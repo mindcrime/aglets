@@ -34,9 +34,12 @@ import java.net.UnknownHostException;
 import java.net.InetAddress;
 import java.util.Hashtable;
 import java.util.Enumeration;
+import org.aglets.log.*;
 
 public class Handler implements AgentSystemHandler {
-
+    static private final LogCategory log 
+            = LogInitializer.getCategory(Handler.class.getName() );
+            
 	static final int DEFAULT_PORT = 4434;
 
 	static boolean initialized = false;
@@ -46,7 +49,7 @@ public class Handler implements AgentSystemHandler {
 	private static String getFullyQualifiedHostName() 
 			throws UnknownHostException {
 		Resource res = Resource.getResourceFor("atp");
-
+        
 		if (res.getBoolean("atp.offline", false)) {
 			return "localhost";
 		} 
@@ -63,7 +66,11 @@ public class Handler implements AgentSystemHandler {
 			throw new UnknownHostException("IP address of local host does not exist.");
 		} 
 
-
+        if( res.getBoolean("atp.useip", false) ) {
+            log.debug("Hostname: "+ipaddr);
+            return ipaddr;
+        }
+        
 		String hostname = null;
 
 		if (res.getBoolean("atp.resolve", false)) {
