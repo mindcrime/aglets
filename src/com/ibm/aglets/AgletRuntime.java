@@ -743,7 +743,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 			FileInputStream in = new FileInputStream(keyStoreFile);
 
 			if (_keyStore == null) {
-				_keyStore = KeyStore.getInstance("jks");
+                _keyStore = KeyStore.getInstance(KeyStore.getDefaultType()); 
 			} 
 			char[] pwd = null;
 
