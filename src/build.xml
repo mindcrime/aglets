@@ -3,7 +3,7 @@
 <!--
     Build Script for Aglets for Java 2 compatible Aglet
     Software Development Kit (ASDK)
-    $Revision: 1.8 $ $Date: 2001/08/08 03:18:59 $ $Author: kbd4hire $
+    $Revision: 1.9 $ $Date: 2001/08/28 02:08:07 $ $Author: kbd4hire $
 -->
 <project name="Aglets" default="all" basedir=".">
 
@@ -76,7 +76,7 @@
   
   <!-- Set flags for compiler (Dev) -->
   <target name="dev-flags">
-    <property name="dep.flag" value="on"/>
+    <property name="dep.flag" value="off"/>
     <property name="debug.flag" value="on"/>
     <property name="opt.flag" value="off"/>
   </target>
@@ -94,7 +94,7 @@
   -->
   <target name="init" >
     <echo>
-Aglets SDK Build $Revision: 1.8 $ $Date: 2001/08/08 03:18:59 $
+Aglets SDK Build $Revision: 1.9 $ $Date: 2001/08/28 02:08:07 $
     </echo>
     <tstamp/>
     <!-- Check for log4j classes -->

@@ -46,7 +46,7 @@ import java.net.URL;
 /**
  * Tahiti is the viewer for aglets
  * 
- * @version     1.10    $Date: 2001/07/28 06:32:51 $
+ * @version     1.10    $Date: 2001/08/28 02:08:07 $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
@@ -259,6 +259,8 @@ public final class Tahiti implements ContextListener {
 		} 
 		res.setDefaultResource("tahiti.browser_command", 
 							   aglet_home + "bin" + File.separator + cmd);
+        
+        res.importOptionProperties("tahiti.window");
 	}
 	public static void initializeGUI() {
 		try {

@@ -83,11 +83,14 @@ import com.ibm.aglet.security.MessageProtection;
 import com.ibm.awb.weakref.Ref;
 import com.ibm.awb.weakref.VirtualRef;
 
+import org.aglets.log.LogInitializer;
+import org.aglets.log.LogCategory;
+
 /**
  * Class LocalAgletRef is the implementation of AgletStub. The purpose of
  * this class is to provide a mechanism to control the aglet.
  * 
- * @version     1.20    96/11/25
+ * @version    $Revision: 1.2 $ $Date: 2001/08/28 02:08:07 $ $Author: kbd4hire $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
@@ -114,6 +117,8 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	private static final String ACTION_DEACTIVATE = "deactivate";
 	private static final String ACTION_ACTIVATE = "activate";
 	private static final String ACTION_RETRACT = "retract";
+    
+    private static LogCategory log = LogInitializer.getCategory("com.ibm.aglets.LocalAgletRef");
 
 	/* package */
 	private static AgentProfile _agent_profile = null;
@@ -548,8 +553,8 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 			return;
 		} 
 
-		System.out.println("protections="+String.valueOf(protections));
-		System.out.println("permission="+String.valueOf(p));
+		log.debug("protections="+String.valueOf(protections));
+		log.debug("permission="+String.valueOf(p));
 		if (protections != null && protections.implies(p) == false) {
 			SecurityException ex = new SecurityException(p.toString());
 
@@ -681,7 +686,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 		resourceManager = _context.createResourceManager(info.getCodeBase(), 
 				_owner, table);
 		if (resourceManager == null) {
-			System.out.println("invalid codebase:" + info.getCodeBase());
+			log.error("invalid codebase:" + info.getCodeBase());
 		} 
 		return resourceManager;
 	}
