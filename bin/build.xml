@@ -13,7 +13,7 @@
   <target name="install">
       <filter token="aglet_home" value="${aglet.home}"/>
       <filter token="jdk_home" value="${java.home}"/>
-      
+      <filter token="ant_home" value="${aglet.home}"/>
       <copy todir="." filtering="true" overwrite="true" >
         <fileset dir=".">
             <include name="*.in"/>
@@ -21,6 +21,7 @@
         <mapper type="glob" from="*.in" to="*" />
       </copy>
       <chmod file="agletsd" perm="755"/>
+      <chmod file="ant" perm="755"/>
   </target>
   
   <target name="grant">
