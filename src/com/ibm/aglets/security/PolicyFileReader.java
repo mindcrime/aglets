@@ -23,12 +23,13 @@ import java.io.BufferedReader;
 import java.io.StreamTokenizer;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import org.aglets.log.*;
 
 /**
  * The <tt>PolicyFileReader</tt> class accesses Java policy database file
  * and returns PolicyDB object.
  * 
- * @version     1.00    $Date: 2001/07/28 06:33:12 $
+ * @version     1.00    $Date: 2002/02/20 22:17:18 $
  * @author      ONO Kouichi
  */
 public class PolicyFileReader {
@@ -91,7 +92,10 @@ public class PolicyFileReader {
 	private String _filename = null;
 	private StreamTokenizer _st = null;
 	private PolicyDB _db = null;
-
+    
+    private static final LogCategory log 
+            = LogInitializer.getCategory(PolicyFileReader.class.getName() );
+    
 	public PolicyFileReader(String policyFilename) {
 		try {
 			readPolicyFile(policyFilename);
@@ -430,8 +434,7 @@ public class PolicyFileReader {
 	}
 	protected synchronized void readPolicyFile(String filename) 
 			throws FileNotFoundException {
-		System.out.print("[Reading security policy file: " + filename 
-						 + "...");
+		log.info("Reading security policy file: " + filename);
 		if (filename == null) {
 			throw new FileNotFoundException("Policy filename is null.");
 		} 
@@ -443,13 +446,11 @@ public class PolicyFileReader {
 		try {
 			readPolicyDB();
 			reader.close();
-			System.out.println(" done.]");
+			log.debug("Policy file read complete");
 		} catch (PolicyFileParsingException excpt) {
-			System.err.println(excpt);
-			System.out.println(" ERROR.]");
+			log.error("Error parsing policy file: ",excpt);
 		} catch (IOException excpt) {
-			System.err.println(excpt);
-			System.out.println(" ERROR.]");
+			log.error("Error parsing policy file: ",excpt);
 		} 
 	}
 	protected synchronized void readPolicyGrant() 

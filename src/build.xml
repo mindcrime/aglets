@@ -3,7 +3,7 @@
 <!--
     Build Script for Aglets for Java 2 compatible Aglet
     Software Development Kit (ASDK)
-    $Revision: 1.9 $ $Date: 2001/08/28 02:08:07 $ $Author: kbd4hire $
+    $Revision: 1.10 $ $Date: 2002/02/20 22:17:18 $ $Author: kbd4hire $
 -->
 <project name="Aglets" default="all" basedir=".">
 
@@ -11,7 +11,7 @@
     Build Properties 
   -->
   <property name="Name" value="aglets"/>
-  <property name="version" value="2.0b0"/>
+  <property name="version" value="2.0.1"/>
   
   <property name="src.dir" location="."/>
   
@@ -76,7 +76,7 @@
   
   <!-- Set flags for compiler (Dev) -->
   <target name="dev-flags">
-    <property name="dep.flag" value="off"/>
+    <property name="dep.flag" value="on"/>
     <property name="debug.flag" value="on"/>
     <property name="opt.flag" value="off"/>
   </target>
@@ -94,7 +94,7 @@
   -->
   <target name="init" >
     <echo>
-Aglets SDK Build $Revision: 1.9 $ $Date: 2001/08/28 02:08:07 $
+Aglets SDK Build $Revision: 1.10 $ $Date: 2002/02/20 22:17:18 $
     </echo>
     <tstamp/>
     <!-- Check for log4j classes -->
@@ -222,6 +222,7 @@ Aglets SDK Build $Revision: 1.9 $ $Date: 2001/08/28 02:08:07 $
           author="true"
           version="true"
           use="true"
+          private="yes"
           windowtitle="Aglets Development Kit"
           doctitle="&lt;h1&gt;Aglets Development Kit&lt;/h1&gt;">
       </javadoc>
@@ -239,6 +240,7 @@ Aglets SDK Build $Revision: 1.9 $ $Date: 2001/08/28 02:08:07 $
     <delete>
         <fileset dir=".." defaultexcludes="no" >
             <include name="**/*~"/>
+            <include name="**/CVS/"/>
         </fileset>
     </delete>
   </target>
@@ -263,6 +265,14 @@ Aglets SDK Build $Revision: 1.9 $ $Date: 2001/08/28 02:08:07 $
     </delete>
   </target>
   
+  <target name="noCvs">
+    <delete includeEmptyDirs="true">
+        <fileset dir=".." defaultexcludes="no">
+            <include name="**/CVS/" />
+         </fileset>
+     </delete>
+  </target>
+        
 </project>
 
 

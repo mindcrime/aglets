@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.util.Properties;
 import java.util.Hashtable;
 import java.util.Enumeration;
+import org.aglets.log.*;
 
 /*
  * @(#)Resource.java
@@ -37,7 +38,9 @@ import java.util.Enumeration;
 public class Resource {
 	private static Hashtable resourceTable = new Hashtable();
 	private static Properties options = null;
-
+    private static LogCategory log 
+            = LogInitializer.getCategory(Resource.class.getName() );
+            
 	static {
 
 		/*
@@ -108,7 +111,7 @@ public class Resource {
 			return;
 		} 
 		if (load(url) == false) {
-			System.out.println("[Could not load resource from " + url + "]");
+			log.error("Could not load resource from [" + url + "]");
 		} 
 	}
 	/**
@@ -145,6 +148,7 @@ public class Resource {
 		if (resourceTable.contains(name)) {
 			throw new SecurityException("cannot re-create existing resource");
 		} 
+        log.debug("Creating resource: "+name+" url: "+file);
 		Resource res = new Resource(file, defaults);
 
 		resourceTable.put(name, res);
@@ -295,7 +299,7 @@ public class Resource {
 		try {
 			return v == null ? defaultValue : new URL(v);
 		} catch (java.net.MalformedURLException ex) {
-			System.err.println("[fail to convert '" + v + "' to URL]");
+			log.error("fail to convert '" + v + "' to URL", ex);
 			return defaultValue;
 		} 
 	}
@@ -320,7 +324,7 @@ public class Resource {
 	 * 
 	 */
 	public void list(java.io.PrintStream out) {
-		option.list(out);
+		option.list(System.out);
 	}
 	/**
 	 * Loads the properties from the file
@@ -328,12 +332,12 @@ public class Resource {
 	public boolean load(URL loadFrom) {
 		if ("file".equalsIgnoreCase(loadFrom.getProtocol())) {
 			if (FileUtils.ensureDirectory(loadFrom.getFile()) == false) {
-				System.out.println("[Could not create directory " + loadFrom 
+				log.error("Could not create directory [" + loadFrom 
 								   + "]");
 				return false;
 			} 
 			if (FileUtils.ensureFile(loadFrom.getFile()) == false) {
-				System.out.println("[Could not create file " + loadFrom 
+				log.error("Could not create file [" + loadFrom 
 								   + "]");
 				return false;
 			} 
@@ -423,7 +427,7 @@ public class Resource {
 			return false;
 		} 
 		try {
-			System.out.println("[saving properties into " + saveTo + " ]");
+			log.info("saving properties into [" + saveTo + " ]");
 
 			// System.out.println(_propertyURL.getFile());
 			File file = new File(saveTo.getFile());

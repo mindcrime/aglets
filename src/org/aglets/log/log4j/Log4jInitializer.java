@@ -30,7 +30,6 @@ public class Log4jInitializer extends LogInitializer {
             logConfig = logConfig + FS;
         }
         
-        System.out.println("Log URL: "+logConfig+"cnf"+FS+"agletslog.xml");
         DOMConfigurator.configure(logConfig+"cnf"+FS+"agletslog.xml");
     }
     

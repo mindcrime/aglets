@@ -287,7 +287,7 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem
 
 		try {
 			URL url = new URL(_url_address, place_name);
-
+            System.out.println("***** Addr: "+_url_address+" place: "+place_name);
 			connection = new AtpConnectionImpl(url);
 			connection.setRequestType(DISPATCH);
 			connection.setAgentProfile(agent_profile);

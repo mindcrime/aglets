@@ -27,14 +27,18 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 import com.ibm.awb.misc.Resource;
 import com.ibm.awb.misc.FileUtils;
+import org.aglets.log.*;
 
 /**
  * The <tt>SharedSecrets</tt> class is a collection of SharedSecret objects.
  * 
- * @version     1.00    $Date: 2001/07/28 06:33:48 $
+ * @version     1.00    $Date: 2002/02/20 22:17:18 $
  * @author      ONO Kouichi
  */
 final public class SharedSecrets {
+    private static final LogCategory log
+            = LogInitializer.getCategory(SharedSecrets.class.getName() );
+            
 	/**
 	 * currenct SharedSecrets object
 	 */
@@ -122,7 +126,7 @@ final public class SharedSecrets {
 						} 
 						secrets.addSharedSecret(secret);
 					} else {
-						System.err.println("secret is null.");
+						log.error("secret is null.");
 					} 
 					sec = null;
 				} 
@@ -280,8 +284,7 @@ final public class SharedSecrets {
 		SharedSecrets secrets = null;
 
 		try {
-			System.out.print("[Loading shared secrets from file " + filename 
-							 + " ... ");
+			log.info("Loading shared secrets from file " + filename); 
 			FileReader freader = new FileReader(filename);
 			BufferedReader breader = new BufferedReader(freader);
 			Vector lines = null;
@@ -301,20 +304,20 @@ final public class SharedSecrets {
 			} 
 			breader.close();
 			if (lines == null) {
-				System.out.println("empty.]");
+				log.warn("empty");
 				secrets = null;
 			} else {
-				System.out.println("done.]");
+				log.debug("load done.");
 				secrets = convertLinesToSharedSecrets(lines.elements());
 			} 
 		} catch (FileNotFoundException excpt) {
 
 			// something wrong
-			System.out.println("file not found.]");
+			log.info("No shared secret file.");
 		} catch (IOException excpt) {
 
 			// something wrong
-			System.out.println("failed.]");
+			log.error("Error loading shared secrets.",excpt);
 		} 
 		return secrets;
 	}
@@ -351,12 +354,11 @@ final public class SharedSecrets {
 		Enumeration lines = toLines();
 
 		if (lines == null) {
-			System.err.println("No secrets.");
+			log.info("No secrets.");
 			return;
 		} 
 		try {
-			System.out.print("[Saving shared secrets into file " + filename 
-							 + " ... ");
+			log.info("[Saving shared secrets into file " + filename); 
 			FileWriter fwriter = new FileWriter(filename);
 			BufferedWriter bwriter = new BufferedWriter(fwriter);
 
@@ -368,11 +370,11 @@ final public class SharedSecrets {
 			} 
 			bwriter.flush();
 			bwriter.close();
-			System.out.println("done.]");
+			log.debug("Save complete.");
 		} catch (IOException excpt) {
 
 			// something wrong
-			System.out.println("failed.]");
+			log.error("Error saving file.", excpt);
 		} 
 	}
 	/**

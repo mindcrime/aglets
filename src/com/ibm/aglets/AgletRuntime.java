@@ -45,6 +45,7 @@ import java.security.KeyStoreException;
 import java.security.Key;
 import java.security.cert.Certificate;
 import java.util.PropertyPermission;
+import org.aglets.log.*;
 
 // import com.ibm.aglets.security.UserAuthenticator;
 // import com.ibm.aglets.security.UserAdministrator;
@@ -87,7 +88,8 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 	private static Version VERSION;
 
 	private static ResourceBundle bundle = null;
-
+    private static final LogCategory log
+            = LogInitializer.getCategory(AgletRuntime.class.getName() );
 	/*
 	 * This must be outside of this source code.
 	 */
@@ -650,7 +652,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 			String username = getOwnerName();
 
 			if (username == null) {
-				System.err.println("No user.");
+				log.error("No user.");
 				return def;
 			} 
 			String propfile = null;
@@ -668,8 +670,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 			} catch (MalformedURLException ex) {
 				System.err.println(ex.toString());
 			} 
-			System.out.println("reading " + prop + " property from " 
-							   + propfile);
+			log.debug("getProperty: reading " + prop + " property from "+ propfile);
 		} 
 		String ret = null;
 
@@ -778,8 +779,8 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 		initialized = true;
 
 		// For users information.
-		System.out.println(bundle.getString("aglets.license"));
-		System.out.println(bundle.getString("aglets.version"));
+		//System.out.println(bundle.getString("aglets.license"));
+		//System.out.println(bundle.getString("aglets.version"));
 	}
 	/**
 	 * Verbose message
@@ -885,11 +886,10 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 			} catch (MalformedURLException ex) {
 				System.err.println(ex.toString());
 			} 
-			System.out.println("reading " + prop + " property from " 
-							   + propfile);
+			log.debug("setProperty: reading " + prop + " property from "+ propfile);
 		} 
 		if (res == null) {
-			System.err.println("No resource.");
+			log.error("No resource.");
 			return;
 		} 
 		res.setResource(key, value);
@@ -941,8 +941,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 					FileUtils.getPropertyFilenameForUser(username, "aglets");
 
 				res = Resource.createResource("aglets", propfile, null);
-				System.out.println("reading aglets property from " 
-								   + propfile);
+				log.debug("startup: reading aglets property from "+ propfile);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			} 
@@ -1027,7 +1026,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 	}
 	public static final void verboseOut(String msg) {
 		if (verbose) {
-			System.out.println(msg);
+			log.debug(msg);
 		} 
 	}
 }

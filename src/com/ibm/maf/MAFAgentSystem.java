@@ -85,8 +85,6 @@ public abstract class MAFAgentSystem {
 
 				protocol_res = Resource.createResource(protocol, propfile, 
 													   null);
-				System.out.println("reading " + protocol.toUpperCase() 
-								   + " property from " + propfile);
 			} catch (SecurityException ex) {
 				protocol_res = null;
 			} catch (Exception ex) {

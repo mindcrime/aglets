@@ -31,7 +31,7 @@ import org.aglets.log.*;
  * ResourceManagerImpl is a implementation of ResourceManager
  * in the Aglets framework.
  * 
- * @version     $Revision: 1.2 $	$Date: 2002/01/19 22:09:56 $ $Author: kbd4hire $
+ * @version     $Revision: 1.3 $	$Date: 2002/02/20 22:17:18 $ $Author: kbd4hire $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  */
@@ -66,7 +66,7 @@ final class ResourceManagerImpl implements com.ibm.aglets.ResourceManager {
 	 * 
 	 */
 	public ResourceManagerImpl(AgletClassLoader l, String name) {
-        logCategory.debug("Ctor["+name+"]: ref="+this+"loader="+((l==null)?"NULL":"OK"));
+        logCategory.debug("Ctor: ["+name+"]");
 		_loader = l;
 		_name = name;
 	}
@@ -76,6 +76,7 @@ final class ResourceManagerImpl implements com.ibm.aglets.ResourceManager {
 	 * ========================================================
 	 */
 	public void addResource(Object o) {
+        logCategory.debug("addResource");
 		synchronized (_resources) {
 			if (_resources.contains(o) == false) {
 				_resources.addElement(o);
@@ -86,6 +87,7 @@ final class ResourceManagerImpl implements com.ibm.aglets.ResourceManager {
 	 * return false if not found.
 	 */
 	public boolean contains(Class cls) {
+        logCategory.debug("contains()");
 		return _loader.contains(cls);
 	}
 	public void disposeAllResources() {
@@ -125,16 +127,27 @@ final class ResourceManagerImpl implements com.ibm.aglets.ResourceManager {
 	}
 	/* package */
 	static ResourceManagerImpl getResourceManagerContext() {
+        logCategory.debug("getResourceManagerContext()++");
 		ResourceManagerImpl rm = 
 			(ResourceManagerImpl)rm_contexts.get(Thread.currentThread());
-
+        
 		if (rm == null) {
+            logCategory.debug("No context found for thread getting group.");
 			ThreadGroup tg = Thread.currentThread().getThreadGroup();
 
 			if (tg instanceof AgletThreadGroup) {
 				rm = ((AgletThreadGroup)tg)._rm;
 			} 
-		} 
+		}
+        
+        if( logCategory.isDebugEnabled() ) {
+            if( rm != null ) {
+                logCategory.debug("Using RM: "+rm.getName());
+            } else {
+                logCategory.debug("No manager found");
+            }
+        }
+        logCategory.debug("getResourceManagerContext()--");
 		return rm;
 	}
 	synchronized public ThreadGroup getThreadGroup() {
@@ -175,6 +188,7 @@ final class ResourceManagerImpl implements com.ibm.aglets.ResourceManager {
 	 * ======================================================
 	 */
 	public AgletThread newAgletThread(MessageManager mm) {
+        logCategory.debug("newAgletThread");
 		try {
 			final ThreadGroup fThreadGroup = getThreadGroup();
 			final MessageManager fMsgMan = mm;
@@ -205,6 +219,7 @@ final class ResourceManagerImpl implements com.ibm.aglets.ResourceManager {
 		} 
 	}
 	public void setResourceManagerContext() {
+        logCategory.debug("setResourceManagerContext() : "+getName());
 		rm_contexts.put(Thread.currentThread(), this);
 	}
 	public void stopAllThreads() {
@@ -279,7 +294,6 @@ final class ResourceManagerImpl implements com.ibm.aglets.ResourceManager {
 	}
 	public void suspendAllThreads() {
 		final ThreadGroup fThreadGroup = getThreadGroup();
-
 		synchronized (fThreadGroup) {
 			try {
 				AccessController.doPrivileged(new PrivilegedAction() {
@@ -302,6 +316,12 @@ final class ResourceManagerImpl implements com.ibm.aglets.ResourceManager {
 		} 
 	}
 	public void unsetResourceManagerContext() {
+        logCategory.debug("unsetResourceManagerContext()");
 		rm_contexts.remove(Thread.currentThread());
 	}
+    
+    public String toString() {
+        return _name;
+    }
+    
 }

@@ -56,17 +56,20 @@ import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Date;
 import java.text.DateFormat;
+import org.aglets.log.*;
 
 /**
  * <tt> Daemon </tt> is a listener of incoming ATP request.
  * 
- * @version     1.10	$Date: 2001/07/28 06:31:29 $
+ * @version     1.10	$Date: 2002/02/20 22:17:18 $
  * @author	Danny D. Langue
  * @author	Gaku Yamamoto
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
  */
 final public class Daemon {
+    public static final LogCategory log = LogInitializer.getCategory(Daemon.class.getName() );
+    
 	static Hashtable locals = new Hashtable();
 
 	String _username = null;
@@ -296,30 +299,28 @@ final public class Daemon {
 
 		Randoms.setUseSecureRandomSeed(secureseed);
 		if (secureseed) {
-			System.out.println("USE SECURE RANDOM SEED.");
+			log.info("USE SECURE RANDOM SEED.");
 		} else {
-			System.out.println("USE UNSECURE PSEUDO RANDOM SEED.");
+			log.info("USE UNSECURE PSEUDO RANDOM SEED.");
 		} 
 		if (auth) {
-			System.out
-				.print("[Generating random seed ... wait for a while ... ");
+			log.info("Generating random seed ... wait for a while.");
 			Randoms.getRandomGenerator(Challenge.LENGTH);
-			System.out.println("done.]");
+			log.info("done.");
 		} 
 		if (auth && SharedSecrets.getSharedSecrets() == null) {
-			System.out.println("No shared secret file for authentication.");
-			System.out
-				.println("Authentication requires a shared secret file");
-			System.out.println("which is duplicated from other host,");
-			System.out.println("or newly created file.");
+			log.error("No shared secret file for authentication."+
+			    "Authentication requires a shared secret file"+
+                "which is duplicated from other host,"+
+                "or newly created file.");
 			resource.setResource("atp.authentication", "false");
 			resource.setOptionResource("atp.authentication", "false");
 			auth = false;
 		} 
 		if (auth) {
-			System.out.println("AUTHENTICATION MODE ON.");
+			log.info("AUTHENTICATION MODE ON.");
 		} else {
-			System.out.println("AUTHENTICATION MODE OFF.");
+			log.info("AUTHENTICATION MODE OFF.");
 		} 
 		ServerSocket socket = null;
 

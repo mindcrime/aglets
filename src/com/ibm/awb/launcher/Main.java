@@ -42,7 +42,7 @@ import org.aglets.log.LogInitializer;
  *
  * @author     Hideki Tai
  * @created    July 22, 2001
- * @version    $Revision: 1.1 $ $Date: 2001/07/28 06:33:30 $ $Author: kbd4hire $
+ * @version    $Revision: 1.2 $ $Date: 2002/02/20 22:17:18 $ $Author: kbd4hire $
  */
 public class Main {
     private final static String         VIEWER_TAHITI =
@@ -201,6 +201,7 @@ public class Main {
         props.put("aglets.owner.name", props.getProperty("user.name"));
         props.remove("aglets.logfile");
         props.put("atp.resolve", "false");
+        props.put("atp.useip", "false");
         props.put("atp.offline", "false");
         props.put("atp.authentication", "false");
         props.put("atp.secureseed", "true");
@@ -261,7 +262,7 @@ public class Main {
         String initializerName = System.getProperty("aglets.logger.class",
             "org.aglets.log.quiet.QuietInitializer" );
         Class.forName(initializerName);
-        LogCategory cat = LogInitializer.getCategory("com.ibm.awb.launcher.Main");
+        LogCategory cat = LogInitializer.getCategory(Main.class.getName());
         cat.info("Logging system initialized!");
 
         // Initializes AWT and Audio classes.
@@ -328,6 +329,7 @@ public class Main {
         MAFAgentSystem maf_system = new MAFAgentSystem_AgletsImpl(runtime);
         String protocol = System.getProperties().getProperty("maf.protocol");
 
+        cat.debug("Initializing handler: "+protocol);
         MAFAgentSystem.initMAFAgentSystem(maf_system, protocol);
 
         // Initializes Tahiti(part of the agent system)

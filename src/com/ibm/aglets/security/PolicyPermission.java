@@ -21,15 +21,18 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Vector;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
+import org.aglets.log.*;
 
 /**
  * The <tt>PolicyPermission</tt> class represents a permission in a grant
  * of Java policy database.
  * 
- * @version     1.00    $Date: 2001/07/28 06:33:08 $
+ * @version     1.00    $Date: 2002/02/20 22:17:18 $
  * @author      ONO Kouichi
  */
 public class PolicyPermission {
+    private static final LogCategory log =
+        LogInitializer.getCategory(PolicyPermission.class.getName() );
 	private static final String CLASSNAME_PERMISSION = 
 		"java.security.Permission";
 	private static final String CLASSNAME_BASIC_PERMISSION = 
@@ -285,6 +288,7 @@ public class PolicyPermission {
 			} 
 		} 
 		_permission = (Permission)obj;
+        log.debug("Created permission: "+_permission);
 		return _permission;
 	}
 	public boolean equals(PolicyPermission permission) {

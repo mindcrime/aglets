@@ -35,15 +35,22 @@ import java.util.StringTokenizer;
 import java.security.Certificate;
 import com.ibm.atp.AtpConstants;
 import com.ibm.aglet.system.AgletRuntime;
+import org.aglets.log.*;
+
 
 /**
  * The <tt>AuthPacket</tt> class is the challenge-response authentication
  * packet class.
  * 
- * @version     1.00    $Date: 2001/07/28 06:33:44 $
+ * @version     1.00    $Date: 2002/02/20 22:17:18 $
  * @author      ONO Kouichi
  */
 public class AuthPacket extends Object {
+    
+    // Logging
+    private final static LogCategory log
+            = LogInitializer.getCategory( AuthPacket.class.getName() );
+            
 	/**
 	 * carriage return & line feed
 	 */
@@ -881,9 +888,7 @@ public class AuthPacket extends Object {
 		return authManner;
 	}
 	static final void verboseOut(String msg) {
-		if (verbose) {
-			System.out.println(msg);
-		} 
+        log.debug("VO:" +msg);
 	}
 	/**
 	 * Writes packet to output stream.
