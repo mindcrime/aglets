@@ -17,7 +17,7 @@ fi
 
 
 #Remove development path when packaging.
-LOCALCLASSPATH=$AGLET_HOME/lib:$AGLET_HOME/lib/classes
+LOCALCLASSPATH=$CLASSPATH:$AGLET_HOME/lib:$AGLET_HOME/lib/classes
 
 # Add all jars in this directory to the tahiti system classpath
 DIRLIBS=${AGLET_HOME}/lib/*.jar
