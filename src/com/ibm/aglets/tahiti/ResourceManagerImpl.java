@@ -25,12 +25,13 @@ import com.ibm.aglets.AgletThread;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import org.aglets.log.*;
 
 /**
  * ResourceManagerImpl is a implementation of ResourceManager
  * in the Aglets framework.
  * 
- * @version     1.10	$Date: 2001/07/28 06:32:53 $
+ * @version     $Revision: 1.2 $	$Date: 2002/01/19 22:09:56 $ $Author: kbd4hire $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  */
@@ -38,6 +39,7 @@ import java.security.PrivilegedAction;
 final class ResourceManagerImpl implements com.ibm.aglets.ResourceManager {
 
 	static private ThreadGroup AGLET_GROUPS = new ThreadGroup("AGLET_GROUPS");
+    static private LogCategory logCategory = LogInitializer.getCategory("com.ibm.aglets.tahiti.ResourceManagerImpl");
 
 	static {
 		int max = Thread.currentThread().getPriority();
@@ -64,6 +66,7 @@ final class ResourceManagerImpl implements com.ibm.aglets.ResourceManager {
 	 * 
 	 */
 	public ResourceManagerImpl(AgletClassLoader l, String name) {
+        logCategory.debug("Ctor["+name+"]: ref="+this+"loader="+((l==null)?"NULL":"OK"));
 		_loader = l;
 		_name = name;
 	}
@@ -101,7 +104,9 @@ final class ResourceManagerImpl implements com.ibm.aglets.ResourceManager {
 			} 
 			_resources = null;
 		} 
-		_loader = null;
+        // <RAB> 01092002 Do not kill loader so agent can recieve message to reativate
+		//_loader = null;
+        // </RAB>
 	}
 	/**
 	 * Archives that this resource manager is managing.
