@@ -62,6 +62,7 @@ import java.net.SocketException;
 
 import java.rmi.RemoteException;
 import com.ibm.maf.NameInvalid;
+import org.aglets.log.*;
 
 /*
  * MM
@@ -77,14 +78,15 @@ import java.applet.AudioClip;
  * environment where the aglets are protected from each other and the host
  * system is secured against malicious aglets.
  * 
- * @version     1.20	$Date: 2001/07/28 06:31:54 $
+ * @version     1.20	$Date: 2002/01/19 22:10:43 $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
  */
 
 final public class AgletContextImpl implements AgletContext {
-
+    private static LogCategory logCategory = LogInitializer.getCategory("com.ibm.aglets.AgletContextImpl");
+    
 	/*
 	 * secure/unsecure
 	 */
@@ -1146,7 +1148,7 @@ final public class AgletContextImpl implements AgletContext {
 
 		_timer.destroy();
 
-		System.out.print("[shutting down.");
+		logCategory.info("shutting down.");
 		synchronized (creationLock) {
 			while (creating > 0) {
 				try {
@@ -1154,7 +1156,6 @@ final public class AgletContextImpl implements AgletContext {
 				} catch (InterruptedException ex) {}
 			} 
 		} 
-		System.out.println(".]");
 
 		Enumeration e = _agletProxies.elements();
 		ReplySet set = new ReplySet();
@@ -1169,7 +1170,7 @@ final public class AgletContextImpl implements AgletContext {
 			} catch (InvalidAgletException ex) {}
 		} 
 
-		System.out.println("[waiting for response..]");
+		logCategory.debug("[waiting for response..]");
 
 		while (set.hasMoreFutureReplies()) {
 			set.waitForNextFutureReply(5000);
@@ -1181,7 +1182,7 @@ final public class AgletContextImpl implements AgletContext {
 			} 
 		} 
 
-		System.out.println("[terminating aglets.]");
+		logCategory.info("[terminating aglets.]");
 
 		MAFFinder finder = null;
 
@@ -1283,7 +1284,7 @@ final public class AgletContextImpl implements AgletContext {
 			_hostingURL = new URL(url.getProtocol(), url.getHost(), 
 								  url.getPort(), '/' + _name);
 		} catch (MalformedURLException ex) {
-			ex.printStackTrace();
+			logCategory.error(ex);
 		} 
 
 		// 
@@ -1326,15 +1327,14 @@ final public class AgletContextImpl implements AgletContext {
 					ex.printStackTrace();
 				} 
 			} else {
-				System.out
-					.println("removing deactivated aglets in the context(" 
+				logCategory.info("removing deactivated aglets in the context(" 
 							 + _name + ")");
 				for (Enumeration e = _persistence.entryKeys(); 
 						e.hasMoreElements(); ) {
 					String key = (String)e.nextElement();
 
 					if (!key.equals("properties-" + _name)) {
-						System.out.println("\t" + key);
+						logCategory.debug("\t" + key);
 						_persistence.removeEntry(key);
 					} 
 				} 

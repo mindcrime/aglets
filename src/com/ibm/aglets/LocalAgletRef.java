@@ -90,7 +90,7 @@ import org.aglets.log.LogCategory;
  * Class LocalAgletRef is the implementation of AgletStub. The purpose of
  * this class is to provide a mechanism to control the aglet.
  * 
- * @version    $Revision: 1.2 $ $Date: 2001/08/28 02:08:07 $ $Author: kbd4hire $
+ * @version    $Revision: 1.3 $ $Date: 2002/01/19 22:10:43 $ $Author: kbd4hire $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
@@ -828,7 +828,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	 * @exception InvalidAgletException if the aglet is not valid any longer.
 	 */
 	public void delegateMessage(Message msg) throws InvalidAgletException {
-
+        logCategory.debug("delegateMessage()++");
 		synchronized (msg) {
 			if (msg instanceof MessageImpl == false 
 					|| ((MessageImpl)msg).isDelegatable() == false) {

@@ -32,19 +32,21 @@ import com.ibm.aglet.InvalidAgletException;
 import java.io.IOException;
 import java.security.cert.Certificate;
 import java.net.URL;
+import org.aglets.log.*;
 
 /**
  * <tt>AgletRuntime</tt> class provides the way to access the information
  * of the local or remote context. Neither of an application nor aglet
  * can create its own instance of this runtime class.
  * 
- * @version     1.10    $Date: 2001/07/28 06:34:09 $
+ * @version     1.10    $Date: 2002/01/19 22:10:43 $
  * @author      Mitsuru Oshima
  * @see AgletRuntime#getAgletRuntime
  */
 public abstract class AgletRuntime {
 
 	final static String runtimePackagePrefix = "aglet.runtime.packagePrefix";
+    static LogCategory logCategory = LogInitializer.getCategory("com.ibm.aglet.system.AgletRuntime");
 
 	private boolean _secure = true;
 
@@ -255,13 +257,13 @@ public abstract class AgletRuntime {
 			if (obj instanceof AgletRuntime) {
 				runtime = (AgletRuntime)obj;
 			} else {
-				System.out.println("[ \"" + classname + "\" is not Runtime]");
+				logCategory.error("[ \"" + classname + "\" is not Runtime]");
 			} 
 		} catch (ClassNotFoundException ex) {
-			System.out.println("[ The class \"" + classname 
+			logCategory.error("[ The class \"" + classname 
 							   + "\" not found]");
 		} catch (Exception ex) {
-			System.out.println("[ An instance of \"" + classname 
+			logCategory.error("[ An instance of \"" + classname 
 							   + "\" cannot be created]");
 		} 
 

@@ -20,13 +20,14 @@ import java.io.OptionalDataException;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.IOException;
+import org.aglets.log.*;
 
 /**
  * 
  */
 
 final class MessageInputStream extends ObjectInputStream {
-
+    static private LogCategory logCategory = LogInitializer.getCategory("com.ibm.aglets.MessageImputStream");
 	private ResourceManager rm = null;
 
 	/**
