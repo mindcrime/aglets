@@ -3,7 +3,7 @@
 <!--
     Build Script for Aglets for Java 2 compatible Aglet
     Software Development Kit (ASDK)
-    $Revision: 1.6 $ $Date: 2001/08/02 03:21:43 $ $Author: kbd4hire $
+    $Revision: 1.7 $ $Date: 2001/08/02 03:56:31 $ $Author: kbd4hire $
 -->
 <project name="Aglets" default="all" basedir=".">
 
@@ -26,7 +26,7 @@
   <property name="doc.dir" location="../doc"/>
   
   <!-- Directory holding user aglets. -->
-  <property name="public.dir" location="../doc"/>
+  <property name="public.dir" location="../public"/>
   
   <!-- Use Java 2 compiler -->
   <property name="build.compiler" value="modern" />
@@ -94,7 +94,7 @@
   -->
   <target name="init" >
     <echo>
-Aglets SDK Build $Revision: 1.6 $ $Date: 2001/08/02 03:21:43 $
+Aglets SDK Build $Revision: 1.7 $ $Date: 2001/08/02 03:56:31 $
     </echo>
     <tstamp/>
     <!-- Check for log4j classes -->
@@ -107,6 +107,7 @@ Aglets SDK Build $Revision: 1.6 $ $Date: 2001/08/02 03:21:43 $
   -->
   <target name="prepare" depends="init">
       <mkdir dir="${lib.classes.dir}" />
+      <mkdir dir="${public.dir}" />
   </target>
   
   <!-- 
@@ -217,7 +218,7 @@ Aglets SDK Build $Revision: 1.6 $ $Date: 2001/08/02 03:21:43 $
       <javadoc packagenames="org.aglets.*,com.ibm.*"
           classpathref="app.classpath"
           sourcepath="${src.dir}"
-          destdir="${build.doc.dir}"
+          destdir="${doc.dir}"
           author="true"
           version="true"
           use="true"
@@ -251,8 +252,12 @@ Aglets SDK Build $Revision: 1.6 $ $Date: 2001/08/02 03:21:43 $
             <exclude name="build.xml"/>
         </fileset>
     </delete>
-    <delete>
-        <fileset dir="../public"/>
+    <delete dir="${public.dir}" />
+    <delete includeEmptyDirs="true">
+        <fileset dir="${doc.dir}">
+            <include name="**/*"/>
+            <exclude name="spec11.html"/>
+        </fileset>
     </delete>
   </target>
   
