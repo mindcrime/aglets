@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration>
+ 
+    <!-- Layout does not use location info and is faster. -->
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+           <layout class="org.apache.log4j.PatternLayout">
+                <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%t] %c{2} - %m%n"/>
+           </layout>	    
+	</appender>
+    
+	
+    <appender name="FULLINFO" class="org.apache.log4j.ConsoleAppender">
+           <layout class="org.apache.log4j.PatternLayout">
+                <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%t] %C{2}:%c{1} (%F:%L) - %m%n"/>
+           </layout>	    
+	</appender>
+    
+    <category name="org" additivity="false">
+	  <priority value="debug" />
+  	  <appender-ref ref="CONSOLE" />
+	</category>
+    
+    <category name="com" additivity="false">
+	  <priority value="debug" />
+  	  <appender-ref ref="CONSOLE" />
+	</category>
+
+    
+    <!-- Must be last element!! -->
+    <root>
+	   <priority value ="debug" />
+   	   <appender-ref ref="CONSOLE" />
+	</root>
+       
+</log4j:configuration>
