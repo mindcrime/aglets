@@ -3,7 +3,7 @@
 <!--
     Build Script for Aglets for Java 2 compatible Aglet
     Software Development Kit (ASDK)
-    $Revision: 1.7 $ $Date: 2001/08/02 03:56:31 $ $Author: kbd4hire $
+    $Revision: 1.8 $ $Date: 2001/08/08 03:18:59 $ $Author: kbd4hire $
 -->
 <project name="Aglets" default="all" basedir=".">
 
@@ -94,7 +94,7 @@
   -->
   <target name="init" >
     <echo>
-Aglets SDK Build $Revision: 1.7 $ $Date: 2001/08/02 03:56:31 $
+Aglets SDK Build $Revision: 1.8 $ $Date: 2001/08/08 03:18:59 $
     </echo>
     <tstamp/>
     <!-- Check for log4j classes -->
@@ -250,6 +250,8 @@ Aglets SDK Build $Revision: 1.7 $ $Date: 2001/08/02 03:56:31 $
             <exclude name="*.in"/>
             <exclude name="install*"/>
             <exclude name="build.xml"/>
+            <exclude name="ant*"/>
+            <exclude name="lcp.bat"/>
         </fileset>
     </delete>
     <delete dir="${public.dir}" />
