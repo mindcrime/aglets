@@ -1,7 +1,7 @@
 package com.ibm.aglets.tahiti;
 
 /*
- * $Id: TahitiDaemon.java,v 1.1 2001/07/28 06:32:19 kbd4hire Exp $
+ * $Id: TahitiDaemon.java,v 1.2 2001/08/01 03:46:59 kbd4hire Exp $
  *
  * @(#)TahitiDaemon.java
  *
@@ -32,7 +32,7 @@ import java.util.Enumeration;
  *
  * @author     Lary Spector
  * @created    July 22, 2001
- * @version    $Revision: 1.1 $ $Date: 2001/07/28 06:32:19 $ $Author: kbd4hire $
+ * @version    $Revision: 1.2 $ $Date: 2001/08/01 03:46:59 $ $Author: kbd4hire $
  * @see        com.ibm.aglet.system.ContextListener
  * @see        com.ibm.aglet.system.ContextEvent
  */
@@ -64,7 +64,7 @@ public final class TahitiDaemon implements ContextListener, Runnable {
     private boolean                     reboot = false;
     private boolean                     shutdown = false;
 
-    private static int                  _control_port_num = 4444;
+    private static int                  _control_port_num = 5545;
 
     private static UserManager          _userManager = new TahitiDaemonUserManager();
 
@@ -310,8 +310,7 @@ public final class TahitiDaemon implements ContextListener, Runnable {
             }
 
             try {
-                out =
-                        new PrintWriter(clientSocket.getOutputStream(), true);
+                out = new PrintWriter(clientSocket.getOutputStream(), true);
                 out.println(_banner_string);
                 out.println(_version_string);
                 out.println("Connected to:" + serverSocket.toString());
@@ -337,12 +336,15 @@ public final class TahitiDaemon implements ContextListener, Runnable {
                     String line = in.readLine();
                     outputString = command(line);
                     out.println(outputString);
+                    out.println("done.");
                 } catch (Throwable ex) {
                     if (debug) {
+                      ex.printStackTrace();
                         System.err.println(ex.getMessage());
                         System.err.println("Socket closed");
-                    }
                     socket_active = false;
+                }
+                    out.println("Exception: ["+ex.toString()+"] With the message: ["+ex.getMessage()+"] has occurred, continuing.");
                 }
             }
         }
@@ -426,9 +428,10 @@ public final class TahitiDaemon implements ContextListener, Runnable {
                         com.ibm.awb.misc.Debug.debug(false);
                         debug = false;
                     }
-                } else {
-                    com.ibm.awb.misc.Debug.list(System.err);
                 }
+                com.ibm.awb.misc.Debug.list(System.err);
+                return (debug ? "debug on"
+                        : "debug off");
             } else if ("msg".equalsIgnoreCase(cmd)) {
                 if (st.hasMoreTokens()) {
                     if ("on".equalsIgnoreCase(st.nextToken())) {
@@ -436,40 +439,67 @@ public final class TahitiDaemon implements ContextListener, Runnable {
                     } else {
                         message = false;
                     }
-                } else {
+                }
                     return (message ? "message on"
                              : "message off");
-                }
             } else if ("help".equalsIgnoreCase(cmd)) {
                 return ("help");
             } else if ("create".equalsIgnoreCase(cmd)) {
                 URL url = null;
                 String name = "";
 
+                try { 
                 if (st.countTokens() == 2) {
                     url = new URL(st.nextToken());
                     name = st.nextToken();
                 } else if (st.countTokens() == 1) {
                     name = st.nextToken();
+                  } else {
+                    return ("Usage: create [URL] name");
+                  }
+                  AgletProxy proxy = null;
+                  if (debug)
+                    System.err.println("Entering context.createAglet");
+                  proxy = context.createAglet(url, name, null);
+                  if (debug)
+                    System.err.println("Leaving context.createAglet");
+                  if (proxy != null) {
+                    return("Creation of Aglet "+name+" Succeeded.");
                 } else {
-                    return ("create [URL] name");
+                    return("Creation of Aglet "+name+" Failed.");
                 }
-                context.createAglet(url, name, null);
-            } else if ((item = (Item) aglets.get(cmd)) != null) {
+                } 
+                catch (Throwable ex) {
+                  if (debug) {
+                    ex.printStackTrace();
+                    System.err.println(ex.getMessage());
+                  }
+                  return("Creation of Aglet ["+name+"] Failed. Exception was: ["+ex.toString()+"] Message was: ["+ex.getMessage()+"]");
+                }
+            }
+            /*
+             * This handles property, dispatch, clone, dispose, dialog
+             */
+            else if ((item = (Item)aglets.get(cmd)) != null) {
                 if (st.hasMoreTokens()) {
-                    item.command(st.nextToken(), st);
+                    String tokenString = st.nextToken();
+                    if ("property".equalsIgnoreCase(tokenString)) {
+                        return("Properties for: " + cmd + "\n" + item.toString());
+                    } else {
+                        item.command(tokenString, st);
                     if (!item.isValid()) {
                         removed(item);
                         return ("Removed : " + cmd);
+                    }
                     }
                 } else {
                     return (item.toString());
                 }
             } else {
-                return ("unknown command : " + cmd);
+                return ("unknown command (or aglet not found): " + cmd);
             }
         }
-        return ("");
+        return ("unknown command: " + line);
     }
 
 
@@ -481,19 +511,23 @@ public final class TahitiDaemon implements ContextListener, Runnable {
      * @since
      */
     String list() throws Exception {
-        String returnString = "";
+        String returnString;
         Enumeration e = aglets.keys();
 
+        returnString = "Aglet List empty";
+
+        if (e.hasMoreElements())
+            returnString = "Aglet List:\n";
         while (e.hasMoreElements()) {
             String k = (String) e.nextElement();
             Item item = (Item) aglets.get(k);
 
             // if (item.isValid()) {
-            returnString += returnString + k + " [" + item.proxy.getAgletClassName() + "] " + item.text;
+            returnString += k + " [" + item.proxy.getAgletClassName() + "] ";
 
             // }
         }
-        return returnString;
+        return (returnString);
     }
 
 

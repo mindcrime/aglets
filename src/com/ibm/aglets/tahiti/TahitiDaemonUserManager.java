@@ -1,6 +1,8 @@
 package com.ibm.aglets.tahiti;
 
 /*
+ * $Id: TahitiDaemonUserManager.java,v 1.2 2001/08/01 03:46:59 kbd4hire Exp $
+ *
  * @(#)TahitiDaemonUserManager.java
  *
  */
@@ -21,7 +23,7 @@ import java.io.IOException;
  *
  * @author     Larry Spector
  * @created    July 20, 2001
- * @version $Revision: 1.1 $ $Date: 2001/07/28 06:32:16 $ $Author: kbd4hire $
+ * @version $Revision: 1.2 $ $Date: 2001/08/01 03:46:59 $ $Author: kbd4hire $
  */
 public final class TahitiDaemonUserManager extends UserManager {
 
@@ -34,8 +36,6 @@ public final class TahitiDaemonUserManager extends UserManager {
      * @since 1.0
      */
     public TahitiDaemonUserManager() {
-        System.out.println("IN CONSTRUCTOR!");
-        System.out.println(System.getProperties().getProperty("verbose"));
         _verbose = Boolean.getBoolean(System.getProperties().getProperty("verbose"));
     }
 
@@ -58,11 +58,6 @@ public final class TahitiDaemonUserManager extends UserManager {
         while (cert == null) {
             while (username == null) {
                 username = inputUsername("login");
-
-                // if(!isRegisteredUser(username)) {
-                // System.out.println("The username is not registered.");
-                // username = null;
-                // }
             }
             String password = input("password", "", false);
 

@@ -1,9 +1,12 @@
 /*
- * $Id: TahitiDaemonClient.java,v 1.1 2001/07/28 06:31:22 kbd4hire Exp $
+ * $Id: TahitiDaemonClient.java,v 1.2 2001/08/01 03:46:59 kbd4hire Exp $
  * 
  * @(#)TahitiDaemonClient.java 
  *
- * The TahitiDaemonClient class is used to communicate with
+ * @author     Lary Spector
+ * @created    July 22, 2001
+ *
+ * TahitiDaemonClient is a java application used to communicate with
  * and control a running TahitiDaemon.
  *
  * TahitiDaemon implements a Tahiti service which listens on
@@ -81,10 +84,9 @@ public class TahitiDaemonClient {
         
         Thread.currentThread().setPriority(1);
         
-        while (true){
+        // Try reading from the Daemon
             try {
                 fromServer = in.readLine();
-                break;
             }
             catch (IOException ex) {
                 System.err.println("\nFailure reading from: " + hostname + ":" + _control_port_num);
@@ -93,11 +95,11 @@ public class TahitiDaemonClient {
                 }
                 System.exit(1);
             }
-        }
         
         /*
          * Handshake with the Daemon, check banner and version
          */
+        try {
         if (fromServer != null) {
             if (_verbose) {
                 System.out.println("Server banner: " + fromServer);
@@ -115,9 +117,25 @@ public class TahitiDaemonClient {
                             System.out.println("Version check OK.");
                         }
                         _banner_version_OK = true;
+                        } else {
+                            System.out.println("Version mismatch.");
+                            System.out.println("Client version is: " + _version_string);
+                            System.out.println("Server version is: " + fromServer);
+                        }
+                    }            
+                } else {
+                    System.out.println("Banner check failed.");
+                    System.out.println("Client banner is: " + _banner_string);
+                    System.out.println("Server banner is: " + fromServer);
+                }
                     }
                 }            
+        catch (IOException ex) {
+            System.err.println("\nFailure reading from: " + hostname + ":" + _control_port_num);
+            if (_verbose) {
+                ex.printStackTrace();
             }
+            System.exit(1);
         }
         
         /* 
@@ -125,26 +143,35 @@ public class TahitiDaemonClient {
          * start handling commands.
          */
         if (_banner_version_OK) {
-            while ((fromServer = in.readLine()) != null) {
+            try {
+                // read the connection info
+                if ((fromServer = in.readLine()) != null) {
+                    // display it if verbose
                 if (_verbose) {
                     System.out.println("Server: " + fromServer);
                 }
-                try {
-                    if (fromServer.equals("shutting down")) {
-                        System.out.println("Server shutting down, closing client connection.");
-                        break;
-                    } else if (fromServer.equals("rebooting")) {
-                        System.out.println("Server rebooting, closing client connection.");
-                        break;
                     } 
+            }
+            catch (IOException ex) {
+                System.err.println("\nFailure reading from: " + hostname + ":" + _control_port_num);
+                if (_verbose) {
+                    ex.printStackTrace();
+                }
+                System.exit(1);
+            }
+            while (true) {
+                try {
+                    // Display the Prompt
                     System.out.print(prompt + " ");
                     System.out.flush();
+
+                    // Handle client side input
                     fromUser = stdIn.readLine();
                     if (fromUser != null) {
                         if (_verbose)
                             System.out.println("Client: " + fromUser);
-                        out.println(fromUser);
-                    }
+                        
+                        // Special cases for help and quit
                     if ("help".equalsIgnoreCase(fromUser)) {
                         System.out.println (helpMsg);
                         System.out.flush();
@@ -153,9 +180,42 @@ public class TahitiDaemonClient {
                         System.out.println ("Closing client connection");
                         System.out.flush();
                         break;
+                        }
+                        // Send command to server
+                        out.println(fromUser);
                     }
-                } catch (Throwable ex) {
+                    
+                    // Read reply from the server
+                    fromServer = in.readLine();
+                    // Special cases for shutdown and reboot
+                    if (_verbose) {
+                        System.out.println("Server: " + fromServer);
+                    }
+                    if (fromServer.equals("shutting down")) {
+                        System.out.println("Server shutting down, closing client connection.");
+                        break;
+                    } else if (fromServer.equals("rebooting")) {
+                        System.out.println("Server rebooting, closing client connection.");
+                        break;
+                    } else { //handle everything else.
+                        System.out.println(fromServer);
+                        while (!((fromServer = in.readLine()).equals("done."))) {
+                            System.out.println(fromServer);
+                        }
+                    }
+                } 
+                catch (IOException ex) {
+                    System.err.println("\nFailure reading from: " + hostname + ":" + _control_port_num);
+                    if (_verbose) {
                     ex.printStackTrace();
+                } 
+                    break;
+                }
+                catch (Throwable ex) {
+                    if (_verbose) {
+                        ex.printStackTrace();
+                    }
+                    break;
                 } 
             } 
         }
