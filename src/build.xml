@@ -3,7 +3,7 @@
 <!--
     Build Script for Aglets for Java 2 compatible Aglet
     Software Development Kit (ASDK)
-    $Revision: 1.5 $ $Date: 2001/08/02 03:19:58 $ $Author: kbd4hire $
+    $Revision: 1.6 $ $Date: 2001/08/02 03:21:43 $ $Author: kbd4hire $
 -->
 <project name="Aglets" default="all" basedir=".">
 
@@ -60,7 +60,7 @@
     Top level target.  Builds java files with 
     deprecation off and optimization on.
   -->
-  <target name="all-release" depends="release-flags,prepare,lib,stubs,jar,public,examples"/> 
+  <target name="all-release" depends="release-flags,prepare,lib,stubs,jar,public,examples,doc"/> 
   
   <!--
     Top level target.  Builds java files with 
@@ -94,7 +94,7 @@
   -->
   <target name="init" >
     <echo>
-Aglets SDK Build $Revision: 1.5 $ $Date: 2001/08/02 03:19:58 $
+Aglets SDK Build $Revision: 1.6 $ $Date: 2001/08/02 03:21:43 $
     </echo>
     <tstamp/>
     <!-- Check for log4j classes -->
