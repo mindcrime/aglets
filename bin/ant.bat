@@ -1,8 +1,5 @@
 @echo off
 
-rem Set ant and java home directories to aglets tree.
-ANT_HOME=..
-
 if exist "%HOME%\antrc_pre.bat" call "%HOME%\antrc_pre.bat"
 
 if not "%OS%"=="Windows_NT" goto win9xStart
