@@ -1,0 +1,22 @@
+Index: LocalAgletRef.java
+===================================================================
+RCS file: /cvsroot/aglets/aglets1_2/src/com/ibm/aglets/LocalAgletRef.java,v
+retrieving revision 1.1
+diff -u -3 -p -w -u -r1.1 LocalAgletRef.java
+--- LocalAgletRef.java	2000/10/25 10:12:33	1.1
++++ LocalAgletRef.java	2001/07/22 11:57:29
+@@ -1938,8 +1938,13 @@ final public class LocalAgletRef extends
+ 		} else if (_state == INACTIVE) {
+ 			buff.append("Aglet [inactive]\n");
+ 		} 
+-		String ownerName = ((X509Certificate)_owner).getSubjectDN().getName();
+ 
++		String ownerName;
++		if(_owner == null)
++		    ownerName = "ANONYMOUS";
++		else
++		    ownerName = ((X509Certificate)_owner).getSubjectDN().getName();
++
+ 		buff.append("      ClassName [" + info.getAgletClassName() + "]\n");
+ 		buff.append("      Identifier[" + info.getAgletID() + "]\n");
+ 		buff.append("      Owner[" + ownerName + "]\n");
