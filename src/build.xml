@@ -3,7 +3,7 @@
 <!--
     Build Script for Aglets for Java 2 compatible Aglet
     Software Development Kit (ASDK)
-    $Revision: 1.3 $ $Date: 2001/07/30 16:57:36 $ $Author: kbd4hire $
+    $Revision: 1.4 $ $Date: 2001/08/02 01:35:28 $ $Author: kbd4hire $
 -->
 <project name="Aglets" default="all" basedir=".">
 
@@ -15,28 +15,18 @@
   
   <property name="src.dir" location="."/>
   
-  <!-- Dependent Libraries -->
-  <property name="lib.dir" location="lib"/>
+  <!-- Dependent Libraries and compiled classes -->
+  <property name="lib.dir" location="../lib"/>
+  <property name="lib.classes.dir" location="../lib/classes"/>
   
   <!-- Configuration source directory -->
-  <property name="cnf.dir" location="cnf"/>
+  <property name="cnf.dir" location="../cnf"/>
   
-  <!-- Templates directory for scripts -->
-  <property name="scripts.dir" location="scripts"/>
+  <!-- directory for docs -->
+  <property name="doc.dir" location="../doc"/>
   
-  <!-- directory for static docs -->
-  <property name="doc.dir" location="scripts"/>
-  
-  <!-- Target directories for build results. -->
-  <property name="build.dir" location="../build/${Name}-${version}"/>
-  <property name="build.lib.dir" location="${build.dir}/lib" />
-  <property name="build.classes.dir" location="${build.dir}/lib/classes" />
-  <property name="build.bin.dir" location="${build.dir}/bin" />
-  <property name="build.doc.dir" location="${build.dir}/doc" />
-  <property name="build.public.dir" location="${build.dir}/public" />
-  <property name="build.src.dir" location="${build.dir}/src" />
-  <property name="build.cnf.dir" location="${build.dir}/cnf" />
-  
+  <!-- Directory holding user aglets. -->
+  <property name="public.dir" location="../doc"/>
   
   <!-- Use Java 2 compiler -->
   <property name="build.compiler" value="modern" />
@@ -59,7 +49,7 @@
     inlcuded.
   -->
   <path id="app.classpath">
-     <pathelement path="${build.classes.dir}"/>
+     <pathelement path="${lib.classes.dir}"/>
      <path refid="project.classpath"/>
   </path>
   
@@ -70,13 +60,13 @@
     Top level target.  Builds java files with 
     deprecation off and optimization on.
   -->
-  <target name="all-release" depends="release-flags,prepare,lib,stubs,jar,public,examples,deploy,doc"/> 
+  <target name="all-release" depends="release-flags,prepare,lib,stubs,jar,public,examples"/> 
   
   <!--
     Top level target.  Builds java files with 
     deprecation on and optimization off.
   -->
-  <target name="all-dev" depends="dev-flags,prepare,lib,stubs,jar,public,deploy,doc"/>
+  <target name="all-dev" depends="dev-flags,prepare,lib,stubs,jar,public,doc"/>
   
   <!--
     Top level target.  Builds java files with 
@@ -104,7 +94,7 @@
   -->
   <target name="init" >
     <echo>
-Aglets SDK Build $Revision: 1.3 $ $Date: 2001/07/30 16:57:36 $
+Aglets SDK Build $Revision: 1.4 $ $Date: 2001/08/02 01:35:28 $
     </echo>
     <tstamp/>
     <!-- Check for log4j classes -->
@@ -112,17 +102,11 @@ Aglets SDK Build $Revision: 1.3 $ $Date: 2001/07/30 16:57:36 $
   </target>
 
   <!-- 
-    Creates build directory tree.  This is
+    Creates lib.directory tree.  This is
     not the installation tree.
   -->
   <target name="prepare" depends="init">
-      <mkdir dir="${build.dir}" />
-      <mkdir dir="${build.classes.dir}" />
-      <mkdir dir="${build.bin.dir}" />
-      <mkdir dir="${build.doc.dir}" />
-      <mkdir dir="${build.public.dir}" />
-      <mkdir dir="${build.src.dir}" />
-      <mkdir dir="${build.cnf.dir}" />
+      <mkdir dir="${lib.classes.dir}" />
   </target>
   
   <!-- 
@@ -132,7 +116,7 @@ Aglets SDK Build $Revision: 1.3 $ $Date: 2001/07/30 16:57:36 $
   <target name="logger" if="log4j.present">
     <echo message="Log4j found.  Building logger."/>
     <javac srcdir="${src.dir}"
-           destdir="${build.classes.dir}"
+           destdir="${lib.classes.dir}"
            debug="${debug.flag}"
            deprecation="${dep.flag}"
            optimize="${opt.flag}" >
@@ -145,7 +129,7 @@ Aglets SDK Build $Revision: 1.3 $ $Date: 2001/07/30 16:57:36 $
   <!-- Compile the ASDK java files -->
   <target name="lib" depends="prepare,logger">
     <javac srcdir="${src.dir}"
-           destdir="${build.classes.dir}"
+           destdir="${lib.classes.dir}"
            debug="${debug.flag}"
            deprecation="${dep.flag}"
            optimize="${opt.flag}" >
@@ -164,7 +148,7 @@ Aglets SDK Build $Revision: 1.3 $ $Date: 2001/07/30 16:57:36 $
 
   <!-- Build RMI stubs -->
   <target name="stubs" depends="lib">
-    <rmic base="${build.classes.dir}"
+    <rmic base="${lib.classes.dir}"
           includes="com/ibm/maf/rmi/*_RMIImpl.class"/>
   </target>
 
@@ -172,7 +156,7 @@ Aglets SDK Build $Revision: 1.3 $ $Date: 2001/07/30 16:57:36 $
   <!-- Build the helper classes not part of the core. -->
   <target name="public" depends="prepare">
     <javac srcdir="${src.dir}"
-           destdir="${build.public.dir}"
+           destdir="${public.dir}"
            debug="${debug.flag}"
            deprecation="${dep.flag}"
            optimize="${opt.flag}" >
@@ -186,7 +170,7 @@ Aglets SDK Build $Revision: 1.3 $ $Date: 2001/07/30 16:57:36 $
   <!-- Build the example aglets -->
   <target name="examples" depends="prepare">
     <javac srcdir="${src.dir}"
-           destdir="${build.public.dir}"
+           destdir="${public.dir}"
            debug="${debug.flag}"
            deprecation="${dep.flag}"
            optimize="${opt.flag}" >
@@ -202,7 +186,7 @@ Aglets SDK Build $Revision: 1.3 $ $Date: 2001/07/30 16:57:36 $
   <!-- Somebody's security test -->
   <target name="test.security" depends="prepare">
     <javac srcdir="${src.dir}"
-           destdir="${build.classes.dir}"
+           destdir="${lib.classes.dir}"
            debug="on"
            deprecation="on"
            optimize="off" >
@@ -219,52 +203,15 @@ Aglets SDK Build $Revision: 1.3 $ $Date: 2001/07/30 16:57:36 $
     Build the ASDK jar file
   -->
   <target name="jar" depends="lib">
-    <delete file="${build.lib.dir}/${Name}-${version}.jar"/>
-    <jar jarfile="${build.lib.dir}/${Name}-${version}.jar">
-         <fileset dir="${build.classes.dir}">
+    <jar jarfile="${lib.dir}/${Name}-${version}.jar">
+         <fileset dir="${lib.classes.dir}">
             <include name="com/ibm/**/*.class"/>
             <include name="org/aglets/log/**/*.class"/>
             <exclude name="com/ibm/agletx/**/*.class"/>
          </fileset>
     </jar>
   </target>
-  
-  <!--
-    Deploys the non-generated files.
-  -->
-  <target name="deploy">
-  
-    <copy todir="${build.bin.dir}">
-        <fileset dir="scripts">
-            <include name="*.in"/>
-            <include name="*.xml"/>
-            <include name=".keystore"/>
-            <exclude name="*.*~"/>
-         </fileset>
-    </copy>
     
-    <copy todir="${build.lib.dir}">
-        <fileset dir="lib"/>
-    </copy>
-    
-    <copy todir="${build.cnf.dir}">
-        <fileset dir="cnf"/>
-    </copy>
-    
-    <copy todir="${build.doc.dir}">
-        <fileset dir="doc"/>
-    </copy>
-    
-    <copy todir="${build.src.dir}">
-        <fileset dir="${src.dir}">
-            <exclude name="*.*~"/>
-            <exclude name="**/CVS/"/>
-        </fileset>
-    </copy>
-    
-  </target>
-  
-  
   <!-- Build API docs from source code. -->
   <target name="doc" depends="prepare">
       <javadoc packagenames="org.aglets.*,com.ibm.*"
@@ -281,18 +228,30 @@ Aglets SDK Build $Revision: 1.3 $ $Date: 2001/07/30 16:57:36 $
 
   
   <!-- 
-    Cleans the build directory of ASDK files.
+    Cleans the tree for release.
   -->
-  <target name="clean" depends="init">
-    <delete dir="${build.lib.dir}" />
+  <target name="tidy" depends="init">
+    <delete dir="${lib.classes.dir}" />
+    <delete>
+        <fileset dir="..">
+            <include name="*.*~"/>
+            <include name="#*.*"/>
+        </fileset>
+    </delete>
   </target>
-
-  <!--
-    Kills the entire build directory
-  -->
-  <target name="clean-all" depends="clean">
-    <delete dir="${build.dir}"/>
-    <delete dir="../build"/>
+  
+  <!-- Cleans the tree of all generated files. -->
+  <target name="clean-all" depends="tidy">
+    <delete>
+        <fileset dir="../bin">
+            <exclude name="*.in"/>
+            <exclude name="install*"/>
+            <exclude name="build.xml"/>
+        </fileset>
+    </delete>
+    <delete>
+        <fileset dir="../public"/>
+    </delete>
   </target>
   
 </project>
