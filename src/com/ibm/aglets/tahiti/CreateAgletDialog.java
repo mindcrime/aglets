@@ -37,7 +37,7 @@ import com.ibm.awb.misc.Resource;
  * between creating an Aglet for a system class, local class file, remote
  * URL, and the hotlist of recently used Aglet classes.
  * 
- * @version     1.04    $Date: 2001/07/28 06:32:34 $
+ * @version     1.04    $Date: 2002/01/09 05:25:37 $
  * @author      Danny B. Lange
  */
 
@@ -75,6 +75,7 @@ final class CreateAgletDialog extends TahitiDialog implements ActionListener,
 		_selectionList.addItemListener(this);
 		Util.setFixedFont(_selectionList);
 		_selectionList.setBackground(Color.white);
+        _selectionList.setForeground(Color.black);
 	}
 	/*
 	 * Creation without reloading class.

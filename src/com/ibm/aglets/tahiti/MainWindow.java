@@ -48,7 +48,7 @@ import java.io.IOException;
  * The <tt>MainWindow</tt> represents the main window for the Tahiti aglet
  * viewer.
  * 
- * @version     1.08    $Date: 2001/07/28 06:33:02 $
+ * @version     1.08    $Date: 2002/01/09 05:25:37 $
  * @author      Danny B. Lange
  * @author      Mitsuru Oshima
  * @author      Yoshiaki Mima
@@ -513,6 +513,7 @@ final class MainWindow extends Frame implements ItemListener, ActionListener {
 		TahitiItem.init();
 
 		_agletList.setBackground(Color.white);
+        _agletList.setForeground(Color.black);
 
 		// Makes the menu bar.
 		setMenuBar(makeMenuBar());
