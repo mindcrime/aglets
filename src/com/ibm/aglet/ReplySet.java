@@ -36,7 +36,7 @@ import java.util.Vector;
  * whlie(set.hasMoreFutureReplies()) {
  * FutureReply future = set.getNextFutureReply();
  * Object reply = future.getReply();
- * System.out.println("No[" + i + "] = " + reply);
+ * logCategory.debug("No[" + i + "] = " + reply);
  * }
  * </pre>
  * 
@@ -44,7 +44,7 @@ import java.util.Vector;
  * @see Message
  * @see FutureReply
  * 
- * @version     1.20    $Date: 2001/07/28 06:34:05 $
+ * @version     1.20    $Date: 2002/01/19 21:57:19 $
  * @author	Mitsuru Oshima
  */
 

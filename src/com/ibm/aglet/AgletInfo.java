@@ -26,16 +26,18 @@ package com.ibm.aglet;
 import java.net.URL;
 import java.io.*;
 import java.security.cert.Certificate;
+import org.aglets.log.*;
 
 /**
  * AgletInfo class is a object which contains the information of the aglet.
  * 
- * @version     1.00	$Date: 2001/07/28 06:33:58 $
+ * @version     $Revision: 1.2 $	$Date: 2002/01/19 21:57:19 $  $Author: kbd4hire $
  * @author	Mitsuru Oshima
  */
 final public class AgletInfo implements java.io.Serializable, Cloneable {
 
 	static final long serialVersionUID = 5077220171230015552L;
+    static LogCategory logCategory = LogInitializer.getCategory("com.ibm.aglet.AgletInfo");
 
 	// static attributes
 	private AgletID aid;
@@ -196,7 +198,7 @@ final public class AgletInfo implements java.io.Serializable, Cloneable {
 											   + Aglet.MAJOR_VERSION);
 		} 
 		if (api_minor_version != Aglet.MINOR_VERSION) {
-			System.out.println("API minor version mismatch.");
+			logCategory.error("API minor version mismatch.");
 		} 
 	}
 	/**
