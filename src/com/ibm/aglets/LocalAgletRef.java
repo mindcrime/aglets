@@ -90,7 +90,7 @@ import org.aglets.log.LogCategory;
  * Class LocalAgletRef is the implementation of AgletStub. The purpose of
  * this class is to provide a mechanism to control the aglet.
  * 
- * @version    $Revision: 1.3 $ $Date: 2002/01/19 22:10:43 $ $Author: kbd4hire $
+ * @version    $Revision: 1.4 $ $Date: 2002/01/21 21:20:05 $ $Author: kbd4hire $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
@@ -118,7 +118,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	private static final String ACTION_ACTIVATE = "activate";
 	private static final String ACTION_RETRACT = "retract";
     
-    private static LogCategory log = LogInitializer.getCategory("com.ibm.aglets.LocalAgletRef");
+    private static LogCategory logCategory = LogInitializer.getCategory("com.ibm.aglets.LocalAgletRef");
 
 	/* package */
 	private static AgentProfile _agent_profile = null;
@@ -553,8 +553,8 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 			return;
 		} 
 
-		log.debug("protections="+String.valueOf(protections));
-		log.debug("permission="+String.valueOf(p));
+		logCategory.debug("protections="+String.valueOf(protections));
+		logCategory.debug("permission="+String.valueOf(p));
 		if (protections != null && protections.implies(p) == false) {
 			SecurityException ex = new SecurityException(p.toString());
 
@@ -686,7 +686,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 		resourceManager = _context.createResourceManager(info.getCodeBase(), 
 				_owner, table);
 		if (resourceManager == null) {
-			log.error("invalid codebase:" + info.getCodeBase());
+			logCategory.error("invalid codebase:" + info.getCodeBase());
 		} 
 		return resourceManager;
 	}
