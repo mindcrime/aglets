@@ -39,5 +39,5 @@ do
         -classpath $LOCALCLASSPATH \
         com.ibm.awb.launcher.Main \
         $* \
-    || exit
+    || exit 0
 done
