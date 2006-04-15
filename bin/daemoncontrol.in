@@ -1,6 +1,6 @@
 #!/bin/sh
 # ==================================================
-# $Id: daemoncontrol.in,v 1.1 2001/08/08 02:57:51 kbd4hire Exp $ 
+# $Id: daemoncontrol.in,v 1.2 2006/04/15 15:54:11 maxthomax Exp $ 
 #
 # TahitiDaemonClient startup script
 #
@@ -19,7 +19,7 @@ fi
 
 
 #Remove development path when packaging.
-LOCALCLASSPATH=$AGLET_HOME/lib:$AGLET_HOME/lib/classes
+LOCALCLASSPATH=$CLASSPATH:$AGLET_HOME/lib:$AGLET_HOME/lib/classes
 
 # Add all jars in this directory to the tahiti system classpath
 DIRLIBS=${AGLET_HOME}/lib/*.jar
