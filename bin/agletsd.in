@@ -1,4 +1,4 @@
-#!/bin/sh 
+#!/bin/sh
 # ==================================================
 # Aglets Server startup script
 #    author  Hideki Tai
@@ -30,11 +30,14 @@ do
     fi
 done
 
-# If you are using xerces in your aglets code and the sun JVM, you may need to 
+# If you are using xerces in your aglets code and the sun JVM, you may need to
 # use the "-classic" option to avoid a Segmentation Fault.
 while true ;
 do
-  ${JDK_HOME}/bin/java -Daglets.home=${AGLET_HOME} -classpath $LOCALCLASSPATH  com.ibm.awb.launcher.Main $* || exit
+    ${JDK_HOME}/bin/java \
+        -Daglets.home=${AGLET_HOME} \
+        -classpath $LOCALCLASSPATH \
+        com.ibm.awb.launcher.Main \
+        $* \
+    || exit
 done
-
-
