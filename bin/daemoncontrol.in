@@ -1,6 +1,6 @@
 #!/bin/sh
 # ==================================================
-# $Id: daemoncontrol.in,v 1.4 2006/04/15 17:07:13 maxthomax Exp $
+# $Id: daemoncontrol.in,v 1.5 2006/04/16 10:25:40 maxthomax Exp $
 #
 # TahitiDaemonClient startup script
 #
@@ -16,10 +16,8 @@ if test -z "$JDK_HOME" -o -z "$AGLET_HOME"; then
     exit
 fi
 
-
-
 #Remove development path when packaging.
-LOCALCLASSPATH=$CLASSPATH:$AGLET_HOME/lib:$AGLET_HOME/lib/classes
+LOCALCLASSPATH="$CLASSPATH:$AGLET_HOME/lib:$AGLET_HOME/lib/classes"
 
 # Add all jars in this directory to the tahiti system classpath
 DIRLIBS=${AGLET_HOME}/lib/*.jar
@@ -28,7 +26,7 @@ do
     # if the directory is empty, then it will return the input string
     # this is stupid, so case for it
     if [ "$i" != "${DIRLIBS}" ] ; then
-        LOCALCLASSPATH=$LOCALCLASSPATH:"$i"
+        LOCALCLASSPATH="$LOCALCLASSPATH:$i"
     fi
 done
 
@@ -37,9 +35,9 @@ done
 while true ;
 do
     ${JDK_HOME}/bin/java \
-        -Daglets.home=${AGLET_HOME} \
-        -classpath $LOCALCLASSPATH \
+        -Daglets.home="${AGLET_HOME}" \
+        -classpath "$LOCALCLASSPATH" \
         TahitiDaemonClient \
-        $* \
+        "$@" \
     || exit 0
 done

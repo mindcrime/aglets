@@ -14,10 +14,8 @@ if test -z "$JDK_HOME" -o -z "$AGLET_HOME"; then
     exit
 fi
 
-
-
 #Remove development path when packaging.
-LOCALCLASSPATH=$CLASSPATH:$AGLET_HOME/lib:$AGLET_HOME/lib/classes
+LOCALCLASSPATH="$CLASSPATH:$AGLET_HOME/lib:$AGLET_HOME/lib/classes"
 
 # Add all jars in this directory to the tahiti system classpath
 DIRLIBS=${AGLET_HOME}/lib/*.jar
@@ -26,7 +24,7 @@ do
     # if the directory is empty, then it will return the input string
     # this is stupid, so case for it
     if [ "$i" != "${DIRLIBS}" ] ; then
-        LOCALCLASSPATH=$LOCALCLASSPATH:"$i"
+        LOCALCLASSPATH="$LOCALCLASSPATH:$i"
     fi
 done
 
@@ -35,9 +33,9 @@ done
 while true ;
 do
     ${JDK_HOME}/bin/java \
-        -Daglets.home=${AGLET_HOME} \
-        -classpath $LOCALCLASSPATH \
+        -Daglets.home="${AGLET_HOME}" \
+        -classpath "$LOCALCLASSPATH" \
         com.ibm.awb.launcher.Main \
-        $* \
+        "$@" \
     || exit 0
 done
