@@ -79,7 +79,7 @@
 
 # (optional) Resolve the domain name of the host by querying DNS server.
 # default: false
-atp.resolve=false
+#atp.resolve=false
 
 # (optional) TCP/IP domain name of the host
 #atp.domain=calivera.com
@@ -99,6 +99,11 @@ atp.resolve=false
 #	which is unsecure but fast.
 # default: true
 #atp.secureseed=true
+
+# (optional) User servers ip address in server URL instead of 
+# logical name.  This is useful if you don't have a DNS entry.
+# default: false
+#atp.userip=true
 
 # User ID for authorization.  This key must exist in your keystore.
 # See keytool documentation for info on creating entry. (genkey)
