@@ -42,7 +42,7 @@ ${user.home}/.java.policy with the grant entry
 found in ${basedir}/.java.policy.  
 You can simply place the .java.policy file in ${user.home}.
 
-The server also needs a java .keystore file.  One has been provide
+The server also needs a java .keystore file.  One has been provided
 for you in this directory.  The password is "aglets" (without quotes).
 It contains a key for the server "aglet_key", and a key for an anonymous
 user "anonymous".  To use the keystore, copy it to ${user.home}.
