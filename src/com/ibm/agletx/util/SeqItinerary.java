@@ -26,7 +26,7 @@ import java.net.URL;
  * An Itinerary is a set of pairs of the form [host, task] where the
  * task should be performed upon arrival of the aglet to the host.
  * 
- * @version     1.10    $Date: 2001/07/28 06:33:36 $
+ * @version     1.10    $Date: 2007/02/02 22:09:16 $
  * @author      Yariv Aridor
  * @see Task
  */
@@ -100,7 +100,7 @@ public abstract class SeqItinerary extends MobilityAdapter
 		return getAddressAt(index);
 	}
 	/**
-	 * Return the task to be preformed at the current destination
+	 * Return the task to be performed at the current destination
 	 */
 	protected Task getCurrentTask() {
 		return getTaskAt(index);
