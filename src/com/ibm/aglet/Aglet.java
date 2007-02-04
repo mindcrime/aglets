@@ -37,7 +37,7 @@ import java.applet.AudioClip;
  * The <tt>Aglet</tt> class is the abstract base class for aglets. Use this
  * class to create your own personalized aglets.
  * 
- * @version     2.00    $Date: 2001/07/28 06:33:50 $
+ * @version     2.00    $Date: 2007/02/04 22:29:23 $
  * @author      Danny B. Lange
  * @author      Mitsuru Oshima
  */
@@ -317,7 +317,7 @@ public abstract class Aglet implements java.io.Serializable {
 	 * Handles the message form outside.
 	 * @param msg the message sent to the aglet
 	 * @return true if the message was handled. Returns false if the message
-	 * was not handled. If false is returned, the <tt>MessageNotHandled</tt> exception
+	 * was not handled. If false is returned, the <tt>NotHandledException</tt> exception
 	 * is thrown in the <tt>FutureReply.getReply</tt> and <tt>AgletProxy.sendMessage</tt>
 	 * methods.
 	 * @see FutureReply#getReply
