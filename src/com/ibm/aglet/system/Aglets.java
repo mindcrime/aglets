@@ -33,7 +33,6 @@ import java.net.URL;
  * 
  * <pre>
  * static public void main(String args[]) {
- * Aglets.init();
  * String contextAddress = "atp://server.com:4434";
  * 
  * // create from server's local path
@@ -49,7 +48,7 @@ import java.net.URL;
  * }
  * </pre>
  * 
- * @version     1.10    $Date: 2001/07/28 06:34:06 $
+ * @version     1.10    $Date: 2007/02/04 22:38:59 $
  * @author      Mitsuru Oshima
  */
 abstract public class Aglets {
