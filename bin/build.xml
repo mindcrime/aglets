@@ -22,6 +22,7 @@
       </copy>
       <chmod file="agletsd" perm="755"/>
       <chmod file="ant" perm="755"/>
+      <chmod file="daemoncontrol" perm="755"/>
   </target>
   
   <target name="grant">
