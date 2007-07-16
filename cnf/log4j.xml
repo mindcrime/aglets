@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+        
+       <!--  A file appender that logs everything that is infor or higher.  -->
+  <appender name="FileLog" class="org.apache.log4j.RollingFileAppender">
+     <param  name="maxFileSize" value="100KB" />
+     <param  name="File"              value="aglets.log" />
+     <param  name="threshold"     value="info" />
+    <layout class="org.apache.log4j.SimpleLayout"/>
+  </appender>
+
+	<!--  A console appender for important things (such as errors) -->  
+  <appender name="ConsoleLog" class="org.apache.log4j.ConsoleAppender">
+      <param  name="threshold"     value="debug" />
+    <layout class="org.apache.log4j.SimpleLayout"/>
+
+  </appender>
+  
+
+  <root>
+    <priority value ="debug" />
+    <appender-ref ref="FileLog"/>
+    <appender-ref ref="ConsoleLog"/>
+  </root>
+
+</log4j:configuration> 

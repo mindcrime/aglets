@@ -29,7 +29,7 @@ import org.aglets.log.*;
  * The <tt>PolicyFileReader</tt> class accesses Java policy database file
  * and returns PolicyDB object.
  * 
- * @version     1.00    $Date: 2002/02/20 22:17:18 $
+ * @version     1.00    $Date: 2007/07/16 12:03:33 $
  * @author      ONO Kouichi
  */
 public class PolicyFileReader {
@@ -93,9 +93,7 @@ public class PolicyFileReader {
 	private StreamTokenizer _st = null;
 	private PolicyDB _db = null;
     
-    private static final LogCategory log 
-            = LogInitializer.getCategory(PolicyFileReader.class.getName() );
-    
+	static AgletsLogger logger = new AgletsLogger("com.ibm.aglets.security.PolicyFileReader");    
 	public PolicyFileReader(String policyFilename) {
 		try {
 			readPolicyFile(policyFilename);
@@ -434,7 +432,7 @@ public class PolicyFileReader {
 	}
 	protected synchronized void readPolicyFile(String filename) 
 			throws FileNotFoundException {
-		log.info("Reading security policy file: " + filename);
+		logger.info("Reading security policy file: " + filename);
 		if (filename == null) {
 			throw new FileNotFoundException("Policy filename is null.");
 		} 
@@ -446,11 +444,11 @@ public class PolicyFileReader {
 		try {
 			readPolicyDB();
 			reader.close();
-			log.debug("Policy file read complete");
+			logger.debug("Policy file read complete");
 		} catch (PolicyFileParsingException excpt) {
-			log.error("Error parsing policy file: ",excpt);
+			logger.error("Error parsing policy file: ",excpt);
 		} catch (IOException excpt) {
-			log.error("Error parsing policy file: ",excpt);
+			logger.error("Error parsing policy file: ",excpt);
 		} 
 	}
 	protected synchronized void readPolicyGrant() 

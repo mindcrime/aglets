@@ -78,14 +78,14 @@ import java.applet.AudioClip;
  * environment where the aglets are protected from each other and the host
  * system is secured against malicious aglets.
  * 
- * @version     1.20	$Date: 2002/01/19 22:10:43 $
+ * @version     1.20	$Date: 2007/07/16 12:03:31 $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
  */
 
 final public class AgletContextImpl implements AgletContext {
-    private static LogCategory logCategory = LogInitializer.getCategory("com.ibm.aglets.AgletContextImpl");
+    	private static AgletsLogger logger = new AgletsLogger("com.ibm.aglets.AgletContextImpl");
     
 	/*
 	 * secure/unsecure
@@ -1148,7 +1148,7 @@ final public class AgletContextImpl implements AgletContext {
 
 		_timer.destroy();
 
-		logCategory.info("shutting down.");
+		logger.info("shutting down.");
 		synchronized (creationLock) {
 			while (creating > 0) {
 				try {
@@ -1170,7 +1170,7 @@ final public class AgletContextImpl implements AgletContext {
 			} catch (InvalidAgletException ex) {}
 		} 
 
-		logCategory.debug("[waiting for response..]");
+		logger.debug("[waiting for response..]");
 
 		while (set.hasMoreFutureReplies()) {
 			set.waitForNextFutureReply(5000);
@@ -1182,7 +1182,7 @@ final public class AgletContextImpl implements AgletContext {
 			} 
 		} 
 
-		logCategory.info("[terminating aglets.]");
+		logger.info("[terminating aglets.]");
 
 		MAFFinder finder = null;
 
@@ -1284,7 +1284,7 @@ final public class AgletContextImpl implements AgletContext {
 			_hostingURL = new URL(url.getProtocol(), url.getHost(), 
 								  url.getPort(), '/' + _name);
 		} catch (MalformedURLException ex) {
-			logCategory.error(ex);
+			logger.error(ex);
 		} 
 
 		// 
@@ -1327,14 +1327,14 @@ final public class AgletContextImpl implements AgletContext {
 					ex.printStackTrace();
 				} 
 			} else {
-				logCategory.info("removing deactivated aglets in the context(" 
+				logger.info("removing deactivated aglets in the context(" 
 							 + _name + ")");
 				for (Enumeration e = _persistence.entryKeys(); 
 						e.hasMoreElements(); ) {
 					String key = (String)e.nextElement();
 
 					if (!key.equals("properties-" + _name)) {
-						logCategory.debug("\t" + key);
+						logger.debug("\t" + key);
 						_persistence.removeEntry(key);
 					} 
 				} 

@@ -34,15 +34,15 @@ import com.ibm.aglets.tahiti.TahitiDaemon;
 import com.ibm.awb.misc.FileUtils;
 import com.ibm.awb.misc.Resource;
 import com.ibm.awb.misc.LogStream;
-import org.aglets.log.LogCategory;
-import org.aglets.log.LogInitializer;
+
+import org.aglets.log.AgletsLogger;
 
 /**
  *  Aglets server bootstrap.
  *
  * @author     Hideki Tai
  * @created    July 22, 2001
- * @version    $Revision: 1.2 $ $Date: 2002/02/20 22:17:18 $ $Author: kbd4hire $
+ * @version    $Revision: 1.3 $ $Date: 2007/07/16 12:03:35 $ $Author: cat4hire $
  */
 public class Main {
     private final static String         VIEWER_TAHITI =
@@ -260,10 +260,10 @@ public class Main {
 
         // Initialize logging system.
         String initializerName = System.getProperty("aglets.logger.class",
-            "org.aglets.log.quiet.QuietInitializer" );
+            "org.aglets.log.AgletsLogger" );
         Class.forName(initializerName);
-        LogCategory cat = LogInitializer.getCategory(Main.class.getName());
-        cat.info("Logging system initialized!");
+        AgletsLogger logger = new AgletsLogger("com.ibm.aglet.system.AgletRuntime");
+        logger.info("Logging system initialized!");
 
         // Initializes AWT and Audio classes.
         if (!(_nogui || _daemon)) {
@@ -329,7 +329,7 @@ public class Main {
         MAFAgentSystem maf_system = new MAFAgentSystem_AgletsImpl(runtime);
         String protocol = System.getProperties().getProperty("maf.protocol");
 
-        cat.debug("Initializing handler: "+protocol);
+        logger.debug("Initializing handler: "+protocol);
         MAFAgentSystem.initMAFAgentSystem(maf_system, protocol);
 
         // Initializes Tahiti(part of the agent system)

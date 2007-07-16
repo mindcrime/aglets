@@ -38,9 +38,7 @@ import org.aglets.log.*;
 public class Resource {
 	private static Hashtable resourceTable = new Hashtable();
 	private static Properties options = null;
-    private static LogCategory log 
-            = LogInitializer.getCategory(Resource.class.getName() );
-            
+	static AgletsLogger logger = new AgletsLogger("com.ibm.awb.misc.Resource");            
 	static {
 
 		/*
@@ -111,7 +109,7 @@ public class Resource {
 			return;
 		} 
 		if (load(url) == false) {
-			log.error("Could not load resource from [" + url + "]");
+			logger.error("Could not load resource from [" + url + "]");
 		} 
 	}
 	/**
@@ -148,7 +146,7 @@ public class Resource {
 		if (resourceTable.contains(name)) {
 			throw new SecurityException("cannot re-create existing resource");
 		} 
-        log.debug("Creating resource: "+name+" url: "+file);
+        logger.debug("Creating resource: "+name+" url: "+file);
 		Resource res = new Resource(file, defaults);
 
 		resourceTable.put(name, res);
@@ -191,7 +189,7 @@ public class Resource {
 		if (value == null) {
 			return defaultFont;
 		} 
-		String fontName = "Dialog";
+		String fontName = "Dialogger";
 		int fontSize = 12;
 		int fontStyle = Font.PLAIN;
 
@@ -299,7 +297,7 @@ public class Resource {
 		try {
 			return v == null ? defaultValue : new URL(v);
 		} catch (java.net.MalformedURLException ex) {
-			log.error("fail to convert '" + v + "' to URL", ex);
+			logger.error("fail to convert '" + v + "' to URL", ex);
 			return defaultValue;
 		} 
 	}
@@ -332,12 +330,12 @@ public class Resource {
 	public boolean load(URL loadFrom) {
 		if ("file".equalsIgnoreCase(loadFrom.getProtocol())) {
 			if (FileUtils.ensureDirectory(loadFrom.getFile()) == false) {
-				log.error("Could not create directory [" + loadFrom 
+				logger.error("Could not create directory [" + loadFrom 
 								   + "]");
 				return false;
 			} 
 			if (FileUtils.ensureFile(loadFrom.getFile()) == false) {
-				log.error("Could not create file [" + loadFrom 
+				logger.error("Could not create file [" + loadFrom 
 								   + "]");
 				return false;
 			} 
@@ -427,7 +425,7 @@ public class Resource {
 			return false;
 		} 
 		try {
-			log.info("saving properties into [" + saveTo + " ]");
+			logger.info("saving properties into [" + saveTo + " ]");
 
 			// System.out.println(_propertyURL.getFile());
 			File file = new File(saveTo.getFile());

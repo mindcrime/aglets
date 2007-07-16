@@ -42,12 +42,12 @@ import org.aglets.log.*;
  * The <tt>MessageManagerReplyImpl</tt> class is an implementation of
  * com.ibm.aglet.MessageManager interface.
  * 
- * @version     1.30    $Date: 2002/01/19 22:10:43 $
+ * @version     1.30    $Date: 2007/07/16 12:03:31 $
  * @author	Mitsuru Oshima
  */
 final class MessageManagerImpl implements MessageManager, 
 										  java.io.Serializable {
-    static private LogCategory logCategory = LogInitializer.getCategory("com.ibm.aglets.MessageManagerImpl");
+    	static AgletsLogger logger = new AgletsLogger("com.ibm.aglet.system.AgletRuntime");
     
 	public static final int REENTRANT_PRIORITY = 12;
 	public static final int SYSTEM_PRIORITY = 11;
@@ -349,7 +349,7 @@ final class MessageManagerImpl implements MessageManager,
 	 * Post a message
 	 */
 	private void postMessage(MessageImpl msg, boolean oneway) {
-        logCategory.debug("postMessage()++");
+        logger.debug("postMessage()++");
 		int priority = NORM_PRIORITY;
 		MessageImpl reentrantOwner = null;
 

@@ -27,7 +27,7 @@ import org.aglets.log.*;
  */
 
 final class MessageInputStream extends ObjectInputStream {
-    static private LogCategory logCategory = LogInitializer.getCategory("com.ibm.aglets.MessageImputStream");
+    	static AgletsLogger logger = new AgletsLogger("com.ibm.aglet.system.AgletRuntime");
 	private ResourceManager rm = null;
 
 	/**

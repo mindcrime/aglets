@@ -83,14 +83,13 @@ import com.ibm.aglet.security.MessageProtection;
 import com.ibm.awb.weakref.Ref;
 import com.ibm.awb.weakref.VirtualRef;
 
-import org.aglets.log.LogInitializer;
-import org.aglets.log.LogCategory;
+import org.aglets.log.AgletsLogger;
 
 /**
  * Class LocalAgletRef is the implementation of AgletStub. The purpose of
  * this class is to provide a mechanism to control the aglet.
  * 
- * @version    $Revision: 1.4 $ $Date: 2002/01/21 21:20:05 $ $Author: kbd4hire $
+ * @version    $Revision: 1.5 $ $Date: 2007/07/16 12:03:31 $ $Author: cat4hire $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
@@ -118,7 +117,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	private static final String ACTION_ACTIVATE = "activate";
 	private static final String ACTION_RETRACT = "retract";
     
-    private static LogCategory logCategory = LogInitializer.getCategory("com.ibm.aglets.LocalAgletRef");
+	static AgletsLogger logger = new AgletsLogger("com.ibm.aglets.LocalAgletRef");
 
 	/* package */
 	private static AgentProfile _agent_profile = null;
@@ -553,8 +552,8 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 			return;
 		} 
 
-		logCategory.debug("protections="+String.valueOf(protections));
-		logCategory.debug("permission="+String.valueOf(p));
+		logger.debug("protections="+String.valueOf(protections));
+		logger.debug("permission="+String.valueOf(p));
 		if (protections != null && protections.implies(p) == false) {
 			SecurityException ex = new SecurityException(p.toString());
 
@@ -686,7 +685,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 		resourceManager = _context.createResourceManager(info.getCodeBase(), 
 				_owner, table);
 		if (resourceManager == null) {
-			logCategory.error("invalid codebase:" + info.getCodeBase());
+			logger.error("invalid codebase:" + info.getCodeBase());
 		} 
 		return resourceManager;
 	}
@@ -828,7 +827,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	 * @exception InvalidAgletException if the aglet is not valid any longer.
 	 */
 	public void delegateMessage(Message msg) throws InvalidAgletException {
-        logCategory.debug("delegateMessage()++");
+        logger.debug("delegateMessage()++");
 		synchronized (msg) {
 			if (msg instanceof MessageImpl == false 
 					|| ((MessageImpl)msg).isDelegatable() == false) {
