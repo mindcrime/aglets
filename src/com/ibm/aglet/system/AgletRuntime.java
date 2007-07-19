@@ -39,14 +39,14 @@ import org.aglets.log.*;
  * of the local or remote context. Neither of an application nor aglet
  * can create its own instance of this runtime class.
  * 
- * @version     1.10    $Date: 2007/07/16 12:03:33 $
+ * @version     1.10    $Date: 2007/07/19 12:23:11 $
  * @author      Mitsuru Oshima
  * @see AgletRuntime#getAgletRuntime
  */
 public abstract class AgletRuntime {
 
 	final static String runtimePackagePrefix = "aglet.runtime.packagePrefix";
-	static AgletsLogger logger = new AgletsLogger("com.ibm.aglet.system.AgletRuntime");
+	static AgletsLogger logger = new AgletsLogger(AgletRuntime.class.getName());
 
 	private boolean _secure = true;
 

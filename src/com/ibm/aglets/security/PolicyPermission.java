@@ -27,11 +27,11 @@ import org.aglets.log.*;
  * The <tt>PolicyPermission</tt> class represents a permission in a grant
  * of Java policy database.
  * 
- * @version     1.00    $Date: 2007/07/16 12:03:34 $
+ * @version     1.00    $Date: 2007/07/19 12:23:14 $
  * @author      ONO Kouichi
  */
 public class PolicyPermission {
-    	private static AgletsLogger logger = new AgletsLogger("com.ibm.aglets.security.PolicyPermission");	
+    	private static AgletsLogger logger = new AgletsLogger(PolicyPermission.class.getName());	
     	private static final String CLASSNAME_PERMISSION = 
 		"java.security.Permission";
 	private static final String CLASSNAME_BASIC_PERMISSION = 

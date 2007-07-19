@@ -32,11 +32,11 @@ import org.aglets.log.*;
 /**
  * The <tt>SharedSecrets</tt> class is a collection of SharedSecret objects.
  * 
- * @version     1.00    $Date: 2007/07/16 12:03:28 $
+ * @version     1.00    $Date: 2007/07/19 12:23:07 $
  * @author      ONO Kouichi
  */
 final public class SharedSecrets {
-    static AgletsLogger logger = new AgletsLogger("com.ibm.atp.auth.SharedSecrets");            
+    static AgletsLogger logger = new AgletsLogger(SharedSecrets.class.getName());            
 	/**
 	 * currenct SharedSecrets object
 	 */

@@ -117,11 +117,6 @@ aglets.owner.password=aglets
 aglets.keystore.password=aglets
 
 # Logger class for ASDK.
-# For log4j - org.aglets.log.log4j.Log4jInitializer
-# For output to standard out - org.aglets.log.console.ConsoleInitializer
-# For quiet - org.aglets.log.quiet.QuietInitializer
-# Default: org.aglets.log.quiet.QuietInitializer
-#aglets.logger.class=org.aglets.log.log4j.Log4jInitializer
-aglets.logger.class=org.aglets.log.quiet.QuietInitializer
-#aglets.logger.class=org.aglets.log.console.ConsoleInitializer
+aglets.logger.class=org.aglets.log.AgletsLogger
+
 

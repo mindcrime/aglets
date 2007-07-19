@@ -78,14 +78,14 @@ import java.applet.AudioClip;
  * environment where the aglets are protected from each other and the host
  * system is secured against malicious aglets.
  * 
- * @version     1.20	$Date: 2007/07/16 12:03:31 $
+ * @version     1.20	$Date: 2007/07/19 12:23:06 $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
  */
 
 final public class AgletContextImpl implements AgletContext {
-    	private static AgletsLogger logger = new AgletsLogger("com.ibm.aglets.AgletContextImpl");
+    	private static AgletsLogger logger = new AgletsLogger(AgletContextImpl.class.getName());
     
 	/*
 	 * secure/unsecure

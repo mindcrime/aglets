@@ -31,7 +31,7 @@ import org.aglets.log.*;
  * ResourceManagerImpl is a implementation of ResourceManager
  * in the Aglets framework.
  * 
- * @version     $Revision: 1.4 $	$Date: 2007/07/16 12:03:35 $ $Author: cat4hire $
+ * @version     $Revision: 1.5 $	$Date: 2007/07/19 12:23:11 $ $Author: cat4hire $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  */
@@ -39,7 +39,7 @@ import org.aglets.log.*;
 final class ResourceManagerImpl implements com.ibm.aglets.ResourceManager {
 
 	static private ThreadGroup AGLET_GROUPS = new ThreadGroup("AGLET_GROUPS");
-	static AgletsLogger logger = new AgletsLogger("com.ibm.aglets.tahiti.ResourceManagerImpl");
+	static AgletsLogger logger = new AgletsLogger(ResourceManagerImpl.class.getName());
 
 	static {
 		int max = Thread.currentThread().getPriority();

@@ -50,7 +50,7 @@ public class MAFAgentSystem_AgletsImpl extends MAFAgentSystem {
 	static private String _finder_port = null;
 	static private String _finder_name = null;
 	static private MAFFinder _finder = null;
-	private static AgletsLogger logger = new AgletsLogger("com.ibm.aglet.system.AgletRuntime");
+	private static AgletsLogger logger = new AgletsLogger(MAFAgentSystem_AgletsImpl.class.getName());
     
 	static {
 		try {

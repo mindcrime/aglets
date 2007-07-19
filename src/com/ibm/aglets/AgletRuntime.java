@@ -88,7 +88,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 	private static Version VERSION;
 
 	private static ResourceBundle bundle = null;
-	private static AgletsLogger logger = new AgletsLogger("com.ibm.aglets.AgletRuntime");
+	private static AgletsLogger logger = new AgletsLogger(AgletRuntime.class.getName());
 	/*
 	 * This must be outside of this source code.
 	 */

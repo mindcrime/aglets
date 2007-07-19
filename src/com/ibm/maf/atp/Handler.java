@@ -37,7 +37,7 @@ import java.util.Enumeration;
 import org.aglets.log.*;
 
 public class Handler implements AgentSystemHandler {
-    static AgletsLogger logger = new AgletsLogger("com.ibm.maf.atp.Handler");            
+    static AgletsLogger logger = new AgletsLogger(Handler.class.getName());            
 	static final int DEFAULT_PORT = 4434;
 
 	static boolean initialized = false;

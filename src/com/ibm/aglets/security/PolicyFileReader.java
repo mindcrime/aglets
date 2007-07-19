@@ -29,7 +29,7 @@ import org.aglets.log.*;
  * The <tt>PolicyFileReader</tt> class accesses Java policy database file
  * and returns PolicyDB object.
  * 
- * @version     1.00    $Date: 2007/07/16 12:03:33 $
+ * @version     1.00    $Date: 2007/07/19 12:23:12 $
  * @author      ONO Kouichi
  */
 public class PolicyFileReader {
@@ -93,7 +93,7 @@ public class PolicyFileReader {
 	private StreamTokenizer _st = null;
 	private PolicyDB _db = null;
     
-	static AgletsLogger logger = new AgletsLogger("com.ibm.aglets.security.PolicyFileReader");    
+	static AgletsLogger logger = new AgletsLogger(PolicyFileReader.class.getName());    
 	public PolicyFileReader(String policyFilename) {
 		try {
 			readPolicyFile(policyFilename);
