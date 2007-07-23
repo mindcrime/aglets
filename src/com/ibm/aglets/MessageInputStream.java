@@ -27,7 +27,7 @@ import org.aglets.log.*;
  */
 
 final class MessageInputStream extends ObjectInputStream {
-    	static AgletsLogger logger = new AgletsLogger(MessageInputStream.class.getName());
+    	private static AgletsLogger logger = new AgletsLogger(MessageInputStream.class.getName());
 	private ResourceManager rm = null;
 
 	/**

@@ -61,14 +61,14 @@ import org.aglets.log.*;
 /**
  * <tt> Daemon </tt> is a listener of incoming ATP request.
  * 
- * @version     1.10	$Date: 2007/07/19 12:23:06 $
+ * @version     1.10	$Date: 2007/07/23 07:08:57 $
  * @author	Danny D. Langue
  * @author	Gaku Yamamoto
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
  */
 final public class Daemon {
-    	static AgletsLogger logger = new AgletsLogger(Daemon.class.getName());
+    	private static AgletsLogger logger = new AgletsLogger(Daemon.class.getName());
     
 	static Hashtable locals = new Hashtable();
 

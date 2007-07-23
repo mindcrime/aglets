@@ -42,7 +42,7 @@ import org.aglets.log.*;
 
 /**
  * @author     Mitsuru Oshima
- * @version    1.10 $Date: 2007/07/19 12:23:11 $
+ * @version    1.10 $Date: 2007/07/23 07:08:58 $
  */
 final class ResourceManagerFactory
          implements com.ibm.aglets.ResourceManagerFactory {
@@ -63,7 +63,7 @@ final class ResourceManagerFactory
     private static String _publicRoot;
     private static String _localAddr;
 
-    private static AgletsLogger logger = new AgletsLogger(AgletsLogger.class.getName());
+    private static AgletsLogger logger = new AgletsLogger(ResourceManagerFactory.class.getName());
     
     private ResourceManager _appResourceManager;
     private Hashtable _map = new Hashtable();

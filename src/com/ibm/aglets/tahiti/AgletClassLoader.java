@@ -65,7 +65,7 @@ import org.aglets.log.*;
  * @author     Danny B. Lange
  * @author     Gaku Yamamoto
  * @author     Mitsuru Oshima
- * @version    1.20 $Date: 2007/07/19 12:23:11 $
+ * @version    1.20 $Date: 2007/07/23 07:08:58 $
  */
 class AgletClassLoader extends ClassLoader implements ResourceManager {
 
@@ -78,7 +78,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
 
     static AgentProfile _agent_profile = null;
 
-    static AgletsLogger logger = new AgletsLogger(AgletsLogger.class.getName());
+    private static AgletsLogger logger = new AgletsLogger(AgletClassLoader.class.getName());
     
     /**
      *  Digest table for classes managed by this classloader.

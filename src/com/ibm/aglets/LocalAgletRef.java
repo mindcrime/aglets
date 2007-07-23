@@ -89,7 +89,7 @@ import org.aglets.log.AgletsLogger;
  * Class LocalAgletRef is the implementation of AgletStub. The purpose of
  * this class is to provide a mechanism to control the aglet.
  * 
- * @version    $Revision: 1.6 $ $Date: 2007/07/19 12:23:06 $ $Author: cat4hire $
+ * @version    $Revision: 1.7 $ $Date: 2007/07/23 07:08:57 $ $Author: cat4hire $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
@@ -117,7 +117,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	private static final String ACTION_ACTIVATE = "activate";
 	private static final String ACTION_RETRACT = "retract";
     
-	static AgletsLogger logger = new AgletsLogger(LocalAgletRef.class.getName());
+	private static AgletsLogger logger = new AgletsLogger(LocalAgletRef.class.getName());
 
 	/* package */
 	private static AgentProfile _agent_profile = null;

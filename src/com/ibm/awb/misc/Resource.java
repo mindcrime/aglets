@@ -38,7 +38,7 @@ import org.aglets.log.*;
 public class Resource {
 	private static Hashtable resourceTable = new Hashtable();
 	private static Properties options = null;
-	static AgletsLogger logger = new AgletsLogger(Resource.class.getName());            
+	private static AgletsLogger logger = new AgletsLogger(Resource.class.getName());            
 	static {
 
 		/*

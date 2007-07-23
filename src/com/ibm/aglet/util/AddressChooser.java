@@ -29,11 +29,11 @@ import com.ibm.aglet.AgletContext;
 import org.aglets.log.*;
 
 /**
- * @version     1.50    $Date: 2007/07/19 12:23:07 $
+ * @version     1.50    $Date: 2007/07/23 07:08:57 $
  * @author	Mitsuru Oshima
  */
 public class AddressChooser extends Panel implements ActionListener {
-    	static AgletsLogger logger = new AgletsLogger(AddressChooser.class.getName());
+    	private static AgletsLogger logger = new AgletsLogger(AddressChooser.class.getName());
     
 	private transient TextField address;
 	private transient AddressBook addressbook = null;
