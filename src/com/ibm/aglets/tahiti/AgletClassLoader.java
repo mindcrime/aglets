@@ -65,7 +65,7 @@ import org.aglets.log.*;
  * @author     Danny B. Lange
  * @author     Gaku Yamamoto
  * @author     Mitsuru Oshima
- * @version    1.20 $Date: 2007/07/23 07:08:58 $
+ * @version    1.20 $Date: 2007/07/25 23:33:05 $
  */
 class AgletClassLoader extends ClassLoader implements ResourceManager {
 
@@ -667,7 +667,6 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      * @exception  ClassNotFoundException  Description of Exception
      * @since
      * @see                                AgletClassLoader#loadClass
-     * @see                                AgletClassLoader#instantiageAglet
      */
     private Class findClassInternal(String name)
              throws ClassNotFoundException {

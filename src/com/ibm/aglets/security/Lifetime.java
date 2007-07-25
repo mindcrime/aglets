@@ -24,7 +24,7 @@ import java.util.StringTokenizer;
 /**
  * The <tt>Lifetime</tt> class shows life-time of an aglet.
  * 
- * @version     1.00    $Date: 2001/07/28 06:33:07 $
+ * @version     1.00    $Date: 2007/07/25 23:33:05 $
  * @author      ONO Kouichi
  */
 public final class Lifetime implements Serializable, Cloneable {
@@ -133,7 +133,7 @@ public final class Lifetime implements Serializable, Cloneable {
 	}
 	/**
 	 * Returns whether the lifetime is greater than lifetime.
-	 * @param date absolute life time
+	 * @param lifetime a {@link Lifetime} to compare this object to
 	 * @return true if the lifetime is greater than lifetime, false otherwise
 	 */
 	public boolean isGreaterThan(Lifetime lifetime) {

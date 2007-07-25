@@ -161,7 +161,7 @@ public abstract class Slave extends Aglet {
 	 * slave is created. The initialization argument includes three
 	 * elements: (1) the master aglet and (2) the Slave's itinerary,
 	 * and (3) an argument for the local task.
-	 * @param obj the initialization argument
+	 * @param object the initialization argument, usually a subclass of {@link Object}
 	 * @exception AgletException if the initialization fails.
 	 */
 	public synchronized void onCreation(Object object) {

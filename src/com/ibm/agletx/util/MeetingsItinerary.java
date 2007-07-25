@@ -66,7 +66,7 @@ import com.ibm.agletx.patterns.Meeting;
  * corresponding task (defined by the <tt>MeetingTask</tt> objects) is automatically
  * executed.
  * 
- * @version     1.20    $Date: 2001/07/28 06:33:39 $
+ * @version     1.20    $Date: 2007/07/25 23:33:06 $
  * @author      Yariv Aridor
  * @see com.ibm.agletx.patterns.Meeting
  */
@@ -82,7 +82,7 @@ public class MeetingsItinerary extends SeqItinerary {
 	}
 	/**
 	 * Add the new plan item (meetingTask object)
-	 * @param meeting  the meeting to participate
+	 * @param task the {@link MeetingTask} representing the meeting to participate in
 	 */
 	public void addMeetingTask(MeetingTask task) {
 		addTask(task.getMeeting().getPlace(), task);

@@ -78,7 +78,7 @@ import java.applet.AudioClip;
  * environment where the aglets are protected from each other and the host
  * system is secured against malicious aglets.
  * 
- * @version     1.20	$Date: 2007/07/19 12:23:06 $
+ * @version     1.20	$Date: 2007/07/25 23:33:05 $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
@@ -224,7 +224,7 @@ final public class AgletContextImpl implements AgletContext {
 
 	/**
 	 * Creates an execution context for aglets.
-	 * @param prop property list.
+	 * @param name {@link String} with the name to assign the context
 	 */
 
 	/* package protected */
@@ -304,7 +304,7 @@ final public class AgletContextImpl implements AgletContext {
 	/**
 	 * Creates an instance of the specified aglet located at the specified URL.
 	 * @param url the URL to load the aglet class from.
-	 * @param name the aglet's class name.
+	 * @param classname {@link String} with the aglet's class name.
 	 * @return a newly instantiated and initialized Aglet.
 	 * @exception ClassNotFoundException if the class was not found
 	 * @exception InstantiationException if failed to instantiate the Aglet.
@@ -319,7 +319,7 @@ final public class AgletContextImpl implements AgletContext {
 	/**
 	 * Creates an instance of the specified aglet located at the specified URL.
 	 * @param url the URL to load the aglet class from.
-	 * @param name the aglet's class name.
+	 * @param classname {@link String} with the aglet's class name.
 	 * @return a newly instantiated and initialized Aglet.
 	 * @exception ClassNotFoundException if the class was not found
 	 * @exception InstantiationException if failed to instantiate the Aglet.
@@ -881,7 +881,7 @@ final public class AgletContextImpl implements AgletContext {
 	}
 	/**
 	 * Receives an aglet. Will start the aglet and return its proxy.
-	 * @param aglet the aglet to be received by the context.
+	 * @param agent_name the name of the aglet to be received by the context.
 	 * @exception AgletException if it is not received.
 	 */
 	public void receiveAglet(Name agent_name, ClassName[] classnames, 

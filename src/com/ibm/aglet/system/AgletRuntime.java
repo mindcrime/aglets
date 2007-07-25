@@ -39,7 +39,7 @@ import org.aglets.log.*;
  * of the local or remote context. Neither of an application nor aglet
  * can create its own instance of this runtime class.
  * 
- * @version     1.10    $Date: 2007/07/23 07:08:58 $
+ * @version     1.10    $Date: 2007/07/25 23:33:05 $
  * @author      Mitsuru Oshima
  * @see AgletRuntime#getAgletRuntime
  */
@@ -50,7 +50,7 @@ public abstract class AgletRuntime {
 
 	private boolean _secure = true;
 
-	/**
+	/*
 	 * [Preliminary]
 	 * Exports the specified aglet context. After this successfull
 	 * invocation, the specified context is visiable and accessible
@@ -63,7 +63,7 @@ public abstract class AgletRuntime {
 	 * abstract public void exportAgletContext(AgletContext cxt);
 	 */
 
-	/**
+	/*
 	 * [Preliminary]
 	 * Exports the specified aglet. After this successfull
 	 * invocation, the specified aglet is visiable and accessible
@@ -212,7 +212,7 @@ public abstract class AgletRuntime {
 	abstract public String getServerAddress();
 	/**
 	 * Create and initialize a runtime environment with a string array
-	 * @param a string array which is typically given as a argument to
+	 * @param args a {@link String} array which is typically given as a argument to
 	 * <tt>main(String args[])</tt> function.
 	 */
 	synchronized static public AgletRuntime init(String args[]) {
@@ -220,7 +220,7 @@ public abstract class AgletRuntime {
 	}
 	/**
 	 * Create and initialize a runtime environment with a string array
-	 * @param a string array which is typically given as a argument to
+	 * @param args a {@link String} array which is typically given as a argument to
 	 * <tt>main(String args[])</tt> function.
 	 * @param loader a classloader used to load a class of the
 	 * implementation.

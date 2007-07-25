@@ -31,7 +31,7 @@ import com.ibm.aglet.util.Arguments;
  * and arguments passed to the receiver. In handleMessage() method
  * on Aglet class, the reply to the request can be set if any.
  * 
- * @version     1.70    $Date: 2001/07/28 06:34:00 $
+ * @version     1.70    $Date: 2007/07/25 23:33:04 $
  * @author	Mitsuru Oshima
  */
 public class Message implements java.io.Serializable {
@@ -40,7 +40,7 @@ public class Message implements java.io.Serializable {
 
 	/**
 	 * The types of message that indecates how the message was sent.
-	 * @see Message#getMessageType();
+	 * @see #getMessageType()
 	 */
 	static public final int SYNCHRONOUS = 0;
 	static public final int FUTURE = 1;
@@ -302,7 +302,7 @@ public class Message implements java.io.Serializable {
 	/**
 	 * Set a double value with an associated name.
 	 * @param name a name of this argument.
-	 * @param d a double value of this argument.
+	 * @param value a double value for this argument.
 	 */
 	public void setArg(String name, double value) {
 		if (arg instanceof Arguments) {

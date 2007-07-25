@@ -75,7 +75,7 @@ final class AgletProxyImpl extends VirtualRef implements AgletProxy {
 	/**
 	 * Deactivate aglet till the specified date. The deactivated aglet are
 	 * stored in the aglet spool.
-	 * @param duraration the term to sleep
+	 * @param duration the term to sleep
 	 * @exception AgletEception if can not deactivate the aglet.
 	 */
 	public void deactivate(long duration) 
@@ -304,7 +304,7 @@ final class AgletProxyImpl extends VirtualRef implements AgletProxy {
 	/**
 	 * Suspend the aglet.  That is, objects of the suspended aglet will remain in
 	 * the memory.
-	 * @param duraration the term to sleep
+	 * @param duration the term to sleep
 	 * @exception AgletEception if can not suspend the aglet.
 	 * @exception IllegalArgumentException if the minutes parameter is negative.
 	 */

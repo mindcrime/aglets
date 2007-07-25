@@ -1,7 +1,7 @@
 package com.ibm.aglets.tahiti;
 
 /*
- * $Id: TahitiDaemon.java,v 1.2 2001/08/01 03:46:59 kbd4hire Exp $
+ * $Id: TahitiDaemon.java,v 1.3 2007/07/25 23:33:06 maxthomax Exp $
  *
  * @(#)TahitiDaemon.java
  *
@@ -32,7 +32,7 @@ import java.util.Enumeration;
  *
  * @author     Lary Spector
  * @created    July 22, 2001
- * @version    $Revision: 1.2 $ $Date: 2001/08/01 03:46:59 $ $Author: kbd4hire $
+ * @version    $Revision: 1.3 $ $Date: 2007/07/25 23:33:06 $ $Author: maxthomax $
  * @see        com.ibm.aglet.system.ContextListener
  * @see        com.ibm.aglet.system.ContextEvent
  */
@@ -372,7 +372,6 @@ public final class TahitiDaemon implements ContextListener, Runnable {
      *
      * @param  event  an ContextEvent
      * @since
-     * @see           Aglet#showDocument
      */
     public void showDocument(ContextEvent event) {
         if (message) {

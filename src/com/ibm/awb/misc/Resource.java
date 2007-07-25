@@ -128,7 +128,7 @@ public class Resource {
 	}
 	/**
 	 * Creates named resources with file and default Proeprties object.
-	 * @see getResourceFor
+	 * @see #getResourceFor(String)
 	 */
 	synchronized static public Resource createResource(String name, 
 			String file, 
@@ -139,7 +139,7 @@ public class Resource {
 	}
 	/**
 	 * Creates named resources with file and default Proeprties object.
-	 * @see getResourceFor
+	 * @see #getResourceFor(String)
 	 */
 	synchronized static private Resource createResource(String name, 
 			URL file, Properties defaults) {
@@ -154,7 +154,7 @@ public class Resource {
 	}
 	/**
 	 * Creates named resources with default Proeprties object.
-	 * @see getResourceFor
+	 * @see #getResourceFor(String)
 	 */
 	synchronized static public Resource createResource(String name, 
 			Properties defaults) {
@@ -225,7 +225,7 @@ public class Resource {
 	}
 	/**
 	 * Get the resources starting with the key
-	 * @param key the key to search
+	 * @param startsWith the key prefix {@link String} to search for
 	 */
 	public String[] getPersistentResourcesStartsWith(String startsWith) {
 		Enumeration e = persistent.keys();
@@ -470,8 +470,7 @@ public class Resource {
 	 * Sets default properties. Default properties have last priority and
 	 * are not persistent.
 	 * 
-	 * @param key    the key
-	 * @param value  the value to be stored as a default
+	 * @param key_value_pairs an array of (key, default value) pairs of {@link String}s
 	 */
 	public void setDefaultResources(String[][] key_value_pairs) {
 		for (int i = 0; i < key_value_pairs.length; i++) {

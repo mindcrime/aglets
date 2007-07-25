@@ -378,8 +378,8 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 	}
 	/**
 	 * Gets an enumeration of aglet proxies of all aglets residing
-	 * in the context specified by contextAddress.
-	 * @param contextAddress
+	 * in a context specified by name.
+	 * @param contextName {@link String} with the name of the context
 	 */
 	public AgletProxy[] getAgletProxies(String contextName) 
 			throws IOException {

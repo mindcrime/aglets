@@ -50,8 +50,7 @@ public final class Version {
 	 * @param kind product information.
 	 * @param major major version number M.x.x
 	 * @param minor minor version number x.M.x
-	 * @param build build version number x.x.B
-	 * @param date date of this version.
+	 * @param micro build version number x.x.B
 	 */
 	public Version(String kind, int major, int minor, int micro) {
 		_kind = (kind != null) ? kind : "";

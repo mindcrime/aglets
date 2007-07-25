@@ -31,7 +31,7 @@ import org.aglets.log.*;
 /**
  * AgletInfo class is a object which contains the information of the aglet.
  * 
- * @version     $Revision: 1.5 $	$Date: 2007/07/23 07:08:57 $  $Author: cat4hire $
+ * @version     $Revision: 1.6 $	$Date: 2007/07/25 23:33:04 $  $Author: maxthomax $
  * @author	Mitsuru Oshima
  */
 final public class AgletInfo implements java.io.Serializable, Cloneable {
@@ -58,7 +58,6 @@ final public class AgletInfo implements java.io.Serializable, Cloneable {
 	 * this API.
 	 * 
 	 * @param aid     the aglet identifier.
-	 * @param address the address where the aglet currently resides.
 	 * @param classname the classname of the aglet.
 	 * @param codebase the codebase of the aglet classes.
 	 * @param origin   the address where the aglet was instantiated.

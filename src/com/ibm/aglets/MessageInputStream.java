@@ -43,7 +43,7 @@ final class MessageInputStream extends ObjectInputStream {
 		this.rm = rm;
 	}
 	/**
-	 * @param classname class name.
+	 * @param osc {@link ObjectStreamClass} whose class to resolve
 	 * @return the resolved class.
 	 * @exception IOException if can not read data from the input stream.
 	 * @exception ClassNotFoundException if can not resolve the class.

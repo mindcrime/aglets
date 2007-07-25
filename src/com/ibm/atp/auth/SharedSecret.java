@@ -49,7 +49,7 @@ import java.io.FileNotFoundException;
  * The <tt>SharedSecret</tt> class is byte sequence for authentication.
  * which is shared by individuals (agent, context, domain).
  * 
- * @version     1.00    $Date: 2001/07/28 06:33:42 $
+ * @version     1.00    $Date: 2007/07/25 23:33:06 $
  * @author      ONO Kouichi
  */
 final public class SharedSecret extends ByteSequence {
@@ -172,7 +172,7 @@ final public class SharedSecret extends ByteSequence {
 	 * Constructor creates
 	 * byte sequence as a copy of given hexadecimal string of encoded bytes
 	 * as a shared secret (password) for authentication.
-	 * @param str a string of encoded byte sequence to be copied as a shared secret
+	 * @param secret a {@link String} encoding the shared secret's byte sequence
 	 */
 	private SharedSecret(String domainName, Certificate creatorCert, 
 						 String secret, 
@@ -392,7 +392,7 @@ final public class SharedSecret extends ByteSequence {
 	/**
 	 * Saves shared secret.
 	 * @param filename filename of the shared secret file to be saved
-	 * @param secrets the shared secret to be saved
+	 * @param secret the SharedSecret to be saved
 	 */
 	public synchronized static void save(String filename, SharedSecret secret) 
 			throws IOException {
@@ -419,8 +419,8 @@ final public class SharedSecret extends ByteSequence {
 		} 
 	}
 	/**
-	 * Sets signature.
-	 * @param signature signature
+	 * Sets the signature creator's certificate.
+	 * @param creator {@link Certificate} of the signature's creator
 	 */
 	private void setCreator(Certificate creator) {
 		try {

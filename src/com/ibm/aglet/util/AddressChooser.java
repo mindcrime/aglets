@@ -29,7 +29,7 @@ import com.ibm.aglet.AgletContext;
 import org.aglets.log.*;
 
 /**
- * @version     1.50    $Date: 2007/07/23 07:08:57 $
+ * @version     1.50    $Date: 2007/07/25 23:33:05 $
  * @author	Mitsuru Oshima
  */
 public class AddressChooser extends Panel implements ActionListener {
@@ -46,7 +46,6 @@ public class AddressChooser extends Panel implements ActionListener {
 	/**
 	 * Constructs a new AddressChooser with the default number of colums.
 	 * The default nubmer is 10.
-	 * @param columns the number of columns
 	 */
 	public AddressChooser() {
 		this(10);

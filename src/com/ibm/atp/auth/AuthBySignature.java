@@ -26,7 +26,7 @@ import java.security.SignatureException;
  * The <tt>AuthBySignature</tt> class is the class for challenge-response
  * authentication by message digest.
  * 
- * @version     1.00    $Date: 2001/07/28 06:33:49 $
+ * @version     1.00    $Date: 2007/07/25 23:33:06 $
  * @author      ONO Kouichi
  */
 public class AuthBySignature extends Auth {
@@ -230,7 +230,7 @@ public class AuthBySignature extends Auth {
 	 * Verify signature
 	 * @param turn of individual
 	 * @param challenge a challenge
-	 * @param response response value for authentication
+	 * @param signature a byte array claimed to be a digital signature over the challenge
 	 * @exception AuthenticationException byte sequence for response is invalid
 	 */
 	public final boolean verify(int turn, Challenge challenge, byte[] signature) 
@@ -261,7 +261,7 @@ public class AuthBySignature extends Auth {
 	 * Verify signature
 	 * @param turn of individual
 	 * @param challenge a challenge
-	 * @param response response value for authentication
+	 * @param signature a {@link ByteSequence} claimed to be a digital signature over the challenge
 	 * @exception AuthenticationException byte sequence for response is invalid
 	 */
 	public final boolean verify(int turn, Challenge challenge, ByteSequence signature) 

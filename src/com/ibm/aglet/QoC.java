@@ -28,7 +28,7 @@ import java.util.Date;
 
 /**
  * <tt>QoC</tt>
- * @version     0.20    $Date: 2001/07/28 06:34:06 $
+ * @version     0.20    $Date: 2007/07/25 23:33:04 $
  * @author      ONO Kouichi
  */
 
@@ -154,7 +154,7 @@ public class QoC implements Serializable {
 	}
 	/**
 	 * Gets the due-date to connect via this channel.
-	 * @param due-date to connect via this channel
+	 * @return the due-date for connecting via this channel
 	 */
 	public Date getDueDate() {
 		return new Date(_timeout);
@@ -193,7 +193,7 @@ public class QoC implements Serializable {
 	/**
 	 * Sets the due-date to connect via this channel.
 	 * When null is given, there is no due-date and infinitely try to connect.
-	 * @param dueDate due-date for time-out
+	 * @param date {@link Date} containing the due-date for time-out
 	 */
 	public void setDueDate(Date date) {
 		_timeout = date.getTime();

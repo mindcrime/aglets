@@ -220,7 +220,7 @@ public abstract class Notifier extends Aglet {
 	 * notifier is created. The initialization argument includes
 	 * the needed parameters for the checks as defined
 	 * in <pre> create </pre>.
-	 * @param obj the initialization argument.
+	 * @param object the initialization argument, usually a subclass of {@link Object}
 	 * @exception AgletException if the initialization fails.
 	 */
 	public synchronized void onCreation(Object object) {
