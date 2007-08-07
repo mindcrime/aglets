@@ -42,7 +42,7 @@ import org.aglets.log.AgletsLogger;
  *
  * @author     Hideki Tai
  * @created    July 22, 2001
- * @version    $Revision: 1.6 $ $Date: 2007/08/07 08:12:19 $ $Author: maxthomax $
+ * @version    $Revision: 1.7 $ $Date: 2007/08/07 08:17:52 $ $Author: maxthomax $
  */
 public class Main {
     private final static String         VIEWER_TAHITI =
@@ -72,7 +72,7 @@ public class Main {
 
     /**
      *  Bootstrap aglets server. This main method takes at most one parameter
-     *  which specifies a name of a bootstrarp property file. The default file
+     *  which specifies a name of a bootstrap property file. The default file
      *  name is "./boot.props"
      *
      * @param  args             The command line arguments

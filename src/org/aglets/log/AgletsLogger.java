@@ -131,7 +131,7 @@ public class AgletsLogger {
 	    *      cat.debug("This is entry number: " + i );
 	    *  </pre>
 	    *  
-	    *  <p>You incur the cost constructing the message, concatenatiion in
+	    *  <p>You incur the cost constructing the message, concatenation in
 	    *  this case, regardless of whether the message is logged or not.
 	    * 
 	    *  <p>If you are worried about speed, then you should write
