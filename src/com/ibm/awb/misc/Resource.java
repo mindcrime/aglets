@@ -127,7 +127,7 @@ public class Resource {
 		persistent.put(key, r + ' ' + value);
 	}
 	/**
-	 * Creates named resources with file and default Proeprties object.
+	 * Creates named resources with file and default Properties object.
 	 * @see #getResourceFor(String)
 	 */
 	synchronized static public Resource createResource(String name, 
@@ -138,7 +138,7 @@ public class Resource {
 		return createResource(name, url, defaults);
 	}
 	/**
-	 * Creates named resources with file and default Proeprties object.
+	 * Creates named resources with file and default Properties object.
 	 * @see #getResourceFor(String)
 	 */
 	synchronized static private Resource createResource(String name, 
@@ -153,7 +153,7 @@ public class Resource {
 		return res;
 	}
 	/**
-	 * Creates named resources with default Proeprties object.
+	 * Creates named resources with default Properties object.
 	 * @see #getResourceFor(String)
 	 */
 	synchronized static public Resource createResource(String name, 

@@ -18,7 +18,7 @@ import java.util.Locale;
  */
 
 /**
- * Class Version is used to creat version objects that contain release
+ * Class Version is used to create version objects that contain release
  * information, such as MAJOR, MINOR, BUILD, DATE, and KIND.
  * Version objects can also be created with an expiration date. Any attempt
  * to create an instance of the version object after the expiration date
