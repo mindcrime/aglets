@@ -3,7 +3,7 @@
 <!--
     Build Script for Aglets for Java 2 compatible Aglet
     Software Development Kit (ASDK)
-    $Revision: 1.11 $ $Date: 2007/02/02 11:25:36 $ $Author: maxthomax $
+    $Revision: 1.12 $ $Date: 2007/08/07 09:23:05 $ $Author: maxthomax $
 -->
 <project name="Aglets" default="all" basedir=".">
 
@@ -45,8 +45,7 @@
   </path>
   
   <!--
-    Same as project.classpath with project classes
-    inlcuded.
+    Same as project.classpath with project classes included.
   -->
   <path id="app.classpath">
      <pathelement path="${lib.classes.dir}"/>
@@ -94,7 +93,7 @@
   -->
   <target name="init" >
     <echo>
-Aglets SDK Build $Revision: 1.11 $ $Date: 2007/02/02 11:25:36 $
+Aglets SDK Build $Revision: 1.12 $ $Date: 2007/08/07 09:23:05 $
     </echo>
     <tstamp/>
     <!-- Check for log4j classes -->
