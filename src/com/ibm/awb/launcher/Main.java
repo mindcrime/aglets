@@ -42,7 +42,7 @@ import org.aglets.log.AgletsLogger;
  *
  * @author     Hideki Tai
  * @created    July 22, 2001
- * @version    $Revision: 1.5 $ $Date: 2007/07/23 07:08:58 $ $Author: cat4hire $
+ * @version    $Revision: 1.6 $ $Date: 2007/08/07 08:12:19 $ $Author: maxthomax $
  */
 public class Main {
     private final static String         VIEWER_TAHITI =
@@ -258,10 +258,6 @@ public class Main {
      * @exception  Exception  Description of Exception
      */
     private static void bootstrap() throws Exception {
-
-        // Initialize logging system.
-        String initializerName = System.getProperty("aglets.logger.class","com.ibm.awb.launcher.Main" );
-        Class.forName(initializerName);
         logger.info("Logging system initialized!");
 
         // Initializes AWT and Audio classes.

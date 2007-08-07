@@ -116,7 +116,4 @@ aglets.owner.password=aglets
 # Keystore password.  Same as used with keytool.
 aglets.keystore.password=aglets
 
-# Logger class for ASDK.
-aglets.logger.class=org.aglets.log.AgletsLogger
-
 
