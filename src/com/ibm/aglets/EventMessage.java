@@ -28,7 +28,7 @@ final class EventMessage extends MessageImpl {
 	final void handle(LocalAgletRef ref) throws InvalidAgletException {
 		ref.dispatchEvent(event);
 	}
-	boolean isDelegatable() {
+	public final boolean isDelegatable() {
 		return false;
 	}
 	public String toString() {

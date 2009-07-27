@@ -16,12 +16,12 @@ package com.ibm.aglets;
 
 import com.ibm.maf.*;
 
-import com.ibm.aglet.Message;
 import com.ibm.aglet.AgletID;
 import com.ibm.aglet.InvalidAgletException;
 import com.ibm.aglet.Ticket;
-import com.ibm.aglet.MessageException;
 import com.ibm.aglet.NotHandledException;
+import com.ibm.aglet.message.Message;
+import com.ibm.aglet.message.MessageException;
 
 
 import java.io.OptionalDataException;
@@ -53,7 +53,7 @@ final class MessageBroker {
 				MessageImpl origin = (MessageImpl)msg;
 				MessageImpl clone = (MessageImpl)origin.clone();
 
-				FutureReplyImpl future = origin.future;
+				FutureReplyImpl future = (FutureReplyImpl)origin.getFutureReply();
 				byte msg_bytes[] = MessageOutputStream.toByteArray(rm, msg);
 
 				MAFAgentSystem local = 

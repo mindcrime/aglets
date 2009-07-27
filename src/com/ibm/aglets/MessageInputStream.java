@@ -27,7 +27,7 @@ import org.aglets.log.*;
  */
 
 final class MessageInputStream extends ObjectInputStream {
-    	private static AgletsLogger logger = new AgletsLogger(MessageInputStream.class.getName());
+    static private LogCategory logCategory = LogInitializer.getCategory("com.ibm.aglets.MessageImputStream");
 	private ResourceManager rm = null;
 
 	/**
@@ -43,7 +43,7 @@ final class MessageInputStream extends ObjectInputStream {
 		this.rm = rm;
 	}
 	/**
-	 * @param osc {@link ObjectStreamClass} whose class to resolve
+	 * @param classname class name.
 	 * @return the resolved class.
 	 * @exception IOException if can not read data from the input stream.
 	 * @exception ClassNotFoundException if can not resolve the class.

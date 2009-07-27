@@ -18,6 +18,8 @@ import com.ibm.aglet.InvalidAgletException;
 import com.ibm.aglet.AgletProxy;
 
 import com.ibm.aglets.*;
+import com.ibm.aglets.tahiti.utils.IconRepository;
+import com.ibm.aglets.tahiti.utils.TahitiCommandStrings;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -25,11 +27,13 @@ import java.awt.Label;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Class DeactivateAgletDialog is the dialog for deactivating an Aglet.
  * 
- * @version     1.02    $Date: 2001/07/28 06:32:32 $
+ * @version     1.02    $Date: 2009/07/27 10:31:40 $
  * @author	Mitsuru Oshima
  */
 
@@ -44,37 +48,62 @@ final class DeactivateAgletDialog extends TahitiDialog
 	/*
 	 * GUI components
 	 */
-	private TextField _time = new TextField(10);
+	private JTextField _time = new JTextField(5);
 
 	/*
 	 * Constructs a new Aglet dispatch dialog.
 	 */
 	DeactivateAgletDialog(MainWindow parent, AgletProxy proxy) {
-		super(parent, "Deactivate", false);
+		super(parent, bundle.getString("dialog.deactivate.title"), false);
 		this.proxy = proxy;
 
-		add("Center", makePanel());
+		// set the layout of this window
+		this.getContentPane().setLayout(new BorderLayout());
+		
+		this.getContentPane().add("Center", makePanel());
 
-		addButton("Deactivate", this);
-		addCloseButton("Cancel");
-		pack();
+		// add the button panel
+		JPanel p = new JPanel();
+		p.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		JButton ok = new JButton(bundle.getString("dialog.deactivate.button.ok"),IconRepository.getIcon("ok"));
+		ok.addActionListener(this);
+		ok.setActionCommand(TahitiCommandStrings.OK_COMMAND);
+		JButton cancel = new JButton(bundle.getString("dialog.deactivate.button.cancel"),IconRepository.getIcon("cancel"));
+		cancel.addActionListener(this);
+		cancel.setActionCommand(TahitiCommandStrings.CANCEL_COMMAND);
+		p.add(ok);
+		p.add(cancel);
+		this.getContentPane().add("South",p);
+		this.pack();
 	}
-	/*
-	 * Creates an Aglet dispatch dialog.
+	
+	
+	/**
+	 * Manages events from the buttons.
+	 * @param event the event to manage
 	 */
-	public void actionPerformed(ActionEvent ev) {
-		if (proxy == null) {
-			return;
-		} 
-		if (!"".equals(_time.getText())) {
-			long time = Integer.parseInt(_time.getText());
-
-			getMainWindow().deactivateAglet(proxy, time);
-			dispose();
-			return;
-		} 
-		System.out.print("\007");
-		System.out.flush();
+	public void actionPerformed(ActionEvent event) {
+	    String command = event.getActionCommand();
+	    
+	    if(command.equals(TahitiCommandStrings.OK_COMMAND)){
+			if (proxy == null) {
+				JOptionPane.showMessageDialog(this,bundle.getString("dialog.deactivate.error.proxy"),bundle.getString("dialog.deactivate.error.proxy"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("error"));
+			} 
+			if (!"".equals(_time.getText())) {
+				long time = Integer.parseInt(_time.getText());
+				if(time<0){
+				    return;
+				}
+	
+				getMainWindow().deactivateAglet(proxy, time);
+				dispose();
+				return;
+			} 
+			
+	    }
+	    
+	    this.setVisible(false);
+	    this.dispose();
 	}
 	/*
 	 * Layouts all Components
@@ -89,23 +118,24 @@ final class DeactivateAgletDialog extends TahitiDialog
 		cns.gridwidth = GridBagConstraints.REMAINDER;
 		cns.weightx = 1.0;
 
-		/*
-		 * Aglet name
-		 */
+		
+		// try to get the aglet name from its proxy
 		String agletname = "Invalid Aglet";
-
 		try {
 			agletname = (proxy == null ? "No Aglet" 
 						 : proxy.getAgletClassName());
-		} catch (InvalidAgletException ex) {}
-		p.add(new Label(agletname, Label.CENTER), cns);
+		} catch (InvalidAgletException ex) {
+		    // cannot get the aglet name
+		    JOptionPane.showMessageDialog(this,bundle.getString("dialog.deactivate.error"),bundle.getString("dialog.deactivate.error"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("proxy"));
+		}
+		p.add(new JLabel(agletname, JLabel.CENTER), cns);
 
 		/*
 		 * Time to sleep
 		 */
 		cns.gridwidth = 1;
 		cns.weightx = 0.0;
-		p.add(new Label("Time to sleep (seconds)"));
+		p.add(new JLabel(bundle.getString("dialog.deactivate.time")));
 
 		cns.fill = GridBagConstraints.HORIZONTAL;
 		cns.gridwidth = GridBagConstraints.REMAINDER;
@@ -117,4 +147,6 @@ final class DeactivateAgletDialog extends TahitiDialog
 
 		return p;
 	}
+	
+	
 }

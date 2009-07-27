@@ -14,6 +14,8 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
+import javax.swing.*;
+import com.ibm.aglets.tahiti.utils.*;
 import com.ibm.aglet.InvalidAgletException;
 import com.ibm.aglet.AgletProxy;
 
@@ -34,17 +36,18 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import java.util.StringTokenizer;
+import javax.swing.event.*;
 
 /**
  * Class DispatchAgletDialog represents the dialog for dispatching an Aglet.
  * 
- * @version     1.02    $Date: 2001/07/28 06:32:27 $
+ * @version     1.02    $Date: 2009/07/27 10:31:40 $
  * @author      Danny B. Lange
  * Mitsuru Oshima
  */
 
 final class DispatchAgletDialog extends TahitiDialog 
-	implements ActionListener, ItemListener {
+	implements ActionListener,ListSelectionListener {
 
 	/*
 	 * The proxy to be dispatched.
@@ -54,84 +57,78 @@ final class DispatchAgletDialog extends TahitiDialog
 	/*
 	 * GUI components
 	 */
-	private TextField _arlSelection = new TextField(40);
-	private List _arlList = new List(10, false);
-	private Button _add = new Button("Add to AddressBook");
-	private Button _remove = new Button("Remove");
+	private JTextField _arlSelection;
+	private AgentListPanel _arlList;
+	private JButton _add;
+	private JButton _remove;
 
 	/*
 	 * Constructs a new Aglet dispatch dialog.
 	 */
 	DispatchAgletDialog(MainWindow parent, AgletProxy proxy) {
-		super(parent, "Dispatch", false);
+		super(parent, bundle.getString("dialog.dispatch.title"), false);
 		this.proxy = proxy;
 
-		add("Center", makePanel());
+		// create the agent list panel
+		this._arlList = new AgentListPanel();
+		this._arlList.addListSelectionListener(this);
+		_arlSelection = new JTextField(40);
+		
+		
 
-		addButton("Dispatch", this);
-		addCloseButton("Cancel");
+		// add the buttons
+		this.addJButton(bundle.getString("dialog.dispatch.button.ok"),TahitiCommandStrings.OK_COMMAND,IconRepository.getIcon("ok"),this);
+		this.addJButton(bundle.getString("dialog.dispatch.button.cancel"),TahitiCommandStrings.CANCEL_COMMAND,IconRepository.getIcon("cancel"),this);
+		
+		// other buttons
+		_add = new JButton(bundle.getString("dialog.dispatch.button.add"),IconRepository.getIcon("add"));
+		_remove = new JButton(bundle.getString("dialog.dispatch.button.remove"),IconRepository.getIcon("remove"));
+		_add.setActionCommand(TahitiCommandStrings.ADD_COMMAND);
+		_add.addActionListener(this);
+		_remove.setActionCommand(TahitiCommandStrings.REMOVE_COMMAND);
+		_remove.addActionListener(this);
 
+		
+		this.getContentPane().add("Center", makePanel());
+		
+		
 		updateList();
-		disabling();
+		
+		this.pack();
 	}
-	/*
-	 * Creates an Aglet dispatch dialog.
+	
+	
+	/**
+	 * Manage events from the buttons.
+	 * @param event the event to manage
 	 */
-	public void actionPerformed(ActionEvent ev) {
-		String cmd = ev.getActionCommand();
-
-		if ("add".equals(cmd)) {
-			add();
-			return;
-		} else if ("remove".equals(cmd)) {
-			remove();
-			return;
-		} 
-
-		// Dispatch Button, TextField and List
-		if (proxy == null) {
-			return;
-		} 
-		if (!"".equals(_arlSelection.getText())) {
-			setVisible(false);
-			dispose();
-
-			String dest = _arlSelection.getText();
-
-			getMainWindow().dispatchAglet(proxy, dest);
-			return;
-		} 
-		beep();
+	public void actionPerformed(ActionEvent event) {
+		String command = event.getActionCommand();
+		
+		if(command.equals(TahitiCommandStrings.ADD_COMMAND) && this._arlSelection.getText()!=null){
+		    // add an entry to the list
+		    this._arlList.addItem(this._arlSelection.getText());
+		    return;
+		}
+		else
+		if(command.equals(TahitiCommandStrings.REMOVE_COMMAND)){
+		    // remove the selected item
+		    this._arlList.removeSelectedItem();
+		    return;
+		}
+		else
+		if(command.equals(TahitiCommandStrings.OK_COMMAND) && this._arlSelection.getText()!=null 
+		        && this.proxy!=null && this._arlSelection.getText().equals("")==false){
+		    // dispatch the agent
+		    this.getMainWindow().dispatchAglet(this.proxy,this._arlSelection.getText());
+		}
+		
+		// close the window
+		this.setVisible(false);
+		this.dispose();
 	}
-	/*
-	 * Adds an item to the list
-	 */
-	void add() {
-		String name = _arlSelection.getText().trim();
-
-		if (name.length() == 0) {
-			return;
-		} 
-		int num = _arlList.getItemCount();
-
-		for (int i = 0; i < num; i++) {
-			if (_arlList.getItem(i).equals(name)) {
-				return;
-			} 
-		} 
-		_arlList.add(name);
-
-		updateProperty();
-	}
-	private void disabling() {
-		_remove.setEnabled(_arlList.getSelectedIndex() != -1);
-	}
-	// Handles list box selections.
-	// 
-	public void itemStateChanged(ItemEvent ev) {
-		disabling();
-		_arlSelection.setText(_arlList.getSelectedItem());
-	}
+	
+	
 	/*
 	 * Layouts all Components
 	 */
@@ -148,21 +145,10 @@ final class DispatchAgletDialog extends TahitiDialog
 
 		p.setConstraints(cns);
 
-		/*
-		 * Aglet name
-		 */
-		String agletname = "Invalid Aglet";
-
-		try {
-			agletname = (proxy == null ? "No Aglet" 
-						 : proxy.getAgletClassName());
-		} catch (InvalidAgletException ex) {}
-		p.add(new Label(agletname, Label.CENTER));
-
-		/*
-		 * Destination ARL
-		 */
-		p.add(new Label("Destination URL"), 1, 0.0);
+		// get the agent name
+		String agentName ="CIAO";// this.getAgletName(this.proxy);
+		// ask the user for the URL
+		p.add(new JLabel(bundle.getString("dialog.dispatch.url")), 1, 0.0);
 
 		cns.fill = GridBagConstraints.HORIZONTAL;
 		cns.gridwidth = GridBagConstraints.REMAINDER;
@@ -177,66 +163,60 @@ final class DispatchAgletDialog extends TahitiDialog
 		cns.gridwidth = 1;
 		cns.fill = GridBagConstraints.NONE;
 		cns.anchor = GridBagConstraints.WEST;
-		p.add(new Label("AddressBook"));
+		p.add(new JLabel(bundle.getString("dialog.dispatch.addressbook")));
 
 		cns.anchor = GridBagConstraints.EAST;
 		p.add(_add);
-		_add.setActionCommand("add");
-		_add.addActionListener(this);
 
 		cns.gridwidth = GridBagConstraints.REMAINDER;
 		p.add(_remove);
-		_remove.setActionCommand("remove");
-		_remove.addActionListener(this);
 
 		cns.weighty = 1.0;
 		cns.anchor = GridBagConstraints.WEST;
 		cns.fill = GridBagConstraints.BOTH;
-		_arlList.addActionListener(this);
-		_arlList.addItemListener(this);
 		p.add(_arlList);
 
-		Util.setFixedFont(_arlList);
+		
 
 		// _arlList.setFont(DefaultResource.getFixedFont());
 		_arlList.setBackground(Color.white);
 
 		return p;
 	}
-	/*
-	 * Delete an item from the list
-	 */
-	void remove() {
-		if (_arlList.getSelectedIndex() != -1) {
-			_arlList.remove(_arlList.getSelectedIndex());
-			updateProperty();
-		} 
-		disabling();
-	}
+
 	/*
 	 * Updates the addressbook
 	 */
 	private void updateList() {
 		Resource res = Resource.getResourceFor("aglets");
-		String items[] = res.getStringArray("aglets.addressbook", " ");
-
-		_arlList.removeAll();
-		for (int i = 0; i < items.length; i++) {
-			_arlList.add(items[i]);
-		} 
-	}
-	private void updateProperty() {
-		synchronized (_arlList) {
-			int num = _arlList.getItemCount();
-			String addressList = "";
-
-			for (int i = 0; i < num; i++) {
-				addressList += (_arlList.getItem(i) + " ");
+		if(res!=null){
+			String items[] = res.getStringArray("aglets.addressbook", " ");
+	
+				for (int i = 0; i < items.length; i++) {
+				this._arlList.addItem(items[i]);
 			} 
+		}
+	}
+	
+	
+	private void updateProperty() {
+		synchronized (this) {
 			Resource res = Resource.getResourceFor("aglets");
-
-			res.setResource("aglets.addressbook", addressList);
-			res.save("Tahiti");
+			if(res!=null){
+				res.setResource("aglets.addressbook", this._arlList.getAllItems());
+				res.save("Tahiti");
+			}
 		} 
 	}
+	
+	/**
+	 * Manage selections over the list.
+	 * @param event the event
+	 */
+	public void valueChanged(ListSelectionEvent event){
+	    this._arlSelection.setText(this._arlList.getSelectedItem());
+	}
+	
+	
+	
 }

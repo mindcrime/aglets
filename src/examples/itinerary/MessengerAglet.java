@@ -16,6 +16,7 @@ package examples.itinerary;
  */
 
 import com.ibm.aglet.*;
+import com.ibm.aglet.message.Message;
 import com.ibm.aglet.system.*;
 import com.ibm.agletx.util.MessengerItinerary;
 import com.ibm.aglet.util.*;
@@ -29,7 +30,7 @@ import java.awt.event.*;
  * Remote stationary aglets are created afterwhich a messenger aglet
  * visits each one of them to send an asynchronous  local message.
  * 
- * @version     1.00	$Date: 2001/07/28 06:34:17 $
+ * @version     1.00	$Date: 2009/07/27 10:31:42 $
  * @author	Yariv Aridor
  */
 public class MessengerAglet extends Aglet {

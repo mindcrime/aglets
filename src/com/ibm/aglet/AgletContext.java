@@ -23,6 +23,7 @@ package com.ibm.aglet;
  * IBM WILL NOT BE LIABLE FOR ANY THIRD PARTY CLAIMS AGAINST YOU.
  */
 
+import com.ibm.aglet.message.Message;
 import com.ibm.aglet.system.ContextEvent;
 import com.ibm.aglet.system.ContextListener;
 import com.ibm.aglet.util.ImageData;
@@ -42,7 +43,7 @@ import java.applet.AudioClip;
  * maintaining and managing running aglets in an environment where the host
  * system is secured against malicious aglets.
  * 
- * @version     1.50	$Date: 2007/07/25 23:33:04 $
+ * @version     1.50	$Date: 2009/07/27 10:31:41 $
  * @author      Danny B. Lange
  * @author      Mitsuru Oshima
  */
@@ -121,11 +122,11 @@ public interface AgletContext {
 	/**
 	 * Gets a proxy for an aglet in a remote context. The remote context is
 	 * identified by its URL, and the aglet is indicated by its identifier.
-	 * This method has beed deprecated, probably in favor of using MAF.
 	 * 
 	 * @param contextAddress the address specifing a remote context.
 	 * @param id the identity of the aglet.
 	 * @return the proxy.
+	 * @see getName
 	 * @deprecated
 	 */
 	abstract public AgletProxy getAgletProxy(URL contextAddress, AgletID id);
@@ -182,7 +183,7 @@ public interface AgletContext {
 	abstract public Object getProperty(String key, Object def);
 	/**
 	 * Sends a multicast message to the subscribers in the context.
-	 * @param msg the {@link Message} to send
+	 * @param message to send
 	 * @return ReplySet containing FutureReplies
 	 */
 	abstract public ReplySet multicastMessage(Message msg);
@@ -213,7 +214,7 @@ public interface AgletContext {
 	/**
 	 * Retracts the aglet specified by its url and id
 	 * @param url the location of the aglet to be retracted.
-	 * @param aid  the {@link AgletID} of the aglet to be retracted
+	 * @param id  the aglet identity of the aglet to be retracted.
 	 * @return the aglet proxy for the retracted aglet.
 	 * @exception AgletException when the method failed to retract the aglet.
 	 * @exception UnknownHostException if the specified HOST is not found.
@@ -230,6 +231,7 @@ public interface AgletContext {
 	 * Sets the context property indicated by the key and value.
 	 * @param key the name of the context property.
 	 * @param value the value to be stored.
+	 * @return the value of the specified key.
 	 */
 	abstract public void setProperty(String key, Object value);
 	/**
@@ -241,8 +243,7 @@ public interface AgletContext {
 	 * Shutdown the context. This is ignored if the context is already stopped.
 	 * @exception SecurityException if the current execution context is not
 	 * allowd to shutdown
-	 * @see #start()
-	 * @see #start(boolean)
+	 * @see start
 	 */
 	abstract public void shutdown();
 	/**
@@ -251,8 +252,7 @@ public interface AgletContext {
 	 * are killed. This is ignored if the context is already stopped.
 	 * @exception SecurityException if the current execution context is not
 	 * allowd to shutdown
-	 * @see #start()
-	 * @see #start(boolean)
+	 * @see start
 	 */
 	abstract public void shutdown(Message msg);
 	/**

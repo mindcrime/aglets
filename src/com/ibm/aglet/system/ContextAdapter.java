@@ -28,7 +28,7 @@ package com.ibm.aglet.system;
  * as convenience for easily creating listerns by extending this class
  * and overriding only the methods of interest.
  * 
- * @version     1.00    $Date: 2001/07/28 06:34:07 $
+ * @version     1.00    $Date: 2009/07/27 10:31:42 $
  * @author      Misturu Oshima
  */
 public class ContextAdapter implements ContextListener {

@@ -31,7 +31,7 @@ import java.io.*;
  * class loader will create the class.
  * 
  * @see AgletOutputStream
- * @see com.ibm.aglets.tahiti.AgletClassLoader
+ * @see AgletLoader
  * @version     1.00    96/06/28
  * @author      Gaku Yamamoto
  * @author	Mitsuru Oshima
@@ -79,7 +79,7 @@ final class AgletInputStream extends ObjectInputStream {
 	 * class data of all super classes of the class in the input stream and
 	 * put them into the class data cache of the class loader. These super
 	 * classes will be  resolved on demand.
-	 * @param classinfo {@link ObjectStreamClass} with the class information
+	 * @param classname class name.
 	 * @return the resolved class.
 	 * @exception IOException if can not read data from the input stream.
 	 * @exception ClassNotFoundException if can not resolve the class.

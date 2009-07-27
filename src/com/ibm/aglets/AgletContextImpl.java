@@ -17,6 +17,8 @@ package com.ibm.aglets;
 import com.ibm.maf.*;
 
 import com.ibm.aglet.*;
+import com.ibm.aglet.message.Message;
+import com.ibm.aglet.message.MessageException;
 import com.ibm.aglet.system.ContextEvent;
 import com.ibm.aglet.system.ContextListener;
 import com.ibm.aglet.util.ImageData;
@@ -78,14 +80,14 @@ import java.applet.AudioClip;
  * environment where the aglets are protected from each other and the host
  * system is secured against malicious aglets.
  * 
- * @version     1.20	$Date: 2007/07/25 23:33:05 $
+ * @version     1.20	$Date: 2009/07/27 10:31:41 $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
  */
 
 final public class AgletContextImpl implements AgletContext {
-    	private static AgletsLogger logger = new AgletsLogger(AgletContextImpl.class.getName());
+    private static LogCategory logCategory = LogInitializer.getCategory("com.ibm.aglets.AgletContextImpl");
     
 	/*
 	 * secure/unsecure
@@ -224,7 +226,7 @@ final public class AgletContextImpl implements AgletContext {
 
 	/**
 	 * Creates an execution context for aglets.
-	 * @param name {@link String} with the name to assign the context
+	 * @param prop property list.
 	 */
 
 	/* package protected */
@@ -304,7 +306,7 @@ final public class AgletContextImpl implements AgletContext {
 	/**
 	 * Creates an instance of the specified aglet located at the specified URL.
 	 * @param url the URL to load the aglet class from.
-	 * @param classname {@link String} with the aglet's class name.
+	 * @param name the aglet's class name.
 	 * @return a newly instantiated and initialized Aglet.
 	 * @exception ClassNotFoundException if the class was not found
 	 * @exception InstantiationException if failed to instantiate the Aglet.
@@ -319,7 +321,7 @@ final public class AgletContextImpl implements AgletContext {
 	/**
 	 * Creates an instance of the specified aglet located at the specified URL.
 	 * @param url the URL to load the aglet class from.
-	 * @param classname {@link String} with the aglet's class name.
+	 * @param name the aglet's class name.
 	 * @return a newly instantiated and initialized Aglet.
 	 * @exception ClassNotFoundException if the class was not found
 	 * @exception InstantiationException if failed to instantiate the Aglet.
@@ -881,7 +883,7 @@ final public class AgletContextImpl implements AgletContext {
 	}
 	/**
 	 * Receives an aglet. Will start the aglet and return its proxy.
-	 * @param agent_name the name of the aglet to be received by the context.
+	 * @param aglet the aglet to be received by the context.
 	 * @exception AgletException if it is not received.
 	 */
 	public void receiveAglet(Name agent_name, ClassName[] classnames, 
@@ -1148,7 +1150,7 @@ final public class AgletContextImpl implements AgletContext {
 
 		_timer.destroy();
 
-		logger.info("shutting down.");
+		logCategory.info("shutting down.");
 		synchronized (creationLock) {
 			while (creating > 0) {
 				try {
@@ -1170,7 +1172,7 @@ final public class AgletContextImpl implements AgletContext {
 			} catch (InvalidAgletException ex) {}
 		} 
 
-		logger.debug("[waiting for response..]");
+		logCategory.debug("[waiting for response..]");
 
 		while (set.hasMoreFutureReplies()) {
 			set.waitForNextFutureReply(5000);
@@ -1182,7 +1184,7 @@ final public class AgletContextImpl implements AgletContext {
 			} 
 		} 
 
-		logger.info("[terminating aglets.]");
+		logCategory.info("[terminating aglets.]");
 
 		MAFFinder finder = null;
 
@@ -1284,7 +1286,7 @@ final public class AgletContextImpl implements AgletContext {
 			_hostingURL = new URL(url.getProtocol(), url.getHost(), 
 								  url.getPort(), '/' + _name);
 		} catch (MalformedURLException ex) {
-			logger.error(ex);
+			logCategory.error(ex);
 		} 
 
 		// 
@@ -1327,14 +1329,14 @@ final public class AgletContextImpl implements AgletContext {
 					ex.printStackTrace();
 				} 
 			} else {
-				logger.info("removing deactivated aglets in the context(" 
+				logCategory.info("removing deactivated aglets in the context(" 
 							 + _name + ")");
 				for (Enumeration e = _persistence.entryKeys(); 
 						e.hasMoreElements(); ) {
 					String key = (String)e.nextElement();
 
 					if (!key.equals("properties-" + _name)) {
-						logger.debug("\t" + key);
+						logCategory.debug("\t" + key);
 						_persistence.removeEntry(key);
 					} 
 				} 

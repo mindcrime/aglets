@@ -15,6 +15,7 @@ package com.ibm.agletx.patterns;
  */
 
 import com.ibm.aglet.*;
+import com.ibm.aglet.message.Message;
 import com.ibm.aglet.util.*;
 import com.ibm.agletx.util.SimpleItinerary;
 import java.net.URL;
@@ -220,7 +221,7 @@ public abstract class Notifier extends Aglet {
 	 * notifier is created. The initialization argument includes
 	 * the needed parameters for the checks as defined
 	 * in <pre> create </pre>.
-	 * @param object the initialization argument, usually a subclass of {@link Object}
+	 * @param obj the initialization argument.
 	 * @exception AgletException if the initialization fails.
 	 */
 	public synchronized void onCreation(Object object) {

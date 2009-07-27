@@ -13,10 +13,11 @@ package com.ibm.aglets.tahiti;
  * divested of its trade secrets, irrespective of what has been
  * deposited with the U.S. Copyright Office.
  */
+import javax.swing.*;
 
 import com.ibm.aglet.Aglet;
 import com.ibm.aglet.AgletInfo;
-import com.ibm.aglet.Message;
+import com.ibm.aglet.message.Message;
 import com.ibm.aglet.InvalidAgletException;
 import com.ibm.aglet.AgletException;
 import com.ibm.aglet.AgletID;
@@ -40,76 +41,80 @@ import java.util.Hashtable;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 import java.net.URL;
+import java.io.File;
 import java.io.InputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import javax.swing.*;
+import javax.swing.border.AbstractBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+
+import org.apache.log4j.Logger;
+
+import com.ibm.aglets.log.LoggerFactory;
+import com.ibm.aglets.tahiti.utils.*;
+import com.ibm.aglets.thread.AgletThreadPool;
+import com.ibm.aglets.thread.DeliveryMessageThread;
+
+import net.sourceforge.aglets.rolex.*;
+import net.sourceforge.aglets.rolex.gui.*;
 
 /**
  * The <tt>MainWindow</tt> represents the main window for the Tahiti aglet
  * viewer.
  * 
- * @version     1.08    $Date: 2002/01/09 05:25:37 $
+ * @version     2
  * @author      Danny B. Lange
  * @author      Mitsuru Oshima
  * @author      Yoshiaki Mima
+ * @author      Luca Ferrari
  */
 
-/*
- * Aglets List
- * 
- * Ordered by Keys "Creation time", "Class name"
- * 
- */
-final class MainWindow extends Frame implements ItemListener, ActionListener {
-	static ResourceBundle bundle = null;
+
+public class MainWindow extends JFrame implements ItemListener, ActionListener {
+	
+    /* Load resources */
+    static ResourceBundle bundle = null;
 	static {
-		bundle = 
-			(ResourceBundle)AccessController
-				.doPrivileged(new PrivilegedAction() {
-			public Object run() {
-				return ResourceBundle.getBundle("tahiti");
-			} 
-		});
+		bundle = ResourceBundle.getBundle("tahiti");
 	} 
-
-	/*
-	 * Aglet menu - menu items and shortcut buttons.
+	
+	/**
+	 * The logger for the action of this window
 	 */
-	private MenuItem _dialogMenuItem = new MenuItem();
-	private MenuItem _disposeMenuItem = new MenuItem();
-	private MenuItem _cloneMenuItem = new MenuItem();
-	private MenuItem _infoMenuItem = new MenuItem();
-	private MenuItem _killMenuItem = new MenuItem();
+	Logger logger = LoggerFactory.getLogger(MainWindow.class);
 
-	// 
-	private Button _disposeButton = new Button();
-	private Button _dialogButton = new Button();
-	private Button _cloneButton = new Button();
-	private Button _infoButton = new Button();
-
-	/*
-	 * Mobility menu - menu items and shortcut buttons.
+	/**
+	 * The log window for this GUI
 	 */
-	private MenuItem _dispatchMenuItem = new MenuItem();
-	private Button _dispatchButton = new Button();
-
-	// 
-	private MenuItem _deactivateMenuItem = new MenuItem();
-	private MenuItem _activateMenuItem = new MenuItem();
-
-	// 
-	private MenuItem _javaConsoleMenuItem = new MenuItem();
-
+	LogWindow logWindow = new LogWindow();
+	
 	// 
 	private Tahiti _tahiti = null;
 
+	/**
+	 * The JMenuBar of this window
+	 */
+	private TahitiMenuBar menuBar;
+	
+	/** 
+	 * The JToolBar of this window.
+	 */
+	private TahitiToolBar toolBar;
+	
+	/**
+	 * The tahiti status bar
+	 */
+	private TahitiStatusBar statusBar;
+	
 	// 
 	private Vector _itemList = new Vector();
 	Hashtable text = new Hashtable();
 
 	// 
-	Panel _buttonPanel = new Panel();
-	List _agletList = new List(0, false);
+	JPanel _buttonPanel = new JPanel();
+	AgentListPanel _agletList = new AgentListPanel();
 	boolean shrink = false;
 
 	/* display options */
@@ -121,384 +126,347 @@ final class MainWindow extends Frame implements ItemListener, ActionListener {
 	private boolean isAscent = true;
 	private boolean isCompact = false;
 
-	/* package */
-	LogWindow logWindow = new LogWindow();
 
-	/*
-	 * Tahiti event constants
+	/**
+	 * A panel that will contain the list of agents.
 	 */
-	static final int TAHITI_EVENT = 10000;
-	static final int CLONE = TAHITI_EVENT + 1;
-	static final int CREATE = TAHITI_EVENT + 2;
-	static final int DISPOSE = TAHITI_EVENT + 3;
-	static final int DISPATCH = TAHITI_EVENT + 4;
-	static final int RETRACT = TAHITI_EVENT + 5;
-	static final int KILL = TAHITI_EVENT + 6;
-	static final int DEACTIVATE = TAHITI_EVENT + 7;
-	static final int ACTIVATE = TAHITI_EVENT + 8;
-	static final int DIALOG = TAHITI_EVENT + 9;
-	static final int GET_AGLETS = TAHITI_EVENT + 10;
+	protected JPanel centerPanel;
+	
+	
 
-	// 
-	static final int EXIT = TAHITI_EVENT + 15;
-	static final int SHUTDOWN = TAHITI_EVENT + 16;
-	static final int REBOOT = TAHITI_EVENT + 17;
+	
+	/**
+	 * 
+	 * Method to perform ation event handling.
+	 * @param event the action event to deal with
+	 *
+	 */
+	public void actionPerformed(ActionEvent event){
+	    // get the current action command
+	    String command = event.getActionCommand();
 
-	// 
-	static final int AGLET_INFO = TAHITI_EVENT + 20;
-	static final int SHOW_LOG = TAHITI_EVENT + 21;
-	static final int MEMORY_USAGE = TAHITI_EVENT + 22;
-	static final int GC = TAHITI_EVENT + 23;
-	static final int SHOW_THREADS = TAHITI_EVENT + 24;
-	static final int SHOW_DEBUG = TAHITI_EVENT + 25;
-	static final int SHOW_REFTABLE = TAHITI_EVENT + 26;
-	static final int SHOW_JAVACON = TAHITI_EVENT + 27;
+	    // if no command (should never happen) don't do anything
+	    if(command == null || command.equals("")){
+	        return;
+	    }
 
-	// 
-	static final int PREFERENCE1 = TAHITI_EVENT + 30;
-	static final int PREFERENCE2 = TAHITI_EVENT + 31;
-	static final int PREFERENCE3 = TAHITI_EVENT + 32;
-	static final int PREFERENCE4 = TAHITI_EVENT + 33;
+	    
+	    // a dialog window for several operations
+	    TahitiDialog dialog = null;
+	    
+	    // the proxy correspondent to the selected item in the list
+	    AgletProxy proxy = this.getSelectedProxy();
+	    
+	    // an array of the selected proxy, useful for some operations
+        AgletProxy pp[] = new AgletProxy[1];
+        pp[0] = proxy;
+	    
+	    
+	    // creation of a new aglet
+	    if(command.equals(TahitiCommandStrings.CREATE_COMMAND) ){
+	        dialog = CreateAgletDialog.getInstance(MainWindow.this);
+			dialog.popupAtCenterOfParent();
+	    }
+	    else
+	     if(command.equals(TahitiCommandStrings.CLONE_COMMAND) && proxy!=null){
+	         // clone an aglet
+	        dialog = new CloneAgletDialog(MainWindow.this, proxy);
+			dialog.popupAtCenterOfParent();
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.DISPOSE_COMMAND) && proxy!=null){
+	         // dispose an agent
+             dialog = new DisposeAgletDialog(MainWindow.this, pp);
+			 dialog.popupAtCenterOfParent();
+	         
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.KILL_COMMAND) && proxy!=null){
+	         // kill the aglet
+	         dialog = new KillAgletDialog(MainWindow.this, pp);
+			 dialog.popupAtCenterOfParent();
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.AGLET_INFO_COMMAND) && proxy!=null){
+	         // show info about the selected aglet
+	         dialog = new PropertiesDialog(MainWindow.this,proxy);
+	         dialog.popupAtCenterOfParent();
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.REDUCE_WINDOW_COMMAND)){
+	         // reduce the window appearance
+	         this._agletList.setVisible(false);
+	         //this.getContentPane().remove(this._agletList);
+	         this.pack();
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.ACTIVATE_COMMAND) && proxy!=null
+	             && proxy.isValid() ){
+	         // reactivate a sleeping agent
+	         try{
+		         // check if the aglet is really deactviated
+		         if(proxy.isActive()){
+		             // the aglet is active, there's a problem
+		             JOptionPane.showMessageDialog(this,bundle.getString("dialog.activate.error.message"),bundle.getString("dialog.activate.error.title"),JOptionPane.WARNING_MESSAGE,IconRepository.getIcon("activate"));
+		             return;
+		         }
+		         
+		         // reactivate the agent
+		         proxy.activate();
+		         
+	         }catch(InvalidAgletException ex){
+	             this.showException(ex);
+	         }
+	         catch(IOException ex){
+	             this.showException(ex);
+	         }
+	         catch(AgletException ex){
+	             this.showException(ex);
+	         }
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.DEACTIVATE_COMMAND) && proxy!=null
+	             && proxy.isValid() ){
+	         // deactivate an agent
+	         try{
+		         // check if the aglet is really active
+		         if(!proxy.isActive()){
+		             // the aglet is not active, this is an error
+		             JOptionPane.showMessageDialog(this,bundle.getString("dialog.deactivate.error.message"),bundle.getString("dialog.deactivate.error.title"),JOptionPane.WARNING_MESSAGE,IconRepository.getIcon("deactivate"));
+		             return;
+		         }
+		         
+		         // deactivate the agent
+				dialog = new DeactivateAgletDialog(MainWindow.this, proxy);
+				dialog.popupAtCenterOfParent();
 
-	// 
-	static final int ABOUT_AGLETS = TAHITI_EVENT + 35;
-	static final int ABOUT_TAHITI = TAHITI_EVENT + 36;
+		         		         
+	         }catch(InvalidAgletException ex){
+	             this.showException(ex);
+	         }
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.DISPATCH_COMMAND) && proxy!=null){
+	         // dispatch the agent
+			dialog = new DispatchAgletDialog(MainWindow.this, proxy);
+			dialog.popupAtCenterOfParent();
 
-	// 
-	static final int SHRINK = TAHITI_EVENT + 40;
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.RETRACT_COMMAND)){
+	         // retract an agent
+			dialog = RetractAgletDialog.getInstance(MainWindow.this);
+			dialog.popupAtCenterOfParent();
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.ENLARGE_WINDOW_COMMAND)){
+	         // enlarge the window appearance
+	         //this.getContentPane().add("Center",this._agletList);
+	         this._agletList.setVisible(true);
+	         this.pack();
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.SECPREFS_COMMAND)){
+	         // opens the policytool editor
+	         JOptionPane.showMessageDialog(this,bundle.getString("dialog.tahitidialog.policytool"),bundle.getString("dialog.tahitidialog.externalprocess"),JOptionPane.INFORMATION_MESSAGE,IconRepository.getIcon("run"));
+	         try{
+	             Process policytool = Runtime.getRuntime().exec("policytool");
+	             policytool.waitFor();
+	         }catch(Exception ex){
+	             this.showException(ex);
+	         }
+        
+	         JOptionPane.showMessageDialog(this,bundle.getString("dialog.tahitidialog.reboot"),bundle.getString("dialog.tahitidialog.reboot.title"),JOptionPane.INFORMATION_MESSAGE,IconRepository.getIcon("warning"));
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.GENPREFS_COMMAND)){
+	         // show general preferences dialog
+	 		dialog = GeneralConfigDialog.getInstance(MainWindow.this);
+			dialog.popupAtCenterOfParent();
 
-	// 
-	static final int TAHITI_LAST_EVENT = TAHITI_EVENT + 41;
-
-	// 
-	class URLOpener implements ActionListener {
-		private String url;
-
-		URLOpener(String u) {
-			url = u;
-		}
-		public void actionPerformed(ActionEvent ev) {
-			showURL(url);
-		} 
-	}
-	;
-	class EventIssuer implements ActionListener {
-		private int _type = 0;
-
-		EventIssuer(int t) {
-			_type = t;
-		}
-		public void actionPerformed(ActionEvent ev) {
-			switch (_type) {
-			case SHRINK:
-				Button b = (Button)ev.getSource();
-
-				if (shrink) {
-					shrink = false;
-					b.setLabel("><");
-					showButtons();
-					updateProxyList();
-					_agletList.setVisible(true);
-					restoreSize();
-					doLayout();
-					_buttonPanel.doLayout();
-				} else {
-					b.setLabel("<>");
-					saveSize();
-					hideButtons();
-					_agletList.setVisible(false);
-					setSize(350, 
-							getBounds().height 
-							- _agletList.getBounds().height);
-					doLayout();
-					_buttonPanel.doLayout();
-					shrink = true;
-				} 
-				break;
-			case GC:
-				System.gc();
-				break;
-			case DIALOG:
-				dialog(getSelectedProxy());
-				break;
-			case SHOW_THREADS:
-				showThreads();
-				break;
-			case SHOW_DEBUG:
-				com.ibm.awb.misc.Debug.list(System.err);
-			case SHOW_REFTABLE:
-				com.ibm.aglets.RemoteAgletRef.showRefTable(System.err);
-				break;
-			case GET_AGLETS:
-				getAglets();
-				break;
-			case ACTIVATE:
-				activateAglet(getSelectedProxy());
-				break;
-			case KILL:
-				AgletProxy p = getSelectedProxy();
-
-				if (p != null) {
-					try {
-						AgletRuntime.getAgletRuntime().killAglet(p);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					} 
-				} 
-				break;
-			}
-		} 
-	}
-	class DialogOpener implements ActionListener {
-		private int _type = 0;
-
-		DialogOpener(int type) {
-			_type = type;
-		}
-		public void actionPerformed(ActionEvent ev) {
-			final AgletProxy p = getSelectedProxy();
-
-			AccessController.doPrivileged(new PrivilegedAction() {
-				public Object run() {
-					TahitiDialog d = null;
-
-					switch (_type) {
-					case CREATE:
-						d = CreateAgletDialog.getInstance(MainWindow.this);
-						d.popupAtCenterOfParent();
-						break;
-					case RETRACT:
-						d = RetractAgletDialog.getInstance(MainWindow.this);
-						d.popupAtCenterOfParent();
-						break;
-					case DISPOSE:
-						AgletProxy pp[] = new AgletProxy[1];
-
-						pp[0] = p;
-						d = new DisposeAgletDialog(MainWindow.this, pp);
-						d.popupAtCenterOfParent();
-						break;
-					case CLONE:
-						d = new CloneAgletDialog(MainWindow.this, p);
-						d.popupAtCenterOfParent();
-						break;
-					case DISPATCH:
-						d = new DispatchAgletDialog(MainWindow.this, p);
-						d.popupAtCenterOfParent();
-						break;
-					case DEACTIVATE:
-						d = new DeactivateAgletDialog(MainWindow.this, p);
-						d.popupAtCenterOfParent();
-						break;
-					case AGLET_INFO:
-						d = new PropertiesDialog(MainWindow.this, 
-												 getSelectedProxy());
-						d.popupAtCenterOfParent();
-						break;
-					case MEMORY_USAGE:
-						d = MemoryUsageDialog.getInstance(MainWindow.this);
-						d.popupAtCenterOfParent();
-						break;
-					case SHOW_LOG:
-						logWindow.pack();
-						if (logWindow.getLocation().x == 0 
-								&& logWindow.getLocation().y == 0) {
-							Dimension dim = getToolkit().getScreenSize();
-							Dimension size = logWindow.getSize();
-
-							logWindow
-								.setLocation((dim.width - size.width) / 2, 
-											 (dim.height - size.height) / 2);
-						} 
-						logWindow.show();
-						break;
-					case SHOW_JAVACON:
-						if (com.ibm.awb.launcher.Agletsd.console != null) {
-							com.ibm.awb.launcher.Agletsd.console.show();
-						} 
-						break;
-					case PREFERENCE1:
-						d = GeneralConfigDialog.getInstance(MainWindow.this);
-						d.popupAtCenterOfParent();
-						break;
-					case PREFERENCE2:
-						d = NetworkConfigDialog.getInstance(MainWindow.this);
-						d.popupAtCenterOfParent();
-						break;
-					case PREFERENCE3:
-						d = SecurityConfigDialog.getInstance(MainWindow.this);
-						d.popupAtCenterOfParent();
-						break;
-					case PREFERENCE4:
-						d = ServerPrefsDialog.getInstance(MainWindow.this);
-						d.popupAtCenterOfParent();
-						break;
-					case ABOUT_TAHITI:
-						Resource res = Resource.getResourceFor("tahiti");
-						ResourceBundle bundle = null;
-
-						bundle = ResourceBundle.getBundle("tahiti");
-						d = 
-							TahitiDialog
-								.message(MainWindow.this, 
-										 bundle.getString("title.about_tahiti"), 
-										 res.getString("tahiti.version") 
-										 + "\n" 
-										 + bundle
-											 .getString("message.copyright"));
-						d.popupAtCenterOfParent();
-						break;
-					case ABOUT_AGLETS:
-						res = Resource.getResourceFor("aglets");
-						String msg = "Aglets Version : " 
-									 + res.getString("aglets.version") + "\n" 
-									 + "Aglets API : " + Aglet.MAJOR_VERSION 
-									 + "." + Aglet.MINOR_VERSION + "\n" 
-									 + "Aglet Transfer Format : " 
-									 + res.getString("aglets.stream.version") 
-									 + "\n" + "\n" 
-									 + res.getString("aglets.copyright");
-
-						d = TahitiDialog.message(MainWindow.this, 
-												 "About Aglets", msg);
-						d.popupAtCenterOfParent();
-						break;
-					case EXIT:
-						d = ShutdownDialog.getInstance(MainWindow.this);
-						d.popupAtCenterOfParent();
-						break;
-					}
-					return null;
-				} 
-			});
-		} 
-	}
-
-	// -------------------------------------------------------------------
-	// -- Message line
-
-	// Size of message line.--
-	// 
-	private int _messageLineSize = 60;
-
-	// The message line.
-	// 
-	private TextField _messageLine = new TextField(_messageLineSize);
-
-	public class TahitiEventHandler implements Runnable {
-		int _type;
-		AgletProxy _proxy;
-		long _time;
-		String _remoteURL;
-		String _codebase;
-		String _name;
-		boolean _reload;
-
-		TahitiEventHandler(int type, AgletProxy p) {
-			_type = type;
-			_proxy = p;
-		}
-		TahitiEventHandler(AgletProxy p, long time) {
-			_type = DEACTIVATE;
-			_proxy = p;
-			_time = time;
-		}
-		TahitiEventHandler(AgletProxy p, String dest) {
-			_type = DISPATCH;
-			_proxy = p;
-			_remoteURL = dest;
-		}
-		TahitiEventHandler(String codebase, String name, boolean reload) {
-			_type = CREATE;
-			_codebase = codebase;
-			_name = name;
-			_reload = reload;
-		}
-		public void run() {
-			com.ibm.awb.misc.Debug.start();
-			com.ibm.awb.misc.Debug.check();
-			try {
-				perform();
-			} catch (Error ex) {
-				ex.printStackTrace();
-				TahitiDialog
-					.message(MainWindow.this, "Error", ex.getClass()
-						.getName() + "\n" + ex.getMessage())
-							.popupAtCenterOfParent();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				TahitiDialog
-					.message(MainWindow.this, "Exception", ex.getClass()
-						.getName() + "\n" + ex.getMessage())
-							.popupAtCenterOfParent();
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.JAVADOC_COMMAND)){
+	         // show the javadoc documentation
+	         File index = new File(System.getProperty("aglets.javadoc"));
+	         DocumentationWindow window = new DocumentationWindow(400,400,index,bundle.getString("documentationwindow.title.javadoc"));
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.WEB_PAGE_COMMAND)){
+	         try{
+		         URL index = new URL("http://aglets.sourceforge.net");
+		         DocumentationWindow window = new DocumentationWindow(400,400,index,bundle.getString("documentationwindow.title.web"));
+	         }catch(Exception e){
+	             this.showException(e);
+	         }
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.MEMORY_COMMAND)){
+	         // show the memory window
+	        MemoryWindow w = new MemoryWindow(); 
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.LOG_COMMAND)){
+	         // show the log command
+	         this.logWindow.setVisible(true);
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.EXIT_COMMAND)){
+	         // exit from the server
+	         int response = JOptionPane.showConfirmDialog(this,bundle.getString("dialog.exit.message"),bundle.getString("dialog.exit.title"),JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE,IconRepository.getIcon("exit"));
+	         if(response == JOptionPane.OK_OPTION){
+	             // exit from the server
+	             System.out.println("exiting Aglets...");
+	             this.shutdown();
+	             System.out.print("done\n");
+	         }
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.REBOOT_COMMAND)){
+	         // reboot the server, ask for confirmation
+	         int response = JOptionPane.showConfirmDialog(this,bundle.getString("dialog.reboot.message"),bundle.getString("dialog.reboot.title"),JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE,IconRepository.getIcon("reboot"));
+	         if(response == JOptionPane.OK_OPTION){
+	             // reboot
+	             System.out.println("rebooting Aglets...");
+	             this.reboot();
+	         }
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.REF_COMMAND)){
+	         // show the reference table
+	         com.ibm.aglets.RemoteAgletRef.showRefTable(System.err);
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.CONSOLE_COMMAND)){
+	         // show the java console
+			if (com.ibm.awb.launcher.Agletsd.console != null) {
+				com.ibm.awb.launcher.Agletsd.console.show();
 			} 
-			finally {
-				com.ibm.awb.misc.Debug.end();
-			} 
-		} 
-		private void perform() throws Exception {
-			switch (_type) {
-			case CLONE:
-				_proxy.clone();
-				break;
-			case DISPOSE:
-				_proxy.dispose();
-				break;
-			case CREATE:
-				if (!"".equals(_codebase)) {
-					while (_codebase.toLowerCase().startsWith("http://") 
-						   && _codebase.endsWith("/")) {
-						_codebase = _codebase.substring(0, 
-														_codebase.length() 
-														- 1);
-					} 
-				} 
-				URL url = !_codebase.equals("") ? new URL(_codebase) : null;
-
-				if (_reload) {
-					Tahiti.CONTEXT.clearCache(null);
-				} 
-				Tahiti.CONTEXT.createAglet(url, _name, null);
-
-				// itrptWin.waitForDisplay();
-				// itrptWin.dispose();
-				// update list
-				break;
-			case DISPATCH:
-
-				// String key = _remoteURL + " " +
-				// _proxy.getAgletClassName() + " " +
-				// (new Date()).toString().substring(0, 20).trim();
-				// String aid_str = _proxy.getAgletID().toString();
-				_proxy.dispatch(new URL(_remoteURL));
-
-				// itrptWin.waitForDisplay();
-				// itrptWin.dispose();
-				break;
-			case RETRACT:
-				AgletInfo info = _proxy.getAgletInfo();
-
-				// System.out.println(info);
-				Tahiti.CONTEXT.retractAglet(new URL(_proxy.getAddress()), 
-											info.getAgletID());
-
-				// itrptWin.waitForDisplay();
-				// itrptWin.dispose();
-				break;
-			case DEACTIVATE:
-				_proxy.deactivate(_time * 1000);
-				break;
-			case ACTIVATE:
-				if (_proxy != null && _proxy.isValid() 
-						&& _proxy.isActive() == false) {
-					_proxy.activate();
-				} 
-				break;
-			default:
-			}
-		} 
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.THREADS_COMMAND)){
+	         // show the running threads
+	         showThreads();
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.GC_COMMAND)){
+	         // invoke the garbage collector
+	         System.gc();
+	         JOptionPane.showMessageDialog(this,bundle.getString("mainwindow.gc.message"),bundle.getString("mainwindow.gc.title"),JOptionPane.WARNING_MESSAGE,IconRepository.getIcon("gc"));
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.NETPREFS_COMMAND)){
+	         // show the network preferences dialog window
+	        dialog = NetworkConfigDialog.getInstance(MainWindow.this);
+			dialog.popupAtCenterOfParent();
+	     }
+	     else
+	     if(command.equals(TahitiCommandStrings.SERPREFS_COMMAND)){
+	         // open the server preferences window
+			dialog = ServerPrefsDialog.getInstance(MainWindow.this);
+			dialog.popupAtCenterOfParent();
+	     }
+	     else
+	     if( command.equals(TahitiCommandStrings.DIALOG_COMMAND) && proxy!=null){
+	     	// send a dialog message to the agent
+	     	/*try{
+	     		proxy.sendMessage(new Message("dialog"));
+	     	}catch(Exception e){
+	     		this.showException(e);
+	     	}
+	     	*/
+	    	 // use a glue thread to deliver the message, thus to don't be blocked from a sleeping agent
+	    	 // or a delay in the message delivery
+	    	 DeliveryMessageThread deliver =  AgletThreadPool.getInstance().getDeliveryMessageThread(proxy, new Message("dialog"));
+	    	 deliver.deliverMessage();
+	    	 
+	    	 // please remember that the thread is automatically re-inserted in the pool
+	     }
+	     else
+	     if( command.equals(TahitiCommandStrings.SLEEP_COMMAND) && proxy!=null){
+	    	 // I must make the aglet sleeping
+	    	 try{
+		    	 String time = JOptionPane.showInputDialog(this, bundle.getString("mainwindow.sleep.message"), 
+		    			 									bundle.getString("mainwindow.sleep.title"),
+		    			 									JOptionPane.INFORMATION_MESSAGE
+		    				 								);
+		    	 int timeout = Integer.parseInt(time);
+		    	 Aglet a = proxy.getAglet();
+		    	 a.sleep(timeout);
+	    	 }catch(Exception e){
+	    		 System.err.println("Exception caught while making an agent sleeping!");
+	    		 this.showException(e);
+	    	 }
+	    	 
+	     }
+	    
+ 
 	}
+	
+	/**
+	 * A method to show an exception in a dialog window and on the java console.
+	 * The method uses a logger to register the error, then a dialog window is shown in
+	 * order to inform the user about the error.
+	 *@param ex the exception to show
+	 *@since 2.1.0
+	 */
+	protected void showException(Exception ex){
+	    if(ex==null){
+	        return;
+	    }
+	    
+	    // log the error
+	    this.logger.error("Exception caught ["+ex.getClass()+"]<"+ex.getMessage()+">");
+	    // show the user a dialog window
+	    ex.printStackTrace(System.err);
+	    JOptionPane.showMessageDialog(this,"Exception "+ex.getMessage(),"Exception",JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("error"));
+	}
+	
 
+	
+	/**
+	 * A method to create a new aglet thru the GUI. 
+	 * @param codebase the codebase of the aglet class
+	 * @param name the name of the agent class
+	 * @param reload if true, the aglet is created clearing the cache of the classloader
+	 * @since 2.1.0
+	 */
+	protected void createNewAglet(String codebase, String name, boolean reload){
+	    // check parameters
+	    if(name==null || name.equals("")){
+	        return;
+	    }
+	    
+	    // if the codebase is an http remove the tailing '/'
+	    while(codebase.startsWith("http") && codebase.endsWith("/")){
+	        codebase=codebase.substring(0,codebase.length()-1);
+	    }
+	    
+	    // build an URL around the codebase
+	    URL codebaseURL=null;
+	    if(codebase!=null && codebase.equals("")==false){
+	        try{
+	            codebaseURL = new URL(codebase);
+	        }catch(Exception ex){
+	            // cannot create the aglet, show the error
+	            this.showException(ex);
+	            return;
+	        }
+	    }
+	    
+	    // should I clear the cache?
+	    if(reload==true){
+	        Tahiti.CONTEXT.clearCache(null);
+	    }
+	    
+	    // load the agent
+	    try{
+	        Tahiti.CONTEXT.createAglet(codebaseURL,name,null);
+	    }catch(Exception ex){
+	        this.showException(ex);
+	    }
+	}
+	
 	/*
 	 * Constructs the instance of the main window for the
 	 * Tahiti Aglet viewer.
@@ -506,43 +474,40 @@ final class MainWindow extends Frame implements ItemListener, ActionListener {
 	MainWindow(Tahiti tahiti) {
 		_tahiti = tahiti;
 
-		Util.setFont(this);
-		Util.setBackground(this);
-		Util.setFixedFont(_agletList);
-
 		TahitiItem.init();
 
-		_agletList.setBackground(Color.white);
-        _agletList.setForeground(Color.black);
+	
+		
+		// set the layout of this window
+		this.getContentPane().setLayout(new BorderLayout());
+		
+		// create the RoleXListener for the rolex gui
+		RoleXListener rlistener = new RoleXListener(this);
+		
+		// create the menu bar
+		this.menuBar = new TahitiMenuBar(this, rlistener);
+		this.setJMenuBar(this.menuBar);
+		
+		
+		// create the toolbar
+		this.toolBar = new TahitiToolBar(this);
+		this.getContentPane().add("North",this.toolBar);
+		
 
-		// Makes the menu bar.
-		setMenuBar(makeMenuBar());
-
-		// Creates the panels.
-		GridBagLayout grid = new GridBagLayout();
-		GridBagConstraints cns = new GridBagConstraints();
-
-		setLayout(grid);
-		cns.gridwidth = GridBagConstraints.REMAINDER;
-		cns.fill = GridBagConstraints.NONE;
-		cns.anchor = GridBagConstraints.WEST;
-		cns.weightx = 1.0;
-		cns.weighty = 0.0;
-
-		Panel p = makeButtonPanel();
-
-		grid.setConstraints(p, cns);
-		add(p);
-
-		cns.weighty = 1.0;
-		cns.fill = GridBagConstraints.BOTH;
-		cns.anchor = GridBagConstraints.CENTER;
-
-		grid.setConstraints(_agletList, cns);
-
-		addListeners();
-
-		add(_agletList);
+		// add the agent list
+		this._agletList.setColors(Color.WHITE,Color.BLACK);
+		this._agletList.setSelectionColors(Color.BLACK,Color.WHITE);
+		this._agletList.setLayout(new FlowLayout());	
+		//	 construct the border
+		TitledBorder border = new TitledBorder((AbstractBorder)new LineBorder(Color.BLUE,2));
+		border.setTitle(bundle.getString("mainwindow.agentlist"));
+		border.setTitleColor(Color.BLUE);
+		border.setTitlePosition(TitledBorder.TOP);
+		border.setTitleJustification(TitledBorder.RIGHT);
+		this._agletList.setBorder(border);
+		// set the dimension
+		this._agletList.setListDimension(new Dimension(300,300));
+		this.getContentPane().add("Center",_agletList);
 
 		Resource tahiti_res = Resource.getResourceFor("tahiti");
 
@@ -551,16 +516,14 @@ final class MainWindow extends Frame implements ItemListener, ActionListener {
 			_agletList.setVisible(false);
 		} 
 
-		cns.gridwidth = GridBagConstraints.REMAINDER;
-		cns.weightx = 1.0;
-		cns.weighty = 0.0;
-		cns.fill = GridBagConstraints.HORIZONTAL;
-		grid.setConstraints(_messageLine, cns);
-		add(_messageLine);
+		
+		// add the status bar
+		this.statusBar = new TahitiStatusBar("Tahiti viewer up and running");
+		this.getContentPane().add("South",this.statusBar);
+		
+		
 
-		_messageLine.setText("Tahiti - The Aglet Viewer is Running...");
-		_messageLine.setBackground(Color.lightGray);
-		_messageLine.setEditable(false);
+		
 
 		updateGUIState();
 
@@ -581,28 +544,17 @@ final class MainWindow extends Frame implements ItemListener, ActionListener {
 			brunning = atp_res.getBoolean("atp.server", false);
 		} 
 
-		setTitle("Tahiti: The Aglet Viewer [" + hosting + " (" + ownerName 
-				 + ")" + (brunning ? "" : " : NOT RUNNING") + " ]" 
-				 + (bsecure ? "" : " - << UNSECURE MODE >>"));
+		// set the title
+		this.setTitle(bundle.getString("mainwindow.title")+"["+hosting+" ("+ownerName+")");
+	
+		// add a window closer
+		this.addWindowListener(new WindowCloser(this));
+		
+		
+		this.pack();
 	}
-	public void actionPerformed(ActionEvent ev) {
-		int selected[] = _agletList.getSelectedIndexes();
 
-		for (int i = 0; i < selected.length; i++) {
-			AgletProxy p = 
-				((TahitiItem)_itemList.elementAt(selected[i]))
-					.getAgletProxy();
-
-			if (p.isState(Aglet.INACTIVE)) {
-				activateAglet(p);
-			} else if (p.isState(Aglet.ACTIVE)) {
-				dialog(p);
-			} 
-		} 
-	}
-	public void activateAglet(AgletProxy p) {
-		new Thread(new TahitiEventHandler(ACTIVATE, p)).start();
-	}
+	
 	private void addListeners() {
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -613,22 +565,51 @@ final class MainWindow extends Frame implements ItemListener, ActionListener {
 			} 
 		});
 
-		_agletList.addItemListener(this);
-		_agletList.addActionListener(this);
+		//_agletList.addItemListener(this);
+		//_agletList.addActionListener(this);
+		
 	}
-	// Clears the message line.
-	// 
-	private void clearMessage() {
-		_messageLine.setText("");
+	
+	/**
+	 * Cloning an agent thru its proxy.
+	 * @param proxy the proxy of the agent to be cloned
+	 */
+	public void cloneAglet(AgletProxy proxy) {
+		// check params
+	    if(proxy==null){
+	        return;
+	    }
+	    
+	    // clone the agent
+	    try{
+	        proxy.clone();
+	    }catch(CloneNotSupportedException ex){
+	        this.showException(ex);
+	    }
 	}
-	public void cloneAglet(AgletProxy p) {
-		new Thread(new TahitiEventHandler(CLONE, p)).start();
-	}
+	
+	/**
+	 * A method to create the aglet from the GUI.
+	 * @deprecated use #createNewAglet
+	 * @param codebase
+	 * @param name
+	 * @param reload
+	 */
 	public void createAglet(String codebase, String name, boolean reload) {
-		new Thread(new TahitiEventHandler(codebase, name, reload)).start();
+		this.createNewAglet(codebase,name,reload);
 	}
-	public void deactivateAglet(AgletProxy p, long time) {
-		new Thread(new TahitiEventHandler(p, time)).start();
+	
+	/**
+	 * Deactivates an agent thru its proxy.
+	 * @param proxy tyhe proxy of the aglet to be deactivated
+	 * @param time the time to deactivate the aglets.
+	 */
+	public void deactivateAglet(AgletProxy proxy, long time) {
+	    try{
+	        proxy.deactivate(time * 1000);
+	    }catch(Exception ex){
+	        this.showException(ex);
+	    }
 	}
 	void dialog(AgletProxy proxy) {
 		try {
@@ -637,52 +618,44 @@ final class MainWindow extends Frame implements ItemListener, ActionListener {
 			setMessage(ex.getMessage());
 		} 
 	}
-	public void dispatchAglet(AgletProxy p, String dest) {
-		new Thread(new TahitiEventHandler(p, dest)).start();
+	
+	/**
+	 * A method to dispatch an agent to the specified destination.
+	 * @param proxy the proxy of the agent to be dispatched
+	 * @param dest the destination to which dispatch the agent to
+	 */
+	public void dispatchAglet(AgletProxy proxy, String dest) {
+		try{
+		    proxy.dispatch(new URL(dest));
+		}catch(Exception ex){
+		    this.showException(ex);
+		}
 	}
-	public void disposeAglet(AgletProxy p) {
-		new Thread(new TahitiEventHandler(DISPOSE, p)).start();
+	
+	
+	/**
+	 * A method to dispose a single aglet.
+	 * @param proxy the proxy of the aglet to dispose
+	 */
+	public void disposeAglet(AgletProxy proxy) {
+		if(proxy==null){
+		    return;
+		}
+		
+		try{
+		    proxy.dispose();
+		}catch(InvalidAgletException ex){
+		    this.showException(ex);
+		}
 	}
-	/*
+
+	
+	/**
 	 * Retract aglets from an Aglet box
+	 * @deprecated it does not do anything
 	 */
-	void getAglets() {
+	void getAglets() {	}
 
-		/*
-		 * try {
-		 * AgletBox.update(Tahiti.CONTEXT);
-		 * } catch (Exception e) {
-		 * setMessage("AgletBox: " + e.getMessage());
-		 * }
-		 */
-	}
-	// Returns an Aglet's item text line for the Aglet list.
-	// 
-
-	/*
-	 * private String getItemText(AgletProxy proxy) {
-	 * StringBuffer buffer = new StringBuffer();
-	 * try {
-	 * AgletInfo info = proxy.getAgletInfo();
-	 * if (proxy.isValid() == false) {
-	 * return "InvalidAglet";
-	 * }
-	 * if (proxy.isActive() == false) {
-	 * buffer.append("[deactivated]");
-	 * }
-	 * buffer.append(new Date(info.getCreationTime()));
-	 * buffer.append(" " + info.getAgletClassName() + ' ');
-	 * String s = (String) text.get(proxy);
-	 * buffer.append(" " + (s == null ? " " : s));
-	 * } catch (InvalidAgletException ex) {
-	 * return "InvalidAglet";
-	 * } catch (RuntimeException ex) {
-	 * ex.printStackTrace();
-	 * } finally {
-	 * }
-	 * return buffer.toString();
-	 * }
-	 */
 
 	private String getItemText(TahitiItem tahitiItem) {
 		StringBuffer buffer = new StringBuffer();
@@ -718,16 +691,16 @@ final class MainWindow extends Frame implements ItemListener, ActionListener {
 		} 
 		return p;
 
-		/*
-		 * if (selected != -1)
-		 * return (AgletProxy)_proxyList.elementAt(selected);
-		 * else
-		 * return null;
-		 */
-	}
-	AgletProxy getSelectedProxy() {
-		int selected = _agletList.getSelectedIndex();
 
+	}
+	
+	/**
+	 * Get a proxy related to the selected item in the agent list.
+	 * @return the proxy of the agent
+	 */
+	public AgletProxy getSelectedProxy() {
+		int selected = _agletList.getSelectedIndex();
+		
 		if (selected != -1) {
 			return ((TahitiItem)_itemList.elementAt(selected))
 				.getAgletProxy();
@@ -735,21 +708,11 @@ final class MainWindow extends Frame implements ItemListener, ActionListener {
 			return null;
 		} 
 	}
+	
+	
 	void hideButtons() {
-		_dialogButton.setVisible(false);
-		_infoButton.setVisible(false);
-		_disposeButton.setVisible(false);
-		_cloneButton.setVisible(false);
-		_dispatchButton.setVisible(false);
+	    this.menuBar.setVisible(false);
 	}
-	/*
-	 * synchronized void updateViewItems() {
-	 * for (int i = 0; i < _itemList.size(); i++) {
-	 * TahitiItem tahitiItem = (TahitiItem)_itemList.elementAt(i);
-	 * _agletList.replaceItem(getItemText(tahitiItem), i);
-	 * }
-	 * }
-	 */
 
 	synchronized void insertProxyToList(AgletProxy proxy) {
 
@@ -771,13 +734,12 @@ final class MainWindow extends Frame implements ItemListener, ActionListener {
 
 		if (index >= 0) {
 			_itemList.insertElementAt(tahitiItem, index);
-			_agletList.add(getItemText(tahitiItem), index);
+			_agletList.addItem(getItemText(tahitiItem), index);
 		} else {
 			_itemList.addElement(tahitiItem);
-			_agletList.add(getItemText(tahitiItem));
+			_agletList.addItem(getItemText(tahitiItem));
 		} 
 
-		// updateGUIState();
 	}
 	public void itemStateChanged(ItemEvent ev) {
 		updateGUIState();
@@ -785,263 +747,7 @@ final class MainWindow extends Frame implements ItemListener, ActionListener {
 			updateProxyList();
 		} 
 	}
-	// Builds the button panel.
-	// @return the button panel.
-	// 
-	private Panel makeButtonPanel() {
-		_buttonPanel = new Panel();
-		_buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-		// ADD LISTENER
-		Button b = new Button("><");
-
-		b.addActionListener(new EventIssuer(SHRINK));
-		_buttonPanel.add(b);
-
-		b = new Button(bundle.getString("button.create"));
-		b.addActionListener(new DialogOpener(CREATE));
-		_buttonPanel.add(b);
-
-		_dialogButton.setLabel(bundle.getString("button.dialog"));
-		_dialogButton.addActionListener(new EventIssuer(DIALOG));
-		_buttonPanel.add(_dialogButton);
-
-		_infoButton.setLabel(bundle.getString("button.info"));
-		_infoButton.addActionListener(new DialogOpener(AGLET_INFO));
-		_buttonPanel.add(_infoButton);
-
-		_disposeButton.setLabel(bundle.getString("button.dispose"));
-		_disposeButton.addActionListener(new DialogOpener(DISPOSE));
-		_buttonPanel.add(_disposeButton);
-
-		_cloneButton.setLabel(bundle.getString("button.clone"));
-		_cloneButton.addActionListener(new DialogOpener(CLONE));
-		_buttonPanel.add(_cloneButton);
-
-		_dispatchButton.setLabel(bundle.getString("button.dispatch"));
-		_dispatchButton.addActionListener(new DialogOpener(DISPATCH));
-		_buttonPanel.add(_dispatchButton);
-
-		b = new Button(bundle.getString("button.retract"));
-		b.addActionListener(new DialogOpener(RETRACT));
-		_buttonPanel.add(b);
-
-		return _buttonPanel;
-	}
-	// -------------------------------------------------------------------
-	// -- Menu bar and panel methods
-
-	// Builds the menu bar.
-	// 
-	private MenuBar makeMenuBar() {
-		MenuBar menubar = new MenuBar();
-
-		// 
-		// Aglet Menu
-		// 
-		Menu menu = new Menu(bundle.getString("menu.aglet"));
-
-		MenuItem item = new MenuItem(bundle.getString("menuitem.create"));
-
-		item.addActionListener(new DialogOpener(CREATE));
-		menu.add(item);
-
-		_dialogMenuItem.setLabel(bundle.getString("menuitem.dialog"));
-		_dialogMenuItem.addActionListener(new EventIssuer(DIALOG));
-		menu.add(_dialogMenuItem);
-
-		_disposeMenuItem.setLabel(bundle.getString("menuitem.dispose"));
-		_disposeMenuItem.addActionListener(new DialogOpener(DISPOSE));
-		menu.add(_disposeMenuItem);
-
-		_cloneMenuItem.setLabel(bundle.getString("menuitem.clone"));
-		_cloneMenuItem.addActionListener(new DialogOpener(CLONE));
-		menu.add(_cloneMenuItem);
-
-		_infoMenuItem.setLabel(bundle.getString("menuitem.info"));
-		_infoMenuItem.addActionListener(new DialogOpener(AGLET_INFO));
-		menu.add(_infoMenuItem);
-
-		menu.addSeparator();
-
-		_killMenuItem.setLabel(bundle.getString("menuitem.kill"));
-		_killMenuItem.addActionListener(new EventIssuer(KILL));
-		menu.add(_killMenuItem);
-
-		menu.addSeparator();
-
-		item = new MenuItem(bundle.getString("menuitem.exit"));
-		item.addActionListener(new DialogOpener(EXIT));
-		menu.add(item);
-
-		menubar.add(menu);
-
-		// 
-		// Mobility menu.
-		// 
-		menu = new Menu(bundle.getString("menu.mobility"));
-
-		_dispatchMenuItem.setLabel(bundle.getString("menuitem.dispatch"));
-		_dispatchMenuItem.addActionListener(new DialogOpener(DISPATCH));
-		menu.add(_dispatchMenuItem);
-
-		item = new MenuItem(bundle.getString("menuitem.retract"));
-		item.addActionListener(new DialogOpener(RETRACT));
-		menu.add(item);
-
-		_deactivateMenuItem.setLabel(bundle.getString("menuitem.deactivate"));
-		_deactivateMenuItem.addActionListener(new DialogOpener(DEACTIVATE));
-		menu.add(_deactivateMenuItem);
-
-		_activateMenuItem.setLabel(bundle.getString("menuitem.activate"));
-		_activateMenuItem.addActionListener(new EventIssuer(ACTIVATE));
-		menu.add(_activateMenuItem);
-
-		menubar.add(menu);
-
-		// 
-		// View menu.
-		// 
-		menu = new Menu(bundle.getString("menu.view"));
-		item = new MenuItem(bundle.getString("menuitem.memoryusage"));
-		item.addActionListener(new DialogOpener(MEMORY_USAGE));
-		menu.add(item);
-
-		// item = new MenuItem(bundle.getString("menuitem.age"));
-		// item.addActionListener();
-		// menu.add(item);
-
-		item = new MenuItem(bundle.getString("menuitem.log"));
-		item.addActionListener(new DialogOpener(SHOW_LOG));
-		menu.add(item);
-
-		_javaConsoleMenuItem = 
-			new MenuItem(bundle.getString("menuitem.javaconsole"));
-		_javaConsoleMenuItem
-			.addActionListener(new DialogOpener(SHOW_JAVACON));
-		if (com.ibm.awb.launcher.Agletsd.console != null) {
-			_javaConsoleMenuItem.setEnabled(true);
-		} else {
-			_javaConsoleMenuItem.setEnabled(false);
-		} 
-		menu.add(_javaConsoleMenuItem);
-
-		menubar.add(menu);
-
-		// 
-		// Options menu.
-		// 
-		menu = new Menu(bundle.getString("menu.options"));
-		item = new MenuItem(bundle.getString("menuitem.general"));
-		item.addActionListener(new DialogOpener(PREFERENCE1));
-		menu.add(item);
-
-		item = new MenuItem(bundle.getString("menuitem.network"));
-		item.addActionListener(new DialogOpener(PREFERENCE2));
-		menu.add(item);
-
-		Resource res = Resource.getResourceFor("aglets");
-
-		if (res.getBoolean("aglets.secure", true)) {
-			item = new MenuItem(bundle.getString("menuitem.security"));
-			item.addActionListener(new DialogOpener(PREFERENCE3));
-			menu.add(item);
-		} 
-
-		item = new MenuItem(bundle.getString("menuitem.server"));
-		item.addActionListener(new DialogOpener(PREFERENCE4));
-		menu.add(item);
-
-		menubar.add(menu);
-
-		// 
-		// Tools menu
-		// 
-		menu = new Menu(bundle.getString("menu.tools"));
-
-		item = new MenuItem(bundle.getString("menuitem.gc"));
-		item.addActionListener(new EventIssuer(GC));
-		menu.add(item);
-
-		item = new MenuItem(bundle.getString("menuitem.threads"));
-		item.addActionListener(new EventIssuer(SHOW_THREADS));
-		menu.add(item);
-
-		item = new MenuItem(bundle.getString("menuitem.debug"));
-		item.addActionListener(new EventIssuer(SHOW_DEBUG));
-		menu.add(item);
-
-		item = new MenuItem(bundle.getString("menuitem.reftable"));
-		item.addActionListener(new EventIssuer(SHOW_REFTABLE));
-		menu.add(item);
-
-		/*
-		 * if (Tahiti.enableBox) {
-		 * menu.addSeparator();
-		 * 
-		 * item = new MenuItem(bundle.getString("menuitem.get"));
-		 * item.addActionListener(new EventIssuer(GET_AGLETS));
-		 * menu.add(item);
-		 * }
-		 */
-		menubar.add(menu);
-
-		// 
-		// Help menu
-		// 
-		menu = new Menu(bundle.getString("menu.help"));
-
-		item = new MenuItem(bundle.getString("menuitem.about_tahiti"));
-		item.addActionListener(new DialogOpener(ABOUT_TAHITI));
-		menu.add(item);
-
-		item = new MenuItem(bundle.getString("menuitem.about_aglets"));
-		item.addActionListener(new DialogOpener(ABOUT_AGLETS));
-		menu.add(item);
-
-		item = new MenuItem(bundle.getString("menuitem.release_notes"));
-		item
-			.addActionListener(new URLOpener(bundle
-				.getString("http.release_notes")));
-
-		// "http://www.trl.ibm.co.jp/aglets/awb_1.0b1.html"));
-		menu.add(item);
-
-		item = new MenuItem(bundle.getString("menuitem.aglets_home_page"));
-		item
-			.addActionListener(new URLOpener(bundle
-				.getString("http.aglets_home")));
-
-		// "http://www.trl.ibm.co.jp/aglets/index.html"
-		menu.add(item);
-
-
-		item = new MenuItem(bundle.getString("menuitem.feedback"));
-		item
-			.addActionListener(new URLOpener(bundle
-				.getString("http.feedback")));
-
-		// "http://aglets.trl.ibm.co.jp/report.html"
-		menu.add(item);
-
-		item = new MenuItem(bundle.getString("menuitem.bug_report"));
-		item
-			.addActionListener(new URLOpener(bundle
-				.getString("http.bug_report")));
-
-		// "http://aglets.trl.ibm.co.jp/report.html"
-		menu.add(item);
-
-		item = new MenuItem(bundle.getString("menuitem.faq"));
-		item.addActionListener(new URLOpener(bundle.getString("http.faq")));
-
-		// "http://www.trl.ibm.co.jp/aglets/faq.html"
-		menu.add(item);
-
-		menubar.setHelpMenu(menu);
-
-		return menubar;
-	}
 	public void reboot() {
 		_tahiti.reboot();
 	}
@@ -1058,7 +764,7 @@ final class MainWindow extends Frame implements ItemListener, ActionListener {
 				p = ((TahitiItem)_itemList.elementAt(i)).getAgletProxy();
 				if (p.isValid() == false) {
 					_itemList.removeElementAt(i);
-					_agletList.remove(i);
+					_agletList.removeItem(i);
 				} 
 			} 
 
@@ -1081,69 +787,21 @@ final class MainWindow extends Frame implements ItemListener, ActionListener {
 		setSize(res.getInteger("tahiti.window.width", 100), 
 				res.getInteger("tahiti.window.height", 100));
 	}
-	public void retractAglet(AgletProxy p) {
-		new Thread(new TahitiEventHandler(RETRACT, p)).start();
-	}
-	/*
-	 * Handles the event
-	 * public boolean handleEvent(Event event) {
-	 * Thread handler;
-	 * AgletProxy proxy;
-	 * String remote_host;
-	 * InterruptWindow itrptWin;
-	 * 
-	 * case CREATE_AGLET:
-	 * remote_host = (String)event.target;
-	 * String aglet_class = ((String)event.arg).trim();
-	 * 
-	 * itrptWin = new InterruptWindow(this,
-	 * "Aglet Creation",
-	 * "Creating Aglet",
-	 * (remote_host.toLowerCase().startsWith("http://") ?
-	 * remote_host + "/" : remote_host) + aglet_class);
-	 * 
-	 * handler = new TahitiEventThread(this, itrptWin, event);
-	 * itrptWin.setHandler(handler);
-	 * handler.start();
-	 * itrptWin.popup(this);
-	 * 
-	 * break;
-	 * 
-	 * case DISPATCH_AGLET:
-	 * proxy = (AgletProxy)event.target;
-	 * remote_host = ((String)event.arg).trim();
-	 * 
-	 * itrptWin = new InterruptWindow(this,
-	 * "Aglet Dispatch",
-	 * "Dispatching Aglet",
-	 * remote_host);
-	 * handler = new TahitiEventThread(this, itrptWin, event);
-	 * itrptWin.setHandler(handler);
-	 * handler.start();
-	 * itrptWin.popup(this);
-	 * break;
-	 * case RETRACT_AGLET:
-	 * URL agletURL = (URL)event.target;
-	 * 
-	 * itrptWin = new InterruptWindow(this,
-	 * "Aglet Retract",
-	 * "Retracting Aglet",
-	 * agletURL.getHost());
-	 * handler = new TahitiEventThread(this, itrptWin, event);
-	 * itrptWin.setHandler(handler);
-	 * handler.start();
-	 * itrptWin.popup(this);
-	 * break;
-	 * default:
-	 * return false;
-	 * }
-	 * return true;
-	 * } else {
-	 * return super.handleEvent(event);
-	 * }
-	 * return false;
-	 * }
+	
+	/**
+	 * A method to retract an agent thru its proxy
+	 * @param proxy the proxy of the remote agent
 	 */
+	public void retractAglet(AgletProxy proxy) {
+	    try{
+			AgletInfo info = proxy.getAgletInfo();
+			Tahiti.CONTEXT.retractAglet(new URL(proxy.getAddress()), 	info.getAgletID());
+	    }catch(Exception ex){
+	        this.showException(ex);
+	    }
+
+
+	}
 
 	void saveSize() {
 		java.awt.Rectangle bounds = getBounds();
@@ -1182,56 +840,85 @@ final class MainWindow extends Frame implements ItemListener, ActionListener {
 		super.setFont(f);
 		doLayout();
 	}
-	// Updates the message line.
-	// @param message the new message.
-	// 
+
+	
+	
+/**
+ * Update the status bar
+ * @param message the text to display
+ * @deprecated use #setStatusBarText
+ */
 	void setMessage(String message) {
-		_messageLine.setText(message);
+		this.statusBar.setText(message);
 	}
+	
+	
+	/**
+	 * A method to display a message in the status bar.
+	 * @param msg the message to display
+	 */
+	public void setStatusBarText(String msg){
+	    this.statusBar.setText(msg);
+	}
+	
 	void showButtons() {
-		_dialogButton.setVisible(true);
-		_infoButton.setVisible(true);
-		_disposeButton.setVisible(true);
-		_cloneButton.setVisible(true);
-		_dispatchButton.setVisible(true);
+		this.menuBar.setVisible(true);
 	}
+	
+	
+	/**
+	 * A method to print to STDERR the thread status.
+	 * @param g the group of thread to print
+	 * @param level the indent factor
+	 */
 	static private void showThreadGroup(ThreadGroup g, int level) {
 		int i;
-		String indent = "                                 ".substring(0, 
-				level);
+		String indent = "                                 ".substring(0,	level);
 
-		System.out.println(indent + "{" + g.toString() + "}");
+		// print the group name
+		System.err.println(indent + "{" + g.toString() + "}");
 
+		// the number of active threads
 		int n = g.activeCount();
 
 		if (n > 0) {
-			System.out.println(indent + " + Threads");
+			System.err.println(indent + " + Threads");
 
+			// get all threads in the group
 			Thread t[] = new Thread[g.activeCount()];
-
 			g.enumerate(t);
+			
+			// iterate on each thread and print it
 			for (i = 0; i < t.length; i++) {
-				if (g == t[i].getThreadGroup()) {
-					System.out.println(indent + "  - " + t[i].toString() 
-									   + (t[i].isAlive() ? " alive" 
-										  : " dead"));
+				if (t[i]!=null && g == t[i].getThreadGroup()) {
+					System.err.println(indent + "  - " + t[i].toString()+ (t[i].isAlive() ? " alive" : " dead"));
 				} 
 			} 
+			
 		} 
 
+		// similarly for thread groups
 		n = g.activeGroupCount();
 		if (n > 0) {
-			System.out.println(indent + " + ThreadGroups");
-			ThreadGroup tg[] = new ThreadGroup[n];
+			System.err.println(indent + " + ThreadGroups");
 
+			// get all groups
+			ThreadGroup tg[] = new ThreadGroup[n];
 			g.enumerate(tg);
+			
+			// iterate and print
 			for (i = 0; i < tg.length; i++) {
-				if (g == tg[i].getParent()) {
+				if (tg[i]!=null && g == tg[i].getParent()) {
 					showThreadGroup(tg[i], level + 4);
 				} 
 			} 
 		} 
 	}
+	
+	
+	/**
+	 * A method to print a dump of the running threads.
+	 */
 	static void showThreads() {
 		ThreadGroup g = null;
 
@@ -1276,62 +963,20 @@ final class MainWindow extends Frame implements ItemListener, ActionListener {
 	public void shutdown() {
 		_tahiti.exit();
 	}
+	
+	/**
+	 * Repaint the window and make the status coherent.
+	 * @deprecated
+	 *
+	 */
 	void updateGUIState() {
-		int indexes[] = _agletList.getSelectedIndexes();
-
-		boolean single = indexes.length == 1;
-		boolean multiple = indexes.length >= 1;
-
-		_dialogMenuItem.setEnabled(single);
-		_dialogButton.setEnabled(single);
-
-		_disposeMenuItem.setEnabled(multiple);
-		_disposeButton.setEnabled(multiple);
-
-		_killMenuItem.setEnabled(single);
-
-		_cloneMenuItem.setEnabled(single);
-		_cloneButton.setEnabled(single);
-
-		_infoMenuItem.setEnabled(single);
-		_infoButton.setEnabled(single);
-
-		_dispatchMenuItem.setEnabled(single);
-		_dispatchButton.setEnabled(single);
-
-		// _retractMenuItem.setEnabled(); _retractButton.setEnabled();
-
-		_deactivateMenuItem.setEnabled(single);
-		_activateMenuItem.setEnabled(single);
+	    this.repaint();
 	}
-	synchronized void updateProxyInList(AgletProxy proxy) {
-		TahitiItem tahitiItem = null;
-
-		if (shrink) {
-			return;
-		} 
-
-		int selected = _agletList.getSelectedIndex();
-
-		int index = -1;
-
-		for (int i = 0; i < _itemList.size(); i++) {
-			tahitiItem = (TahitiItem)_itemList.elementAt(i);
-			if (tahitiItem.checkProxy(proxy)) {
-				_agletList.replaceItem(getItemText(tahitiItem), i);
-				index = i;
-				if (index == selected) {
-					_agletList.select(index);
-				} 
-			} 
-		} 
-
-		updateGUIState();
-	}
+	
 	public synchronized void updateProxyList() {
 
 		// return all
-		_agletList.removeAll();
+		_agletList.removeAllItems();
 		_itemList.setSize(0);
 
 		// System.out.println("updateProxyList()");
@@ -1342,4 +987,6 @@ final class MainWindow extends Frame implements ItemListener, ActionListener {
 			insertProxyToList((AgletProxy)e.nextElement());
 		} 
 	}
+	
+
 }

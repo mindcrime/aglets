@@ -20,7 +20,7 @@ import java.util.Hashtable;
  * The <tt>AuthenticationManager</tt> class is the manager class of
  * authentication.
  * 
- * @version     1.00    $Date: 2001/07/28 06:33:42 $
+ * @version     1.00    $Date: 2009/07/27 10:31:41 $
  * @author      ONO Kouichi
  */
 public class AuthenticationManager {

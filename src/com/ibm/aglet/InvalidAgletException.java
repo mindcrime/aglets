@@ -26,7 +26,7 @@ package com.ibm.aglet;
 /**
  * Signals that the aglet proxy is not valid any longer.
  * 
- * @version     1.20    $Date: 2001/07/28 06:33:51 $
+ * @version     1.20    $Date: 2009/07/27 10:31:41 $
  * @author	Mitsuru Oshima
  */
 public class InvalidAgletException extends AgletException {

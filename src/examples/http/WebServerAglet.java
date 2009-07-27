@@ -16,6 +16,7 @@ package examples.http;
  */
 
 import com.ibm.aglet.*;
+import com.ibm.aglet.message.Message;
 import com.ibm.awb.misc.Encoding;
 import java.io.*;
 import java.net.URL;
@@ -32,7 +33,7 @@ import java.util.Enumeration;
  * in your web browser. The port number have to be same number on which
  * the aglet server is running. (434 by default)
  * 
- * @version     1.00	$Date: 2001/07/28 06:34:21 $
+ * @version     1.00	$Date: 2009/07/27 10:31:42 $
  * @author	Mitsuru Oshima
  */
 public class WebServerAglet extends Aglet {

@@ -17,6 +17,7 @@ package examples.itinerary;
 
 import com.ibm.aglet.*;
 import com.ibm.aglet.event.*;
+import com.ibm.aglet.message.Message;
 import com.ibm.agletx.patterns.Meeting;
 
 public final class StationaryAglet extends Aglet implements MobilityListener {

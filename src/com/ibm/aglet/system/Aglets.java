@@ -33,21 +33,23 @@ import java.net.URL;
  * 
  * <pre>
  * static public void main(String args[]) {
- *     String contextAddress = "atp://server.com:4434";
- *
- *     // create from server's local path
- *     AgletProxy p1 = Aglets.createAglet(contextAddress, null,
- *                                        "test.Aglet", null);
- *     AgletID id = p1.getAgletID();
- *
- *     // this returns a proxy equivalent to p1.
- *     AgletProxy p2 = Aglets.getAgletProxy(contextAddress, id);
- *
- *     p2.sendMessage(new Message("startTrip"));
+ * Aglets.init();
+ * String contextAddress = "atp://server.com:4434";
+ * 
+ * // create from server's local path
+ * AgletProxy p1 = Aglets.createAglet(contextAddress,
+ * null,
+ * "test.Aglet", null);
+ * AgletID id = p1.getAgletID();
+ * 
+ * // this returns a proxy equivalent to p1.
+ * AgletProxy p2 = Aglets.getAgletProxy(contextAddress, id);
+ * 
+ * p2.sendMessage(new Message("startTrip"));
  * }
  * </pre>
  * 
- * @version     1.10    $Date: 2007/02/04 22:55:49 $
+ * @version     1.10    $Date: 2009/07/27 10:31:42 $
  * @author      Mitsuru Oshima
  */
 abstract public class Aglets {
@@ -81,7 +83,7 @@ abstract public class Aglets {
 		return AgletRuntime.getAgletRuntime().getAgletProxies(contextAddress);
 	}
 	/**
-	 * Obtains a proxy reference to the remote aglet.
+	 * Obtains a proxy reference the remote aglet.
 	 */
 	static public AgletProxy getAgletProxy(String contextAddress, 
 										   AgletID id) throws IOException {

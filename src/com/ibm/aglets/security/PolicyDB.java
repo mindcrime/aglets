@@ -35,7 +35,7 @@ import java.util.Vector;
  *  permissions for specified code source.
  *
  *@author     ONO Kouichi
- *@version    1.00 $Date: 2002/02/20 22:17:18 $
+ *@version    1.00 $Date: 2009/07/27 10:31:40 $
  */
 public class PolicyDB {
 

@@ -14,7 +14,7 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-import java.awt.Button;
+import javax.swing.*;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Label;
@@ -30,19 +30,22 @@ import java.awt.event.WindowEvent;
 import java.util.StringTokenizer;
 
 import com.ibm.awb.misc.Resource;
-
+import com.ibm.aglets.tahiti.utils.*;
+import java.awt.*;
+import java.util.*;
+import javax.swing.event.*;
 /**
  * Class CreateAgletDialog represents the dialog for creating a new Aglet
  * instance. The class uses a CardLayout to handle the GUI differences
  * between creating an Aglet for a system class, local class file, remote
  * URL, and the hotlist of recently used Aglet classes.
  * 
- * @version     1.04    $Date: 2002/01/09 05:25:37 $
+ * @version     1.04    $Date: 2009/07/27 10:31:40 $
  * @author      Danny B. Lange
  */
 
 final class CreateAgletDialog extends TahitiDialog implements ActionListener, 
-		ItemListener {
+		ListSelectionListener {
 
 	/*
 	 * Singleton instance reference.
@@ -52,118 +55,187 @@ final class CreateAgletDialog extends TahitiDialog implements ActionListener,
 	/*
 	 * GUI components
 	 */
-	private TextField _classField = new TextField(20);
-	private TextField _urlField = new TextField(20);
-	private List _selectionList = new List(10, false);
-	private Button _add = new Button("Add to List");
-	private Button _remove = new Button("Remove");
+	private JTextField _classField = new JTextField(20);
+	private JTextField _urlField = new JTextField(20);
+	private AgentListPanel agentList;
 
 	/**
 	 * Constructs a new Aglet creation dialog.
 	 * @param parent the parent frame.
 	 */
 	private CreateAgletDialog(MainWindow parent) {
-		super(parent, "Create Aglet", false);
+		super(parent, bundle.getString("dialog.create.title"), false);
 
-		add("Center", makePanel());
-
-		addButton("Create", this);
-		addCloseButton("Cancel");
-		addButton("Reload Class and Create", this);
-
-		_selectionList.addActionListener(this);
-		_selectionList.addItemListener(this);
-		Util.setFixedFont(_selectionList);
-		_selectionList.setBackground(Color.white);
-        _selectionList.setForeground(Color.black);
+	
+		// set the layout of this window
+		this.getContentPane().setLayout(new BorderLayout());
+		
+		// create the panel with the agent name and sourcebase
+		this.getContentPane().add("North",this.createUpperPanel());
+		// add the agent list
+		this.getContentPane().add("Center",this.createAgentListPanel());
+		
+		
+		// create the button panel
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BorderLayout());
+		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		JButton create = new JButton(bundle.getString("dialog.create.button.create"),IconRepository.getIcon("create"));
+		create.setActionCommand(TahitiCommandStrings.CREATE_COMMAND);
+		create.addActionListener(this);
+		buttonPanel.add("South",create);
+		JButton clearcreate = new JButton(bundle.getString("dialog.create.button.clearcreate"),IconRepository.getIcon("create"));
+		clearcreate.setActionCommand(TahitiCommandStrings.CLEAR_CREATE_COMMAND);
+		clearcreate.addActionListener(this);
+		buttonPanel.add("South",clearcreate);
+		JButton add = new JButton(bundle.getString("dialog.create.button.add"),IconRepository.getIcon("add"));
+		add.setActionCommand(TahitiCommandStrings.ADD_COMMAND);
+		add.addActionListener(this);
+		buttonPanel.add("North",add);
+		JButton remove = new JButton(bundle.getString("dialog.create.button.remove"),IconRepository.getIcon("remove"));
+		remove.setActionCommand(TahitiCommandStrings.REMOVE_COMMAND);
+		remove.addActionListener(this);
+		buttonPanel.add("North",remove);
+		JButton close = new JButton(bundle.getString("dialog.create.button.close"),IconRepository.getIcon("close"));
+		close.setActionCommand(TahitiCommandStrings.CANCEL_COMMAND);
+		close.addActionListener(this);
+		buttonPanel.add("South",close);
+		
+		this.getContentPane().add("South",buttonPanel);
+		
+		this.pack();
+				
 	}
-	/*
-	 * Creation without reloading class.
+	
+	/**
+	 * Creates the upper panel, with fields for the agent name and code base
+	 * @return the panel.
 	 */
-	public void actionPerformed(ActionEvent ev) {
-		String cmd = ev.getActionCommand();
-
-		if ("add".equals(cmd)) {
-			add();
-		} else if ("remove".equals(cmd)) {
-			remove();
-		} else if ("Reload Class and Create".equals(cmd)) {
-			createAglet(true);
-			setVisible(false);
-		} else {
-			createAglet(false);
-			setVisible(false);
-		} 
+	protected JPanel createUpperPanel(){
+	    JPanel ret = new JPanel();
+	    ret.setLayout(new BorderLayout());
+	    
+	    // nested panels
+	    JPanel p1 = new JPanel();
+	    p1.setLayout(new FlowLayout(FlowLayout.RIGHT));
+	    p1.add(new JLabel(bundle.getString("dialog.create.label.agletname")));
+	    p1.add(this._classField);
+	    
+	    JPanel p2 = new JPanel();
+	    p2.setLayout(new FlowLayout(FlowLayout.RIGHT));
+	    p2.add(new JLabel(bundle.getString("dialog.create.label.codebase")));
+	    p2.add(this._urlField);
+	    
+	    ret.add("North",p1);
+	    ret.add("South",p2);
+	    
+	    return ret;
 	}
-	/*
-	 * Adds an item to the hotlist
+	
+	/**
+	 * Creates a panel that contains the list of the agents.
+	 * @return the panel
 	 */
-	void add() {
-		String name = _urlField.getText().trim();
+	protected JPanel createAgentListPanel(){
+	    	    
+	    // get a new agentlist
+	    AgentListPanel ret = new AgentListPanel();
+	    
 
-		if (name.length() > 0 && name.charAt(name.length() - 1) != '/') {
-			name += '/';
-		} 
-		name += _classField.getText().trim();
-
-		if (name.length() == 0) {
-			return;
-		} 
-
-		int num = _selectionList.getItemCount();
-
-		for (int i = 0; i < num; i++) {
-			if (_selectionList.getItem(i).equals(name)) {
-				return;
-			} 
-		} 
-		_selectionList.add(name);
-		updateProperty();
+	    
+	    // add this class as listselection listener
+	    ret.addListSelectionListener(this);
+	    // store the panel
+	    this.agentList = ret;
+	    
+	    // get the list of agents from the property file
+	    this.updateList();
+	    
+	    return ret;
+	    
 	}
-	public void closeButtonPressed() {
-		if (_selectionList.getSelectedIndex() != -1) {
-			_selectionList.deselect(_selectionList.getSelectedIndex());
-		} 
+	
+	/**
+	 * Manage events from buttons
+	 * @param event the event to manage
+	 */
+	public void actionPerformed(ActionEvent event) {
+		String command = event.getActionCommand();
+		
+		if(command!=null && command.equals(TahitiCommandStrings.CREATE_COMMAND) && this._classField.getText()!=null){
+		    // create the specified aglet
+		    createAglet(false);
+		}
+		else
+		if(command!=null && command.equals(TahitiCommandStrings.ADD_COMMAND) && this._classField.getText()!=null){
+		    this.agentList.addItem(this._classField.getText());
+		    return;
+		}
+		else
+		if(command != null && command.equals(TahitiCommandStrings.REMOVE_COMMAND)){
+		    this.agentList.removeSelectedItem();
+		    return;
+		}
+		else
+		if(command !=null && command.equals(TahitiCommandStrings.CLEAR_CREATE_COMMAND) && this._classField.getText()!=null){
+		    createAglet(true);
+		}
+
+		this.setVisible(false);
+		this.dispose();
 	}
+	
+	
+	
 	/*
-	 * Creates an Aglet creation dialog.
+	 * Creates an agent. 
+	 * @param reload if true forces a creation with a new classloader.
 	 */
 	synchronized void createAglet(boolean reload) {
-		if (_selectionList.getSelectedIndex() != -1) {
-			_selectionList.deselect(_selectionList.getSelectedIndex());
-		} 
-		disabling();
+		
+	    if((this._classField.getText()==null || this._classField.getText().equals("")) &&
+		        this.agentList.getSelectedItem()!=null){
+		    this._classField.setText(this.agentList.getSelectedItem());
+		}
+	    
+		this.setVisible(false);
 		String classname = _classField.getText().trim();
 		String codebase = _urlField.getText().trim();
 
-		// System.out.println("createAglet("+codebase+","+classname+","+reload+")");
-		getMainWindow().createAglet(codebase, classname, reload);
+		// check if there's data
+		if(classname ==null){
+		    JOptionPane.showMessageDialog(this,"Please specify an aglet class name!");
+		    return;
+		}
+		
+		
+		getMainWindow().createNewAglet(codebase, classname, reload);
 	}
-	/*
-	 * 
-	 */
-	private void disabling() {
-		_remove.setEnabled(_selectionList.getSelectedIndex() != -1);
-	}
+	
+	
 	/*
 	 * Singleton method to get the instance
 	 */
-	static CreateAgletDialog getInstance(MainWindow parent) {
+	static synchronized CreateAgletDialog getInstance(MainWindow parent) {
 		if (_instance == null) {
 			_instance = new CreateAgletDialog(parent);
 		} 
-		_instance.updateList();
+		
 		return _instance;
 	}
-	/*
-	 * Handles list box selections.
+	
+	/**
+	 * Handles list events
+	 * @param event the event to manage
 	 */
-	public void itemStateChanged(ItemEvent ev) {
-		disabling();
-
-		String selectedItem = _selectionList.getSelectedItem();
-
-		if (selectedItem.toLowerCase().startsWith("http://") 
+	public void valueChanged(ListSelectionEvent event){
+	    if(event==null){
+	        return;
+	    }
+	    
+	    String selectedItem = this.agentList.getSelectedItem();
+	   
+	    if (selectedItem.toLowerCase().startsWith("http://") 
 				|| selectedItem.toLowerCase().startsWith("https://") 
 				|| selectedItem.toLowerCase().startsWith("atps://") 
 				|| selectedItem.toLowerCase().startsWith("atp://") 
@@ -176,100 +248,30 @@ final class CreateAgletDialog extends TahitiDialog implements ActionListener,
 			_classField.setText(selectedItem);
 			_urlField.setText("");
 		} 
+	    
 	}
-	/*
-	 * Creates the panel
-	 */
-	protected GridBagPanel makePanel() {
-		GridBagPanel p = new GridBagPanel();
-		GridBagConstraints cns = new GridBagConstraints();
-
+	
 		/*
-		 * Initializes the constraints
-		 */
-		cns.ipadx = cns.ipady = 0;
-		cns.insets = new Insets(5, 5, 5, 5);
-		cns.anchor = GridBagConstraints.WEST;
-		cns.gridwidth = GridBagConstraints.REMAINDER;
-		cns.fill = GridBagConstraints.HORIZONTAL;
-
-		p.setConstraints(cns);
-
-		/*
-		 * Label
-		 */
-		_classField.addActionListener(this);
-		_urlField.addActionListener(this);
-
-		p.addLabeled("Aglet name", _classField);
-		p.addLabeled("Source URL", _urlField);
-
-		/*
-		 * HotList
-		 */
-		p.add(new Label("Aglets List"), GridBagPanel.WEST, GridBagPanel.NONE, 
-			  1);
-
-		p.add(_add, GridBagPanel.EAST, GridBagPanel.NONE, 1);
-		p.add(_remove, GridBagPanel.REMAINDER);
-
-		_add.setActionCommand("add");
-		_add.addActionListener(this);
-		_remove.setActionCommand("remove");
-		_remove.addActionListener(this);
-
-		cns.anchor = GridBagConstraints.CENTER;
-		cns.weightx = 1.0;
-		cns.weighty = 1.0;
-		cns.fill = GridBagConstraints.BOTH;
-		p.add(_selectionList, cns);
-
-		disabling();
-		return p;
-	}
-	/*
-	 * Deletes an item from the hotlist.
-	 */
-	void remove() {
-		if (_selectionList.getSelectedIndex() != -1) {
-			_selectionList.remove(_selectionList.getSelectedIndex());
-			_classField.setText("");
-			_urlField.setText("");
-			updateProperty();
-		} 
-		disabling();
-	}
-	/*
 	 * Updates the hotlist
 	 */
 	private void updateList() {
 		Resource res = Resource.getResourceFor("aglets");
-		String lists = res.getString("aglets.agletsList");
+		String list = res.getString("aglets.agletsList");
 
-		_selectionList.removeAll();
-
-		StringTokenizer st = new StringTokenizer(lists, " ", false);
-
-		while (st.hasMoreTokens()) {
-			_selectionList.add(st.nextToken());
-		} 
+		StringTokenizer stz = new StringTokenizer(list," ");
+	    while(stz.hasMoreTokens()){
+	        this.agentList.addItem(stz.nextToken());
+	    }
+	    
 	}
 	private void updateProperty() {
-		synchronized (_selectionList) {
-			int num = _selectionList.getItemCount();
-			String agletsList = "";
-
-			for (int i = 0; i < num; i++) {
-				agletsList += (_selectionList.getItem(i) + " ");
-			} 
+		synchronized (this) {
+		    String agletsList = this.agentList.getAllItems();
+		    		    
 			Resource res = Resource.getResourceFor("aglets");
-
 			res.setResource("aglets.agletsList", agletsList);
 			res.save("Tahiti");
 		} 
 	}
-	public boolean windowClosing(WindowEvent ev) {
-		closeButtonPressed();
-		return false;
-	}
+	
 }

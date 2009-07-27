@@ -21,6 +21,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import com.ibm.aglet.*;
+import com.ibm.aglet.message.Message;
 import com.ibm.aglet.util.*;
 
 /**
@@ -38,7 +39,7 @@ import com.ibm.aglet.util.*;
  * </ol>
  * Please use JDK1.1 or later to compile these classes.
  * 
- * @version     1.00    $Date: 2001/07/28 06:34:15 $
+ * @version     1.00    $Date: 2009/07/27 10:31:40 $
  * @author      Mitsuru Oshima
  * @see examples.watcher.WatcherSlave
  * @updated by Shintaro Kosugi $Date: 98/11/24

@@ -30,7 +30,7 @@ import java.util.Hashtable;
  * objects as arguments. This exists because the Hashtable does not
  * accept "null" as arguments.
  * 
- * @version     1.20    $Date: 2007/07/25 23:33:05 $
+ * @version     1.20    $Date: 2009/07/27 10:31:42 $
  * @author	Mitsuru Oshima
  */
 final public class Arguments extends Hashtable {
@@ -78,7 +78,7 @@ final public class Arguments extends Hashtable {
 	/**
 	 * Set a double value with an associated name.
 	 * @param name a name of this argument.
-	 * @param value a double value for this argument
+	 * @param d a double value of this argument.
 	 */
 	public Object setArg(String name, double value) {
 		return super.put(name, new Double(value));

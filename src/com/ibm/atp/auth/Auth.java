@@ -20,7 +20,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * The <tt>Auth</tt> class is the class for challenge-response authentication.
  * 
- * @version     1.00    $Date: 2001/07/28 06:33:42 $
+ * @version     1.00    $Date: 2009/07/27 10:31:41 $
  * @author      ONO Kouichi
  */
 public abstract class Auth extends Object {

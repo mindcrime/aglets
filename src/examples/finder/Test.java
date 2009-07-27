@@ -16,6 +16,7 @@ package examples.finder;
  */
 
 import com.ibm.aglet.*;
+import com.ibm.aglet.message.Message;
 
 public class Test extends Aglet {
 	AgletProxy _finder;

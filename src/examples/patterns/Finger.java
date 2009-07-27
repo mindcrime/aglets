@@ -16,6 +16,7 @@ package examples.patterns;
  */
 
 import com.ibm.aglet.*;
+import com.ibm.aglet.message.Message;
 import com.ibm.agletx.patterns.*;
 
 import java.net.*;

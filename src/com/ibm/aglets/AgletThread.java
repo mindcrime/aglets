@@ -2,22 +2,30 @@ package com.ibm.aglets;
 
 /*
  * @(#)AgletThread.java
- * 
+ *
  * IBM Confidential-Restricted
- * 
+ *
  * OCO Source Materials
- * 
+ *
  * 03L7246 (c) Copyright IBM Corp. 1996, 1998
- * 
+ *
  * The source code for this program is not published or otherwise
  * divested of its trade secrets, irrespective of what has been
  * deposited with the U.S. Copyright Office.
  */
 
+import org.apache.log4j.Logger;
+
 import com.ibm.aglet.Aglet;
 import com.ibm.aglet.MessageManager;
 import com.ibm.aglet.AgletException;
 import com.ibm.aglet.InvalidAgletException;
+import com.ibm.aglets.*;
+import com.ibm.aglets.log.LoggerFactory;
+import com.ibm.aglets.tahiti.MainWindow;
+
+import examples.hello.HelloAglet;
+import net.sourceforge.aglets.rolex.*;
 
 // import com.ibm.awb.misc.Debug;
 
@@ -29,12 +37,23 @@ final class AgletThread extends Thread {
 
 	private MessageManagerImpl manager = null;
 	private MessageImpl message = null;
+	
+	/**
+	 * A logger for this class.
+	 */
+	Logger logger = LoggerFactory.getLogger(AgletThread.class);
+
+	/**
+	 * This flag indicates whenever the thread is waiting (should be
+	 * in the thread pool then).
+	 */
+	private boolean waiting = false;
 
 	static int count = 1;
 
 	public AgletThread(ThreadGroup group, MessageManager m) {
 		super(group, "No." + (count++) + ']');
-		manager = (MessageManagerImpl)m;
+		setManager((MessageManagerImpl)m);
 		setPriority(group.getMaxPriority());
 	}
 	static MessageImpl getCurrentMessage() {
@@ -42,38 +61,42 @@ final class AgletThread extends Thread {
 
 		if (t instanceof AgletThread) {
 			return ((AgletThread)t).message;
-		} 
+		}
 		return null;
 	}
+	
+	
+	
+	/**
+	 * Handle a message for a specified agent. Please note that this method is called from the sender thread,
+	 * thus this method starts the current thread object in order to manage the message.
+	 * @param msg the message to handle.
+	 */
 	void handleMessage(MessageImpl msg) {
+	
+		// store the message to handle and enable the message handling thru the 
+		// start flag
+		message = msg;
+		start   = true;
+		
+		
+		// if this thread is still alive (i.e., not destroyed), try to resume the thread itself, since
+		// from the run method the thread should be waiting on this object itself.
 		if (isAlive()) {
-
-			// this is called after this is pushed into the thread stack.
-
-			// Debug.check();
-
+			// this branch is executed only after the thread has been pushed into the thread pool
+			
 			// synchronized block is needed only when the thread
 			// is already running.
 			synchronized (this) {
-
-				// following two can be outside of sync. block.
-				message = msg;
-				start = true;
-
 				notifyAll();
-			} 
-
-			// Debug.check();
+			}
 		} else {
-
-			// Debug.check();
-			message = msg;
-			start = true;
-			start();
-
-			// Debug.check();
-		} 
+			// start this thread, since it seems to be sleeping
+			this.start();
+		}
 	}
+	
+	
 	synchronized public void invalidate() {
 
 		// Debug.check();
@@ -81,27 +104,65 @@ final class AgletThread extends Thread {
 			valid = false;
 			start = true;
 			notifyAll();
-		} 
+		}
 
 		// Debug.check();
 	}
+	
+	
+	
 	public void run() {
+
+
 		if (loop_started) {
 
 			// to assure that aglet cannot call run on this thread.
 			return;
-		} 
+		}
 
 		loop_started = true;
 		start = false;
-		LocalAgletRef ref = manager.getAgletRef();
+
+		//LocalAgletRef ref = manager.getAgletRef();
 
 		// Debug.start();
 
 		try {
 			while (valid) {
 				try {
-					message.handle(ref);
+					LocalAgletRef ref = getManager().getAgletRef();
+					logger.debug("Delivering a message to the ref "+ref);
+					if( message != null && !(message instanceof RolexMessage) ){
+						logger.debug("The message is a normal message");
+						message.handle(ref);
+						if( message instanceof SystemMessage ){
+							logger.debug("The message is a SystemMessage, set the start flag appropriately");
+							start = ((SystemMessage)message).type == SystemMessage.CREATE;
+						}
+						else
+							start = false;
+					}
+					else{
+                        if (message instanceof RolexMessage && 
+                        	((RolexMessage) message).isExclusive()) {
+							logger.debug("The message is a RoleX message:"+message);
+							//message.handle(ref);
+							
+							try{
+								Aglet  a = ref.prepareForAgletSubstitution();
+								logger.debug("Preparation for the agent substitution completed");
+								ref.completeAgletSubstitution(a);
+								logger.debug("Substitution completed");
+							}catch(AgletException e){
+								System.err.println("Rolex Exception "+e);
+								e.printStackTrace();
+							}
+						}
+                        
+                        
+                        
+						start = false;
+					}
 					message = null;
 				} catch (RuntimeException ex) {
 					valid = false;
@@ -113,53 +174,106 @@ final class AgletThread extends Thread {
 					ex.printStackTrace();
 					valid = false;
 					start = true;
-				} 
+				}
 				finally {
 
-					// Debug.check();
-					if (valid) {
-						manager.pushThreadAndExitMonitorIfOwner(this);
-					} else {
-						manager.exitMonitorIfOwner();
-					} 
+					// IMPORTANT: since the threads are now shared
+					// I need to synchronize for the thread releasing and
+					// waiting
 
-					// Debug.check();
-				} 
+					synchronized(this){
 
-				synchronized (this) {
+						if (valid) {
+							getManager().pushThreadAndExitMonitorIfOwner(this);
+						} else {
+							getManager().exitMonitorIfOwner();
+						}
 
-					// Debug.check();
-					while (start == false && valid) {
-						try {
-							wait();
-						} catch (InterruptedException ex) {
+						try{
+							while( start == false && valid){
+								this.setWaiting(true);
+								this.wait();
+								this.setWaiting(false);
+							}
+						}catch(InterruptedException ex){
+							System.err.println("AgletThread - cannot suspend myself ");
 							ex.printStackTrace();
-						} 
-					} 
-					start = false;
-				} 
+							this.setWaiting(false);
+						}
 
-				// Debug.check();
-			} 
-		} 
+						start = false;
+
+
+					}	// end of the synchronized block
+
+				}
+
+			}
+		}
 		finally {
-			manager.removeThread(this);
+			getManager().removeThread(this);
 			message = null;
 
 			// Debug.end();
-		} 
+		}
 	}
 	public String toString() {
 		MessageImpl m = message;
 
 		if (m == null) {
-			return "AgletThread[" + getName() + ", priority = " 
-				   + getPriority() + ", valid = " + valid + ", start = " 
+			return "AgletThread[" + getName() + ", priority = "
+				   + getPriority() + ", valid = " + valid + ", start = "
 				   + start;
 		} else {
-			return "AgletThread[" + getName() + "," + m.toString() 
-				   + ", priority = " + getPriority() + ", valid = " + valid 
+			return "AgletThread[" + getName() + "," + m.toString()
+				   + ", priority = " + getPriority() + ", valid = " + valid
 				   + ", start = " + start;
-		} 
+		}
 	}
+
+
+	/**
+	 * A method to set the message manager for this thread. Since the thread can be
+	 * shared from a pool. it is important to set the message manager
+	 * before the message is processed.
+	 * @param manager the message manager to handle the message
+	 */
+	public void setMessageManager(MessageManager manager){
+		if(manager instanceof MessageManagerImpl){
+			this.setManager((MessageManagerImpl) manager);
+		}
+	}
+
+	/**
+	 * Indicates if this thread is waiting, that means has done a wait call.
+	 * <B>Should be invoked by a synchronized block!</B>
+	 * @return true if the thread is waiting
+	 */
+	public synchronized boolean isWaiting(){
+		return waiting;
+	}
+
+	/**
+	 * Sets the waiting flag for this thread.
+	 * @param waiting the waiting status.
+	 */
+	protected synchronized void setWaiting(boolean waiting){
+		this.waiting = waiting;
+	}
+	/**
+	 * Sets the message manager implementation.
+	 * @param manager The manager to set.
+	 */
+	protected void setManager(MessageManager manager) {
+		if( manager instanceof MessageManagerImpl)
+			this.manager = (MessageManagerImpl) manager;
+	}
+	/**
+	 * Returns the message manager of this thread.
+	 * @return Returns the manager.
+	 */
+	protected MessageManagerImpl getManager() {
+		return manager;
+	}
+
 }

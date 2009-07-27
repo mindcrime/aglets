@@ -40,6 +40,7 @@ public class LogFileOutputStream extends OutputStream {
 	 * @param maxFileSize maximum file size of the log. If the size of the log file exceeds
 	 * this value, the log file will be renamed and a new log file will be created.
 	 * @exception IOException if fail to create or access the file.
+	 * @return an instance of this class.
 	 */
 	public LogFileOutputStream(String filename, 
 							   long maxFileSize) throws IOException {

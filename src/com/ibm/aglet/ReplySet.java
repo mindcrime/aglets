@@ -25,6 +25,8 @@ package com.ibm.aglet;
 
 import java.util.Vector;
 
+import com.ibm.aglet.message.Message;
+
 /**
  * ReplySet is a container of the FutureReply objects by which the
  * each of FutureReply object can be retrieved as its reply become available.
@@ -44,7 +46,7 @@ import java.util.Vector;
  * @see Message
  * @see FutureReply
  * 
- * @version     1.20    $Date: 2002/01/19 21:57:19 $
+ * @version     1.20    $Date: 2009/07/27 10:31:41 $
  * @author	Mitsuru Oshima
  */
 

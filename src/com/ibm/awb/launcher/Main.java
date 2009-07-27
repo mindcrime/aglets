@@ -34,15 +34,15 @@ import com.ibm.aglets.tahiti.TahitiDaemon;
 import com.ibm.awb.misc.FileUtils;
 import com.ibm.awb.misc.Resource;
 import com.ibm.awb.misc.LogStream;
-
-import org.aglets.log.AgletsLogger;
+import org.aglets.log.LogCategory;
+import org.aglets.log.LogInitializer;
 
 /**
  *  Aglets server bootstrap.
  *
  * @author     Hideki Tai
  * @created    July 22, 2001
- * @version    $Revision: 1.8 $ $Date: 2007/08/07 08:25:25 $ $Author: maxthomax $
+ * @version    $Revision: 1.9 $ $Date: 2009/07/27 10:31:42 $ $Author: cat4hire $
  */
 public class Main {
     private final static String         VIEWER_TAHITI =
@@ -67,12 +67,12 @@ public class Main {
 
     private static String               FS;
     private static String               PS;
-    private static AgletsLogger logger = new AgletsLogger(Main.class.getName());
 
 
     /**
      *  Bootstrap aglets server. This main method takes at most one parameter
-     *  which specifies a name of a bootstrap property file.
+     *  which specifies a name of a bootstrarp property file. The default file
+     *  name is "./boot.props"
      *
      * @param  args             The command line arguments
      * @exception  IOException  Description of Exception
@@ -257,7 +257,13 @@ public class Main {
      * @exception  Exception  Description of Exception
      */
     private static void bootstrap() throws Exception {
-        logger.info("Logging system initialized!");
+
+        // Initialize logging system.
+        String initializerName = System.getProperty("aglets.logger.class",
+            "org.aglets.log.quiet.QuietInitializer" );
+        Class.forName(initializerName);
+        LogCategory cat = LogInitializer.getCategory(Main.class.getName());
+        cat.info("Logging system initialized!");
 
         // Initializes AWT and Audio classes.
         if (!(_nogui || _daemon)) {
@@ -323,7 +329,7 @@ public class Main {
         MAFAgentSystem maf_system = new MAFAgentSystem_AgletsImpl(runtime);
         String protocol = System.getProperties().getProperty("maf.protocol");
 
-        logger.debug("Initializing handler: "+protocol);
+        cat.debug("Initializing handler: "+protocol);
         MAFAgentSystem.initMAFAgentSystem(maf_system, protocol);
 
         // Initializes Tahiti(part of the agent system)
@@ -571,6 +577,16 @@ public class Main {
         // Get mandatory properties
         String aglets_home = props.getProperty("install.root");
 
+
+        // Luca: only beacuse I don't understand how to pass these values thru eclipse!
+        aglets_home="f:\\aglets2.0.2";
+        String icons_file = aglets_home+"\\cnf\\icons.prop";
+        props.setProperty("aglets.home",aglets_home);
+        props.setProperty("aglets.icons",icons_file);
+        props.setProperty("aglets.icons.path",aglets_home+"\\icons");
+        System.out.println("Aglets_home = "+aglets_home);
+
+        
         // install.root will be given the script produced
         // by InstallShield JavaEdition.
         if (aglets_home == null) {
@@ -579,9 +595,17 @@ public class Main {
                 System.err.println("Please specify aglets.home property");
                 System.exit(1);
             }
+            else{
+            	System.out.println("Running for the aglet installation aglets_home="+aglets_home);
+            }
         }
-
+        
+        
+        
         String user_home = props.getProperty("user.home", null);
+        
+        System.out.println("Aglets home: "+aglets_home);
+        
 
         if (user_home == null || user_home.length() == 0) {
             user_home = FileUtils.getUserHome();

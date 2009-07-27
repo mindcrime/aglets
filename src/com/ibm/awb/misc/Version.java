@@ -18,7 +18,7 @@ import java.util.Locale;
  */
 
 /**
- * Class Version is used to create version objects that contain release
+ * Class Version is used to creat version objects that contain release
  * information, such as MAJOR, MINOR, BUILD, DATE, and KIND.
  * Version objects can also be created with an expiration date. Any attempt
  * to create an instance of the version object after the expiration date
@@ -50,7 +50,8 @@ public final class Version {
 	 * @param kind product information.
 	 * @param major major version number M.x.x
 	 * @param minor minor version number x.M.x
-	 * @param micro build version number x.x.B
+	 * @param build build version number x.x.B
+	 * @param date date of this version.
 	 */
 	public Version(String kind, int major, int minor, int micro) {
 		_kind = (kind != null) ? kind : "";

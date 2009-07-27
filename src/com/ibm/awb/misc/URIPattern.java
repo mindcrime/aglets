@@ -22,7 +22,7 @@ import java.io.IOException;
 /**
  * The <tt>URIPattern</tt> class represents a URI pattern.
  * 
- * @version     1.00    $Date: 2007/04/04 00:16:35 $
+ * @version     1.00    $Date: 2009/07/27 10:31:40 $
  * @author      ONO Kouichi
  */
 public class URIPattern {
@@ -383,19 +383,11 @@ public class URIPattern {
 		} 
 	}
 	public String toString() {
-		String hostpart = "";
+		String hostpart = HOSTNAME_LEADER + _host;
 
-		// initialize hostpart only if the host is not empty
-		// (for the "file" URI scheme the host is parsed as empty)
-		if (_host != "") {
-			hostpart = HOSTNAME_LEADER + _host;
-
-			// since there is a host part, add a port, too, if there is one
-			if (_port != null) {
-				hostpart = hostpart + PORT_LEADER + _port;
-			} 
-		}
-
+		if (_port != null) {
+			hostpart = hostpart + PORT_LEADER + _port;
+		} 
 		return _protocol + PROTOCOL_TERMINATOR + hostpart + _file;
 	}
 }

@@ -15,6 +15,7 @@ package com.ibm.agletx.patterns;
  */
 
 import com.ibm.aglet.*;
+import com.ibm.aglet.message.Message;
 import com.ibm.aglet.util.*;
 import com.ibm.agletx.util.MessengerItinerary;
 import java.net.URL;

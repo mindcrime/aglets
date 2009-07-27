@@ -30,12 +30,15 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Enumeration;
 
+import com.ibm.aglet.message.Message;
+import com.ibm.aglet.message.MessageException;
+
 /**
  * AgletProxy interface is a placeholder for aglets. The purpose of this
  * interface is to provide a mechanism to control and limit direct access to
  * aglets.
  * 
- * @version     1.50    $Date: 2007/07/25 23:33:04 $
+ * @version     1.50    $Date: 2009/07/27 10:31:41 $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
@@ -99,7 +102,7 @@ public interface AgletProxy {
 	/**
 	 * Dispatches the aglet to the location specified by the ticket
 	 * as the argument.
-	 * @param ticket the {@link Ticket} identifying the destination context
+	 * @param address the address of the destination context.
 	 * @return the AgletProxy of the dispatched (remote) aglet.
 	 * @exception ServerNotFoundException if the server
 	 * @exception UnknownHostException if the host given in the URL doesn't
@@ -150,8 +153,8 @@ public interface AgletProxy {
 	/**
 	 * Gets the current address of the target aglet.
 	 * 
-	 * @return the address
-	 * @exception InvalidAgletException if the aglet is not valid.
+	 * @reutrn the address
+	 * @return InvalidAgletException if the aglt is not valid.
 	 */
 	abstract public String getAddress() throws InvalidAgletException;
 	/**

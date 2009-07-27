@@ -32,7 +32,7 @@ import java.awt.event.ActionEvent;
 /**
  * <tt>ActionPanel</tt> is a panel to execute action to an aglet.
  * 
- * @version     1.00    $Date: 2007/07/16 12:03:25 $
+ * @version     1.00    $Date: 2009/07/27 10:31:42 $
  * @author      ONO Kouichi
  */
 class ActionPanel extends Panel implements ItemListener, ActionListener {
@@ -48,7 +48,7 @@ class ActionPanel extends Panel implements ItemListener, ActionListener {
 	ActionPanel(ProtectionAglet aglet) {
 		_aglet = aglet;
 		_field.setLayout(_layout);
-		for (int i = 0; i < ProtectionDialog.ACTIONS.length; i++) {
+		for (int i = 0; i < ProtectionDialog.NUMBER_OF_ACTIONS; i++) {
 			String label = ProtectionDialog.ACTIONS[i];
 
 			_command.addItem(label);

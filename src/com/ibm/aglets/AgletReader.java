@@ -37,7 +37,7 @@ import java.util.Hashtable;
 /**
  * <tt> AgletReader </tt>
  * 
- * @version     1.10	$Date: 2001/07/28 06:31:57 $
+ * @version     1.10	$Date: 2009/07/27 10:31:41 $
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
  */

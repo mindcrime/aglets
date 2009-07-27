@@ -31,7 +31,7 @@ import java.net.URL;
 /**
  * Context level event
  * 
- * @version	1.50	$Date: 2007/07/25 23:33:05 $
+ * @version	1.50	$Date: 2009/07/27 10:31:42 $
  * @author      Danny B. Lange
  * @author      Mitsuru Oshima
  */
@@ -49,47 +49,44 @@ public class ContextEvent extends AgletEvent {
 
 	/**
 	 * The STARTED event type is delivered when the aglet is started.
-	 * @see com.ibm.aglet.AgletContext#start()
-	 * @see com.ibm.aglet.AgletContext#start(boolean)
+	 * @see aglet.AgletContext#start
 	 */
 	public static final int STARTED = CONTEXT_FIRST;				// 1000
 
 	/**
 	 * The STARTED event type is delivered when the context is being
 	 * shutting down.
-	 * @see com.ibm.aglet.AgletContext#shutdown()
-	 * @see com.ibm.aglet.AgletContext#shutdown(com.ibm.aglet.Message)
+	 * @see aglet.AgletContext#shutdown
 	 */
 	public static final int SHUTDOWN = CONTEXT_FIRST + 1;			// 1001
 
 	/**
 	 * The CREATED event type is delivered when an aglet is created.
-	 * @see com.ibm.aglet.AgletContext#createAglet(URL, String, Object)
+	 * @see aglet.AgletContext#createAglet
 	 */
 	public static final int CREATED = CONTEXT_FIRST + 2;			// 1002
 
 	/**
 	 * The CLONED event type is delivered when an aglet is cloned.
-	 * @see com.ibm.aglet.Aglet#clone()
+	 * @see aglet.Aglet#clone
 	 */
 	public static final int CLONED = CONTEXT_FIRST + 3;				// 1003
 
 	/**
 	 * The DISPOSED event type is delivered when an aglet is disposed.
-	 * @see com.ibm.aglet.Aglet#dispose()
+	 * @see aglet.Aglet#dispose
 	 */
 	public static final int DISPOSED = CONTEXT_FIRST + 4;			// 1004
 
 	/**
 	 * The DISPATCHED event type is delivered when an aglet is dispatched.
-	 * @see com.ibm.aglet.Aglet#dispatch(com.ibm.aglet.Ticket)
-	 * @see com.ibm.aglet.Aglet#dispatch(URL)
+	 * @see aglet.Aglet#dispatch
 	 */
 	public static final int DISPATCHED = CONTEXT_FIRST + 5;			// 1005
 
 	/**
 	 * The DISPATCHED event type is delivered when an aglet is retracted.
-	 * @see com.ibm.aglet.AgletContext#retractAglet(URL, com.ibm.aglet.AgletID)
+	 * @see aglet.AgletContext#retractAglet
 	 */
 	public static final int REVERTED = CONTEXT_FIRST + 6;			// 1006
 
@@ -101,25 +98,25 @@ public class ContextEvent extends AgletEvent {
 
 	/**
 	 * The DEACTIVATED event type is delivered when an aglet is deactivated
-	 * @see com.ibm.aglet.Aglet#deactivate(long)
+	 * @see aglet.Aglet#deactivate
 	 */
 	public static final int DEACTIVATED = CONTEXT_FIRST + 8;		// 1008
 
 	/**
 	 * The SUSPENDED event type is delivered when an aglet is suspended
-	 * @see com.ibm.aglet.Aglet#suspend(long)
+	 * @see aglet.Aglet#deactivate
 	 */
 	public static final int SUSPENDED = CONTEXT_FIRST + 9;			// 1009
 
 	/**
 	 * The ACTIVATED event type is delivered when an aglet is activated.
-	 * @see com.ibm.aglet.Aglet#deactivate(long)
+	 * @see aglet.Aglet#activate
 	 */
 	public static final int ACTIVATED = CONTEXT_FIRST + 10;			// 1010
 
 	/**
 	 * The RESUMED event type is delivered when an aglet is resumed.
-	 * @see com.ibm.aglet.Aglet#suspend(long)
+	 * @see aglet.Aglet#resume
 	 */
 	public static final int RESUMED = CONTEXT_FIRST + 11;			// 1011
 
@@ -132,7 +129,7 @@ public class ContextEvent extends AgletEvent {
 	/**
 	 * The SHOW_DOCUMENT event type is delivered when an aglet requests to
 	 * show an document specified by the URL.
-	 * @see com.ibm.aglet.AgletContext#showDocument(URL)
+	 * @see aglet.AgletContext#showDocument
 	 */
 	public static final int SHOW_DOCUMENT = CONTEXT_FIRST + 13;		// 1013
 

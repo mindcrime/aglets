@@ -24,9 +24,9 @@ import com.ibm.aglet.AgletInfo;
 import com.ibm.aglet.AgletProxy;
 import com.ibm.aglet.AgletID;
 import com.ibm.aglet.AgletContext;
-import com.ibm.aglet.Message;
 import com.ibm.aglet.AgletException;
 import com.ibm.aglet.InvalidAgletException;
+import com.ibm.aglet.message.Message;
 import com.ibm.aglet.security.Protections;
 import com.ibm.aglet.security.AgletProtection;
 
@@ -34,7 +34,7 @@ import com.ibm.aglet.security.AgletProtection;
  * <tt>ProtectionAglet</tt> is a test aglet for selecting actions
  * to be protected or not.
  * 
- * @version     1.00    $Date: 2001/07/28 06:34:23 $
+ * @version     1.00    $Date: 2009/07/27 10:31:42 $
  * @author      ONO Kouichi
  */
 public class ProtectionAglet extends Aglet {

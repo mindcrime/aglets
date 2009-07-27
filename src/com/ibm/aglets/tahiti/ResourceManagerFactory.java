@@ -3,6 +3,7 @@ import com.ibm.aglet.MessageManager;
 import com.ibm.aglets.AgletRuntime;
 import com.ibm.aglets.AgletThread;
 import com.ibm.aglets.ResourceManager;
+import com.ibm.aglets.log.LoggerFactory;
 import com.ibm.aglets.security.PolicyImpl;
 import com.ibm.awb.misc.*;
 import com.ibm.maf.ClassName;
@@ -38,11 +39,11 @@ import java.security.cert.Certificate;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import org.aglets.log.*;
+import org.apache.log4j.Logger;
 
 /**
  * @author     Mitsuru Oshima
- * @version    1.10 $Date: 2007/07/23 07:08:58 $
+ * @version    1.10 $Date: 2009/07/27 10:31:40 $
  */
 final class ResourceManagerFactory
          implements com.ibm.aglets.ResourceManagerFactory {
@@ -63,8 +64,8 @@ final class ResourceManagerFactory
     private static String _publicRoot;
     private static String _localAddr;
 
-    private static AgletsLogger logger = new AgletsLogger(ResourceManagerFactory.class.getName());
-    
+    private final static Logger log = LoggerFactory.getLogger(ResourceManager.class);
+
     private ResourceManager _appResourceManager;
     private Hashtable _map = new Hashtable();
 
@@ -101,8 +102,8 @@ final class ResourceManagerFactory
 
         for (int i = 0; i < _agletsClassPath.length; i++) {
             lookupJarFiles(_agletsClassPath[i], true);
-            if (logger.isDebugEnabled()) {
-                logger.debug("Aglet CP: " + _agletsClassPath[i]);
+            if (log.isDebugEnabled()) {
+                log.debug("Aglet CP: " + _agletsClassPath[i]);
             }
         }
 
@@ -194,7 +195,7 @@ final class ResourceManagerFactory
         final String[] pl = pathList;
         final String classFileName = name.replace('.', File.separatorChar)
                  + ".class";
-        logger.debug("lookupCodeBaseFrom()++");
+        log.debug("lookupCodeBaseFrom()++");
         try {
             return (String) AccessController.doPrivileged(
                 new PrivilegedExceptionAction() {
@@ -204,7 +205,7 @@ final class ResourceManagerFactory
                                      + classFileName);
 
                             if (f.exists()) {
-                                logger.debug("Found ["+name+"] in "+getCanonicalDirectory(pl[i]));
+                                log.debug("Found ["+name+"] in "+getCanonicalDirectory(pl[i]));
                                 return getCanonicalDirectory(pl[i]);
                                 // REMIND:
                                 // file URL automatically adds local address to URL.
@@ -215,7 +216,7 @@ final class ResourceManagerFactory
                     }
                 });
         } catch (PrivilegedActionException ex) {
-            logger.error("PrivilegedAction error",ex);
+            log.error("PrivilegedAction error",ex);
             throw (IOException) ex.getException();
         }
     }
@@ -231,14 +232,14 @@ final class ResourceManagerFactory
     private static String lookupCodeBaseInManifest(String name)
              throws IOException {
                  
-        logger.debug("lookupCodeBaseInManifest() : ["+name+"]");
+        log.debug("lookupCodeBaseInManifest() : ["+name+"]");
         Enumeration e = _manifests.keys();
 
         while (e.hasMoreElements()) {
             Manifest m = (Manifest) e.nextElement();
 
             if (m.contains(name.replace('.', '/') + ".class")) {
-                logger.debug("Found in manifest.");
+                log.debug("Found in manifest.");
                 return (String) _manifests.get(m);
             }
         }
@@ -293,7 +294,7 @@ final class ResourceManagerFactory
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        logger.debug("Reading manifest .. " + path);
+        log.debug("Reading manifest .. " + path);
         try {
             JarArchive j = new JarArchive(path);
             Manifest m = j.getManifest();
@@ -326,13 +327,13 @@ final class ResourceManagerFactory
                 if (loader instanceof AgletClassLoader) {
                     rm = ((AgletClassLoader) loader);
                 } else {
-                    logger.debug("Using appResourceManager???");
+                    log.debug("Using appResourceManager???");
                     // then, that's secure class loader.
                     rm = _appResourceManager;
                 }
             }
         }
-        logger.debug("getCurrentResourceManager() : "+ rm );
+        log.debug("getCurrentResourceManager() : "+ rm );
         return rm;
     }
 
@@ -372,11 +373,11 @@ final class ResourceManagerFactory
     public synchronized ResourceManager createResourceManager(URL codebase,
             Certificate owner, ClassName[] t) {
         AgletClassLoader loader = getClassLoaderInCache(codebase, owner, t);
-        logger.info("Creating ResourceManager.");
+        log.info("Creating ResourceManager.");
         if (loader == null) {
             loader = createClassLoader(codebase, owner);
         } else {
-            logger.debug("Using cached loader: " + codebase);
+            log.debug("Using cached loader: " + codebase);
         }
 
         String ownerName = null;
@@ -396,7 +397,7 @@ final class ResourceManagerFactory
      */
     public URL lookupCodeBaseFor(String name) {
         String codebase = null;
-        logger.debug("lookupCodeBaseFor()++ : ["+name+"]");
+        log.debug("lookupCodeBaseFor()++ : ["+name+"]");
         try {
             codebase = lookupCodeBaseInManifest(name);
 
@@ -430,10 +431,10 @@ final class ResourceManagerFactory
         try {
             u = new URL(codebase.replace(File.separatorChar, '/'));
         } catch (Exception ex) {
-            logger.error("Error creating URL: ", ex); 
+            log.error("Error creating URL: ", ex); 
             u = null;
         }
-        logger.debug("lookupCodeBaseFor()-- : ["+u+"]");
+        log.debug("lookupCodeBaseFor()-- : ["+u+"]");
         return u;
     }
 
@@ -462,10 +463,10 @@ final class ResourceManagerFactory
         CodeSource cs = new CodeSource(codebase, owners);
         Vector v = (Vector) _map.get(cs);
 
-        logger.debug("Looking for cached loader: " + codebase);
+        log.debug("Looking for cached loader: " + codebase);
 
         if (table == null && JarAgletClassLoader.isJarFile(codebase)) {
-            logger.debug("Codebase is jar file.");
+            log.debug("Codebase is jar file.");
             try {
                 final URL fCodebase = codebase;
                 ClassName[] tmpTab = (ClassName[]) AccessController.doPrivileged(
@@ -493,7 +494,7 @@ final class ResourceManagerFactory
                 table = new ClassName[tmpTab.length];
                 System.arraycopy(tmpTab, 0, table, 0, table.length);
             } catch (PrivilegedActionException ex) {
-                logger.error(ex);
+                log.error(ex);
             }
         }
 
@@ -529,7 +530,7 @@ final class ResourceManagerFactory
                     ((java.security.cert.X509Certificate) owner).getSubjectDN()
                     .getName();
         }
-        logger.debug("creating AgletClassLoader: for " + codeBase + " : " + oo);
+        log.debug("creating AgletClassLoader: for " + codeBase + " : " + oo);
 
         // do not forget the scope!
         Certificate[] owners;

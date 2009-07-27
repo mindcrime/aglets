@@ -28,7 +28,7 @@ import com.ibm.aglet.AgletProxy;
 /**
  * The clon event occurs when the cloning of an aglet is attempted.
  * 
- * @version     1.00    $Date: 2001/07/28 06:34:10 $
+ * @version     1.00    $Date: 2009/07/27 10:31:41 $
  * @author      Mitsuru Oshima
  */
 public class CloneEvent extends AgletEvent {

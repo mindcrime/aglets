@@ -21,7 +21,7 @@ import com.ibm.aglets.LocalAgletRef;
 /**
  * An AgletThreadGroup contains are the running threads of a specific aglet.
  * 
- * @version     1.10	$Date: 2001/07/28 06:32:52 $
+ * @version     1.10	$Date: 2009/07/27 10:31:40 $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  */

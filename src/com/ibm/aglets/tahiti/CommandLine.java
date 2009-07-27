@@ -36,7 +36,7 @@ import java.security.Identity;
  * 
  * @see com.ibm.aglet.system.ContextListener
  * @see com.ibm.aglet.system.ContextEvent
- * @version     1.10    $Date: 2007/07/25 23:33:05 $
+ * @version     1.10    $Date: 2009/07/27 10:31:40 $
  * @author	Mitsuru Oshima
  */
 public final class CommandLine implements ContextListener, Runnable {
@@ -283,7 +283,7 @@ public final class CommandLine implements ContextListener, Runnable {
 	}
 	/**
 	 * Initializes the Viewer with the context.
-	 * @param ev the {@link ContextEvent} containing the context
+	 * @param context the AgletContext assigned to this Viewer.
 	 */
 	public void contextStarted(ContextEvent ev) {
 		this.context = ev.getAgletContext();
@@ -352,6 +352,7 @@ public final class CommandLine implements ContextListener, Runnable {
 	/**
 	 * Called when an aglet request to show the document given
 	 * as URL
+	 * @see Aglet#showDocument
 	 * @param event an ContextEvent
 	 */
 	public void showDocument(ContextEvent event) {

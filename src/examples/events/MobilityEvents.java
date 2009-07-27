@@ -17,6 +17,7 @@ package examples.events;
 
 import com.ibm.aglet.*;
 import com.ibm.aglet.event.*;
+import com.ibm.aglet.message.Message;
 
 /**
  * MobilityEvents

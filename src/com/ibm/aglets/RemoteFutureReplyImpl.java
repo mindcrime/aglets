@@ -14,11 +14,11 @@ package com.ibm.aglets;
  * deposited with the U.S. Copyright Office.
  */
 
-import com.ibm.aglet.MessageException;
 import com.ibm.aglet.NotHandledException;
 import com.ibm.aglet.FutureReply;
 import com.ibm.aglet.ReplySet;
 import com.ibm.aglet.AgletException;
+import com.ibm.aglet.message.MessageException;
 
 import java.util.Vector;
 import java.util.Enumeration;
@@ -28,7 +28,7 @@ import com.ibm.maf.MAFAgentSystem;
  * The <tt>FutureReplyImpl</tt> class is an implementation of
  * com.ibm.aglet.FutureReply abstract class.
  * 
- * @version     1.30    $Date: 2001/07/28 06:31:59 $
+ * @version     1.30    $Date: 2009/07/27 10:31:41 $
  * @author	Mitsuru Oshima
  */
 final class RemoteFutureReplyImpl extends FutureReplyImpl {

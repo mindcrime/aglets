@@ -31,7 +31,7 @@ package com.ibm.aglet;
  * @see FutureReply
  * @see ReplySet
  * 
- * @version     1.30    $Date: 2007/07/25 23:33:04 $
+ * @version     1.30    $Date: 2009/07/27 10:31:41 $
  * @author	Mitsuru Oshima
  */
 public interface MessageManager {
@@ -97,9 +97,9 @@ public interface MessageManager {
 	/**
 	 * Exits the current monitor.
 	 * @see Aglet#exitMonitor
-	 * @see #waitMessage()
-	 * @see #notifyMessage()
-	 * @see #notifyAllMessages()
+	 * @see waitMessage
+	 * @see notifyMessage
+	 * @see notifyAllMessages
 	 */
 	public void exitMonitor();
 	/**
@@ -107,8 +107,8 @@ public interface MessageManager {
 	 * @exception IllegalMonitorStateException If the current thread
 	 * is not the owner of the monitor.
 	 * @see Aglet#notifyAllMessages
-	 * @see #waitMessage()
-	 * @see #notifyMessage()
+	 * @see waitMessage
+	 * @see notifyMessage
 	 */
 	public void notifyAllMessages();
 	/**
@@ -116,8 +116,8 @@ public interface MessageManager {
 	 * @exception IllegalMonitorStateException If the current thread
 	 * is not the owner of the monitor.
 	 * @see Aglet#notifyMessage
-	 * @see #waitMessage()
-	 * @see #notifyAllMessages()
+	 * @see waitMessage
+	 * @see notifyAllMessages
 	 */
 	public void notifyMessage();
 	/**
@@ -131,8 +131,8 @@ public interface MessageManager {
 	 * Waits until it is notified.
 	 * @exception IllegalMonitorStateException If the current thread
 	 * is not the owner of the monitor.
-	 * @see #notifyMessage()
-	 * @see #notifyAllMessages()
+	 * @see notifyMessage
+	 * @see notifyAllMessages
 	 */
 	public void waitMessage();
 	/**
@@ -141,8 +141,21 @@ public interface MessageManager {
 	 * @exception IllegalMonitorStateException If the current thread
 	 * is not the owner of the monitor.
 	 * @see Aglet#waitMessage
-	 * @see #notifyMessage()
-	 * @see #notifyAllMessages()
+	 * @see notifyMessage
+	 * @see notifyAllMessages
 	 */
 	public void waitMessage(long timeout);
+	
+	/**
+	 * Suspends the message manager.
+	 *
+	 */
+	public void sleep();
+	
+	/**
+	 * Wakes up the message manager.
+	 *
+	 */
+	public void wakeUp();
+	
 }

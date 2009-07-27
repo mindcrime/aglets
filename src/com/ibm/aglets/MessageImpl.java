@@ -17,7 +17,6 @@ package com.ibm.aglets;
 import com.ibm.aglet.Aglet;
 import com.ibm.aglet.AgletProxy;
 import com.ibm.aglet.InvalidAgletException;
-import com.ibm.aglet.Message;
 import com.ibm.aglet.MessageManager;
 import com.ibm.aglet.RequestRefusedException;
 
@@ -25,6 +24,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
+import com.ibm.aglet.FutureReply;
 
 // import com.ibm.awb.misc.Debug;
 
@@ -32,6 +32,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.Permission;
 import com.ibm.aglets.security.MessagePermission;
+import com.ibm.aglet.message.Message;
 import com.ibm.aglet.security.MessageProtection;
 
 /**
@@ -41,12 +42,10 @@ import com.ibm.aglet.security.MessageProtection;
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
  */
-class MessageImpl extends Message implements Cloneable {
+public class MessageImpl extends Message implements Cloneable {
 
-	transient FutureReplyImpl future = null;
 	transient MessageImpl next = null;
-	protected int priority = MessageManager.NORM_PRIORITY;
-
+	
 	private int msg_type;
 	private boolean defered = false;
 
@@ -54,14 +53,16 @@ class MessageImpl extends Message implements Cloneable {
 
 	transient AgletThread thread = null;
 
-	boolean waiting = false;
+	private final int msg_type2;
 
+	
 	/*
 	 * For system and event message. These are all synchronus.
 	 */
 	protected MessageImpl() {
 		super(null, null);
 		msg_type = Message.SYNCHRONOUS;
+		msg_type2 = msg_type;
 		timestamp = System.currentTimeMillis();
 	}
 	/*
@@ -71,12 +72,14 @@ class MessageImpl extends Message implements Cloneable {
 					   long timestamp) {
 		super(msg.getKind(), msg.getArg());
 		this.future = future;
+		msg_type2 = msg_type;
 		this.msg_type = msg_type;
 		this.timestamp = timestamp;
 	}
 	protected MessageImpl(Object arg) {
 		super(null, arg);
 		msg_type = Message.SYNCHRONOUS;
+		msg_type2 = msg_type;
 		timestamp = System.currentTimeMillis();
 	}
 	final void activate(MessageManagerImpl manager) {
@@ -94,18 +97,18 @@ class MessageImpl extends Message implements Cloneable {
 	}
 	final synchronized void cancel(String explain) {
 		if (future != null) {
-			future.cancel(explain);
+			((FutureReplyImpl)future).cancel(explain);
 		} 
 	}
 	public Object clone() {
-		MessageImpl c = new MessageImpl(this, future, msg_type, timestamp);
+		MessageImpl c = new MessageImpl((Message)this, (FutureReplyImpl)this.future, this.msg_type, this.timestamp);
 
 		c.priority = priority;
 		return c;
 	}
 	final synchronized void destroy() {
 		if (thread == Thread.currentThread()) {
-			System.err.println("waring: tring to destroy itself");
+			System.err.println("warning: tryin to destroy itself");
 		} 
 
 		if (waiting) {
@@ -172,12 +175,17 @@ class MessageImpl extends Message implements Cloneable {
 	final public void enableDeferedReply(boolean b) {
 		defered = b;
 	}
+	
+	
 	/**
-	 * 
+	 * A message is delegatale if it cannot be delivered even if the message manager
+	 * is inactive.
 	 */
-	final void enableDelegation() {
+	final synchronized void  enableDelegation() {
 		delegatable = true;
 	}
+	
+	
 	final public int getMessageType() {
 		return msg_type;
 	}
@@ -192,7 +200,7 @@ class MessageImpl extends Message implements Cloneable {
 		return new MessageProtection(authority, /*"message." +*/ getKind());
 	}
 	void handle(LocalAgletRef ref) throws InvalidAgletException {
-		FutureReplyImpl f = future;
+		FutureReplyImpl f = (FutureReplyImpl)future;
 		Aglet aglet = ref.aglet;
 		Throwable result_ex = null;
 		boolean handled = false;
@@ -230,34 +238,34 @@ class MessageImpl extends Message implements Cloneable {
 			} 
 		} 
 	}
-	/* synchronized */
-	boolean isDelegatable() {
-		return delegatable && future != null &&!future.available;
+	
+	/**
+	 * Indicates if the message can be delegated or not.
+	 * @return true if the message can be delegated
+	 */
+	protected synchronized boolean isDelegatable() {
+		return delegatable && future != null &&!future.isAvailable();
 	}
-	final boolean isWaiting() {
-		return waiting;
-	}
+	
 	/**
 	 * 
 	 */
 	final public void sendException(Exception exp) {
-		future.setExceptionAndNotify(exp);
+		((FutureReplyImpl)future).setExceptionAndNotify(exp);
 	}
 	/**
 	 * 
 	 */
 	final public void sendReply() {
-		future.setReplyAndNotify(null);
+		((FutureReplyImpl)future).setReplyAndNotify(null);
 	}
 	/**
 	 * Sets the reply of the message.
 	 */
 	final public void sendReply(Object arg) {
-		future.setReplyAndNotify(arg);
+		((FutureReplyImpl)future).setReplyAndNotify(arg);
 	}
-	final void setWaiting() {
-		waiting = true;
-	}
+	
 	public String toString() {
 		StringBuffer buff = new StringBuffer();
 
@@ -269,5 +277,22 @@ class MessageImpl extends Message implements Cloneable {
 		buff.append(']');
 
 		return buff.toString();
+	}
+	
+	/**
+	 * A method to get the future reply of this message.
+	 * @return the future reply contained in the Message object.
+	 */
+	public FutureReply getFutureReply(){
+		return this.future;
+	}
+	
+	
+	/**
+	 * A method to set the future reply.
+	 * @param reply the reply to be used for this message
+	 */
+	protected void setFutureReply(FutureReply reply){
+		this.future = reply;
 	}
 }

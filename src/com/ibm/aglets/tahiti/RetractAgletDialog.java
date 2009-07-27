@@ -38,35 +38,47 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
 
+import java.util.ResourceBundle;
 import java.util.Vector;
 import java.util.Enumeration;
 
 import java.net.*;
 
 import com.ibm.awb.misc.Resource;
+import javax.swing.*;
+import com.ibm.aglets.tahiti.utils.*;
 
 /**
  * Class RetractAgletDialog represents the dialog for Retracting an Aglet.
  * 
- * @version     1.02    $Date: 2001/07/28 06:32:32 $
+ * @version     1.02    $Date: 2009/07/27 10:31:40 $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  */
 
 final class RetractAgletDialog extends TahitiDialog implements ActionListener, 
-		ItemListener, Runnable {
+		 Runnable {
 
+    /* Load resources */
+    static ResourceBundle bundle = null;
+	static {
+		bundle = ResourceBundle.getBundle("tahiti");
+	} 
+    
+    
 	/*
 	 * Singleton instance reference.
 	 */
 	private static RetractAgletDialog _instance = null;
 
+	
+	
 	/*
 	 * GUI components
 	 */
-	private Choice _servers = new Choice();
+	private JComboBox _servers = new JComboBox();
 
-	private List _agletsList = new List();
+	private AgentListPanel _agletsList = new AgentListPanel();
 
 	private GridBagLayout grid = new GridBagLayout();
 
@@ -80,39 +92,35 @@ final class RetractAgletDialog extends TahitiDialog implements ActionListener,
 	 * Constructs a new Aglet retract dialog.
 	 */
 	private RetractAgletDialog(MainWindow parent) {
-		super(parent, "Retract", true);
+		super(parent, bundle.getString("dialog.retract.title"), true);
 
-		add("Center", makePanel());
-
-		addButton("Retract", this);
-		addCloseButton("Cancel");
+		this.getContentPane().add("Center",this.makePanel());
+		
+		this.addJButton(bundle.getString("dialog.retract.button.ok"),TahitiCommandStrings.OK_COMMAND,IconRepository.getIcon("retract"),this);
+		this.addJButton(bundle.getString("dialog.retract.button.cancel"),TahitiCommandStrings.OK_COMMAND,IconRepository.getIcon("cancel"),this);
 	}
-	/*
-	 * Creates an Aglet retract dialog.
+	
+	
+	/**
+	 * Manages events from the buttons.
+	 * @param event the event to manage
 	 */
-	public void actionPerformed(ActionEvent ev) {
-		int i = _agletsList.getSelectedIndex();
+	public void actionPerformed(ActionEvent event) {
+	    String command=event.getActionCommand();
+	    
+	    if(command.equals(TahitiCommandStrings.OK_COMMAND)){
+	        int selected = this._agletsList.getSelectedIndex();
+	        
+	        if(selected >= 0){
+	            this.getMainWindow().retractAglet(proxies[selected]);
+	        }
+	    }
+	    
+	    this.setVisible(false);
+	    dispose();
 
-		if (i >= 0) {
-			getMainWindow().retractAglet(proxies[i]);
-		} 
-		dispose();
-
-		/*
-		 * String key = _agletsList.getSelectedItem();
-		 * if (key != null) {
-		 * URL url = (URL)Tahiti.getMigrantAglet(key);
-		 * Event ev = new Event(url, MainWindow.RETRACT_AGLET, null);
-		 * // to work around the bug in JDK1.1 for UNIX
-		 * hide();
-		 * dispose();
-		 * getParent().postEvent(ev);
-		 * return;
-		 * }
-		 * System.out.print("\007");
-		 * System.out.flush();
-		 */
 	}
+	
 	/*
 	 * Singleton method to obtain the instance
 	 */
@@ -120,12 +128,13 @@ final class RetractAgletDialog extends TahitiDialog implements ActionListener,
 		if (_instance == null) {
 			_instance = new RetractAgletDialog(parent);
 		} 
-		_instance.updateList();
+		_instance.buildServerList();
+		_instance.run();
 		return _instance;
 	}
-	synchronized public void itemStateChanged(ItemEvent ev) {
-		updateList();
-	}
+	
+	
+	
 	protected GridBagPanel makePanel() {
 		GridBagPanel p = new GridBagPanel();
 		GridBagConstraints cns = new GridBagConstraints();
@@ -137,63 +146,63 @@ final class RetractAgletDialog extends TahitiDialog implements ActionListener,
 		cns.gridwidth = 1;
 		cns.weightx = 0.1;
 
-		// p.addLabeled("Remote Aglet", _retractSelection);
-		// _retractSelection.setEnabled(false);
-		// _retractSelection.setEditable(false);
-		// _retractSelection.addActionListener(this);
 
-		p.add(new Label("Remote Aglets List"), GridBagPanel.REMAINDER);
+		p.add(new JLabel(bundle.getString("dialog.retract.label")), GridBagPanel.REMAINDER);
+		
+		p.addLabeled(bundle.getString("dialog.retract.label.server"), _servers);
 
-		_servers = new Choice();
-		p.addLabeled("Select Server:", _servers);
-
-		_servers.addItemListener(this);
-		_agletsList.addActionListener(this);
-		_agletsList.setBackground(Color.white);
-
-		Util.setFixedFont(_agletsList);
-
-		// _agletsList.setFont( DefaultResource.getFixedFont() );
-		cns.gridwidth = GridBagConstraints.REMAINDER;
+	cns.gridwidth = GridBagConstraints.REMAINDER;
 		cns.weighty = 1.0;
 		p.add(_agletsList, cns);
 		return p;
 	}
+	
+	
+	/**
+	 * A method to retrieve the list of agent on a server. Originally this method was
+	 * executed by a separated thread, now it's just a normal object method.
+	 */
 	public void run() {
-		String dest = (String)_servers.getSelectedObjects()[0];
+	    
+	    // get the destination server
+		String dest = (String)_servers.getSelectedItem();
 
 		try {
+		    // get all proxies on the destination server
 			proxies = com.ibm.aglet.system.Aglets.getAgletProxies(dest);
-		} catch (java.net.MalformedURLException ex) {
 
-			// ex.printStackTrace();
-		} catch (java.io.IOException ex) {
-			ex.printStackTrace();
-		} 
-
-		_agletsList.removeAll();
-		if (proxies == null) {
-			return;
-		} 
-		for (int i = 0; i < proxies.length; i++) {
-			try {
-				com.ibm.aglet.AgletInfo info = proxies[i].getAgletInfo();
-
-				_agletsList.add(info.getAgletClassName() + " : " 
-								+ info.getAgletID());
-			} catch (com.ibm.aglet.InvalidAgletException ex) {
-				_agletsList.add("InvalidAglet");
+			if (proxies == null) {
+				return;
 			} 
-		} 
+
+			// remove all items from the list
+			_agletsList.removeAll();
+
+			for (int i = 0; i < proxies.length; i++) {
+				com.ibm.aglet.AgletInfo info = proxies[i].getAgletInfo();
+				_agletsList.addItem(info.getAgletClassName() + " : " 	+ info.getAgletID());
+			}
+		} catch (Exception ex) {
+		    ex.printStackTrace();
+		    return;
+		}
+ 
 	}
-	void updateChoice() {
-		Resource res = Resource.getResourceFor("aglets");
+	
+	
+	/**
+	 * A method to build the aglets servers list.
+	 *
+	 */
+	protected void buildServerList(){
+	    // read the server list from the properties
+	    Resource res = Resource.getResourceFor("aglets");
 		String list = res.getString("aglets.addressbook");
 
+		// add all the items
 		if (list != null && list.equals(currentList) == false) {
 			currentList = list;
 			_servers.removeAll();
-			_servers.addItem("Select Server");
 			String items[] = res.getStringArray("aglets.addressbook", " ");
 
 			for (int i = 0; i < items.length; i++) {
@@ -201,34 +210,7 @@ final class RetractAgletDialog extends TahitiDialog implements ActionListener,
 			} 
 		} 
 	}
-	/*
-	 * Update list
-	 */
-	private void updateList() {
-		updateChoice();
-		if (handler != null) {
-			handler.interrupt();
-			handler.stop();
-		} 
-		handler = new Thread(this);
-		handler.start();
-	}
-	/*
-	 * public void foo() {
-	 * String item = _agletsList.getSelectedItem();
-	 * if (item != null) {
-	 * String defaultValue =
-	 * MainWindow.dotdotdot(item,
-	 * _retractSelection.getColumns());
-	 * _retractSelection.setText(defaultValue);
-	 * }
-	 * else {
-	 * _retractSelection.setText("");
-	 * }
-	 * }
-	 */
+	
+	
 
-	public boolean windowClosing(WindowEvent ev) {
-		return false;
-	}
 }

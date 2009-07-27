@@ -17,6 +17,7 @@ package examples.finder;
 
 import com.ibm.aglet.*;
 import com.ibm.aglet.event.*;
+import com.ibm.aglet.message.Message;
 
 import java.net.URL;
 import java.util.Hashtable;
@@ -30,7 +31,7 @@ import java.util.Enumeration;
  * it appends a list of server name to list in the HostList and
  * then get the list belongs to the HostList.
  * 
- * @version     1.00    $Date: 2001/07/28 06:34:19 $
+ * @version     1.00    $Date: 2009/07/27 10:31:41 $
  * @author      Yoshiaki Mima
  * @see examples.finder.HostList
  */

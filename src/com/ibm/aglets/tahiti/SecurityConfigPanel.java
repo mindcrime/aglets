@@ -54,6 +54,8 @@ import com.ibm.aglets.security.PolicyFileParsingException;
 import com.ibm.awb.misc.URIPattern;
 import com.ibm.awb.misc.MalformedURIPatternException;
 import com.ibm.awb.misc.Resource;
+import javax.swing.*;
+import com.ibm.aglets.tahiti.utils.*;
 
 class SecurityConfigPanel extends GridBagPanel implements ItemListener {
 	private static final String LABEL_FILE_PERMISSION = "FileSystem";
@@ -356,7 +358,7 @@ class SecurityConfigPanel extends GridBagPanel implements ItemListener {
 		panel.setConstraints(cns);
 
 		cns.weighty = 0.1;
-		EditListPanel elp = new EditListPanel(null, list, editor);
+		EditListPanel elp = new EditListPanel((String)null,list,(Editor) editor);
 
 		panel.add(elp, GridBagConstraints.REMAINDER, 1.0);
 

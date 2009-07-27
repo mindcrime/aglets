@@ -16,6 +16,7 @@ package com.ibm.agletx.util;
 
 import com.ibm.aglet.*;
 import com.ibm.aglet.event.*;
+import com.ibm.aglet.message.Message;
 
 import java.util.Vector;
 import java.util.Enumeration;
@@ -59,7 +60,7 @@ import java.net.MalformedURLException;
  * If fails, it throws an <tt>IOException</tt> exception (in case of communication
  * problems) or <tt>SecurityException</tt> (otherwise).
  * 
- * @version     1.20    $Date: 2001/07/28 06:33:38 $
+ * @version     1.20    $Date: 2009/07/27 10:31:41 $
  * @author      Yariv Aridor
  */
 

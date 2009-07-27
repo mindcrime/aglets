@@ -16,6 +16,7 @@ package examples.itinerary;
  */
 
 import com.ibm.aglet.*;
+import com.ibm.aglet.message.Message;
 import com.ibm.aglet.util.*;
 import com.ibm.agletx.util.SeqPlanItinerary;
 import java.util.Vector;
@@ -25,7 +26,7 @@ import java.awt.event.*;
 /**
  * <tt> CirculateAglet </tt> illustrates how to use SeqPlanItinerary.
  * 
- * @version     1.00	$Date: 2001/07/28 06:34:17 $
+ * @version     1.00	$Date: 2009/07/27 10:31:42 $
  * @author	Mitsuru Oshima
  */
 public class CirculateAglet extends Aglet {

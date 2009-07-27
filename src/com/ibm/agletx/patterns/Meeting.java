@@ -15,6 +15,8 @@ package com.ibm.agletx.patterns;
  */
 
 import com.ibm.aglet.*;
+import com.ibm.aglet.message.Message;
+
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -138,7 +140,7 @@ public final class Meeting implements java.io.Serializable {
 	}
 	/**
 	 * Accepts an aglet to a meeting.
-	 * @param ag the {@link Aglet} that has just arrived
+	 * @param aglet the arrived aglet.
 	 * @return enumeration of the agletID of all presented aglets.
 	 * @exception AgletException if wrong meeting place or if any
 	 * of the colleagues is not presented.

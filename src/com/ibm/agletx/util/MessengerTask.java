@@ -16,6 +16,8 @@ package com.ibm.agletx.util;
 
 import com.ibm.aglet.*;
 import com.ibm.aglet.event.*;
+import com.ibm.aglet.message.Message;
+
 import java.util.Vector;
 import java.util.Enumeration;
 import java.net.URL;

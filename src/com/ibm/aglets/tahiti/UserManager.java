@@ -22,7 +22,7 @@ import java.security.cert.Certificate;
 /**
  * <tt>UserManager</tt> class specifies user manager of aglet server.
  * 
- * @version     1.00    $Date: 2001/07/28 06:32:16 $
+ * @version     1.00    $Date: 2009/07/27 10:31:40 $
  * @author      ONO Kouichi
  */
 public abstract class UserManager {

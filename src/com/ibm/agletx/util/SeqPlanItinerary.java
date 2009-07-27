@@ -16,6 +16,7 @@ package com.ibm.agletx.util;
 
 import com.ibm.aglet.*;
 import com.ibm.aglet.event.*;
+import com.ibm.aglet.message.Message;
 
 import java.util.Vector;
 import java.util.Enumeration;
@@ -40,7 +41,7 @@ import java.net.URL;
  * address when the job is completed, the aglet have to have the following
  * block
  * 
- * @version     1.10    $Date: 2001/07/28 06:33:40 $
+ * @version     1.10    $Date: 2009/07/27 10:31:41 $
  * @author      Mitsuru Oshima
  * @author      Yariv Aridor
  */

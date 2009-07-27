@@ -16,6 +16,7 @@ package examples.mdispatcher;
  */
 
 import com.ibm.aglet.*;
+import com.ibm.aglet.message.Message;
 
 import java.io.*;
 import java.lang.reflect.*;
@@ -42,7 +43,7 @@ import java.util.Hashtable;
  * </pre>
  * This may be incorporated with MessageManager in the future.
  * 
- * @version     1.00	$Date: 2001/07/28 06:34:18 $
+ * @version     1.00	$Date: 2009/07/27 10:31:41 $
  * @author	Mitsuru Oshima
  */
 public class MethodDispatcher implements Serializable {

@@ -19,10 +19,14 @@ import com.ibm.aglet.AgletProxy;
 import com.ibm.aglet.AgletInfo;
 
 import com.ibm.aglets.*;
+import com.ibm.aglets.tahiti.utils.IconRepository;
+import com.ibm.aglets.tahiti.utils.TahitiCommandStrings;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Label;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Class CloneAgletDialog is the dialog for cloning an Aglet instance.
@@ -41,29 +45,54 @@ final class CloneAgletDialog extends TahitiDialog implements ActionListener {
 
 	/*
 	 * Constructs the clone Aglet window.
+	 * @param parent the TahitiWindow parent of this dialog window
+	 * @param proxy the proxy of the aglet to clone
 	 */
 	CloneAgletDialog(MainWindow parent, AgletProxy proxy) {
-		super(parent, "Clone an Aglet", true);
+		super(parent, bundle.getString("dialog.clone.title"), true);
+		
 		_proxy = proxy;
 
 		String msg = "Invalid Aglet";
 
 		try {
 			AgletInfo info = proxy.getAgletInfo();
+			msg = (proxy == null ? "No Aglet selected" : info.getAgletClassName());
+		} catch (InvalidAgletException ex) {
+		    ex.printStackTrace();
+		}
 
-			msg = (proxy == null ? "No Aglet selected" 
-				   : info.getAgletClassName());
-		} catch (InvalidAgletException ex) {}
+		this.getContentPane().add("North",new JLabel(bundle.getString("dialog.clone.message"),JLabel.CENTER));
+		this.getContentPane().add("Center", new MessagePanel(msg));
 
-		add("North", new Label("Clone Aglet", Label.CENTER));
-		add("Center", new MessagePanel(msg, Label.CENTER, false));
-
-		addButton("Clone", this);
-		addCloseButton("Cancel");
+		JButton clone = new JButton(bundle.getString("dialog.clone.button.clone"),IconRepository.getIcon("clone"));
+		clone.setActionCommand(TahitiCommandStrings.CLONE_COMMAND);
+		clone.addActionListener(this);
+		JButton close = new JButton(bundle.getString("dialog.clone.button.cancel"),IconRepository.getIcon("cancel"));
+		close.setActionCommand(TahitiCommandStrings.CANCEL_COMMAND);
+		close.addActionListener(this);
+		
+		JPanel buttonPanel  = new JPanel();
+		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		buttonPanel.add(clone);
+		buttonPanel.add(close);
+		
+		this.getContentPane().add("South",buttonPanel);
+		this.pack();
 	}
-	public void actionPerformed(ActionEvent ev) {
+	
+	/**
+	 * Manage action events.
+	 * @param event the event to manage
+	 */
+	public void actionPerformed(ActionEvent event) {
+	    String command = event.getActionCommand();
+	    
+	    if(command!=null && command.equals(TahitiCommandStrings.CLONE_COMMAND)){
+	        getMainWindow().cloneAglet(_proxy);    
+	    }
+	    
 		setVisible(false);
 		dispose();
-		getMainWindow().cloneAglet(_proxy);
 	}
 }

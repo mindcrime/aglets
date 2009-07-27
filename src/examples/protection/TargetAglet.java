@@ -2,6 +2,7 @@ package examples.protection;
 
 import com.ibm.aglet.*;
 import com.ibm.aglet.event.*;
+import com.ibm.aglet.message.Message;
 import com.ibm.aglet.security.Protections;
 import com.ibm.aglet.security.AgletProtection;
 import com.ibm.aglet.security.MessageProtection;

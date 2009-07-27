@@ -23,12 +23,13 @@ package com.ibm.aglet.system;
  * IBM WILL NOT BE LIABLE FOR ANY THIRD PARTY CLAIMS AGAINST YOU.
  */
 
-import com.ibm.aglet.Message;
 import com.ibm.aglet.AgletContext;
 import com.ibm.aglet.Aglet;
 import com.ibm.aglet.AgletID;
 import com.ibm.aglet.AgletProxy;
 import com.ibm.aglet.InvalidAgletException;
+import com.ibm.aglet.message.Message;
+
 import java.io.IOException;
 import java.security.cert.Certificate;
 import java.net.URL;
@@ -39,18 +40,18 @@ import org.aglets.log.*;
  * of the local or remote context. Neither of an application nor aglet
  * can create its own instance of this runtime class.
  * 
- * @version     1.10    $Date: 2007/07/25 23:33:05 $
+ * @version     1.10    $Date: 2009/07/27 10:31:42 $
  * @author      Mitsuru Oshima
  * @see AgletRuntime#getAgletRuntime
  */
 public abstract class AgletRuntime {
 
 	final static String runtimePackagePrefix = "aglet.runtime.packagePrefix";
-	private static AgletsLogger logger = new AgletsLogger(AgletRuntime.class.getName());
+    static LogCategory logCategory = LogInitializer.getCategory("com.ibm.aglet.system.AgletRuntime");
 
 	private boolean _secure = true;
 
-	/*
+	/**
 	 * [Preliminary]
 	 * Exports the specified aglet context. After this successfull
 	 * invocation, the specified context is visiable and accessible
@@ -63,7 +64,7 @@ public abstract class AgletRuntime {
 	 * abstract public void exportAgletContext(AgletContext cxt);
 	 */
 
-	/*
+	/**
 	 * [Preliminary]
 	 * Exports the specified aglet. After this successfull
 	 * invocation, the specified aglet is visiable and accessible
@@ -212,7 +213,7 @@ public abstract class AgletRuntime {
 	abstract public String getServerAddress();
 	/**
 	 * Create and initialize a runtime environment with a string array
-	 * @param args a {@link String} array which is typically given as a argument to
+	 * @param a string array which is typically given as a argument to
 	 * <tt>main(String args[])</tt> function.
 	 */
 	synchronized static public AgletRuntime init(String args[]) {
@@ -220,7 +221,7 @@ public abstract class AgletRuntime {
 	}
 	/**
 	 * Create and initialize a runtime environment with a string array
-	 * @param args a {@link String} array which is typically given as a argument to
+	 * @param a string array which is typically given as a argument to
 	 * <tt>main(String args[])</tt> function.
 	 * @param loader a classloader used to load a class of the
 	 * implementation.
@@ -257,13 +258,13 @@ public abstract class AgletRuntime {
 			if (obj instanceof AgletRuntime) {
 				runtime = (AgletRuntime)obj;
 			} else {
-				logger.error("[ \"" + classname + "\" is not Runtime]");
+				logCategory.error("[ \"" + classname + "\" is not Runtime]");
 			} 
 		} catch (ClassNotFoundException ex) {
-			logger.error("[ The class \"" + classname 
+			logCategory.error("[ The class \"" + classname 
 							   + "\" not found]");
 		} catch (Exception ex) {
-			logger.error("[ An instance of \"" + classname 
+			logCategory.error("[ An instance of \"" + classname 
 							   + "\" cannot be created]");
 		} 
 

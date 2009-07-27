@@ -23,7 +23,7 @@ import java.net.InetAddress;
 /**
  * The <tt>ServerIdentifier</tt> class is the identifier of alget server.
  * 
- * @version     1.00    $Date: 2001/07/28 06:33:49 $
+ * @version     1.00    $Date: 2009/07/27 10:31:41 $
  * @author      ONO Kouichi
  */
 public class ServerIdentifier {

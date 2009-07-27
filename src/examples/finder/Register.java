@@ -17,6 +17,7 @@ package examples.finder;
 
 import com.ibm.aglet.*;
 import com.ibm.aglet.event.*;
+import com.ibm.aglet.message.Message;
 
 // now this is reusable!
 public class Register extends MobilityAdapter {

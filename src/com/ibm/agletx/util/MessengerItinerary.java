@@ -16,6 +16,8 @@ package com.ibm.agletx.util;
 
 import com.ibm.aglet.*;
 import com.ibm.aglet.event.*;
+import com.ibm.aglet.message.Message;
+
 import java.util.Vector;
 import java.util.Enumeration;
 import java.net.URL;
@@ -71,7 +73,7 @@ import java.io.IOException;
  * aglet. The invocation of <tt>itinerary.startTrip()</tt> causes the
  * messenger aglet to start its trip among the hosts of the receiver aglets.
  * 
- * @version     1.20    $Date: 2007/07/25 23:33:06 $
+ * @version     1.20    $Date: 2009/07/27 10:31:41 $
  * @author      Yariv Aridor
  */
 
@@ -139,6 +141,7 @@ public class MessengerItinerary extends SeqItinerary {
 	}
 	/**
 	 * Return the message to be broadcast.
+	 * @param index the index to remove.
 	 */
 	Message getMessage() {
 		return msg;

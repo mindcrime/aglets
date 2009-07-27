@@ -31,13 +31,13 @@ import org.aglets.log.*;
 /**
  * AgletInfo class is a object which contains the information of the aglet.
  * 
- * @version     $Revision: 1.6 $	$Date: 2007/07/25 23:33:04 $  $Author: maxthomax $
+ * @version     $Revision: 1.7 $	$Date: 2009/07/27 10:31:41 $  $Author: cat4hire $
  * @author	Mitsuru Oshima
  */
 final public class AgletInfo implements java.io.Serializable, Cloneable {
 
 	static final long serialVersionUID = 5077220171230015552L;
-	private static AgletsLogger logger = new AgletsLogger(AgletInfo.class.getName());
+    static LogCategory logCategory = LogInitializer.getCategory("com.ibm.aglet.AgletInfo");
 
 	// static attributes
 	private AgletID aid;
@@ -58,6 +58,7 @@ final public class AgletInfo implements java.io.Serializable, Cloneable {
 	 * this API.
 	 * 
 	 * @param aid     the aglet identifier.
+	 * @param address the address where the aglet currently resides.
 	 * @param classname the classname of the aglet.
 	 * @param codebase the codebase of the aglet classes.
 	 * @param origin   the address where the aglet was instantiated.
@@ -197,7 +198,7 @@ final public class AgletInfo implements java.io.Serializable, Cloneable {
 											   + Aglet.MAJOR_VERSION);
 		} 
 		if (api_minor_version != Aglet.MINOR_VERSION) {
-			logger.error("API minor version mismatch.");
+			logCategory.error("API minor version mismatch.");
 		} 
 	}
 	/**

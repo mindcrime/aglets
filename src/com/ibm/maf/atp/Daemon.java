@@ -61,14 +61,14 @@ import org.aglets.log.*;
 /**
  * <tt> Daemon </tt> is a listener of incoming ATP request.
  * 
- * @version     1.10	$Date: 2007/07/23 07:08:57 $
+ * @version     1.10	$Date: 2009/07/27 10:31:41 $
  * @author	Danny D. Langue
  * @author	Gaku Yamamoto
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
  */
 final public class Daemon {
-    	private static AgletsLogger logger = new AgletsLogger(Daemon.class.getName());
+    public static final LogCategory log = LogInitializer.getCategory(Daemon.class.getName() );
     
 	static Hashtable locals = new Hashtable();
 
@@ -299,17 +299,17 @@ final public class Daemon {
 
 		Randoms.setUseSecureRandomSeed(secureseed);
 		if (secureseed) {
-			logger.info("USE SECURE RANDOM SEED.");
+			log.info("USE SECURE RANDOM SEED.");
 		} else {
-			logger.info("USE UNSECURE PSEUDO RANDOM SEED.");
+			log.info("USE UNSECURE PSEUDO RANDOM SEED.");
 		} 
 		if (auth) {
-			logger.info("Generating random seed ... wait for a while.");
+			log.info("Generating random seed ... wait for a while.");
 			Randoms.getRandomGenerator(Challenge.LENGTH);
-			logger.info("done.");
+			log.info("done.");
 		} 
 		if (auth && SharedSecrets.getSharedSecrets() == null) {
-			logger.error("No shared secret file for authentication."+
+			log.error("No shared secret file for authentication."+
 			    "Authentication requires a shared secret file"+
                 "which is duplicated from other host,"+
                 "or newly created file.");
@@ -318,9 +318,9 @@ final public class Daemon {
 			auth = false;
 		} 
 		if (auth) {
-			logger.info("AUTHENTICATION MODE ON.");
+			log.info("AUTHENTICATION MODE ON.");
 		} else {
-			logger.info("AUTHENTICATION MODE OFF.");
+			log.info("AUTHENTICATION MODE OFF.");
 		} 
 		ServerSocket socket = null;
 

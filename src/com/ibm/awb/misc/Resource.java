@@ -38,7 +38,9 @@ import org.aglets.log.*;
 public class Resource {
 	private static Hashtable resourceTable = new Hashtable();
 	private static Properties options = null;
-	private static AgletsLogger logger = new AgletsLogger(Resource.class.getName());            
+    private static LogCategory log 
+            = LogInitializer.getCategory(Resource.class.getName() );
+            
 	static {
 
 		/*
@@ -109,7 +111,7 @@ public class Resource {
 			return;
 		} 
 		if (load(url) == false) {
-			logger.error("Could not load resource from [" + url + "]");
+			log.error("Could not load resource from [" + url + "]");
 		} 
 	}
 	/**
@@ -127,8 +129,8 @@ public class Resource {
 		persistent.put(key, r + ' ' + value);
 	}
 	/**
-	 * Creates named resources with file and default Properties object.
-	 * @see #getResourceFor(String)
+	 * Creates named resources with file and default Proeprties object.
+	 * @see getResourceFor
 	 */
 	synchronized static public Resource createResource(String name, 
 			String file, 
@@ -138,23 +140,23 @@ public class Resource {
 		return createResource(name, url, defaults);
 	}
 	/**
-	 * Creates named resources with file and default Properties object.
-	 * @see #getResourceFor(String)
+	 * Creates named resources with file and default Proeprties object.
+	 * @see getResourceFor
 	 */
 	synchronized static private Resource createResource(String name, 
 			URL file, Properties defaults) {
 		if (resourceTable.contains(name)) {
 			throw new SecurityException("cannot re-create existing resource");
 		} 
-        logger.debug("Creating resource: "+name+" url: "+file);
+        log.debug("Creating resource: "+name+" url: "+file);
 		Resource res = new Resource(file, defaults);
 
 		resourceTable.put(name, res);
 		return res;
 	}
 	/**
-	 * Creates named resources with default Properties object.
-	 * @see #getResourceFor(String)
+	 * Creates named resources with default Proeprties object.
+	 * @see getResourceFor
 	 */
 	synchronized static public Resource createResource(String name, 
 			Properties defaults) {
@@ -189,7 +191,7 @@ public class Resource {
 		if (value == null) {
 			return defaultFont;
 		} 
-		String fontName = "Dialogger";
+		String fontName = "Dialog";
 		int fontSize = 12;
 		int fontStyle = Font.PLAIN;
 
@@ -225,7 +227,7 @@ public class Resource {
 	}
 	/**
 	 * Get the resources starting with the key
-	 * @param startsWith the key prefix {@link String} to search for
+	 * @param key the key to search
 	 */
 	public String[] getPersistentResourcesStartsWith(String startsWith) {
 		Enumeration e = persistent.keys();
@@ -297,7 +299,7 @@ public class Resource {
 		try {
 			return v == null ? defaultValue : new URL(v);
 		} catch (java.net.MalformedURLException ex) {
-			logger.error("fail to convert '" + v + "' to URL", ex);
+			log.error("fail to convert '" + v + "' to URL", ex);
 			return defaultValue;
 		} 
 	}
@@ -330,12 +332,12 @@ public class Resource {
 	public boolean load(URL loadFrom) {
 		if ("file".equalsIgnoreCase(loadFrom.getProtocol())) {
 			if (FileUtils.ensureDirectory(loadFrom.getFile()) == false) {
-				logger.error("Could not create directory [" + loadFrom 
+				log.error("Could not create directory [" + loadFrom 
 								   + "]");
 				return false;
 			} 
 			if (FileUtils.ensureFile(loadFrom.getFile()) == false) {
-				logger.error("Could not create file [" + loadFrom 
+				log.error("Could not create file [" + loadFrom 
 								   + "]");
 				return false;
 			} 
@@ -425,7 +427,7 @@ public class Resource {
 			return false;
 		} 
 		try {
-			logger.info("saving properties into [" + saveTo + " ]");
+			log.info("saving properties into [" + saveTo + " ]");
 
 			// System.out.println(_propertyURL.getFile());
 			File file = new File(saveTo.getFile());
@@ -470,7 +472,8 @@ public class Resource {
 	 * Sets default properties. Default properties have last priority and
 	 * are not persistent.
 	 * 
-	 * @param key_value_pairs an array of (key, default value) pairs of {@link String}s
+	 * @param key    the key
+	 * @param value  the value to be stored as a default
 	 */
 	public void setDefaultResources(String[][] key_value_pairs) {
 		for (int i = 0; i < key_value_pairs.length; i++) {

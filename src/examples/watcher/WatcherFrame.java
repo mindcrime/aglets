@@ -21,6 +21,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import com.ibm.aglet.*;
+import com.ibm.aglet.message.Message;
 import com.ibm.aglet.util.*;
 
 class WatcherFrame extends Frame implements WindowListener, ActionListener {

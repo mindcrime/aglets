@@ -20,8 +20,8 @@ import com.ibm.maf.MAFUtil;
 
 import com.ibm.aglet.AgletContext;
 import com.ibm.aglet.AgletID;
-import com.ibm.aglet.Message;
 
+import com.ibm.aglet.message.Message;
 import com.ibm.aglet.system.AgletRuntime;
 
 import com.ibm.atp.AtpConstants;

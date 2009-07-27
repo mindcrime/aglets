@@ -14,7 +14,7 @@ package com.ibm.awb.misc;
  * deposited with the U.S. Copyright Office.
  */
 
-public class CGIMessage extends com.ibm.aglet.Message {
+public class CGIMessage extends com.ibm.aglet.message.Message {
 
 	public CGIMessage(String k) {
 		super(k);

@@ -32,7 +32,7 @@ import com.ibm.awb.misc.Hexadecimal;
 /**
  * The <tt>ByteSequence</tt> class is byte sequence using for authentication.
  * 
- * @version     1.00    $Date: 2007/07/25 23:33:06 $
+ * @version     1.00    $Date: 2009/07/27 10:31:41 $
  * @author      ONO Kouichi
  * 
  * @see com.ibm.atp.auth.Challenge
@@ -83,7 +83,7 @@ public class ByteSequence extends Object implements Cloneable, Serializable {
 	 * and generates byte sequence.
 	 * @param length length of byte sequence
 	 * @param str a hexadecimal string to be copied
-	 * @see #toString()
+	 * @see toString
 	 */
 	public ByteSequence(int length, String str) {
 		this(length, str, DELIMITERS);
@@ -97,7 +97,7 @@ public class ByteSequence extends Object implements Cloneable, Serializable {
 	 * @param length length of byte sequence
 	 * @param str a hexadecimal string to be copied
 	 * @param delimiters delimiters between hexadecimal numbers
-	 * @see #toString()
+	 * @see toString
 	 */
 	public ByteSequence(int length, String str, String delimiters) {
 		byte[] seq = null;
@@ -213,6 +213,7 @@ public class ByteSequence extends Object implements Cloneable, Serializable {
 	}
 	/**
 	 * Creates a clone of the byte sequence.
+	 * @param seq a byte sequence
 	 * @see java.lang.Object#clone
 	 * @see java.lang.Cloneable
 	 */

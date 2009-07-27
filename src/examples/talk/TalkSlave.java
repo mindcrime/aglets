@@ -17,6 +17,8 @@ package examples.talk;
 
 import com.ibm.aglet.*;
 import com.ibm.aglet.event.*;
+import com.ibm.aglet.message.Message;
+
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.IOException;

@@ -37,7 +37,9 @@ import java.util.Enumeration;
 import org.aglets.log.*;
 
 public class Handler implements AgentSystemHandler {
-    private static AgletsLogger logger = new AgletsLogger(Handler.class.getName());            
+    static private final LogCategory log 
+            = LogInitializer.getCategory(Handler.class.getName() );
+            
 	static final int DEFAULT_PORT = 4434;
 
 	static boolean initialized = false;
@@ -65,7 +67,7 @@ public class Handler implements AgentSystemHandler {
 		} 
 
         if( res.getBoolean("atp.useip", false) ) {
-            logger.debug("Hostname: "+ipaddr);
+            log.debug("Hostname: "+ipaddr);
             return ipaddr;
         }
         

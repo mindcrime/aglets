@@ -20,7 +20,7 @@ import java.net.MalformedURLException;
  * The <tt>MalformendURIPatternException</tt> class shows
  * the specified URI pattern is malformed.
  * 
- * @version     1.00    $Date: 2001/07/28 06:33:15 $
+ * @version     1.00    $Date: 2009/07/27 10:31:40 $
  * @author      ONO Kouichi
  */
 public class MalformedURIPatternException extends MalformedURLException {

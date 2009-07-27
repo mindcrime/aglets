@@ -35,7 +35,7 @@ import java.io.IOException;
  * Abstract class AgletStub is used to implement an aglet behavior.
  * It is not normally used by aglet programmers.
  * 
- * @version     1.30    $Date: 2007/07/25 23:33:04 $
+ * @version     1.30    $Date: 2009/07/27 10:31:41 $
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
  */
@@ -76,7 +76,7 @@ abstract public class AgletStub {
 	abstract protected AgletInfo getAgletInfo();
 	/**
 	 * Gets the aglet's message manager object.
-	 * @see MessageManager
+	 * @see aglet.MessageManager
 	 * @return the method manager
 	 * @exception InvalidAgletException if the aglet is not valid.
 	 */

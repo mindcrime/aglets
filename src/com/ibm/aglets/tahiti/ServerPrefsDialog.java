@@ -34,6 +34,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.WindowEvent;
+import java.awt.*;
+
 
 /**
  * Class ServerPrefsDialog represents the dialog for
@@ -42,19 +44,23 @@ import java.awt.event.WindowEvent;
  * 
  * @version     1.00    98/05/27
  * @author      Hideki Tai
+ * @author Luca Ferrari
  */
+
+import javax.swing.*;
+import com.ibm.aglets.tahiti.utils.*;
 
 final class ServerPrefsDialog extends TahitiDialog implements ActionListener, 
 		ItemListener {
 
-	private TextField _pubRoot;
-	private List _aliases;
-	private TextField _alias_1;
-	private TextField _alias_2;
+	private JTextField _pubRoot;
+	private AgentListPanel _aliases;
+	private JTextField _alias_1;
+	private JTextField _alias_2;
 
-	private Button _alias_add;
-	private Button _alias_remove;
-	private Button _alias_modify;
+	private JButton _alias_add;
+	private JButton _alias_remove;
+	private JButton _alias_modify;
 
 	static private final String ALIASES_SEP = " -> ";
 
@@ -64,24 +70,36 @@ final class ServerPrefsDialog extends TahitiDialog implements ActionListener,
 	private static ServerPrefsDialog _instance = null;
 
 	private ServerPrefsDialog(MainWindow parent) {
-		super(parent, "Server Preferences", true);
+		super(parent, bundle.getString("dialog.serprefs.title"), true);
 
 		makePanel();
 
-		addButton("OK", this);
-		addButton("Cancel", this);
-		addButton("Restore Defaults", this);
+		// add buttons
+		this.addJButton(bundle.getString("dialog.serprefs.button.ok"),TahitiCommandStrings.OK_COMMAND,IconRepository.getIcon("ok"),this);
+		this.addJButton(bundle.getString("dialog.serprefs.button.cancel"),TahitiCommandStrings.CANCEL_COMMAND,IconRepository.getIcon("cancel"),this);
+		this.addJButton(bundle.getString("dialog.serprefs.button.default"),TahitiCommandStrings.DEFAULT_COMMAND,IconRepository.getIcon("default"),this);
+		
+		this.pack();
 	}
-	public void actionPerformed(java.awt.event.ActionEvent ev) {
-		String cmd = ev.getActionCommand();
+	
+	
+	/**
+	 * Manage events from the buttons.
+	 * @param event the event to manage
+	 */
+	public void actionPerformed(java.awt.event.ActionEvent event) {
+		String command = event.getActionCommand();
 
-		if ("Add".equals(cmd)) {
+		if (command.equals(TahitiCommandStrings.ADD_COMMAND)) {
+		    // add a new alias
+		    
 			String ali_name = _alias_1.getText();
 			String ali_path = _alias_2.getText();
 
 			if (ali_name.startsWith("/") == false) {
 				ali_name = "/" + ali_name;
-			} 
+			}
+			
 			try {
 				String entry = getAliasEntry(ali_name, ali_path);
 				String items[] = _aliases.getItems();
@@ -94,19 +112,27 @@ final class ServerPrefsDialog extends TahitiDialog implements ActionListener,
 					i++;
 				} 
 				if (i >= items.length) {
-					_aliases.add(entry);
+					_aliases.addItem(entry);
 				} 
 			} catch (NullPointerException ex) {
 
 				// No text was set in the TextTield (_alias_1, _alias_2)
 			} 
-		} else if ("Remove".equals(cmd)) {
+		} 
+		else 
+		if (command.equals(TahitiCommandStrings.REMOVE_COMMAND)) {
+		    // remove an alias
+		    
 			int idx = _aliases.getSelectedIndex();
 
 			if (idx >= 0) {
 				_aliases.remove(idx);
 			} 
-		} else if ("Modify".equals(cmd)) {
+		} 
+		else 
+		if (command.equals(TahitiCommandStrings.CREATE_COMMAND)) {
+		    // modify an alias
+		    
 			int idx = _aliases.getSelectedIndex();
 			String ali_name = _alias_1.getText();
 			String ali_path = _alias_2.getText();
@@ -121,15 +147,23 @@ final class ServerPrefsDialog extends TahitiDialog implements ActionListener,
 					// No text was set in the TextTield (_alias_1, _alias_2)
 				} 
 			} 
-		} else if ("OK".equals(cmd)) {
+		} 
+		else 
+		if (command.equals(TahitiCommandStrings.OK_COMMAND)) {
 			commitValues();
 			dispose();
-		} else if ("Cancel".equals(cmd)) {
+		} 
+		else 
+		if (command.equals(TahitiCommandStrings.CANCEL_COMMAND)) {
 			dispose();
-		} else if ("Restore Defaults".equals(cmd)) {
+		} 
+		else 
+		if (command.equals(TahitiCommandStrings.DEFAULT_COMMAND)) {
 			updateValues();
 		} 
 	}
+	
+	
 	private void commitValues() {
 		Resource aglets_res = Resource.getResourceFor("aglets");
 		String public_root = _pubRoot.getText();
@@ -205,118 +239,77 @@ final class ServerPrefsDialog extends TahitiDialog implements ActionListener,
 			_alias_2.setText(ali_path);
 		} 
 	}
+
+	
 	/*
 	 * Layouts all components.
 	 */
 	protected void makePanel() {
-		GridBagPanel p = new GridBagPanel();
 
-		add("Center", p);
-
-		GridBagConstraints cns = new GridBagConstraints();
-
-		cns.fill = GridBagConstraints.BOTH;
-		cns.weightx = 1.0;
-		cns.weighty = 1.0;
-		cns.ipadx = cns.ipady = 5;
-		cns.insets = new Insets(5, 5, 5, 5);
-		p.setConstraints(cns);
-
-		BorderPanel pubRootPanel = new BorderPanel("Root Path");
-
-		p.add(pubRootPanel, GridBagConstraints.REMAINDER);
-
-		setupPubRootPanel(pubRootPanel);
+	    JPanel p = new JPanel();
+	    JPanel pubRootPanel = new JPanel();
+	    this.getContentPane().add("Center",p);
+	    setupPubRootPanel(pubRootPanel);
+	    p.add(pubRootPanel);
+	    
+		
 
 		updateValues();
 	}
-	private void setupPubRootPanel(BorderPanel p) {
-		GridBagConstraints cns = new GridBagConstraints();
+	
+	
+	private void setupPubRootPanel(JPanel p) {
+	    
+	    p.setLayout(new BorderLayout());
+	    _pubRoot = new JTextField(40);
+	    JPanel northPanel = new JPanel();
+	    northPanel.setLayout(new FlowLayout());
+	    northPanel.add(new JLabel(bundle.getString("dialog.serprefs.label.root")));
+	    northPanel.add(_pubRoot);
+	    p.add("North",northPanel);
+	    JPanel aliasesPanel = new JPanel();
+		aliasesPanel.setLayout(new BorderLayout());
+		_aliases = new AgentListPanel();
+		
+		aliasesPanel.add("Center",_aliases);
+		JPanel southPanel = new JPanel();
+		southPanel.setLayout(new BorderLayout());
+		aliasesPanel.add("South",southPanel);
+		p.add("Center",aliasesPanel);
+		
+	    
+			_alias_1 = new JTextField(20);
+			_alias_2 = new JTextField(20);
+			JPanel centerPanel = new JPanel();
+			centerPanel.setLayout(new FlowLayout());
+			centerPanel.add(new JLabel("/"));
+			centerPanel.add(_alias_1);
+			centerPanel.add(new JLabel("=>"));
+			centerPanel.add(_alias_2);
+			southPanel.add("Center",centerPanel);
 
-		cns.fill = GridBagPanel.NONE;
-		cns.anchor = GridBagConstraints.WEST;
-		cns.insets = p.topInsets();
-		p.add(new Label("Public Root:"), cns);
+			 
 
-		_pubRoot = new TextField(40);
-		cns.fill = GridBagConstraints.HORIZONTAL;
-		cns.anchor = GridBagConstraints.WEST;
-		cns.gridwidth = GridBagConstraints.REMAINDER;
-		cns.weightx = 1.0;
-		p.add(_pubRoot, cns);
-
-		BorderPanel aliasesPanel = new BorderPanel("Aliases");
-
-		cns = new GridBagConstraints();
-		cns.fill = GridBagPanel.BOTH;
-		cns.gridwidth = 2;
-		cns.weighty = 1.0;
-		cns.insets = new Insets(5, 5, 5, 5);
-		p.add(aliasesPanel, cns);
-
-		{
-			GridBagConstraints cns2 = new GridBagConstraints();
-
-			cns2.anchor = GridBagConstraints.WEST;
-			cns2.fill = GridBagConstraints.BOTH;
-			cns2.weightx = 1.0;
-			cns2.weighty = 1.0;
-			cns2.insets = aliasesPanel.topInsets();
-			cns2.insets.bottom = aliasesPanel.bottomInsets().bottom;
-			aliasesPanel.setConstraints(cns2);
-			GridBagPanel p1 = new GridBagPanel();
-
-			aliasesPanel.add(p1);
-
-			cns2 = new GridBagConstraints();
-			cns2.anchor = GridBagConstraints.WEST;
-			cns2.fill = GridBagConstraints.HORIZONTAL;
-			cns2.weightx = 1.0;
-			cns2.weighty = 1.0;
-			p1.setConstraints(cns2);
-
-			_aliases = new List(5);
-			_aliases.addActionListener(this);
-			_aliases.addItemListener(this);
-			p1.add(_aliases, GridBagConstraints.REMAINDER, 0.1);
-
-			_alias_1 = new TextField(20);
-			_alias_2 = new TextField(20);
-			{
-				GridBagPanel pp = new GridBagPanel();
-				GridBagConstraints cns3 = new GridBagConstraints();
-
-				cns3.fill = GridBagConstraints.HORIZONTAL;
-				cns3.weightx = 1.0;
-				cns3.weighty = 0.0;
-				pp.setConstraints(cns3);
-				pp.add(new Label("/"));
-				pp.add(_alias_1);
-
-				pp.add(new Label("->"), new GridBagConstraints());
-
-				pp.add(_alias_2);
-				p1.add(pp);
-
-				// p1.add(pp, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL);
-			} 
-
-			_alias_add = new Button("Add");
-			_alias_remove = new Button("Remove");
-			_alias_modify = new Button("Modify");
+			_alias_add = new JButton(bundle.getString("dialog.serprefs.button.add"));
+			_alias_remove = new JButton(bundle.getString("dialog.serprefs.button.remove"));
+			_alias_modify = new JButton(bundle.getString("dialog.serprefs.button.modify"));
+			_alias_add.setActionCommand(TahitiCommandStrings.ADD_COMMAND);
+			_alias_remove.setActionCommand(TahitiCommandStrings.REMOVE_COMMAND);
+			_alias_modify.setActionCommand(TahitiCommandStrings.CREATE_COMMAND);
 			_alias_add.addActionListener(this);
 			_alias_remove.addActionListener(this);
 			_alias_modify.addActionListener(this);
-			{
-				Panel pp = new Panel(new FlowLayout(FlowLayout.RIGHT));
 
-				pp.add(_alias_add);
-				pp.add(_alias_remove);
-				pp.add(_alias_modify);
-				p1.add(pp, GridBagConstraints.REMAINDER);
-			} 
-		} 
-	}
+			JPanel pp = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+			pp.add(_alias_add);
+			pp.add(_alias_remove);
+			pp.add(_alias_modify);
+			southPanel.add("South",pp);
+ 
+	} 
+	
+	
 	private void updateValues() {
 		Resource aglets_res = Resource.getResourceFor("aglets");
 		String public_root = aglets_res.getString("aglets.public.root", "");
@@ -331,11 +324,9 @@ final class ServerPrefsDialog extends TahitiDialog implements ActionListener,
 				int idx = public_root_aliases[i].indexOf(ALIASES_SEP);
 
 				if (idx < 0) {
-					System.out
-						.println("Illegal resource setting in aglets.properties: " 
-								 + public_root_aliases[i]);
+				    JOptionPane.showMessageDialog(this,bundle.getString("dialog.serprefs.error.properties.message"),bundle.getString("dialog.serprefs.error.properties.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("error"));
 				} else {
-					_aliases.add(public_root_aliases[i]);
+					_aliases.addItem(public_root_aliases[i]);
 				} 
 			} 
 		} 

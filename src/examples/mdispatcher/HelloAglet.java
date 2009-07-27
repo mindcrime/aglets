@@ -17,6 +17,7 @@ package examples.mdispatcher;
 
 import com.ibm.aglet.*;
 import com.ibm.aglet.event.*;
+import com.ibm.aglet.message.Message;
 import com.ibm.aglet.util.*;
 
 import com.ibm.agletx.util.SimpleItinerary;
@@ -35,7 +36,7 @@ import java.awt.event.*;
  * <tt> HelloAglet </tt> is a revised version of examples.hello.HelloAglet,
  * which uses MethodDispatcher class to handle incoming messages.
  * 
- * @version     1.00	$Date: 2001/07/28 06:34:18 $
+ * @version     1.00	$Date: 2009/07/27 10:31:41 $
  * @author	Danny B. Lange
  * @author	Mitsuru Oshima
  * @see examples.hello.HelloAglet

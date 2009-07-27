@@ -14,46 +14,35 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-import java.awt.Button;
-import java.awt.Checkbox;
-import java.awt.Dialog;
-import java.awt.Event;
-import java.awt.Font;
-import java.awt.Choice;
-import java.awt.Frame;
+import javax.swing.*;
+import com.ibm.aglets.tahiti.utils.*;
 import java.awt.CardLayout;
-import java.awt.GridBagLayout;
+
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.Label;
-import java.awt.List;
-import java.awt.Panel;
-import java.awt.TextField;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 import java.util.Vector;
 import java.util.Hashtable;
 import java.util.Enumeration;
-import java.util.StringTokenizer;
+
 
 import java.io.File;
 import java.io.IOException;
 
-import java.security.Policy;
+
 import com.ibm.aglets.security.PolicyDB;
 import com.ibm.aglets.security.PolicyFileReader;
 import com.ibm.aglets.security.PolicyFileWriter;
 import com.ibm.aglets.security.PolicyGrant;
-import com.ibm.aglets.security.PolicyPermission;
-import com.ibm.aglets.security.PolicyFileParsingException;
 
 import com.ibm.awb.misc.URIPattern;
-import com.ibm.awb.misc.MalformedURIPatternException;
+
 import com.ibm.awb.misc.Resource;
+
+import javax.swing.event.*;
 
 /**
  * Class SecurityConfigDialog represents the dialog for
@@ -63,14 +52,8 @@ import com.ibm.awb.misc.Resource;
  */
 
 final class SecurityConfigDialog extends TahitiDialog 
-	implements ActionListener, ItemListener {
+	implements ActionListener, ListSelectionListener {
 
-	// Labels
-	private static final String LABEL_TITLE = "Security Preferences";
-	private static final String LABEL_OK = "OK";
-	private static final String LABEL_CLOSE = "Close";
-	private static final String LABEL_RELOAD = "Reload";
-	private static final String LABEL_GRANT_PANEL = "Code Base";
 
 	/*
 	 * Singleton instance reference.
@@ -79,11 +62,11 @@ final class SecurityConfigDialog extends TahitiDialog
 
 	private PolicyDB _db = null;
 
-	private List _grantList = new List(5, false);
+	private AgentListPanel _grantList = new AgentListPanel(5);
 	private GrantEditor _grantEditor = new GrantEditor();
 	private GrantEditPanel _grantPanel = null;
 	GridBagPanel _panel = new GridBagPanel();
-	Panel setting_panel = new Panel();
+	JPanel setting_panel = new JPanel();
 	CardLayout layout = new CardLayout();
 	Hashtable privileges = new Hashtable();
 
@@ -91,79 +74,67 @@ final class SecurityConfigDialog extends TahitiDialog
 	 * Constructs a security configuration dialog.
 	 */
 	private SecurityConfigDialog(MainWindow parent) {
-		super(parent, LABEL_TITLE, true);
+		super(parent, bundle.getString("dialog.secprefs.title"), true);
 		loadPolicyFile();
-		add("Center", _panel);
 		makePanel();
-
-		addButton(LABEL_OK, this);
-		addButton(LABEL_CLOSE, this);
-
-		// -     addButton(LABEL_RELOAD, this);
+		this.getContentPane().add("Center",this._panel);
+		
+		// add buttons
+		this.addJButton(bundle.getString("dialog.secprefs.button.ok"),TahitiCommandStrings.OK_COMMAND,IconRepository.getIcon("ok"),this);
+		this.addJButton(bundle.getString("dialog.secprefs.button.cancel"),TahitiCommandStrings.CANCEL_COMMAND,IconRepository.getIcon("cancel"),this);
+	
 	}
-	// -   public void restoreDefaults() {
-	// -     Enumeration e = privileges.elements();
-	// -     while(e.hasMoreElements()) {
-	// -       ((SecurityConfigPanel)e.nextElement()).restoreDefaults();
-	// -     }
-	// -   }
 
 	/**
 	 * *****************************************************************
 	 * The call back methods
 	 */
 
-	// Creates an Aglet creation dialog.
-	// 
-	public void actionPerformed(ActionEvent ev) {
-		String cmd = ev.getActionCommand();
+	/**
+	 * Manage events from buttons.
+	 * @param event the event to deal with
+	 */
+	public void actionPerformed(ActionEvent event) {
+	    if(event==null){
+	        return;
+	    }
+	    
+	    
+		String command = event.getActionCommand();
+		
+		if(command==null || command.equals("")){ 
+		    return;
+		}
 
-		if (LABEL_OK.equals(cmd)) {
-			save();
-
-			// -       Policy policy = Policy.getPolicy();
-			// -       if(policy!=null) {
-			// - 	policy.refresh();
-			// -       }
-			// to work around the bug in JDK1.1 for UNIX
-			// -       dispose();
-			setVisible(false);
-			ShutdownDialog sd = 
-				new ShutdownDialog((MainWindow)getParent(), 
-								   "To be effective, you need reboot the server.");
-
-			sd.popupAtCenterOfParent();
-		} else if (LABEL_CLOSE.equals(cmd)) {
-			setVisible(false);
-
-			// -     } else if(LABEL_RELOAD.equals(cmd)) {
-			// - //System.out.println("remove all");
-			// - //      _instance.removeAll();
-			// -       restoreDefaults();
-			// -       _grantPanel.removeAll();
-			// -       _panel.removeAll();
-			// - System.out.println("load policy file");
-			// -       loadPolicyFile();
-			// - System.out.println("make panel");
-			// -       makePanel();
-			// - //System.out.println("add buttons");
-			// - //	addButton(LABEL_OK, this);
-			// - //	addCloseButton(null);
-			// - //	addButton(LABEL_RELOAD, this);
-			// - System.out.println("update values");
-			// -       _instance.updateValues();
-			// - System.out.println("done.");
-		} 
+		if(command.equals(TahitiCommandStrings.OK_COMMAND)){
+		    // save the policy
+		    this.save();
+		    this.setVisible(false);
+		    JOptionPane.showMessageDialog(this,bundle.getString("dialog.secprefs.reboot"),bundle.getString("dialog.secprefs.reboot.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("warning"));
+		}
+		else
+		if(command.equals(TahitiCommandStrings.CANCEL_COMMAND)){
+		    this.setVisible(false);
+		}
+		
+		this.dispose();
 	}
+	
+	
+	
+	
+
 	private void addGrantPanel(PolicyGrant grant) {
 		addGrantPanel(getGrantName(grant), grant);
 	}
+	
 	public void addGrantPanel(String name) {
 		addGrantPanel(name, null);
 	}
+	
 	private void addGrantPanel(String name, PolicyGrant grant) {
 		if (!hasGrant(name)) {
-			_grantList.add(name);
+			this._grantList.addItem(name);
 			SecurityConfigPanel panel = new SecurityConfigPanel(name, grant);
 
 			privileges.put(name, panel);
@@ -171,6 +142,7 @@ final class SecurityConfigDialog extends TahitiDialog
 			panel.setupPanels();
 		} 
 	}
+	
 	private static String getGrantName(PolicyGrant grant) {
 		final URIPattern codeBase = grant.getCodeBase();
 		final String signers = grant.getSignerNames();
@@ -191,6 +163,7 @@ final class SecurityConfigDialog extends TahitiDialog
 		} 
 		return EditorPanel.toText(args);
 	}
+	
 	/*
 	 * Singletion method to get the instnace
 	 */
@@ -201,9 +174,11 @@ final class SecurityConfigDialog extends TahitiDialog
 		_instance.updateValues();
 		return _instance;
 	}
+	
 	private boolean hasGrant(PolicyGrant grant) {
 		return hasGrant(getGrantName(grant));
 	}
+	
 	private boolean hasGrant(String name) {
 		String[] grants = _grantList.getItems();
 		int i = 0;
@@ -215,16 +190,20 @@ final class SecurityConfigDialog extends TahitiDialog
 		} 
 		return false;
 	}
-	/*
-	 * Handles the events
+	
+	
+	/**
+	 * Events from the list
+	 * @param event the event to work with
 	 */
-	public void itemStateChanged(ItemEvent ev) {
-		String item = _grantList.getSelectedItem();
+	public void valueChanged(ListSelectionEvent event) {
+		String selected = (String) this._grantList.getSelectedItem();
 
-		if (item != null) {
-			showGrantPanel(item);
-		} 
+		if(selected!=null){
+		    this.showGrantPanel(selected);
+		}
 	}
+	
 	private void loadPolicyFile() {
 		final String file = PolicyFileReader.getUserPolicyFilename();
 		PolicyFileReader reader = new PolicyFileReader(file);
@@ -244,7 +223,7 @@ final class SecurityConfigDialog extends TahitiDialog
 		cns.insets = new Insets(10, 5, 5, 5);
 
 		_panel.setConstraints(cns);
-		BorderPanel grantPanel = new BorderPanel(LABEL_GRANT_PANEL);
+		BorderPanel grantPanel = new BorderPanel(bundle.getString("dialog.secprefs.grantpanel"));
 
 		_panel.add(grantPanel, 1, 0.0);
 		setupGrantPanel(grantPanel);
@@ -272,6 +251,7 @@ final class SecurityConfigDialog extends TahitiDialog
 
 		showGrantPanel(firstGrant);
 	}
+	
 	public void removeGrantPanel(int idx, String name) {
 		if (hasGrant(name)) {
 			_grantList.remove(idx);
@@ -285,6 +265,7 @@ final class SecurityConfigDialog extends TahitiDialog
 			} 
 		} 
 	}
+	
 	public void save() {
 		PolicyDB db = new PolicyDB();
 		final int num = _grantList.getItemCount();
@@ -325,6 +306,8 @@ final class SecurityConfigDialog extends TahitiDialog
 			System.err.println(excpt.toString());
 		} 
 	}
+	
+	
 	/*
 	 * setup Grant Panel
 	 */
@@ -343,7 +326,7 @@ final class SecurityConfigDialog extends TahitiDialog
 		cns.weighty = 0.1;
 		_grantPanel = new GrantEditPanel(this, _grantList, _grantEditor);
 		panel.add(_grantPanel, GridBagConstraints.REMAINDER, 1.0);
-		_grantList.addItemListener(this);
+		this._grantList.addListSelectionListener(this);
 
 		cns.insets.top = 0;
 		cns.fill = GridBagConstraints.HORIZONTAL;

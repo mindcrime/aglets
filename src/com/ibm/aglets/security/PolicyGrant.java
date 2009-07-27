@@ -32,7 +32,7 @@ import java.security.PublicKey;
  * The <tt>PolicyGrant</tt> class represents a grant
  * of Java policy database.
  * 
- * @version     1.00    $Date: 2001/07/28 06:33:11 $
+ * @version     1.00    $Date: 2009/07/27 10:31:40 $
  * @author      ONO Kouichi
  */
 public class PolicyGrant {

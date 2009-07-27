@@ -57,10 +57,10 @@ import com.ibm.aglet.AgletProxy;
 import com.ibm.aglet.AgletContext;
 import com.ibm.aglet.AgletID;
 import com.ibm.aglet.Ticket;
-import com.ibm.aglet.Message;
 import com.ibm.aglet.InvalidAgletException;
-import com.ibm.aglet.MessageException;
 import com.ibm.aglet.NotHandledException;
+import com.ibm.aglet.message.Message;
+import com.ibm.aglet.message.MessageException;
 
 import com.ibm.maf.MAFAgentSystem;
 import com.ibm.maf.MAFFinder;
@@ -88,7 +88,8 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 	private static Version VERSION;
 
 	private static ResourceBundle bundle = null;
-	private static AgletsLogger logger = new AgletsLogger(AgletRuntime.class.getName());
+    private static final LogCategory log
+            = LogInitializer.getCategory(AgletRuntime.class.getName() );
 	/*
 	 * This must be outside of this source code.
 	 */
@@ -378,8 +379,8 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 	}
 	/**
 	 * Gets an enumeration of aglet proxies of all aglets residing
-	 * in a context specified by name.
-	 * @param contextName {@link String} with the name of the context
+	 * in the context specified by contextAddress.
+	 * @param contextAddress
 	 */
 	public AgletProxy[] getAgletProxies(String contextName) 
 			throws IOException {
@@ -651,7 +652,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 			String username = getOwnerName();
 
 			if (username == null) {
-				logger.error("No user.");
+				log.error("No user.");
 				return def;
 			} 
 			String propfile = null;
@@ -669,7 +670,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 			} catch (MalformedURLException ex) {
 				System.err.println(ex.toString());
 			} 
-			logger.debug("getProperty: reading " + prop + " property from "+ propfile);
+			log.debug("getProperty: reading " + prop + " property from "+ propfile);
 		} 
 		String ret = null;
 
@@ -885,10 +886,10 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 			} catch (MalformedURLException ex) {
 				System.err.println(ex.toString());
 			} 
-			logger.debug("setProperty: reading " + prop + " property from "+ propfile);
+			log.debug("setProperty: reading " + prop + " property from "+ propfile);
 		} 
 		if (res == null) {
-			logger.error("No resource.");
+			log.error("No resource.");
 			return;
 		} 
 		res.setResource(key, value);
@@ -940,7 +941,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 					FileUtils.getPropertyFilenameForUser(username, "aglets");
 
 				res = Resource.createResource("aglets", propfile, null);
-				logger.debug("startup: reading aglets property from "+ propfile);
+				log.debug("startup: reading aglets property from "+ propfile);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			} 
@@ -1025,7 +1026,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 	}
 	public static final void verboseOut(String msg) {
 		if (verbose) {
-			logger.debug(msg);
+			log.debug(msg);
 		} 
 	}
 }

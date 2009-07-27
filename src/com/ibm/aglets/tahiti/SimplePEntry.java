@@ -27,7 +27,7 @@ import java.security.PrivilegedExceptionAction;
 import java.security.PrivilegedActionException;
 
 /**
- * @version     1.10	$Date: 2001/07/28 06:32:38 $
+ * @version     1.10	$Date: 2009/07/27 10:31:40 $
  * @author      Mitsuru Oshima
  */
 final class SimplePEntry implements com.ibm.aglets.PersistentEntry {

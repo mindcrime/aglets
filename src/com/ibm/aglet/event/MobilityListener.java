@@ -26,7 +26,7 @@ package com.ibm.aglet.event;
 /**
  * The listener interface for receiving mobility events on an aglet.
  * 
- * @version     1.00    $Date: 2001/07/28 06:34:11 $
+ * @version     1.00    $Date: 2009/07/27 10:31:41 $
  * @author      Mitsuru Oshima
  */
 public interface MobilityListener extends java.util.EventListener, 

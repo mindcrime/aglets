@@ -26,6 +26,7 @@ package com.ibm.aglet;
 import java.security.PermissionCollection;
 
 import com.ibm.aglet.event.*;
+import com.ibm.aglet.message.Message;
 
 import java.net.URL;
 import java.io.IOException;
@@ -37,7 +38,7 @@ import java.applet.AudioClip;
  * The <tt>Aglet</tt> class is the abstract base class for aglets. Use this
  * class to create your own personalized aglets.
  * 
- * @version     2.00    $Date: 2007/07/25 23:33:04 $
+ * @version     2.00    $Date: 2009/07/27 10:31:41 $
  * @author      Danny B. Lange
  * @author      Mitsuru Oshima
  */
@@ -141,7 +142,7 @@ public abstract class Aglet implements java.io.Serializable {
 	 * Deactivates the aglet. The aglet will temporarily be stopped and
 	 * removed from its current context. It will return to the context and
 	 * resume execution after the specified period has elapsed.
-	 * @param duration number of milliseconds to stay deactivated
+	 * @param millisecounds duration of the aglet deactivating.
 	 * If this is 0, it will be activeted at the next startup time.
 	 * @exception NotSerializableException if the entire aglet is not
 	 * serializable.
@@ -226,10 +227,10 @@ public abstract class Aglet implements java.io.Serializable {
 	 * Exits the current monitor.
 	 * @exception IllegalMonitorStateException if the current thread is not the
 	 * owner of the monitor.
-	 * @see #waitMessage()
-	 * @see #waitMessage(long)
-	 * @see #notifyMessage()
-	 * @see #notifyAllMessages()
+	 * @see Aglet#exitMonitor
+	 * @see waitMessage
+	 * @see notifyMessage
+	 * @see notifyAllMessages
 	 */
 	public void exitMonitor() {
 		getMessageManager().exitMonitor();
@@ -243,14 +244,16 @@ public abstract class Aglet implements java.io.Serializable {
 	}
 	/**
 	 * Gets the id of this aglet.
-	 * @return the {@link AgletID} object of this aglet
+	 * @return the <tt>AgletID<tt> object of this aglet
+	 * @see aglet.AgletID
 	 */
 	public final AgletID getAgletID() {
 		return getAgletInfo().getAgletID();
 	}
 	/**
 	 * Gets the info object of this aglet
-	 * @return the {@link AgletInfo} object of this aglet
+	 * @return the <tt>aglet.AgletInfo<tt> object of this aglet
+	 * @see aglet.AgletID
 	 */
 	public final AgletInfo getAgletInfo() {
 		return _stub.getAgletInfo();
@@ -263,7 +266,8 @@ public abstract class Aglet implements java.io.Serializable {
 	}
 	/**
 	 * Gets the code base URL of this aglet
-	 * @return the {@link java.net.URL} object of this aglet
+	 * @return the <tt>java.net.URL<tt> object of this aglet
+	 * @see aglet.AgletID
 	 */
 	public final URL getCodeBase() {
 		return getAgletInfo().getCodeBase();
@@ -312,9 +316,9 @@ public abstract class Aglet implements java.io.Serializable {
 	}
 	/**
 	 * Handles the message form outside.
-	 * @param message the {@link Message} sent to the aglet
+	 * @param msg the message sent to the aglet
 	 * @return true if the message was handled. Returns false if the message
-	 * was not handled. If false is returned, the <tt>NotHandledException</tt> exception
+	 * was not handled. If false is returned, the <tt>MessageNotHandled</tt> exception
 	 * is thrown in the <tt>FutureReply.getReply</tt> and <tt>AgletProxy.sendMessage</tt>
 	 * methods.
 	 * @see FutureReply#getReply
@@ -328,9 +332,9 @@ public abstract class Aglet implements java.io.Serializable {
 	 * Notifies all of waiting threads.
 	 * @exception IllegalMonitorStateException If the current thread
 	 * is not the owner of the monitor.
-	 * @see #notifyMessage()
-	 * @see #waitMessage()
-	 * @see #waitMessage(long)
+	 * @see Aglet#notifyAllMessages
+	 * @see waitMessage
+	 * @see notifyMessage
 	 */
 	public void notifyAllMessages() {
 		getMessageManager().notifyAllMessages();
@@ -339,9 +343,9 @@ public abstract class Aglet implements java.io.Serializable {
 	 * Notifies a single waiting thread.
 	 * @exception IllegalMonitorStateException If the current thread
 	 * is not the owner of the monitor.
-	 * @see #notifyAllMessages()
-	 * @see #waitMessage()
-	 * @see #waitMessage(long)
+	 * @see Aglet#notifyMessage
+	 * @see waitMessage
+	 * @see notifyAllMessages
 	 */
 	public void notifyMessage() {
 		getMessageManager().notifyMessage();
@@ -488,7 +492,7 @@ public abstract class Aglet implements java.io.Serializable {
 	/**
 	 * Sets the proxy for the aglet. This cannot be set twice.
 	 * Called by the system.
-	 * @param stub the {@link AgletStub} to set
+	 * @param proxy the proxy to set
 	 */
 	public synchronized final void setStub(AgletStub stub) {
 		if (_stub != null) {
@@ -500,7 +504,7 @@ public abstract class Aglet implements java.io.Serializable {
 	/**
 	 * Sets the text of this Aglet. A way for the aglet to display
 	 * messages on the viewer window.
-	 * @param text a {@link String} containing the message
+	 * @param message the message.
 	 */
 	public final void setText(String text) {
 		_stub.setText(text);
@@ -603,9 +607,9 @@ public abstract class Aglet implements java.io.Serializable {
 	 * Waits until it is notified.
 	 * @exception IllegalMonitorStateException If the current thread
 	 * is not the owner of the monitor.
-	 * @see #notifyMessage()
-	 * @see #notifyAllMessages()
-	 * @see #waitMessage(long)
+	 * @see MessageManager#waitMessage
+	 * @see notifyMessage
+	 * @see notifyAllMessages
 	 */
 	public void waitMessage() {
 		getMessageManager().waitMessage();
@@ -615,11 +619,40 @@ public abstract class Aglet implements java.io.Serializable {
 	 * @param timeout the maximum value to wait in milliseconds
 	 * @exception IllegalMonitorStateException If the current thread
 	 * is not the owner of the monitor.
-	 * @see #notifyMessage()
-	 * @see #notifyAllMessages()
-	 * @see #waitMessage()
+	 * @see MessageManager#waitMessage
+	 * @see notifyMessage
+	 * @see notifyAllMessages
 	 */
 	public void waitMessage(long timeout) {
 		getMessageManager().waitMessage(timeout);
+	}
+	
+	
+	/**
+	 * Suspends the agent execution for the specified amount of time.
+	 * @param timeout the number of millisecs. the agent must be suspended.
+	 */
+	public final void sleep(long timeout){
+		long startTime = System.currentTimeMillis();
+		long countDown = 0;
+		
+		// suspend the message manager
+		MessageManager manager = this.getMessageManager();
+		manager.sleep();
+		
+		countDown = timeout;
+		do{
+			try{
+				Thread.currentThread().sleep(countDown);
+			}catch(InterruptedException e){
+				System.err.println("Sleeping interrupted!");
+				e.printStackTrace();
+			}
+		}while( (countDown = System.currentTimeMillis() - startTime) < timeout );
+		
+		// wake up the manager
+		manager.wakeUp();
+		
+		
 	}
 }

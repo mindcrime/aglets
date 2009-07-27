@@ -16,25 +16,38 @@ package com.ibm.aglets.tahiti;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ResourceBundle;
 
-public class TahitiWindow extends Frame {
+import javax.swing.*;
 
+import com.ibm.aglets.tahiti.utils.IconRepository;
+
+public class TahitiWindow extends JFrame {
+
+    /* Load resources */
+    static ResourceBundle bundle = null;
+	static {
+		bundle = ResourceBundle.getBundle("tahiti");
+	} 
+	
+    
 	static final public String lineSeparator = "\n";
 
-	private Panel buttonPanel = new Panel();
+	private JPanel buttonPanel = new JPanel();
 	private boolean shown = false;
 
-	private Button _closeButton = null;
+	private JButton _closeButton = null;
 
 	protected TahitiWindow() {
 		this("");
 	}
 	protected TahitiWindow(String title) {
 		super(title);
-		setLayout(new BorderLayout());
+		//this.setIconImage(Toolkit.getDefaultToolkit().getImage(System.getProperty("aglets.home"+"/icons/aglets.jpg")));
+		this.getContentPane().setLayout(new BorderLayout());
 		setTitle(title);
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		add("South", buttonPanel);
+		this.getContentPane().add("South", buttonPanel);
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -47,23 +60,32 @@ public class TahitiWindow extends Frame {
 		});
 
 	}
-	public Button addButton(String name) {
-		Button b = new Button(name);
+	public JButton addButton(String name) {
+		JButton b = new JButton(name);
 
 		buttonPanel.add(b);
 		return b;
 	}
-	protected Button addButton(String name, ActionListener listener) {
-		Button b = addButton(name);
+	protected JButton addButton(String name, ActionListener listener) {
+		JButton b = addButton(name);
 
 		b.setActionCommand(name);
 		b.addActionListener(listener);
 		return b;
 	}
-	protected Button addButton(String name, ActionListener actionListener, 
+	protected JButton addButton(String name, ActionListener actionListener, 
 							   KeyListener keyListener) {
-		Button b = addButton(name);
+		JButton b = addButton(name);
 
+		b.setActionCommand(name);
+		b.addActionListener(actionListener);
+		b.addKeyListener(keyListener);
+		return b;
+	}
+	protected JButton addButton(String name, ActionListener actionListener,
+	        										KeyListener keyListener, String icon){
+	    JButton b = addButton(name);
+	    b.setIcon(IconRepository.getIcon(icon));
 		b.setActionCommand(name);
 		b.addActionListener(actionListener);
 		b.addKeyListener(keyListener);
@@ -86,7 +108,7 @@ public class TahitiWindow extends Frame {
 		} 
 		ActionAndKeyListener listener = new AlertCloseListener(this);
 
-		_closeButton = addButton(name, listener, listener);
+		_closeButton = addButton(name, listener, listener,"cancel");
 	}
 	public void beep() {
 		getToolkit().beep();
@@ -101,7 +123,6 @@ public class TahitiWindow extends Frame {
 	}
 	public void popupAtCenterOfScreen() {
 		if (shown == false) {
-			pack();
 			shown = true;
 		} 
 		Dimension d = getToolkit().getScreenSize();
@@ -110,7 +131,7 @@ public class TahitiWindow extends Frame {
 							(d.height - s.height) / 2);
 
 		setLocation(p);
-		show();
+		this.setVisible(true);
 
 		// Due to a bug in AIX JDK or Motif/AWT?
 		setLocation(p.x - 1, p.y - 1);
@@ -118,4 +139,37 @@ public class TahitiWindow extends Frame {
 	protected boolean windowClosing(WindowEvent e) {
 		return true;
 	}
+	
+	/**
+	 * A method to add a jbutton to the window with the name, icon, actionstring, etc. specified.
+	 * The button is automatically added to the south panel.
+	 *@param label the label of the button
+	 *@param action the actionstring of the button
+	 *@param icon the icon of the button
+	 *@param listener the actionlistener for this button
+	 *@param tooltip the tooltip text for this button
+	 */
+	protected JButton addJButton(String label, String action, Icon icon, ActionListener listener,String tooltip){
+	    if(label==null ){
+	        return null;
+	    }
+	    
+	    if(action==null || action.equals("")){
+	        action = label;
+	    }
+	    
+	    if(tooltip==null || tooltip.equals("")){
+	        tooltip = label;
+	    }
+	    
+	    JButton ret = new JButton(label);
+	    ret.setActionCommand(action);
+	    ret.setIcon(icon);
+	    ret.addActionListener(listener);
+	    ret.setToolTipText(tooltip);
+	    
+	    this.buttonPanel.add("South",ret);
+	    return ret;
+	}
+
 }

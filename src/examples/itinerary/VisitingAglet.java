@@ -16,6 +16,7 @@ package examples.itinerary;
  */
 
 import com.ibm.aglet.*;
+import com.ibm.aglet.message.Message;
 import com.ibm.aglet.system.*;
 import com.ibm.aglet.util.*;
 import com.ibm.agletx.util.*;
@@ -31,7 +32,7 @@ import java.awt.event.*;
  * Remote stationary aglets are created afterwhich a mobile aglet
  * meet with them to dispose them.
  * 
- * @version     1.00	$Date: 2001/07/28 06:34:17 $
+ * @version     1.00	$Date: 2009/07/27 10:31:42 $
  * @author	Yariv Aridor
  */
 public class VisitingAglet extends Aglet {

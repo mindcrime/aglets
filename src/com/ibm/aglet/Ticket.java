@@ -35,7 +35,7 @@ import com.ibm.awb.misc.MalformedURIPatternException;
 
 /**
  * <tt>Ticket</tt>
- * @version     0.20    $Date: 2007/07/25 23:33:04 $
+ * @version     0.20    $Date: 2009/07/27 10:31:41 $
  * @author      ONO Kouichi
  */
 
@@ -111,7 +111,7 @@ public class Ticket implements Serializable {
 	 * The quality of communication for the trip is null.
 	 * The scheme name is default("atp").
 	 * The port number is default.
-	 * @param destination a {@link String} containing the destination host of the trip
+	 * @param host destination host of the trip
 	 * @param qoc quality of communication for the trip
 	 * @exception MalformedURLException
 	 * @see QoC

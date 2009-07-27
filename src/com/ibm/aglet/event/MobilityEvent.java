@@ -30,7 +30,7 @@ import java.net.URL;
 /**
  * The mobility event occurs when the aglet is about to move.
  * 
- * @version     1.00    $Date: 2001/07/28 06:34:12 $
+ * @version     1.00    $Date: 2009/07/27 10:31:41 $
  * @author      Mitsuru Oshima
  */
 public class MobilityEvent extends AgletEvent {

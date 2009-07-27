@@ -21,6 +21,7 @@ import java.awt.Button;
 import java.awt.Label;
 
 import java.awt.event.WindowEvent;
+import javax.swing.*;
 
 /**
  * ShutdownDialog
@@ -39,11 +40,11 @@ final class ShutdownDialog extends TahitiDialog {
 	/**
 	 * Shutdown
 	 */
-	private Button _OKButton = null;
+	private JButton _OKButton = null;
 	/**
 	 * Reboot
 	 */
-	private Button _RebootButton = null;
+	private JButton _RebootButton = null;
 
 	/*
 	 * Constructs

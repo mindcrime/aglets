@@ -16,6 +16,8 @@ package examples.finder;
  */
 
 import com.ibm.aglet.*;
+import com.ibm.aglet.message.Message;
+
 import java.util.Hashtable;
 
 public class Finder extends Aglet {

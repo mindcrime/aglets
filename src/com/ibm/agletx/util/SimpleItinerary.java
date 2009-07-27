@@ -16,6 +16,7 @@ package com.ibm.agletx.util;
 
 import com.ibm.aglet.*;
 import com.ibm.aglet.event.*;
+import com.ibm.aglet.message.Message;
 
 import java.util.Hashtable;
 import java.util.Enumeration;
@@ -60,7 +61,7 @@ import java.io.IOException;
  * In this way, an aglet can specify both a destination
  * to go and a message to be handled at the destination.
  * 
- * @version     1.00    $Date: 2001/07/28 06:33:39 $
+ * @version     1.00    $Date: 2009/07/27 10:31:41 $
  * @author      Mitsuru Oshima
  */
 

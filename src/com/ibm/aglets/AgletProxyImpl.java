@@ -25,6 +25,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import com.ibm.aglet.*;
+import com.ibm.aglet.message.Message;
+import com.ibm.aglet.message.MessageException;
 
 // # import com.ibm.aglets.security.Allowance;
 
@@ -75,7 +77,7 @@ final class AgletProxyImpl extends VirtualRef implements AgletProxy {
 	/**
 	 * Deactivate aglet till the specified date. The deactivated aglet are
 	 * stored in the aglet spool.
-	 * @param duration the term to sleep
+	 * @param duraration the term to sleep
 	 * @exception AgletEception if can not deactivate the aglet.
 	 */
 	public void deactivate(long duration) 
@@ -304,7 +306,7 @@ final class AgletProxyImpl extends VirtualRef implements AgletProxy {
 	/**
 	 * Suspend the aglet.  That is, objects of the suspended aglet will remain in
 	 * the memory.
-	 * @param duration the term to sleep
+	 * @param duraration the term to sleep
 	 * @exception AgletEception if can not suspend the aglet.
 	 * @exception IllegalArgumentException if the minutes parameter is negative.
 	 */

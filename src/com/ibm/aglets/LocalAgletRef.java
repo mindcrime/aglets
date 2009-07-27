@@ -29,13 +29,11 @@ import com.ibm.aglet.AgletStub;
 import com.ibm.aglet.AgletInfo;
 import com.ibm.aglet.AgletContext;
 import com.ibm.aglet.FutureReply;
-import com.ibm.aglet.Message;
 import com.ibm.aglet.MessageManager;
 import com.ibm.aglet.Ticket;
 import com.ibm.aglet.AgletException;
 import com.ibm.aglet.AgletNotFoundException;
 import com.ibm.aglet.InvalidAgletException;
-import com.ibm.aglet.MessageException;
 import com.ibm.aglet.NotHandledException;
 import com.ibm.aglet.RequestRefusedException;
 import com.ibm.aglet.ServerNotFoundException;
@@ -43,9 +41,12 @@ import com.ibm.aglet.event.AgletEvent;
 import com.ibm.aglet.event.CloneEvent;
 import com.ibm.aglet.event.MobilityEvent;
 import com.ibm.aglet.event.PersistencyEvent;
+import com.ibm.aglet.message.Message;
+import com.ibm.aglet.message.MessageException;
 import com.ibm.aglet.system.ContextEvent;
 
 import java.util.Date;
+
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Hashtable;
@@ -83,13 +84,17 @@ import com.ibm.aglet.security.MessageProtection;
 import com.ibm.awb.weakref.Ref;
 import com.ibm.awb.weakref.VirtualRef;
 
-import org.aglets.log.AgletsLogger;
+import org.aglets.log.LogInitializer;
+import org.aglets.log.LogCategory;
+
+import net.sourceforge.aglets.rolex.*;
+
 
 /**
  * Class LocalAgletRef is the implementation of AgletStub. The purpose of
  * this class is to provide a mechanism to control the aglet.
  * 
- * @version    $Revision: 1.8 $ $Date: 2007/07/25 23:33:05 $ $Author: maxthomax $
+ * @version    $Revision: 1.9 $ $Date: 2009/07/27 10:31:41 $ $Author: cat4hire $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
@@ -97,9 +102,11 @@ import org.aglets.log.AgletsLogger;
 final public class LocalAgletRef extends AgletStub implements AgletRef {
 
 	static final int NOT_INITIALIZED = 0;
-	static final int ACTIVE = Aglet.ACTIVE;
-	static final int INACTIVE = Aglet.INACTIVE;
-	static final int INVALID = 0x1 << 2;
+	static final int ACTIVE          = Aglet.ACTIVE;
+	static final int INACTIVE        = Aglet.INACTIVE;
+	static final int INVALID         = 0x1 << 2;
+	static final int SUBSTITUTING    = 0x1 << 3;
+	static final int SUBSTITUTED     = 0x1 << 4;
 
 	static final String CLASS_AGLET_PERMISSION = 
 		"com.ibm.aglets.security.AgletPermission";
@@ -117,7 +124,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	private static final String ACTION_ACTIVATE = "activate";
 	private static final String ACTION_RETRACT = "retract";
     
-	private static AgletsLogger logger = new AgletsLogger(LocalAgletRef.class.getName());
+    private static LogCategory logCategory = LogInitializer.getCategory("com.ibm.aglets.LocalAgletRef");
 
 	/* package */
 	private static AgentProfile _agent_profile = null;
@@ -131,11 +138,16 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 		null);
 	} 
 
+	/**
+	 * Stores the class of the agent behind the reference. Useful for agent substitution.
+	 */
+	private Class aglet_class = null;
+	
 	/* package */
 	Aglet aglet = null;
 	AgletInfo info = null;
 	ResourceManager resourceManager = null;
-	MessageManagerImpl messageManager = null;
+	MessageManager messageManager = null;
 	AgletProxyImpl proxy = null;
 
 	// #     /**
@@ -332,6 +344,20 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 			} 
 		} 
 	}
+	
+	
+	/**
+	 * This method sets the state of the message manager as unitialized. Override depending
+	 * from the impementation of your message manager.
+	 * @param manager the message manager (a MessageManagerImpl)
+	 */
+	protected void setStateUnitialized(MessageManager manager){
+		if( manager != null && manager instanceof MessageManagerImpl ){
+			((MessageManagerImpl)manager).state = MessageManagerImpl.UNINITIALIZED;
+		}
+	}
+	
+	
 	/**
 	 * 
 	 * 
@@ -361,7 +387,8 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 
 			try {
 				if (_mode == DeactivationInfo.SUSPENDED) {
-					messageManager.state = MessageManagerImpl.UNINITIALIZED;
+					
+					this.setStateUnitialized( this.messageManager );
 				} else {
 
 					// - 		    checkAgletPermissionAndProtection(ACTION_ACTIVATE);
@@ -442,7 +469,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	}
 	/**
 	 * Returns that the protections can be set or not
-	 * @param newprotections (@link PermissionCollection} with protections listing who can send
+	 * @param protections collection of protections about who can send
 	 * what kind of messages to the aglet
 	 */
 	private boolean canSetProtections(PermissionCollection newprotections) {
@@ -552,8 +579,8 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 			return;
 		} 
 
-		logger.debug("protections="+String.valueOf(protections));
-		logger.debug("permission="+String.valueOf(p));
+		logCategory.debug("protections="+String.valueOf(protections));
+		logCategory.debug("permission="+String.valueOf(p));
 		if (protections != null && protections.implies(p) == false) {
 			SecurityException ex = new SecurityException(p.toString());
 
@@ -561,14 +588,21 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 			throw ex;
 		} 
 	}
-	/*
-	 * Checks if the aglet ref is valid.
+	
+	
+	/**
+	 * Checks if the aglet behind this reference is still valid.
+	 * @throws InvalidAgletException if the aglet is not valid
 	 */
-	public void checkValidation() throws InvalidAgletException {
+	public final void checkValidation() throws InvalidAgletException {
 		if (!isValid()) {
 			throw new InvalidAgletException("Aglet is not valid");
 		} 
 	}
+	
+	
+	
+	
 	// #     /*
 	// #      *
 	// #      */
@@ -632,15 +666,40 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 		checkAgletPermissionAndProtection(ACTION_CLONE);
 		return _clone();
 	}
-	private MessageImpl cloneMessageAndCheck(Message msg, int type) {
-		MessageImpl clone;
+	
+	
+	/**
+	 * Clone and check permissions for the message to deliver. This method is tied to
+	 * the implementation of the message and supports the RolexMessage.
+	 * @param msg the original message
+	 * @param type the type of the message
+	 * @return the clone of the message or null
+	 */
+	protected MessageImpl cloneMessageAndCheck(Message msg, int type) {
+		
+		// check arguments
+		if( msg == null ){
+			return null;
+		}
+		
+		MessageImpl clone = null;
 
+		// if the message is a system message, it does not mean to clone it,
+		// since it should be sent from a system component, not another agent
 		if (msg instanceof SystemMessage) {
 			clone = (MessageImpl)msg;
-		} else {	// normal or delegate
-			clone = new MessageImpl(msg, null, type, 
-									System.currentTimeMillis());
 		} 
+		else
+		if( msg instanceof RolexMessage ){
+			clone = (RolexMessage)((RolexMessage)msg).clone();
+		}
+		else
+		if( msg instanceof MessageImpl ){
+			clone = (MessageImpl)((MessageImpl)msg).clone();
+		}
+		else{
+			clone = new MessageImpl(msg,null, type, System.currentTimeMillis());
+		}
 		checkMessagePermissionAndProtection(clone);
 		return clone;
 	}
@@ -685,7 +744,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 		resourceManager = _context.createResourceManager(info.getCodeBase(), 
 				_owner, table);
 		if (resourceManager == null) {
-			logger.error("invalid codebase:" + info.getCodeBase());
+			logCategory.error("invalid codebase:" + info.getCodeBase());
 		} 
 		return resourceManager;
 	}
@@ -714,6 +773,22 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 											  + excpt);
 		} 
 	}
+	
+	
+	/**
+	 * A method to deactivate the current message manager. Override depending on
+	 * your implementation of the message manager.
+	 *
+	 */
+	protected void deactivateMessageManager(){
+		if( this.messageManager != null && 
+			this.messageManager instanceof MessageManagerImpl ){
+			((MessageManagerImpl)this.messageManager).deactivate();
+		}
+	}
+	
+	
+	
 	/*
 	 * 
 	 */
@@ -798,12 +873,13 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 			_state = INACTIVE;
 			_mode = DeactivationInfo.DEACTIVATED;
 
-			if (msg != null && msg.future != null) {
-				msg.future.sendReplyIfNeeded(null);
+			if (msg != null && msg.getFutureReply() != null
+				&& msg.getFutureReply() instanceof FutureReplyImpl) {
+				((FutureReplyImpl)msg.getFutureReply()).sendReplyIfNeeded(null);
 			} 
 
 			// message manager is persistent and will be restored later
-			messageManager.deactivate();
+			this.deactivateMessageManager();
 
 			terminateThreads();
 
@@ -822,38 +898,58 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 		} 
 	}
 	/**
-	 * Delegates a message to the ref.
+	 * Deliver a message to the aglet thru the message manager. This method strongly
+	 * depends on the implementation of messages and message managers (at the moment
+	 * MessageImpl and MessageManagerImpl), rewrite it depending on such implementations.
 	 * @param msg a message to delegate
 	 * @exception InvalidAgletException if the aglet is not valid any longer.
 	 */
 	public void delegateMessage(Message msg) throws InvalidAgletException {
-        logger.debug("delegateMessage()++");
-		synchronized (msg) {
-			if (msg instanceof MessageImpl == false 
-					|| ((MessageImpl)msg).isDelegatable() == false) {
+        logCategory.debug("LocalAgletRef.delegateMessage(" + msg.getKind()+")");
+        
+        
+        // accept only instances of MessageImpl
+        if( ! (msg instanceof MessageImpl) || ! (this.messageManager instanceof MessageManagerImpl) ){
+        	return;
+        }
+        
+        
+        // the message must be delegatable to be delegated
+        MessageImpl source = (MessageImpl) msg;
+        if( source.isDelegatable() == false ){
+        	throw new IllegalArgumentException("The message cannot be delegated");
+        }
+        
+        
+        // check for validation of the aglet behind this local aglet ref
+		checkValidation();
+		
+		// clone the message to deliver, thus the sender cannot manipulate the
+		// message thru its reference
+		MessageImpl clone = (MessageImpl)source.clone();
+		
+		// check protections for this message
+		checkMessagePermissionAndProtection(clone);
 
-				throw new IllegalArgumentException("The message cannot be delegated " 
-												   + msg);
-			} 
 
-			MessageManagerImpl mng = messageManager;
-
-			checkValidation();
-
-			MessageImpl origin = (MessageImpl)msg;
-			MessageImpl clone = (MessageImpl)origin.clone();
-
-			checkMessagePermissionAndProtection(clone);
-
-			if (mng != null) {
-				origin.disable();		// disable the message
-				mng.postMessage(clone);
-			} else {
-				origin.cancel("Message Manager not found " 
-							  + (_state == INACTIVE ? "[inactive]" : ""));
-			} 
-		} 
+		// now post the message thru the message manager
+		// (note that we check before if the message manager is an instance of
+		// the MessageManagerImpl class)
+		MessageManagerImpl manager = (MessageManagerImpl) this.messageManager;
+		
+		if( manager != null ){
+			source.disable(); // disable the original message
+			manager.postMessage(clone);
+		}
+		else{
+			source.cancel("Cannot delive the message because no message manager found");
+		}
+		 
 	}
+	
+	
+	
+	
 	void destroyMessageManager() {
 
 		// Debug.check();
@@ -993,8 +1089,9 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 
 			AgletProxy new_proxy = new AgletProxyImpl(r_ref);
 
-			if (msg != null && msg.future != null) {
-				msg.future.sendReplyIfNeeded(new_proxy);
+			if (msg != null && msg.getFutureReply() != null
+				&& msg.getFutureReply() instanceof FutureReplyImpl) {
+				((FutureReplyImpl)msg.getFutureReply()).sendReplyIfNeeded(new_proxy);
 			} 
 
 			removeSnapshot();
@@ -1079,8 +1176,9 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 
 		invalidateReference();
 
-		if (msg != null && msg.future != null) {
-			msg.future.sendReplyIfNeeded(null);
+		if (msg != null && msg.getFutureReply() != null
+			&& msg.getFutureReply() instanceof FutureReplyImpl) {
+			((FutureReplyImpl)msg.getFutureReply()).sendReplyIfNeeded(null);
 		} 
 
 		removeSnapshot();
@@ -1199,21 +1297,76 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	boolean getSecurity() {
 		return _secure;
 	}
-	/*
-	 * Helpers
+	
+	
+
+	/**
+	 * Returns the state as a string to be displayed.
+	 * @return the string that summarizes the state of the aglet/reference
 	 */
-	String getStateAsString() {
-		switch (_state) {
-		case INVALID:
-			return "INVALID";
-		case ACTIVE:
-			return "ACTIVE";
-		case INACTIVE:
-			return "INACTIVE";
-		default:
-			return "DEFAULT";
+	protected final String getStateAsString() {
+		StringBuffer ret = new StringBuffer();
+		
+		if( this.isState( LocalAgletRef.INACTIVE) ){
+			ret.append(" INACTIVE ");
 		}
+		
+		if( this.isState( LocalAgletRef.INVALID) ){
+			ret.append(" INVALID ");
+		}
+		
+		if( this.isState( LocalAgletRef.ACTIVE) ){
+			ret.append(" ACTIVE ");
+		}
+		
+		if( this.isState( LocalAgletRef.SUBSTITUTED) ){
+			ret.append(" SUBSTITUTED ");
+		}
+		
+		if( this.isState( LocalAgletRef.SUBSTITUTING) ){
+			ret.append(" SUBSTITUTING ");
+		}
+
+		// if no state found....
+		if( ret.length() == 0 ){
+			ret.append("No state description");
+		}
+
+		return ret.toString();
 	}
+	
+	
+	/**
+	 * Returns the current state of the aglet.
+	 * @return the state.
+	 */
+	public final int getState(){
+		return this._state;
+	}
+	
+	/**
+	 * Adds the state to the current state, that means makes a logical or with the
+	 * current state. The method <b>does not check</b> for incompatibility among states.
+	 * @param newState the state to add.
+	 */
+	protected final void addState(int newState){
+		this._state |= newState;
+	}
+	
+	/**
+	 * Sets the state exactly equal to the argument.
+	 * @param newState the new state of the agent.
+	 */
+	protected final void setState(int newState){
+		this._state = newState;
+		System.out.println("\tSTATO = "+this._state);
+		if(_state == ACTIVE)
+			System.out.println("\tSTATO ATTIVO");
+	}
+	
+	
+	
+	
 	/**
 	 * Gets the current content of the Aglet's message line.
 	 * @return the message line.
@@ -1240,18 +1393,29 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	public boolean isRemote() {
 		return false;
 	}
+	
+	
 	/**
-	 * Check the state
+	 * Cheks if the reference is in a specific state. The state is checked making a logical
+	 * and with the passed value.
+	 * @param state the state to check
 	 */
-	public boolean isState(int s) {
-		return (_state & s) != 0;
+	public final boolean isState(int state) {
+		return (_state & state) != 0;
 	}
+	
+	
+	
+	
 	/**
 	 * Checks if it's valid or not.
+	 * An aglet is valid if its state includes the ACTIVE or INACTIVE state.
+	 * @return true if the aglet is at least in one of the above state
 	 */
 	public boolean isValid() {
-		return _state == ACTIVE || _state == INACTIVE;
+		return this.isState(LocalAgletRef.ACTIVE) || this.isState(LocalAgletRef.INACTIVE);
 	}
+	
 	protected void kill() {
 		suspendMessageManager();
 		switch (_state) {
@@ -1345,7 +1509,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 			String key = getPersistenceKey();
 
 			try {
-				messageManager.state = MessageManagerImpl.UNINITIALIZED;
+				this.setStateUnitialized(this.messageManager);
 
 				// this should already have proxy.
 				startResumedAglet();
@@ -1375,12 +1539,23 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 			} 
 		} 
 	}
-	/*
-	 * Resumes all threads and resume accepting incoming messages.
+	
+	
+	/**
+	 * Resume the message manager. This method depends on your implementation
+	 * of the message manager.
+	 *
 	 */
 	void resumeMessageManager() {
-		messageManager.resume();
+		if( this.messageManager != null && 
+			this.messageManager instanceof MessageManagerImpl){
+			((MessageManagerImpl)this.messageManager).resume();
+		}
+			
 	}
+	
+	
+	
 	/* package */
 	byte[] retract() throws MAFExtendedException {
 
@@ -1476,6 +1651,9 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 		sendFutureMessage(msg, future);
 		return future;
 	}
+	
+	
+	
 	/* protected */
 	void sendFutureMessage(Message msg, FutureReplyImpl future) 
 			throws InvalidAgletException {
@@ -1484,37 +1662,46 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 		// Just for thread safety to avoid a message being posted
 		// into destroyed messageManager. this must be improved.
 		// 
-		MessageManagerImpl mng = messageManager;
+		MessageManagerImpl mng = (MessageManagerImpl)messageManager;
 
 		checkValidation();
 
 		MessageImpl clone = cloneMessageAndCheck(msg, Message.FUTURE);
 
-		clone.future = future;
+		clone.setFutureReply(future);
 		mng.postMessage(clone);
 	}
-	/*
-	 * Sends a message in synchronous way.
+	
+	/**
+	 * Sends a message in a synchronous way. Depends on the implementation of
+	 * messages and message maanager.
+	 * @param msg  the message to send
+	 * @return the reply
 	 */
 	public Object sendMessage(Message msg) 
 			throws MessageException, InvalidAgletException, 
 				   NotHandledException {
 
-		// 
-		// Just for thread safety to avoid a message being posted
-		// into destroyed messageManager. this must be improved.
-		// 
-		MessageManagerImpl mng = messageManager;
+
+		if( this.messageManager == null || 
+			!(this.messageManager instanceof MessageManagerImpl)){
+			throw new MessageException(new NullPointerException(),"Cannot handle the message thru the message manager");
+		}
+		
+		MessageManagerImpl mng = (MessageManagerImpl)messageManager;
 
 		checkValidation();
 
 		FutureReplyImpl future = new FutureReplyImpl();
 		MessageImpl clone = cloneMessageAndCheck(msg, Message.SYNCHRONOUS);
 
-		clone.future = future;
+		clone.setFutureReply(future);
 		mng.postMessage(clone);
 		return future.getReply();
 	}
+	
+	
+	
 	/*
 	 * Sends an oneway message.
 	 * REMIND: IMPLEMENT!
@@ -1525,25 +1712,62 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 		// Just for thread safety to avoid a message being posted
 		// into destroyed messageManager. this must be improved.
 		// 
-		MessageManagerImpl mng = messageManager;
+		MessageManagerImpl mng = (MessageManagerImpl)messageManager;
 
 		checkValidation();
 
 		FutureReplyImpl future = new FutureReplyImpl();
 		MessageImpl clone = cloneMessageAndCheck(msg, Message.ONEWAY);
 
-		clone.future = future;
+		clone.setFutureReply(future);
 		mng.pushMessage(clone);
 		return;
 	}
+
+	
+	
 	/*
+	 * This method allows the set of the aglet behind this reference.
+	 * @throws IllegalAccessError if the aglet is being set twice while it is
+	 * valid.
+	 * @throws IllegalArgumentException is the aglet passed as argument is null and the state
+	 * is not SUBSTITUTING
 	 * @see com.ibm.aglet.AgletProxy#setStub
 	 */
-	protected void setAglet(Aglet a) {
-		if (a != null) {
-			new IllegalAccessError("Aglet canont be set twice");
-		} 
-		aglet = a;
+	protected void setAglet(Aglet agent) 
+	throws IllegalAccessError,IllegalArgumentException{
+		
+		// check params
+		if (agent != null && this.isValid()) {
+			throw new IllegalAccessError("Aglet canont be set twice");
+		}
+		else
+		if( agent == null && ! this.isState(LocalAgletRef.SUBSTITUTING) ){
+			// a null aglet does not make sense!
+			throw new IllegalArgumentException("Trying to set a null agent for the reference");
+			
+			// or at least return!
+		}
+		
+		// now assign the agent
+		this.aglet = agent;
+		// and assign permissions to the agent
+		calculatePermissions(); 
+	}
+	
+	
+	
+	/**
+	 * A method to calculate the permissions of the current aglet. This method
+	 * extracts the permission collection from the domain of the agent class, and
+	 * assignes the permissions to the <code>protections</code> reference.
+	 */
+	protected void calculatePermissions() {
+		// check arguments
+		if( this.aglet == null )
+			return;
+		
+		
 		final Class cls = aglet.getClass();
 		ProtectionDomain domain = (ProtectionDomain)
 			AccessController.doPrivileged(new PrivilegedAction() {
@@ -1553,11 +1777,6 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 				}
 			);
 
-		// =	ProtectionDomain domain = ProtectionDomain.getDomain(cls);
-
-		// System.out.println("Class="+aglet.getClass());
-		// System.out.println("ClaasLoader="+cls.getClassLoader());
-		// System.out.println("ProtectionDomain="+String.valueOf(domain));
 
 		if (domain != null && protections == null) {
 			PermissionCollection ps = domain.getPermissions();
@@ -1577,17 +1796,39 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 				} 
 			} 
 
-			// System.out.println("protections="+String.valueOf(protections));
-		} 
+		}
 	}
-	/*
-	 * 
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * A method to set the message manager. This method calls the adjustMessageManager one
+	 * that must perform operation depending from your implementation of the message manager.
+	 * @param impl the implementation of the MessageManager
 	 */
-	/* package synchronized */
-	void setMessageManager(MessageManagerImpl impl) {
+	protected final void setMessageManager(MessageManagerImpl impl) {
 		messageManager = impl;
-		messageManager.setAgletRef(this);
+		this.adjustMessageManager();
 	}
+	
+	
+	/**
+	 * Complete the initialization of the message manager. Override this method depending
+	 * on your implementation type of the message manager.
+	 *
+	 */
+	protected void adjustMessageManager(){
+		if( this.messageManager != null && 
+			this.messageManager instanceof MessageManagerImpl ){
+			((MessageManagerImpl)this.messageManager).setAgletRef(this);
+		}
+	}
+	
+	
 	/* package */
 	void setName(Name n) {
 		_name = n;
@@ -1603,7 +1844,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	/**
 	 * Sets the protections: permission collection about
 	 * who can send what kind of messages to the aglet
-	 * @param newprotections (@link PermissionCollection} with protections listing who can send
+	 * @param protections collection of protections about who can send
 	 * what kind of messages to the aglet
 	 */
 	protected void setProtections(PermissionCollection newprotections) {
@@ -1701,69 +1942,98 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 			} 
 		} 
 	}
+	
 	/**
 	 * Send events to the activated aglet.
+	 * @param cxt the aglet context in which the aglet activated
 	 * @exception AgletException if the activation fails.
-	 * @see com.ibm.aglet.event.PersistencyListener#onActivation(PersistencyEvent)
+	 * @see Aglet#onActivation
 	 */
-	void startActivatedAglet() throws InvalidAgletException {
+	protected final void startActivatedAglet() throws InvalidAgletException {
 		_state = ACTIVE;
 
-		messageManager
-			.postMessage(new EventMessage(new PersistencyEvent(PersistencyEvent
+		
+		this.postMessageThruMessageManager(new EventMessage(new PersistencyEvent(PersistencyEvent
 				.ACTIVATION, proxy, 0)));
-		messageManager.postMessage(new SystemMessage(SystemMessage.RUN, 
+		this.postMessageThruMessageManager(new SystemMessage(SystemMessage.RUN, 
 				null));
-
-		_context
-			.postEvent(new ContextEvent(ContextEvent
-				.ACTIVATED, _context, proxy), true);
+		
+		this.postContextEvent(new ContextEvent(ContextEvent
+				.ACTIVATED, _context, proxy));
 
 		resumeMessageManager();
 	}
+	
+	
+	/**
+	 * Post a message to the agent thru its message manager. This methods strictly
+	 * depends on the implementation of both the message and the message manager. Override
+	 * it depending on your implementations.
+	 * @param msg the message to post
+	 */
+	protected void postMessageThruMessageManager(Message msg){
+		if( this.messageManager != null && msg != null && 
+			this.messageManager instanceof MessageManagerImpl &&
+			msg instanceof MessageImpl){
+			((MessageManagerImpl)this.messageManager).postMessage((MessageImpl)msg);
+		}
+	}
+	
+	
+	/**
+	 * Post an event in the context in a syncrhonous way. Override this method depending
+	 * from your implementation of the context.
+	 * @param event the event to be posted
+	 */
+	protected void postContextEvent(ContextEvent event){
+		if( event != null && this._context != null && 
+			this._context instanceof AgletContextImpl){
+			((AgletContextImpl)this._context).postEvent(event,true);
+		}
+	}
+	
 	/**
 	 * Activates the arrived aglet.
 	 * @param cxt the aglet context in which the aglet activated
 	 * @param sender url of the departure
 	 * @exception AgletException if the activation fails.
-	 * @see com.ibm.aglet.event.MobilityListener#onArrival(MobilityEvent)
+	 * @see Aglet#onArrival
 	 */
-	void startArrivedAglet(AgletContextImpl cxt, 
+	void startArrivedAglet(AgletContext cxt, 
 						   String sender) throws InvalidAgletException {
 		validate(cxt, ACTIVE);
 
-		messageManager
-			.postMessage(new EventMessage(new MobilityEvent(MobilityEvent
+		this.postMessageThruMessageManager(new EventMessage(new MobilityEvent(MobilityEvent
 				.ARRIVAL, proxy, _context.getHostingURL())));
-		messageManager.postMessage(new SystemMessage(SystemMessage.RUN, 
+		this.postMessageThruMessageManager(new SystemMessage(SystemMessage.RUN, 
 				null));
+		
 
-		_context
-			.postEvent(new ContextEvent(ContextEvent
-				.ARRIVED, cxt, proxy, sender), true);
-
+		this.postContextEvent(new ContextEvent(ContextEvent
+				.ARRIVED, cxt, proxy, sender));
+		
 		resumeMessageManager();
 	}
+	
 	/**
 	 * Activates the cloned aglet.
 	 * @param cxt the aglet context in which the aglet activated
 	 * @param parent proxy to the original aglet
 	 * @exception AgletException if the activation fails.
-	 * @see com.ibm.aglet.event.CloneListener#onCloned(CloneEvent)
+	 * @see Aglet#onClone
 	 */
-	void startClonedAglet(AgletContextImpl cxt, AgletProxyImpl parent) 
+	void startClonedAglet(AgletContext cxt, AgletProxy parent) 
 			throws InvalidAgletException {
 		validate(cxt, ACTIVE);
 
-		messageManager
-			.postMessage(new EventMessage(new CloneEvent(CloneEvent.CLONE, 
+		this.postMessageThruMessageManager(new EventMessage(new CloneEvent(CloneEvent.CLONE, 
 				proxy)));
-		messageManager.postMessage(new SystemMessage(SystemMessage.RUN, 
+		this.postMessageThruMessageManager(new SystemMessage(SystemMessage.RUN, 
 				null));
-
-		_context
-			.postEvent(new ContextEvent(ContextEvent
-				.CLONED, cxt, proxy, parent), true);
+		
+		this.postContextEvent(new ContextEvent(ContextEvent
+				.CLONED, cxt, proxy, parent));
+		
 
 		resumeMessageManager();
 	}
@@ -1774,43 +2044,48 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	 * @exception InvalidAgletException if the aglet is invalid.
 	 * @see Aglet#onCreation
 	 */
-	void startCreatedAglet(AgletContextImpl cxt, 
+	void startCreatedAglet(AgletContext cxt, 
 						   Object init) throws InvalidAgletException {
 		validate(cxt, ACTIVE);
 
 		messageManager = new MessageManagerImpl(this);
 
-		messageManager.postMessage(new SystemMessage(SystemMessage.CREATE, 
+		this.postMessageThruMessageManager(new SystemMessage(SystemMessage.CREATE, 
 				init));
-		messageManager.postMessage(new SystemMessage(SystemMessage.RUN, 
+		this.postMessageThruMessageManager(new SystemMessage(SystemMessage.RUN, 
 				null));
-		_context.postEvent(new ContextEvent(ContextEvent.CREATED, cxt, proxy), 
-						   true);
+		
+		this.postContextEvent(new ContextEvent(ContextEvent.CREATED, cxt, proxy));
 
 		startMessageManager();
 	}
-	/*
-	 * Start the aglet threads
+	
+	
+	/**
+	 * Starts the message manager. This method depends on your implementation of the
+	 * message manager, override it to obtain a message manager start appropriate behaviour.
+	 *
 	 */
-	void startMessageManager() {
-		messageManager.start();
+	protected void startMessageManager() {
+		if( this.messageManager != null && this.messageManager instanceof MessageManagerImpl)
+		((MessageManagerImpl)messageManager).start();
 	}
+	
 	/**
 	 * Send events to the resumed aglet.
+	 * @param cxt the aglet context in which the aglet activated
 	 * @exception AgletException if the activation fails.
-	 * @see com.ibm.aglet.event.PersistencyListener#onActivation(PersistencyEvent)
+	 * @see Aglet#onActivation
 	 */
 	void startResumedAglet() throws InvalidAgletException {
 		_state = ACTIVE;
 
-		// //messageManager.postMessage(new EventMessage(new PersistencyEvent(PersistencyEvent.RESUME, proxy, 0)));
-		messageManager.postMessage(new SystemMessage(SystemMessage.RUN, 
+		this.postMessageThruMessageManager(new SystemMessage(SystemMessage.RUN, 
 				null));
 
-		_context
-			.postEvent(new ContextEvent(ContextEvent
-				.RESUMED, _context, proxy), true);
-
+		this.postContextEvent(new ContextEvent(ContextEvent
+				.RESUMED, _context, proxy));
+		
 		resumeMessageManager();
 	}
 	// -- subscribe to a specific whiteboard.
@@ -1875,12 +2150,13 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 			_state = INACTIVE;
 			_mode = DeactivationInfo.SUSPENDED;
 
-			if (msg != null && msg.future != null) {
-				msg.future.sendReplyIfNeeded(null);
+			if (msg != null && msg.getFutureReply() != null &&
+				msg.getFutureReply() instanceof FutureReplyImpl) {
+				((FutureReplyImpl)msg.getFutureReply()).sendReplyIfNeeded(null);
 			} 
 
 			// message manager is persistent and will be restored later
-			messageManager.deactivate();
+			this.deactivateMessageManager();
 
 			terminateThreads();
 
@@ -1915,12 +2191,20 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 			suspendMessageManager();
 		} 
 	}
-	/*
-	 * Suspends all threads and accepting new message
+	
+	
+	/**
+	 * Suspends the message manager. This code depends on your implementation
+	 * of the message manager, override.
+	 *
 	 */
-	void suspendMessageManager() {
-		messageManager.suspend();
+	protected void suspendMessageManager() {
+		if( this.messageManager != null && this.messageManager instanceof MessageManagerImpl){
+			((MessageManagerImpl)this.messageManager).suspend();
+		}
 	}
+	
+	
 	void terminateThreads() {
 
 		// Debug.check();
@@ -1993,18 +2277,26 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	 * 
 	 */
 	/* synchronized */
-	void validate(AgletContextImpl context, 
+	protected void validate(AgletContext context, 
 				  int state) throws InvalidAgletException {
 		if (isValid()) {
 			throw new IllegalAccessError("Aglet is already validated");
 		} 
+		
+		if( context == null || !(context instanceof AgletContextImpl)){
+			throw new IllegalArgumentException("The context must be an AgletContextImpl");
+		}
+		
 		_state = state;
-		_context = context;
+		_context = (AgletContextImpl)context;
 		_context.addAgletProxy(info.getAgletID(), proxy);
 
 		// see AgletReader
 		addAgletRef(_name, this);
 	}
+	
+	
+	
 	private void writeDeactivatedAglet(ObjectOutputStream out, 
 									   DeactivationInfo dinfo) throws IOException {
 		out.writeObject(dinfo);
@@ -2030,5 +2322,147 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	public void writeInfo(ObjectOutputStream s) throws IOException {
 		s.writeObject(_name);
 		s.writeObject(_context.getHostingURL().toString());
+	}
+	
+	
+	
+	/**
+	 * A method to start the aglet substitution, that means the substitution
+	 * of the aglet behind this reference. The method first of all checks if the
+	 * substitution is alredy running and if the agent is valid, if not an exception is
+	 * thrown. Then, the state is set to SUBSTITUTING and the aglet behind the
+	 * reference is removed and returned to the caller.
+	 * @return the aglet currently behind the reference. <b>The returned is the only copy
+	 * of the aglet, no other copies exist in the system</b>.
+	 * @throws RolexException if the aglet is not valid or the state is already
+	 * SUBSTITUTING.
+	 * @throws AgletException if something was wrong with the references
+	 */
+	protected synchronized final Aglet prepareForAgletSubstitution()
+	throws RolexException,AgletException{
+		// check if the reference is valid and the state is not already
+		// in substitution 
+		if( !this.isValid() || this.isState( LocalAgletRef.SUBSTITUTING )==true ){
+			throw new RolexException("Trying to substitute an aglet under substitution or not valid!");
+		}
+		
+		
+		
+		// invalidate the aglet and return it
+		this.storeAgletClass();
+		Aglet aglet = this.getAglet();
+		this.setState( LocalAgletRef.SUBSTITUTING );
+		
+		// disable the message queue of this aglet, thus it will still enqueue
+		// messages but will not process them.
+		this.disableMessageQueue();
+
+		// set the agent null, thus there is no more agent behind this aglet ref
+		this.setAglet( null );
+		
+		
+		
+		return aglet;
+	}
+	
+	
+	/**
+	 * Complete the aglet substitution as started from the prepareForAgletSubstitution
+	 * method.
+	 * @param aglet the aglet to use since now
+	 * @throws RolexException if trying to substitute an aglet without being
+	 * in the SUSPENDING state
+	 */
+	protected synchronized final void completeAgletSubstitution(Aglet aglet)
+	throws RolexException{
+		// first, check if the method has been called from a SUBSTITUTING state
+		if( ! (this.isState( LocalAgletRef.SUBSTITUTING ) ||
+			   this.isValid() || this.isActive() || this.aglet != null) ){
+			// cannot substitute the aglet, wrong state
+			throw new RolexException("Cannot substitute an aglet from a not SUBSTITUTING state!");
+		}
+		
+			
+		// now I know I'm into SUBSTITUTING, thus I can substitute the agent with the
+		// new one, re-enabling the message queue and restarting the new agent
+		this.setAglet(aglet);
+		this.setState(LocalAgletRef.ACTIVE);
+		this.addState(LocalAgletRef.SUBSTITUTED);
+		
+		// check if the aglet class is valid
+		if( ! this.checkAgletClass() ){
+			throw new RolexException("The agent has been substituted with a different class");
+		}
+				
+		// before enabling the message queue I need to post a message for the
+		// restart of the agent, this message must be inserted at the top of the
+		// message queue, thus I must use the max priority
+		// check for the priority!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		// the run message is at norm priority, what happens if the message
+		// has previous norm priority messages??????
+		
+		this.enableMessageQueue();
+		this.postMessageThruMessageManager(new SystemMessage(SystemMessage.RUN, 
+				null));
+	}
+	
+	
+	/**
+	 * Disables the message queue. This method depends on yuor implementation of the
+	 * message manager, override depending from it.
+	 *
+	 */
+	protected void disableMessageQueue(){
+		if( this.messageManager != null && this.messageManager instanceof MessageManagerImpl){
+			((MessageManagerImpl)this.messageManager).enableMessageQueue(false);
+		}
+	}
+	
+	/**
+	 * Enables the message queue. This method depends on your implementation of the
+	 * message manager, override it.
+	 *
+	 */
+	protected void enableMessageQueue(){
+		if( this.messageManager != null && this.messageManager instanceof MessageManagerImpl){
+			((MessageManagerImpl)this.messageManager).enableMessageQueue(true);
+		}
+	}
+	
+	
+	
+	
+	/**
+	 * Stores the agent class.
+	 */
+	protected final void storeAgletClass(){
+		if( this.aglet_class == null && this.aglet != null )
+			this.aglet_class = this.aglet.getClass();
+	}
+	
+	/**
+	 * Returns the aglet class. The class can be stored and the aglet can be substituted,
+	 * this method does not indicates if the aglet is valid (i.e., the aglet class is not
+	 * checked dynamically). This method simply says which class the aglet must
+	 * belong to in order to be set and attached to this reference.
+	 * @return the aglet class
+	 */
+	protected final Class getAgletClass(){
+		return this.aglet_class;
+	}
+	
+	
+	/**
+	 * Checks if the aglet class is right.
+	 * @return true if the agent class and the stored aglet class are equal, false
+	 * otherwise. It returns true also if the agent has not been substituted yet!
+	 */
+	protected final boolean checkAgletClass(){
+		if( this.aglet_class != null && this.aglet != null &&
+			this.isState(LocalAgletRef.SUBSTITUTED) ){
+			return (this.aglet_class.equals(this.aglet.getClass()));
+		}
+		else
+			return true;
 	}
 }

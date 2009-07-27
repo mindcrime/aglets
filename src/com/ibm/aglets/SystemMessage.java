@@ -15,7 +15,6 @@ package com.ibm.aglets;
  */
 
 import com.ibm.aglet.Aglet;
-import com.ibm.aglet.Message;
 import com.ibm.aglet.Ticket;
 import com.ibm.aglet.AgletException;
 import com.ibm.aglet.InvalidAgletException;
@@ -28,6 +27,7 @@ import com.ibm.awb.misc.Debug;
 
 import java.security.Permission;
 import com.ibm.aglets.security.AgletPermission;
+import com.ibm.aglet.message.Message;
 import com.ibm.aglet.security.AgletProtection;
 
 final class SystemMessage extends MessageImpl {
@@ -113,7 +113,7 @@ final class SystemMessage extends MessageImpl {
 	 */
 
 	void handle(LocalAgletRef ref) throws InvalidAgletException {
-		FutureReplyImpl f = future;
+		FutureReplyImpl f = (FutureReplyImpl)this.getFutureReply();
 		Aglet aglet = ref.aglet;
 
 		switch (type) {

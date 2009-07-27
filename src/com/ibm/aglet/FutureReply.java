@@ -1,5 +1,8 @@
 package com.ibm.aglet;
 
+import com.ibm.aglet.message.Message;
+import com.ibm.aglet.message.MessageException;
+
 /*
  * @(#)FutureReply.java
  * 
@@ -29,7 +32,7 @@ package com.ibm.aglet;
  * 
  * @see AgletProxy#sendAsyncMessage
  * 
- * @version     1.50    $Date: 2001/07/28 06:33:51 $
+ * @version     1.50    $Date: 2009/07/27 10:31:41 $
  * @author	Mitsuru Oshima
  */
 

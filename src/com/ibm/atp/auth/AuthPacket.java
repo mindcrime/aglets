@@ -42,14 +42,15 @@ import org.aglets.log.*;
  * The <tt>AuthPacket</tt> class is the challenge-response authentication
  * packet class.
  * 
- * @version     1.00    $Date: 2007/07/25 23:33:06 $
+ * @version     1.00    $Date: 2009/07/27 10:31:41 $
  * @author      ONO Kouichi
  */
 public class AuthPacket extends Object {
     
     // Logging
-    private static AgletsLogger logger = new AgletsLogger(AuthPacket.class.getName());
-    
+    private final static LogCategory log
+            = LogInitializer.getCategory( AuthPacket.class.getName() );
+            
 	/**
 	 * carriage return & line feed
 	 */
@@ -249,7 +250,7 @@ public class AuthPacket extends Object {
 	// 
 	/**
 	 * Constructor for receiving packet
-	 * @param di a {@link DataInput} stream for the packet
+	 * @param in data input stream for packet
 	 */
 	public AuthPacket(DataInput di) {
 		try {
@@ -554,7 +555,7 @@ public class AuthPacket extends Object {
 	// 
 	/**
 	 * Parses body of packet from data input stream.
-	 * @param di a {@link DataInput} stream for the packet
+	 * @param in data input stream for packet
 	 */
 	public synchronized void parseBody(DataInput di) throws IOException {
 		String line;
@@ -654,7 +655,7 @@ public class AuthPacket extends Object {
 	// 
 	/**
 	 * Reads packet from data input stream.
-	 * @param di a {@link DataInput} stream for the packet
+	 * @param in input stream for packet
 	 */
 	public synchronized void readFrom(DataInput di) throws IOException {
 		final String topLine = di.readLine().trim();
@@ -664,7 +665,7 @@ public class AuthPacket extends Object {
 	/**
 	 * Reads packet from data input stream.
 	 * @param topLine top line of packet
-	 * @param di a {@link DataInput} stream for the packet
+	 * @param in data input stream for packet
 	 */
 	public synchronized void readFrom(String topLine, 
 									  DataInput di) throws IOException {
@@ -752,7 +753,7 @@ public class AuthPacket extends Object {
 	}
 	/**
 	 * Sets security domain names.
-	 * @param namelist a {@link String} with URI encoded security domain names
+	 * @param names security domain names (URI encoded)
 	 */
 	private final void setSecurityDomains(String namelist) {
 		setSecurityDomains(new StringTokenizer(namelist, DOMAIN_SEPARATOR));
@@ -775,21 +776,21 @@ public class AuthPacket extends Object {
 	}
 	/**
 	 * Sets server ID.
-	 * @param id a {@link String} denoting the server ID
+	 * @param name server ID
 	 */
 	private final void setServerID(String id) {
 		_serverid = id;
 	}
 	/**
 	 * Sets authentication status.
-	 * @param status authentication status
+	 * @Param status authentication status
 	 */
 	private final void setStatus(int status) {
 		_status = status;
 	}
 	/**
 	 * Sets authentication status.
-	 * @param status a {@link String} denoting the authentication status
+	 * @Param string of authentication status
 	 */
 	private final void setStatus(String status) {
 		setStatus(Integer.parseInt(status.trim()));
@@ -814,7 +815,7 @@ public class AuthPacket extends Object {
 	}
 	/**
 	 * Sets authentication protocol step.
-	 * @param step a {@link String} denoting the authentication protocol step
+	 * @Param step string of authentication protocol step
 	 * @exception java.lang.IllegalArgumentException
 	 */
 	private final void setStep(String step) throws IllegalArgumentException {
@@ -887,7 +888,7 @@ public class AuthPacket extends Object {
 		return authManner;
 	}
 	static final void verboseOut(String msg) {
-        logger.debug("VO:" +msg);
+        log.debug("VO:" +msg);
 	}
 	/**
 	 * Writes packet to output stream.

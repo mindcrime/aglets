@@ -1,7 +1,7 @@
 package com.ibm.aglets.tahiti;
 
 /*
- * $Id: TahitiDaemonUserManager.java,v 1.2 2001/08/01 03:46:59 kbd4hire Exp $
+ * $Id: TahitiDaemonUserManager.java,v 1.3 2009/07/27 10:31:40 cat4hire Exp $
  *
  * @(#)TahitiDaemonUserManager.java
  *
@@ -23,7 +23,7 @@ import java.io.IOException;
  *
  * @author     Larry Spector
  * @created    July 20, 2001
- * @version $Revision: 1.2 $ $Date: 2001/08/01 03:46:59 $ $Author: kbd4hire $
+ * @version $Revision: 1.3 $ $Date: 2009/07/27 10:31:40 $ $Author: cat4hire $
  */
 public final class TahitiDaemonUserManager extends UserManager {
 

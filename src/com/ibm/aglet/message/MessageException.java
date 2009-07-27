@@ -1,4 +1,4 @@
-package com.ibm.aglet;
+package com.ibm.aglet.message;
 
 /*
  * @(#)MessageException.java
@@ -25,10 +25,12 @@ package com.ibm.aglet;
 
 import java.io.*;
 
+import com.ibm.aglet.AgletException;
+
 /**
  * Signals that the exception occured while processsing the message.
  * 
- * @version     1.10    $Date: 2001/07/28 06:33:56 $
+ * @version     1.10    $Date: 2009/07/27 10:31:42 $
  * @author	Mitsuru Oshima
  */
 

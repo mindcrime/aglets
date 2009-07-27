@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.Hashtable;
 
 /**
- * @version     1.01	$Date: 2001/07/28 06:31:32 $
+ * @version     1.01	$Date: 2009/07/27 10:31:41 $
  * @author	Gaku Yamamoto
  * @author	Mitsuru Oshima
  */

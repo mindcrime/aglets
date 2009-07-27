@@ -17,6 +17,8 @@ package examples.patterns;
 
 import com.ibm.aglet.*;
 import com.ibm.aglet.event.*;
+import com.ibm.aglet.message.Message;
+
 import java.util.Vector;
 import java.net.*;
 import java.util.Properties;

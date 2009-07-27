@@ -6,6 +6,7 @@ import com.ibm.aglet.Ticket;
 import com.ibm.aglets.AgletRuntime;
 import com.ibm.aglets.AgletThread;
 import com.ibm.aglets.ResourceManager;
+import com.ibm.aglets.log.LoggerFactory;
 
 import com.ibm.awb.misc.Archive;
 import com.ibm.awb.misc.Hexadecimal;
@@ -46,7 +47,7 @@ import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
 import java.security.cert.Certificate;
 import java.util.Hashtable;
-import org.aglets.log.*;
+import org.apache.log4j.Logger;
 
 /**
  *  Class <tt>AgletClassLoader<tt> is responsible for loading classes for the
@@ -65,7 +66,7 @@ import org.aglets.log.*;
  * @author     Danny B. Lange
  * @author     Gaku Yamamoto
  * @author     Mitsuru Oshima
- * @version    1.20 $Date: 2007/07/25 23:33:05 $
+ * @version    1.20 $Date: 2009/07/27 10:31:40 $
  */
 class AgletClassLoader extends ClassLoader implements ResourceManager {
 
@@ -78,8 +79,8 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
 
     static AgentProfile _agent_profile = null;
 
-    private static AgletsLogger logger = new AgletsLogger(AgletClassLoader.class.getName());
-    
+    private final static Logger log = LoggerFactory.getLogger(AgletClassLoader.class);
+
     /**
      *  Digest table for classes managed by this classloader.
      */
@@ -136,7 +137,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      * @param  owner     Certificate of the owner
      */
     protected AgletClassLoader(URL codebase, Certificate owner) {
-        logger.debug("Ctor: [" + codebase + "]");
+        log.debug("Ctor: [" + codebase + "]");
         _codeBase = codebase;
         _ownerCert = owner;
     }
@@ -172,7 +173,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      * @since
      */
     private static void verboseOut(String msg) {
-        logger.debug(msg);
+        log.debug(msg);
     }
 
 
@@ -204,7 +205,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
                 if (b != null) {
                     long d = _digest_table.getDigest(name);
 
-                    logger.debug("putResource(" + name + "," + d + ","
+                    log.debug("putResource(" + name + "," + d + ","
                              + b.length + ") into archive");
                     a.putResource(name, d, b);
                 }
@@ -275,7 +276,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      * @since
      */
     public void addResource(Object o) {
-        logger.debug("Adding resource.");
+        log.debug("Adding resource.");
         synchronized (_resources) {
             if (_resources.contains(o) == false) {
                 _resources.addElement(o);
@@ -338,7 +339,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      * @since
      */
     public void finalize() {
-        logger.debug("Class Loader: Garbage Collected");
+        log.debug("Class Loader: Garbage Collected");
         disposeAllResources();
         releaseCacheEntries();
     }
@@ -352,13 +353,13 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
     public void importArchive(Archive a) {
         Archive.Entry ae[] = a.entries();
 
-        logger.debug("importArchive()");
+        log.debug("importArchive()");
         for (int i = 0; i < ae.length; i++) {
 
             // do we need check? M.O.
-            logger.debug("archive[" + i + "].name()=" + ae[i].name());
-            logger.debug("archive[" + i + "].digest()=" + ae[i].digest());
-            logger.debug("archive[" + i + "].data().length="
+            log.debug("archive[" + i + "].name()=" + ae[i].name());
+            log.debug("archive[" + i + "].digest()=" + ae[i].digest());
+            log.debug("archive[" + i + "].data().length="
                      + ae[i].data().length);
             putResource(ae[i].name(), a.getResourceAsByteArray(ae[i].name()));
 
@@ -500,7 +501,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
 
         if (digest != 0) {
             data = _cache.getData(filename, digest);
-            logger.debug("get '" + filename + "' from cache by getData("
+            log.debug("get '" + filename + "' from cache by getData("
                      + filename + "," + digest + ")");
         }
         if (data == null) {
@@ -511,13 +512,13 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
                         (byte[]) AccessController.doPrivileged(
                     new PrivilegedAction() {
                         public Object run() {
-                            logger.debug("get '" + fn + "' from codebase");
+                            log.debug("get '" + fn + "' from codebase");
                             byte[] res = loadResourceFromCodeBase(fn);
                             return res;
                         }
                     });
             } catch (Throwable t) {
-                logger.error("Error getting resource: "+t.getMessage() );
+                log.error("Error getting resource: "+t.getMessage() );
             }
         }
 
@@ -588,12 +589,12 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      */
     protected synchronized Class loadClass(String name, boolean resolve)
              throws ClassNotFoundException {
-        logger.debug("loadClass()++ ["+resolve+"]");
+        log.debug("loadClass()++ ["+resolve+"]");
         try {
             Class cl = findResolvedClass(name);
 
             if (cl != null) {
-                logger.debug("Using class " + name + " in resolved cache");
+                log.debug("Using class " + name + " in resolved cache");
                 return cl;
             }
 
@@ -614,10 +615,10 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
 
             if (resolve) {
                 if (_resolvedClassCache.contains(cl)) {
-                    logger.debug(name + " was resolved before.");
+                    log.debug(name + " was resolved before.");
                     return cl;
                 } else {
-                    logger.debug("resolving.. " + name);
+                    log.debug("resolving.. " + name);
                 }
                 boolean success = false;
 
@@ -667,6 +668,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      * @exception  ClassNotFoundException  Description of Exception
      * @since
      * @see                                AgletClassLoader#loadClass
+     * @see                                AgletClassLoader#instantiageAglet
      */
     private Class findClassInternal(String name)
              throws ClassNotFoundException {
@@ -675,7 +677,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
         try {
             clazz = findSystemClass(name);
             if (clazz != null) {
-                logger.debug("Loading " + name + " from System");
+                log.debug("Loading " + name + " from System");
                 return clazz;
             }
         } catch (ClassNotFoundException ex) {
@@ -683,13 +685,13 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
 
         clazz = findLoadedClass(name);
         if (clazz != null) {
-            logger.debug("Using class " + name + " in cache");
+            log.debug("Using class " + name + " in cache");
             return clazz;
         }
 
         clazz = loadClassFromCodeBase(name);
         if (clazz != null) {
-            logger.debug("Loading class " + name + " from CodeBase");
+            log.debug("Loading class " + name + " from CodeBase");
         }
         return clazz;
     }
@@ -718,13 +720,13 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      */
     private Class loadClassFromCodeBase(String classname)
              throws ClassNotFoundException {
-        logger.debug("loadClassFromCodeBase(" + classname + ")");
+        log.debug("loadClassFromCodeBase(" + classname + ")");
         byte[] bytecode = findByteCode(classname);
 
         if (bytecode == null) {
             throw new ClassNotFoundException(classname);
         }
-        logger.debug("findByteCode(" + classname + ") returns bytecode ("
+        log.debug("findByteCode(" + classname + ") returns bytecode ("
                  + bytecode.length + "bytes)");
 
         // if(AgletRuntime.isVerbose()) {
@@ -732,7 +734,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
         // }
 
         try {
-            logger.debug("define class " + classname);
+            log.debug("define class " + classname);
             Object[] signers = null;
             Certificate[] certs = null;
 
@@ -823,7 +825,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
         byte[] bytecode;
         InputStream is = null;
 
-        logger.debug("LoadResourceFromCodeBase()++");
+        log.debug("LoadResourceFromCodeBase()++");
         try {
             URL url = new URL(_codeBase, name);
             int content_length = -1;
@@ -860,18 +862,18 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
             }
             is.close();
         } catch (IOException ex) {
-            logger.error("Error loading ["+name+"] resource from ["+_codeBase+"]", ex);
+            log.error("Error loading ["+name+"] resource from ["+_codeBase+"]", ex);
             bytecode = null;
         } finally {
             if (is != null) {
                 try {
                     is.close();
                 } catch (Exception ex) {
-                    logger.error("Error closing.",ex);
+                    log.error("Error closing.",ex);
                 }
             }
         }
-        logger.debug("LoadResourceFromCodeBase()--");
+        log.debug("LoadResourceFromCodeBase()--");
         return bytecode;
     }
 
@@ -890,7 +892,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
 
         if (digest == 0) {
             digest = _digest_table.setData(name, data);
-            logger.debug("digest of " + name + " = " + digest);
+            log.debug("digest of " + name + " = " + digest);
             _cache.putData(name, digest, data, true);
         } else {
             _cache.putData(name, digest, data, false);

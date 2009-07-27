@@ -1,4 +1,4 @@
-package com.ibm.aglet;
+package com.ibm.aglet.message;
 
 /*
  * @(#)Message.java
@@ -24,6 +24,10 @@ package com.ibm.aglet;
  */
 
 import java.util.Hashtable;
+
+import com.ibm.aglet.Aglet;
+import com.ibm.aglet.FutureReply;
+import com.ibm.aglet.MessageManager;
 import com.ibm.aglet.util.Arguments;
 
 /**
@@ -31,7 +35,7 @@ import com.ibm.aglet.util.Arguments;
  * and arguments passed to the receiver. In handleMessage() method
  * on Aglet class, the reply to the request can be set if any.
  * 
- * @version     1.70    $Date: 2007/07/25 23:33:04 $
+ * @version     1.70    $Date: 2009/07/27 10:31:42 $
  * @author	Mitsuru Oshima
  */
 public class Message implements java.io.Serializable {
@@ -40,7 +44,7 @@ public class Message implements java.io.Serializable {
 
 	/**
 	 * The types of message that indecates how the message was sent.
-	 * @see #getMessageType()
+	 * @see Message#getMessageType();
 	 */
 	static public final int SYNCHRONOUS = 0;
 	static public final int FUTURE = 1;
@@ -56,6 +60,20 @@ public class Message implements java.io.Serializable {
 	static final public String DEACTIVATE = "_deactivate";
 	static final public String REVERT = "_revert";
 
+	/**
+	 * The priority of this message.
+	 */
+	protected int priority = MessageManager.NORM_PRIORITY;
+	
+	transient protected FutureReply future = null;
+	
+	/**
+	 * This flags indicates if the message is waiting to be
+	 * processed.
+	 */
+	protected boolean waiting = false;
+	
+	
 	/*
 	 * An arbitrary argument.
 	 */
@@ -132,6 +150,18 @@ public class Message implements java.io.Serializable {
 		this.kind = kind;
 		this.arg = arg;
 	}
+	
+	/**
+	 * Constructor that specifies the priority of a message.
+	 * @param kind the kind of the message
+	 * @param arg ther argument of a message
+	 * @param priority the priority of a messag
+	 */
+	public Message(String kind, Object arg, int priority){
+		this(kind,arg);
+		this.priority = priority;
+	}
+	
 	/**
 	 * Constructs a message with an argument value.
 	 * @param kind a kind of this message.
@@ -215,7 +245,10 @@ public class Message implements java.io.Serializable {
 	 * @param k a string to compare
 	 */
 	public boolean sameKind(String k) {
-		return kind.equals(k);
+		if( this.kind != null && k != null)
+			return kind.equals(k);
+		else
+			return false;
 	}
 	/**
 	 * Sets a exception to this message.
@@ -302,7 +335,7 @@ public class Message implements java.io.Serializable {
 	/**
 	 * Set a double value with an associated name.
 	 * @param name a name of this argument.
-	 * @param value a double value for this argument.
+	 * @param d a double value of this argument.
 	 */
 	public void setArg(String name, double value) {
 		if (arg instanceof Arguments) {
@@ -389,4 +422,35 @@ public class Message implements java.io.Serializable {
 	public String toString() {
 		return "[kind = " + kind + ": arg = " + String.valueOf(arg) + ']';
 	}
+	
+	/**
+	 * Get priority of this message.
+	 * @return the priority level of the message
+	 */
+	public int getPriority(){
+		return this.priority;
+	}
+	
+	
+	/**
+	 * Enable/disable the waiting flag.
+	 * @param the status of the waiting flag
+	 */
+	public void setWaiting(boolean waiting){
+		this.waiting = waiting;
+	}
+	
+	/**
+	 * Gets the status of the waiting flag.
+	 * @return true if the message is marked as waiting, false
+	 * otherwise
+	 */
+	public boolean isWaiting(){
+		return this.waiting;
+	}
+	
+	public void setPriority(int newPriority){
+		this.priority = newPriority;
+	}
+	
 }

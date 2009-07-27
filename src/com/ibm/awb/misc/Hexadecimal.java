@@ -19,7 +19,7 @@ import java.util.StringTokenizer;
 /**
  * The <tt>Hexadecimal</tt> class
  * 
- * @version     1.00    $Date: 2001/07/28 06:33:13 $
+ * @version     1.00    $Date: 2009/07/27 10:31:40 $
  * @author      ONO Kouichi
  */
 

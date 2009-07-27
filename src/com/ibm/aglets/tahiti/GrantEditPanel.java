@@ -54,19 +54,27 @@ import com.ibm.aglets.security.PolicyFileParsingException;
 import com.ibm.awb.misc.URIPattern;
 import com.ibm.awb.misc.MalformedURIPatternException;
 import com.ibm.awb.misc.Resource;
+import com.ibm.aglets.tahiti.utils.*;
+import javax.swing.*;
 
+/**
+ * Converted from AWT to SWING
+ *
+ */
 class GrantEditPanel extends EditListPanel {
 	SecurityConfigDialog _dialog = null;
 
-	GrantEditPanel(SecurityConfigDialog dialog, List list, Editor editor) {
+	GrantEditPanel(SecurityConfigDialog dialog, AgentListPanel list, Editor editor) {
 		super(null, list, editor);
 		_dialog = dialog;
 	}
+	
 	protected void addItemIntoList(String item) {
 		_dialog.addGrantPanel(item);
 		selectItem(item);
 		_dialog.showGrantPanel(item);
 	}
+	
 	protected void removeItemFromList() {
 		final int idx = getSelectedIndex();
 		final String item = getSelectedItem();

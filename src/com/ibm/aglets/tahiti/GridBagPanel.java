@@ -15,8 +15,19 @@ package com.ibm.aglets.tahiti;
  */
 
 import java.awt.*;
+import java.util.ResourceBundle;
 
-public class GridBagPanel extends Panel {
+import javax.swing.*;
+
+public class GridBagPanel extends JPanel {
+    
+    /* Load resources */
+    static ResourceBundle bundle = null;
+	static {
+		bundle = ResourceBundle.getBundle("tahiti");
+	} 
+    
+    
 	public static final int RELATIVE = GridBagConstraints.RELATIVE;
 	public static final int REMAINDER = GridBagConstraints.REMAINDER;
 
@@ -69,7 +80,7 @@ public class GridBagPanel extends Panel {
 	public void addLabeled(String label, Component c) {
 		_cns.gridwidth = 1;
 		_cns.weightx = 0.1;
-		add(new Label(label));
+		add(new JLabel(label));
 
 		_cns.weightx = 1.0;
 		_cns.gridwidth = GridBagConstraints.REMAINDER;

@@ -29,7 +29,7 @@ import java.io.OutputStream;
 /**
  * <tt>ImageData</tt> is a object to store the image.
  * 
- * @version     1.10    $Date: 2001/07/28 06:34:14 $
+ * @version     1.10    $Date: 2009/07/27 10:31:42 $
  * @author	Mitsuru Oshima
  */
 public interface ImageData {

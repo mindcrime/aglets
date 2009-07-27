@@ -47,7 +47,7 @@ final class HttpResponseOutputStream extends ByteArrayOutputStream
 
 	/**
 	 * Create a new instance
-	 * @param out an {@link OutputStream} into which the instantiated atp
+	 * @param os an instance of OutputStream into which the instantiated atp
 	 * output stream writes.
 	 */
 	public HttpResponseOutputStream(OutputStream out) {

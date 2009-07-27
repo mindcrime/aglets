@@ -21,7 +21,7 @@ import java.security.NoSuchAlgorithmException;
  * The <tt>AuthByDigest</tt> class is the class for challenge-response
  * authentication by message digest.
  * 
- * @version     1.00    $Date: 2001/07/28 06:33:48 $
+ * @version     1.00    $Date: 2009/07/27 10:31:41 $
  * @author      ONO Kouichi
  */
 public class AuthByDigest extends Auth {

@@ -16,6 +16,8 @@ package examples.talk;
  */
 
 import com.ibm.aglet.*;
+import com.ibm.aglet.message.Message;
+
 import java.io.Externalizable;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -24,7 +26,7 @@ import java.net.URL;
 
 /**
  * 
- * @version     1.00    $Date: 2001/07/28 06:34:20 $
+ * @version     1.00    $Date: 2009/07/27 10:31:42 $
  * @author      Mitsuru Oshima
  * @see examples.talk.TalkSlave
  */

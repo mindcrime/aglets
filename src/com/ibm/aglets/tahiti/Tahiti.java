@@ -46,7 +46,7 @@ import java.net.URL;
 /**
  * Tahiti is the viewer for aglets
  * 
- * @version     1.10    $Date: 2002/02/20 22:17:18 $
+ * @version     1.10    $Date: 2009/07/27 10:31:40 $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
@@ -94,7 +94,7 @@ public final class Tahiti implements ContextListener {
 	 */
 	public Tahiti() {}
 	public void agletActivated(ContextEvent event) {
-		_window.updateProxyInList(event.getAgletProxy());
+		//_window.updateProxyInList(event.getAgletProxy());
 	}
 	public void agletArrived(ContextEvent event) {
 		_window.insertProxyToList(event.getAgletProxy());
@@ -109,7 +109,7 @@ public final class Tahiti implements ContextListener {
 		_window.insertProxyToList(event.getAgletProxy());
 	}
 	public void agletDeactivated(ContextEvent event) {
-		_window.updateProxyInList(event.getAgletProxy());
+		//_window.updateProxyInList(event.getAgletProxy());
 
 		// _window.removeProxyList(event.getAgletProxy());
 	}
@@ -120,7 +120,7 @@ public final class Tahiti implements ContextListener {
 		_window.removeProxyFromList(event.getAgletProxy());
 	}
 	public void agletResumed(ContextEvent event) {
-		_window.updateProxyInList(event.getAgletProxy());
+		//_window.updateProxyInList(event.getAgletProxy());
 	}
 	public void agletReverted(ContextEvent event) {
 		_window.removeProxyFromList(event.getAgletProxy());
@@ -130,10 +130,10 @@ public final class Tahiti implements ContextListener {
 		String text = event.getText();
 
 		_window.text.put(proxy, text);
-		_window.updateProxyInList(proxy);
+		//_window.updateProxyInList(proxy);
 	}
 	public void agletSuspended(ContextEvent event) {
-		_window.updateProxyInList(event.getAgletProxy());
+		//_window.updateProxyInList(event.getAgletProxy());
 
 		// _window.removeProxyList(event.getAgletProxy());
 	}

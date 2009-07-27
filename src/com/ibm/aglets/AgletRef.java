@@ -17,6 +17,9 @@ import java.security.Permissions;
 
 // # import com.ibm.aglets.security.Allowance;
 import com.ibm.aglet.*;
+import com.ibm.aglet.message.Message;
+import com.ibm.aglet.message.MessageException;
+
 import java.io.IOException;
 import java.net.URL;
 
