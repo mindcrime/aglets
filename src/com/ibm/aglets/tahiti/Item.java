@@ -15,7 +15,7 @@ package com.ibm.aglets.tahiti;
  */
 
 import com.ibm.aglet.*;
-import com.ibm.aglet.message.*;
+import com.ibm.aglet.message.Message;
 import com.ibm.aglet.system.ContextEvent;
 import com.ibm.aglet.system.ContextListener;
 import com.ibm.aglet.system.AgletRuntime;

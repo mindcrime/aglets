@@ -52,7 +52,7 @@ public class MAFAgentSystem_AgletsImpl extends MAFAgentSystem {
 	static private String _finder_port = null;
 	static private String _finder_name = null;
 	static private MAFFinder _finder = null;
-    static private LogCategory logCategory = LogInitializer.getCategory("com.ibm.aglets.MAFAgentSystem_AgletsImpl");
+	private static AgletsLogger logger = AgletsLogger.getLogger(MAFAgentSystem_AgletsImpl.class.getName());
     
 	static {
 		try {
@@ -521,7 +521,7 @@ public class MAFAgentSystem_AgletsImpl extends MAFAgentSystem {
 	public byte[] receive_message(Name agent_name, byte[] raw_msg) 
 			throws AgentNotFound, NotHandled, MessageEx, ClassUnknown, 
 				   DeserializationFailed, MAFExtendedException {
-        logCategory.debug("receive_message()++");
+        logger.debug("receive_message()++");
 		try {
 
 			// context only supports only synchronized message.
@@ -565,28 +565,28 @@ public class MAFAgentSystem_AgletsImpl extends MAFAgentSystem {
 			} 
 
 		} catch (MessageException ex) {
-            logCategory.error(ex);
+            logger.error(ex);
 			throw new MessageEx(ex.getMessage(), ex.getException());
 
 		} catch (NotHandledException ex) {
-            logCategory.error(ex);
+            logger.error(ex);
 			throw new NotHandled(toMessage(ex));
 
 		} catch (OptionalDataException ex) {
-            logCategory.error(ex);
+            logger.error(ex);
 			throw new DeserializationFailed(toMessage(ex));
 
 		} catch (IOException ex) {
-            logCategory.error(ex);
+            logger.error(ex);
 			ex.printStackTrace();
 			throw new DeserializationFailed(toMessage(ex));
 
 		} catch (ClassNotFoundException ex) {
-            logCategory.error(ex);
+            logger.error(ex);
 			throw new ClassUnknown(toMessage(ex));
 
 		} catch (InvalidAgletException ex) {
-            logCategory.error(ex);
+            logger.error(ex);
 			throw new AgentNotFound(toMessage(ex));
 
 		} 
@@ -605,19 +605,19 @@ public class MAFAgentSystem_AgletsImpl extends MAFAgentSystem {
 			ref.sendOnewayMessage(msg);
 
 		} catch (OptionalDataException ex) {
-            logCategory.error(ex);
+            logger.error(ex);
 			throw new DeserializationFailed(toMessage(ex));
 
 		} catch (IOException ex) {
-            logCategory.error(ex);
+            logger.error(ex);
 			throw new DeserializationFailed(toMessage(ex));
 
 		} catch (ClassNotFoundException ex) {
-            logCategory.error(ex);
+            logger.error(ex);
 			throw new ClassUnknown(toMessage(ex));
 
 		} catch (InvalidAgletException ex) {
-            logCategory.error(ex);
+            logger.error(ex);
 			throw new AgentNotFound(toMessage(ex));
 
 		} 

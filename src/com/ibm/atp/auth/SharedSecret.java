@@ -49,7 +49,7 @@ import java.io.FileNotFoundException;
  * The <tt>SharedSecret</tt> class is byte sequence for authentication.
  * which is shared by individuals (agent, context, domain).
  * 
- * @version     1.00    $Date: 2009/07/27 10:31:41 $
+ * @version     1.00    $Date: 2009/07/28 07:04:53 $
  * @author      ONO Kouichi
  */
 final public class SharedSecret extends ByteSequence {

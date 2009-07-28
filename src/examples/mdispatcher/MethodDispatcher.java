@@ -43,7 +43,7 @@ import java.util.Hashtable;
  * </pre>
  * This may be incorporated with MessageManager in the future.
  * 
- * @version     1.00	$Date: 2009/07/27 10:31:41 $
+ * @version     1.00	$Date: 2009/07/28 07:04:53 $
  * @author	Mitsuru Oshima
  */
 public class MethodDispatcher implements Serializable {

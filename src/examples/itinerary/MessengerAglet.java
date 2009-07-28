@@ -30,7 +30,7 @@ import java.awt.event.*;
  * Remote stationary aglets are created afterwhich a messenger aglet
  * visits each one of them to send an asynchronous  local message.
  * 
- * @version     1.00	$Date: 2009/07/27 10:31:42 $
+ * @version     1.00	$Date: 2009/07/28 07:04:53 $
  * @author	Yariv Aridor
  */
 public class MessengerAglet extends Aglet {

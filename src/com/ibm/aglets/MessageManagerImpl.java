@@ -14,14 +14,17 @@ package com.ibm.aglets;
  * deposited with the U.S. Copyright Office.
  */
 
-import java.util.*;
 import com.ibm.aglet.Aglet;
-import com.ibm.aglet.MessageManager;
-import com.ibm.aglet.FutureReply;
-import com.ibm.aglet.ReplySet;
+import com.ibm.aglet.AgletException;
+import com.ibm.aglet.AgletProxy;
+import com.ibm.aglet.message.FutureReply;
 import com.ibm.aglet.message.Message;
+import com.ibm.aglet.message.MessageManager;
+import com.ibm.aglet.message.ReplySet;
+import com.ibm.aglets.thread.AgletThread;
+import com.ibm.aglets.thread.AgletThreadPool;
 
-
+import java.util.HashMap;
 import java.util.Vector;
 import java.util.Hashtable;
 import java.util.Stack;
@@ -30,35 +33,37 @@ import java.io.ObjectInputStream;
 import java.io.IOException;
 import org.aglets.log.*;
 
-import com.ibm.aglets.thread.*;
-
-
 // import com.ibm.awb.misc.Debug;
 
-/*
- * Priority
- * DONT_QUEUE       -1
- * REENTRANT_MESSAGE 12
- * SYSTEM_MESSAGE    11 (onCreation, etc)
- * REQUEST_MESSAGE   10
- */
 
 /**
  * The <tt>MessageManagerReplyImpl</tt> class is an implementation of
  * com.ibm.aglet.MessageManager interface.
  * 
- * @version     2    
- * @author	Mitsuru Oshima
- * @author Luca Ferrari cat4hire@users.sourceforge.net (refactoring)
+ * The message manager is the decoupling point between a sender thread and a receiver one. In fact,
+ * when an agent sends a message to another agent, it comes up to the message manager of the addressee
+ * agent and enters the postMessage method. Such method is quite complex, but briefly stores the
+ * message into the addressee message queue and then notifies the message manager itself that are at least
+ * one new pending message. The addressee message manager then pops a thread from the thread pool and then
+ * processes the message at the top of the queue (and all the following ones) until the queue is empty. After that
+ * the message managers waits for other messages to come.
  * 
+ * Note by Luca Ferrari:
+ * I've tried to clean up the code related to the post and process message. In particular
+ * now the code uses the new global thread pool and keeps the same thread for re-entrant messages.
+ * Please consider that now, due to the new message queue, the cancelMessages method simply remove all the
+ * messages from the message queue. This should not be an error since the old code simply cancel and destroy
+ * all the messages in the message queue, but they should not be processed then.
+ * 
+ * @version     2.0 9-8-2007
+ * @author	Mitsuru Oshima
+ * @author      Luca Ferrari
  */
-public   class MessageManagerImpl implements MessageManager, 
+public final class MessageManagerImpl implements MessageManager, 
 										  java.io.Serializable {
-    static private LogCategory logCategory = LogInitializer.getCategory("com.ibm.aglets.MessageManagerImpl");
+    	private static AgletsLogger logger = AgletsLogger.getLogger(MessageManagerImpl.class.getName());
     
-	public static final int REENTRANT_PRIORITY = 12;
-	public static final int SYSTEM_PRIORITY = 11;
-	public static final int REQUEST_PRIORITY = 10;
+	
     
 	/*
 	 * Status
@@ -76,50 +81,64 @@ public   class MessageManagerImpl implements MessageManager,
 		"UNINITIALIZED", "RUNNING", "SUSPENDED", "DEACTIVATED", "DESTRYOED"
 	};
 
-	transient private MessageQueue message_queue = new MessageQueue();
+	transient private MessageQueue<MessageImpl> message_queue = new MessageQueue<MessageImpl>();
 
-	transient private MessageQueue waiting_queue = new MessageQueue();
+	transient private MessageQueue<MessageImpl> waiting_queue = new MessageQueue<MessageImpl>();
 
 
-	static private Hashtable defaultPriorityTable = null;
+	/**
+	 * A priority table. If a message does not specifies a priority, the message manager
+	 * can check this table to see if the message kind is contained, and in such case can
+	 * use the priority assigned in the table for the above message.
+	 * Priorities are expressed as integers, and the keys are strings that represent the message
+	 * kinds.
+	 */
+	private HashMap<String,Integer> priorityTable = null;
+	
+	/**
+	 * A default priority table, used when a priority cannot be found both in the message and
+	 * the priority table.
+	 */
+	static private HashMap<String,Integer> defaultPriorityTable = new HashMap<String,Integer>(5);
 
 	static {
-		defaultPriorityTable = new Hashtable();
-		defaultPriorityTable.put(Message.CLONE, 
-								 new Integer(REQUEST_PRIORITY));
-		defaultPriorityTable.put(Message.DISPOSE, 
-								 new Integer(REQUEST_PRIORITY));
-		defaultPriorityTable.put(Message.DISPATCH, 
-								 new Integer(REQUEST_PRIORITY));
-		defaultPriorityTable.put(Message.DEACTIVATE, 
-								 new Integer(REQUEST_PRIORITY));
-		defaultPriorityTable.put(Message.REVERT, 
-								 new Integer(REQUEST_PRIORITY));
+	    // assign default priorities for the well known message kinds
+	    defaultPriorityTable.put(Message.CLONE,	new Integer(Message.REQUEST_PRIORITY));
+	    defaultPriorityTable.put(Message.DISPOSE, new Integer(Message.REQUEST_PRIORITY));
+	    defaultPriorityTable.put(Message.DISPATCH, new Integer(Message.REQUEST_PRIORITY));
+	    defaultPriorityTable.put(Message.DEACTIVATE, new Integer(Message.REQUEST_PRIORITY));
+	    defaultPriorityTable.put(Message.REVERT,  new Integer(Message.REQUEST_PRIORITY));
 	} 
 
-	
-	
 	/**
-	 * The owner of the message manager. The owner message is the message
-	 * currently being processed, that is the one why the thread is
-	 * running on this message manager.
+	 * The message owner of this message manager. The owner is a special message that has been
+	 * peecked from the message queue and is going to be processed. In other words is the closest
+	 * message to be processed, being processed or that has just been processed. Several critical methods of
+	 * the message manager should check if the current thread is the owner, that is if it is the thread
+	 * that has been chosen to process the owner message. 
 	 */
-	transient private Message owner = null;
-	
-	/**
-	 * Indicates if the message manager has been suspended or not.
-	 */
-	private boolean sleeping = false;
+	transient private MessageImpl owner = null;
 
-	//transient private Stack threadSpool = new Stack();
+	/**
+	 * The thread pool. Each thread used to process a message must be extracted
+	 * from this pool. Please note that the poll is global across the platform
+	 * thus this is only a reference to the pool, not a real private instance.
+	 */
 	transient private AgletThreadPool threadPool = AgletThreadPool.getInstance();
 
 	transient private LocalAgletRef ref;
 
-	private Hashtable priorityTable = null;
+
 	private Vector activationTable = null;
 
 	int state = UNINITIALIZED;
+	
+	/**
+	 * This flag indicates if the aglet is sleeping, and so does its message manager. In other
+	 * words, each time the aglet starts sleeping, this flag is set and it stays while
+	 * the sleep period has expired.
+	 */
+	private boolean sleeping = false;
 
 	/*
 	 * public void close() {
@@ -132,130 +151,51 @@ public   class MessageManagerImpl implements MessageManager,
 	 * return message_queue.peek() == null;
 	 * }
 	 */
+	/**
+	 * The constructor has been set up as public for testing, and since
+	 * I don't like to enforce protection based on package access (Luca).
+	 */
 	public MessageManagerImpl(LocalAgletRef ref) {
-		priorityTable = (Hashtable)defaultPriorityTable.clone();
+		HashMap<String, Integer> clone = (HashMap<String,Integer>) defaultPriorityTable.clone();
+		priorityTable = clone;
 		this.ref = ref;
 	}
 	
-	
-	/**
-	 * Removes a message from the message queue. This method calls
-	 * the destroyMessage, that you should override in order to
-	 * deal with your current implementatio of Message (e.g., MessageImpl). 
-	 * @author Luca Ferrari
-	 *
+	/*
+	 * Cancel all messages in the message queue
 	 */
 	void cancelMessagesInMessageQueue() {
-		// before cancelling all the messages from the queue,
-		// I need to advice the future replies
-		Iterator iterator = this.message_queue.iterator();
-		
-		while( iterator != null && iterator.hasNext()){
-			Message msg = (Message) iterator.next();
-			this.destroyMessage(msg);
-			
-		}
-		
-		// remove all messages from the queue
-		this.message_queue.removeAll();
-		
+	    message_queue.removeAll();
 	}
-	
-	
-	
-	/**
-	 * Sets the status of the sleeping indicator. <B>Please note that this method sets only the status
-	 * of the sleeping boolean value, it does not suspend the message manager!</B>
-	 * @param value the value of the sleeping flag.
+	/*
+	 * Cancel all messages in the waiting queue
+	 * void cancelMiscMessages() {
+	 * int size = misc.size();
+	 * MessageImpl msg;
+	 * for(int i=0; i<size; i++) {
+	 * msg = ((MessageImpl)misc.elementAt(i));
+	 * msg.cancel("handler destroyed : message = " + msg.toString());
+	 * msg.destroy();
+	 * }
+	 * }
 	 */
-	protected final synchronized void setSleeping(boolean value){
-		this.sleeping = value;
-	}
-	
-	/**
-	 * Provides the sleeping status.
-	 * @return true if the message manager is sleeping, false otherwise.
-	 */
-	public final synchronized boolean isSleeping(){
-		return this.sleeping;
-	}
-	
-	/**
-	 * Suspends the message manager. Messages will be queued but not processed.
-	 *
-	 */
-	public final void sleep(){
-		this.setSleeping(true);
-	}
-	
-	/**
-	 * Wakes up the message manager, messages will be processed.
-	 *
-	 */
-	public final void wakeUp(){
-		this.setSleeping(false);
-		//this.processNextMessage();
-	}
-	
-	
-	/**
-	 * A method to remove the future reply from a message. This method
-	 * exploits the MessageImpl method. Override the method if you are 
-	 * using a different implementation of the message.
-	 * @param msg the message to convert into a MessageImpl and to 
-	 * remove.
-	 * @author Luca Ferrari
-	 */
-	protected void destroyMessage(Message msg){
-		// check arguments
-		if( msg == null || ! (msg instanceof MessageImpl) )
-			return;
-		
-		// convert the message to a messageImpl and cancel the
-		// future reply
-		MessageImpl mimpl = (MessageImpl) msg;
-		mimpl.cancel("Cancelled from the queue");
-		mimpl.destroy();
-		
-	}
-	
-	
-	/**
-	 * Cancels all messages in the waiting queue. This method calls
-	 * the destroyMessage one, that you should override in order
-	 * to deal with your implementation of Message.
-	 * @author Luca Ferrari
+
+	/*
+	 * Cancel all messages in the waiting queue
 	 */
 	void cancelMessagesInWaitingQueue() {
-		//before cancelling all the messages from the queue,
-		// I need to advice the future replies
-		Iterator iterator = this.waiting_queue.iterator();
-		
-		while( iterator != null && iterator.hasNext()){
-			Message msg = (Message) iterator.next();
-			this.destroyMessage(msg);
-			
-		}
-		
-		// remove all messages from the queue
-		this.message_queue.removeAll();
+	    waiting_queue.removeAll();
 	}
-	
-	
-	
-	/**
-	 * Cancels the owner message.
-	 *
+	/*
+	 * Cancel the owner message
 	 */
 	void cancelOwnerMessage() {
 		if (owner != null && isOwner() == false) {
-			this.destroyMessage( this.owner );
-			this.owner = null;
+			owner.cancel("handler destroyed : message = " + owner.toString());
+			owner.destroy();
+			owner = null;
 		} 
 	}
-	
-	
-	
 	void deactivate() {
 		synchronized (message_queue) {
 			if (isSuspended() == false) {
@@ -268,7 +208,6 @@ public   class MessageManagerImpl implements MessageManager,
 		} 
 
 		cancelMessagesInMessageQueue();
-		invalidateSpooledThreads();
 	}
 	// 
 	// This have to be improved.
@@ -304,7 +243,6 @@ public   class MessageManagerImpl implements MessageManager,
 		// invalidate all threads
 		// Debug.check();
 
-		invalidateSpooledThreads();
 
 		// Debug.check();
 	}
@@ -318,28 +256,17 @@ public   class MessageManagerImpl implements MessageManager,
 			processNextMessage();
 		} 
 	}
-	void exitMonitorIfOwner() {
+	public void exitMonitorIfOwner() {
 		synchronized (message_queue) {
 			if (isOwner()) {
 				processNextMessage();
 			} 
 		} 
 	}
-	LocalAgletRef getAgletRef() {
+	public LocalAgletRef getAgletRef() {
 		return ref;
 	}
-	
-	
-	/**
-	 * Eperimental!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	 *
-	 */
-	private void invalidateSpooledThreads() {
-	/*	while (threadSpool.empty() == false) {
-			((AgletThread)threadSpool.pop()).invalidate();
-		}
-	*/ 
-	}
+
 	public boolean isDeactivated() {
 		return state == DEACTIVATED;
 	}
@@ -348,30 +275,30 @@ public   class MessageManagerImpl implements MessageManager,
 	}
 	
 	
-	
-	
 	/**
-	 * A method to know if the running thread is the owner of the
-	 * message manager, that is the one encapsulated in the message
-	 * owner of this message manager. This method strictly depends
-	 * over the message implementation (i.e, MessageImpl), thus you should
-	 * override it depending on the message you're using.
-	 * @return true if the thread is the owner of the message manager
+	 * This method is used to check if the current thread is the one used to
+	 * process last message, or better if the message that is currently stored as owner
+	 * of this message manager has been attached to the same thread of the one that calls 
+	 * this method.
+	 * The aim of this method is to provide a way to check who is calling critical methods of
+	 * the message manager. For instance, it should not be possible to call the processNextMessage() method
+	 * (to process another message) if not owning the message manager, that is if the thread is different
+	 * from a message processing thread.
+	 * @return true if the current thread is the same attached to the owner message
 	 */
-	protected boolean isOwner() {
-		if ( owner != null && owner instanceof MessageImpl &&
-			((MessageImpl)owner).thread == Thread.currentThread()) {
-			return true;
-		} else {
-			return false;
-		} 
+	boolean isOwner() {
+	    if (owner != null && owner.thread.equals(Thread.currentThread()) ) {
+		return true;
+	    } else {
+		return false;
+	    } 
 	}
-	
 	
 	
 	public boolean isRunning() {
 		return state == RUNNING;
 	}
+	
 	public boolean isSuspended() {
 		return state == SUSPENDED;
 	}
@@ -379,41 +306,19 @@ public   class MessageManagerImpl implements MessageManager,
 		return state == UNINITIALIZED;
 	}
 	
-	
-	
 	/* package protected */
-/*	void kill() {
-		setState(DESTROYED);
-		ref = null;
-
-		// Debug.check();
-		while (threadSpool.empty() == false) {
-			((AgletThread)threadSpool.pop()).stop();
-		} 
-
-		// Debug.check();
-	}
-*/
-	
 	/**
-	 * Experimental!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	 * Kills the message manager and thus the agent. Please note that no more
+	 * actions on the thread are required, since the threads are shared.
 	 */
-	void kill(){
-		// invalidate the message manager
-		this.deactivate();
+	void kill() {
+	    logger.debug("The message manager is being killed...");
+	    setState(DESTROYED);
+	    ref = null;
 	}
 	
-	/**
-	 * Notifies all messages in the queue. Similarly to the notifyMessage
-	 * method, this method places all the waiting queue at the top of
-	 * the message queue, and then calls the processNextMessage method,
-	 * thus all the waiting messages are processed. After this the
-	 * thread is suspended.
-	 * This method relies on the doWait() one for the thread
-	 * suspension.
-	 */
 	public void notifyAllMessages() {
-		Message notifier = null;
+		MessageImpl notifier = null;
 
 		synchronized (message_queue) {
 			if (isOwner() == false) {
@@ -425,59 +330,24 @@ public   class MessageManagerImpl implements MessageManager,
 				message_queue.insertAtTop(waiting_queue);
 				waiting_queue.removeAll();
 
-				notifier.setWaiting(true);
+				notifier.setWaiting();
 				processNextMessage();
 			} 
 		} 
-		
-		this.doWait(notifier);
+		notifier.doWait();
 	}
-	
-	
-	
-	/**
-	 * Notifies a single message. The message to notify is the
-	 * owner of the message manager. The method checks if the thread
-	 * running is the one attached to the message, and in this case
-	 * checks if there are waiting messages. In this case both the
-	 * owner and the first waiting message are placed at the top of
-	 * message queue. After this, the processNextMessage method is call,
-	 * and this causes the thread to notify the message to the agent (handle(...)). 
-	 * Since the waiting message is inserted at the top of queue <b>after</b>
-	 * the owner, the processed message is the waiting one. In other words,
-	 * if there's a waiting message, this is always processed, otherwise the
-	 * thread is suspended.
-	 * In the case there's no one waiting message (or after the notification
-	 * of the owner), the thread suspends over the owner message.
- 	 * This method relies on the doWait() one for the thread
-	 * suspension.
-	 */
 	public void notifyMessage() {
-		Message notifier = null;
-		Message waiting = null;
+		MessageImpl notifier = null;
+		MessageImpl waiting = null;
 
 		synchronized (message_queue) {
-			
-			// check if the thread attached to the owner message
-			// is the same that is running this method
 			if (isOwner() == false) {
 				throw new IllegalMonitorStateException("Current thread is not owner");
 			} 
-			
-			// the notifier message is the owner of this message
-			// manager
 			notifier = owner;
 
-			
-			// Since the thread could have been suspended until
-			// the notifier/owner message came, there could be
-			// a set of messages in the waiting queue. Thus, I
-			// need to extract the message from the waiting queue
-			// and to notify it to the aglet.
-			
 			// remove waiting message from queue.
 			waiting = waiting_queue.pop();
-			
 			if (waiting != null) {
 
 				// set the waiting message to the top of the queue
@@ -485,316 +355,362 @@ public   class MessageManagerImpl implements MessageManager,
 				message_queue.insertAtTop(notifier);
 				message_queue.insertAtTop(waiting);
 
-				// Now I've placed the messages in the queue,
-				// indicates that the notifier/owner is waiting
-				// to be processed
-				notifier.setWaiting(true);
-				
-				// process the message
+				notifier.setWaiting();
 				processNextMessage();
 			} 
 		} 
 
-		this.doWait(notifier);
+		notifier.doWait();
 	}
-	
-	
-	/**
-	 * Suspends over the messageImpl. Substitute with the
-	 * implementation for your kind of message implementation.
-	 * @param msg the message (supposed MessageImpl) to suspend
-	 * over
-	 * @author Luca Ferrari
-	 */
-	protected void doWait(Message msg){
-		if( msg != null && msg instanceof MessageImpl){
-			((MessageImpl)msg).doWait();
-		}
-		
-	}
-	
-	/**
-	 * Similar to the doWait method, but with a timeout.
-	 * @param msg the message to suspend onto.
-	 * @param timeout the timeout to wait for.
-	 */
-	protected void doWait(Message msg, long timeout){
-		if( msg != null && msg instanceof MessageImpl){
-			((MessageImpl)msg).doWait(timeout);
-		}
-	}
-	
-	
 	
 	/*
 	 * Thread Management
 	 */
-/*	AgletThread popThread() {
-		if (isDestroyed()) {
-			System.out.println("should not happen");
-			return null;
-		} 
-
-		synchronized (threadSpool) {
-			if (threadSpool.empty()) {
-				return ref.resourceManager.newAgletThread(this);
-
-				// due to Fiji
-				// return tm.newAgletThread(ref.threadGroup, this);
-			} 
-			return (AgletThread)threadSpool.pop();
-		} 
-	}
-*/
-	
 	/**
-	 * Get the agletthread from the <b>global</b> thread pool.
-	 * @return the thread for the message manager
+	 * Pops a thread from the pool. All the details about the thread management and
+	 * creation are now within the aglet thread pool, thus this method is only a proxy
+	 * for the pool popThread method.ù
+	 * 
+	 * @return the thread to use associated to the current message manager
+	 * @throws AgletException if the message manager has been destroyed or there is a problem
+	 * getting the thread from the pool
 	 */
-	AgletThread popThread(){
-		if( this.isDestroyed() ){
-			System.err.println("Trying to get a thread for a destroyed message manager!");
-			return null;
-		}
-		
-		// get the thread from the pool
-		return this.threadPool.pop(this);
+	AgletThread popThread() throws AgletException {
+	    // check if the message manager has been destroyed.
+	    if (isDestroyed()) {
+		logger.info("The message manager has been destroyed but a thread is being popped...not possible!");
+		throw new AgletException("Cannot pop a thread if the message manager has been destroyed!");
+	    } 
+	    
+	    // check to have a valid thread pool
+	    if( this.threadPool == null )
+		this.threadPool = AgletThreadPool.getInstance();
+	    
+	    // get a new thread from the pool and return it
+	    return this.threadPool.pop(this);
+
 	}
 	
 	
 	void postMessage(MessageImpl msg) {
 		postMessage(msg, false);
 	}
+
 	
 	/**
-	 * A method to enable delegation of a message. This method depends
-	 * on the MessageImpl class, override it depending on your message
-	 * implementation.
-	 * @param msg the message to delegate
-	 */
-	protected void enableDelegation(Message msg){
-		if( msg != null && msg instanceof MessageImpl ){
-			((MessageImpl)msg).enableDelegation();
-		}
-	}
-	
-	
-	/**
-	 * Post a new message. This method works as follows:
-	 * 1) if the message manager is deactivated and the message is one
-	 * of those that can reactivate it, the message is activated
-	 * 2) if the message is sent from the thread to itself, that means
-	 * the thread calling postMessage is the owner of the message manager,
-	 * the current message is enqueued and the loop message is processed as first.
-	 * 3) if the message is a normal message, it is enqueued and then 
-	 * the processNextMessageIfFree is called.
-	 * @param msg the message to process
+	 * Post a message to the Aglet behind this message manager.
+	 * This method is called from the sendXXXMessage methods of an aglet reference (i.e., from the
+	 * aglet proxy). Briefly this method has to enqueue the incoming message and to notify a thread of process 
+	 * such message. Things are little more complicated due to the different scenarios that can happen.
+	 * 
+	 * The simplest case is if a message is sent by another agent, that is by another thread. In this case
+	 * the message is simply enqueued and a call to processNextIfEmpty is issued. Such method is used to
+	 * wake up this message manager threads to process the message(s) in the message queue. If the message manager is
+	 * not processing a message (i.e., the owner is null), then a thread is required and the processing starts. In other
+	 * words in the above case a message is enqueued and then forced to be processed if the message manager has not yet
+	 * took a thread to process the message queue.
+	 * 
+	 * If the message manager is not active (i.e., not processing messages) then the message is discarded. As an exception,
+	 * if the message is contained in the activation table, then the message manager is woken up. More in detail, if the message
+	 * is one of those that can be processed (i.e., it is in the activation table) it is pushed back to the agent reference (LocalAgletRef) that
+	 * will then pass it back thru the postMessage method. This time the reference and the message manager are active
+	 * and the message will be processed normally.
+	 * 
+	 * If the message is posted by the same thread that is processing the message itself, then we have a re-entrant message.
+	 * This situation can happen if the agent itself post a message to itself as a reply for another message, such as the example
+	 * below:
+	 * <code>
+	 *  public boolean handleMessage(Message msg){
+	 *	try{
+         *	// change the post message flag
+         *	this.postMessage = ! this.postMessage;
+         *	
+         *	
+         *	if( this.postMessage ){
+         *	    System.out.println("\n\t POSTING A MESSAGE TO MYSELF\n");
+         *	    AgletProxy myself = this.getProxy();
+         *	    Message mess = new Message("REENTRANT_MESSAGE_TO_MYSELF");
+         *	    //myself.sendOnewayMessage(mess);
+         *	    myself.sendMessage(mess);
+         *	}
+         *     ....
+         * }
+	 * </code>
+	 * or if the agent, when receiving a message, decides to do something that requires posting another message, maybe
+	 * a system message (e.g., suspend, clone, move, etc.).
+	 * To better understand the situation consider that we are in the postMessage with thread T1 and message M1, and that
+	 * the agent wants to send to itself the message M2. We understand this when we are in the postMessage with T1 and M1 as
+	 * owner (i.e., currently processed message) of the message manager. 
+	 * The old management of such cases worked as follows:
+	 * 1) put M2 as first message in the message queue;
+	 * 2) put M1 as second message in the message queue;
+	 * 3a) call processNextMessage(), that will claim a new thread T2 and will start it to process M2;
+	 * 3b) at the same time suspend T1 waiting for T2 for finish.
+	 * 4) once T2 has processed M2 (that is now the new owner of the message manager), it will continue
+	 * processing M1 (since T2 is the thread owner) and thus M1 must not be processed no more by T1.
+	 * 5) T1 is waked up and finishes without doing something more with M1.
+	 * 
+	 * With the new threading system things go differently: the idea is that since T1 is putting M2 on the
+	 * message "stack", then T1 should process both M1 and M2. This avoids resource wasting (we have already a thread, we
+	 * don't need to get another one) and provides coherency. More in detail:
+	 * 1) T1 puts M2 on the top of the message queue;
+	 * 2) T1 puts M1 as second message in the queue;
+	 * 3) T1 marks itself as re-entrant, thus the AgletThread knows that before suspending it will
+	 * called to process another message;
+	 * 4) a call to processNextMessage() is issued. This changes the message of T1, but this does not matter since
+	 * T1 has already processed M1 and can re-loop to process M2.
+	 * 4.1) the thread T1 instead of suspending itself in the pool re-loop and process M2, but before this
+	 * marks itself as no-reentrant, thus to not loop forever. If another re-entrant message comes, than
+	 * steps from 1-4 are repeated and the thread will re-loop.
+	 * @param msg the message to send to the agent
 	 * @param oneway
 	 */
-	protected final void postMessage(Message msg, boolean oneway) {
-        logCategory.debug("[MessageManagerImpl.postMessage()] "+msg);
-        
-		int priority = NORM_PRIORITY;
-		Message reentrantOwner = null;
+	private void postMessage(MessageImpl msg, boolean oneway) {
+	    // check the argument
+	    if( msg == null )
+		return;
+	    
+	    
+	    logger.debug("MessageManagerImpl is receiving a new message, within the postMessage method...");
+	    
+	    // use the norm priority for the message
+	    int priority = NORM_PRIORITY;
+	    MessageImpl reentrantOwner = null;
 
-		synchronized (message_queue) {
-			if (isDestroyed()) {
-				// cannot process messages if I'm destroyed
-				this.destroyMessage(msg);
-				return;
+	    synchronized (message_queue) {
+		if (isDestroyed()) {
+		    // the message manager has been destroyed, therefore this message
+		    // cannot be processed and so it is canceled
+		    logger.debug("Message manager has been destroyed and so it cannot process the message <" + msg + ">");
+		    msg.cancel("Message manager has been destroyed and cannot process the message"); 
+		    return;
+		} else if (isDeactivated()) {
+		    // the message manager has been deactivated, this means it is not receiving
+		    // messages but it can be resumed if a special message is incoming. Such special
+		    // message must be listed in the activation table. This means that if the current
+		    // message is in the activation table the message manager can be woke up, otherwise
+		    // the message must be deleted.
+		    if (activationTable != null && activationTable.contains(msg.getKind())) {
+			try {
+			    // reactivate the message manager. Reactivating means:
+			    // 1) activate the localagletref so it can receive again messages
+			    // 2) enable the message to be delegatable, that is to be passed thru another component
+			    // 3) delegate the message to the localagletref, that will re-post the message to this
+			    // message manager. Since the message manager is now activated it will process the message.
+			    logger.debug("Re-activating the message manager and delegating the message");
+			    ref.activate();			// activate the aglet ref and the message manager
+			    msg.enableDelegation();		// set the message to accept delegation
+			    ref.delegateMessage(msg);		// delegate the message to the aglet ref and thus to this message manager again
+			    return;				// nothing more to do (the delegation will re-enter this method to process the message)
+			} catch (Exception ex) {
+			    // cannot re-activate
+			    logger.error("Exception caught while re-activating the message manager", ex);
+			    msg.cancel("Exception caught while re-activating the message manager");
+			    return;
 			} 
-			else 
-			if (isDeactivated()) {
-				// I'm deactivated, the only thing I can do is to check if
-				// my activation table contains this message, if so
-				// I can try to reactivate the agent
-				if (activationTable != null && 
-					activationTable.contains(msg.getKind())) {
-					try {
-						ref.activate();
-						this.enableDelegation( msg );
-						ref.delegateMessage(msg);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-						this.destroyMessage(msg);
-						return;
-					} 
-				} else {
-					this.destroyMessage(msg);
-				} 
-				return;
-			} 
-
-			
-			// get the priority of the message
-			priority = msg.getPriority();
-			
-			
-			// if the priority is less than 0, the message is not
-			// queued and is immediatly processed. Thus a negative priority
-			// is higher than a positive value????????????
-			// Luca: it does not make sense! and it complicates the sleeping activity!
-			//if (priority < 0) {
-			//	this.deliverMessageWithoutQueueing(msg);
-			//	return;
-			//} 
-
-			
-			// if the running thread is the same associated to
-			// the message manager and the message is not oneway
-			// process it immediatly. In other words,
-			// if the thread is trying to notify a message to itself
-			// stop processing the last message and process this one.
-			if (isOwner() && oneway == false) {
-				// store the message I'm processing now
-				reentrantOwner = owner;
-
-				// keep the original priority and set the
-				// priority of the original message at the max, thus
-				// it will be processed immediatly after the other.
-				// NOTE: insertAtTop should not use priority, thus
-				// here it is not needed, but keep it for sureness.
-				priority = reentrantOwner.getPriority();
-				reentrantOwner.setPriority(REENTRANT_PRIORITY);
-				message_queue.insertAtTop(reentrantOwner);
-
-				// insert the new message at the top of the queue
-				msg.setPriority(REENTRANT_PRIORITY);
-				message_queue.insertAtTop(msg);
-
-				// the original message is waiting
-				reentrantOwner.setWaiting(true);
-
-				// process the message currently at the top
-				// of the queue
-				processNextMessage();
-
-			} else {
-
-				// normal message, enqueue depending on its priority
-				this.message_queue.insert(msg);
-				
-				// now call processNextMessage if there's not an owner,
-				// this will lead to the processing of the message just enqueued
-				processNextMessageIfEmpty();
-			} 
-		} 
-
-		// if I have a previous owner, I need to reactivate it 
-		if (reentrantOwner != null) {
-			this.doWait(reentrantOwner);
-
-			// restore original priority
-			reentrantOwner.setPriority(priority);
-		} 
-	}
-	
-	
-	
-	/**
-	 * A method to deliver the message. You should override this method
-	 * since it depends on the implementation of the message (for example
-	 * MessageImpl).
-	 * @param msg the message to be delivered
-	 */
-	protected void deliverMessageWithoutQueueing(Message msg){
-		if( msg != null && msg instanceof MessageImpl){
-			((MessageImpl)msg).activate(this);
-		}
-	}
-	
-	
-	
-	/**
-	 * Processes a message at the top of the message queue. This method relies on
-	 * the processCurrentOwner one, that you should override to deal with your specific
-	 * Message implementation.
-	 * 
-	 * This method pops the first message in the message queue and sets
-	 * it as the owner of the MessageManager. After that, it calls the
-	 * processCurrentOwner that activates the message.
-	 */
-	protected final void processNextMessage() {
-
-		// don't process messages if not running or sleeping
-		if (isRunning() == false  || this.isSleeping() ) {
+		    } else {
+			// the message cannot wake up the message manager, and thus cannot be processed
+			msg.cancel("The message manager is deactivated and this message cannot re-activate it (it is not in the activation table)");
 			return;
-		} 
+		    } 
+		} 		
 
-		// extract a message from the queue and activate it
-		if( this.message_queue != null && 
-			this.message_queue.isEmpty() == false ){
-			// get the first message in the queue
-			this.owner = (Message) this.message_queue.pop();
-			// process the message (only if it is not null)
-			if( this.owner != null )
-				this.processCurrentOwner();
-		}
-		else{
-			this.owner = null;
-		}
 		
-	}
-	
-	
-	
-	
-	
-	
-	/**
-	 * Process the current owner message. You should override this method
-	 * depending on the implementation of your message. This method treats
-	 * only MessageImpl objects.
-	 *
-	 */
-	protected void processCurrentOwner(){
-		if( this.owner != null && this.owner instanceof MessageImpl )
-			((MessageImpl)this.owner).activate(this);
-	} 
-	
-	
-	/**
-	 * Processes a message only if there's not an owner, that means
-	 * only if there's not a currently processing message.
-	 *
-	 */
-	private final void processNextMessageIfEmpty() {
-		// process a message only if the current owner is empty and if not sleeping
-		if( this.owner == null && ! this.isSleeping() ){
-			this.processNextMessage();
+		// if here the message manager is (now) active (it can has been activated thru
+		// the activation table), and thus it must process the message
+		
+		// first of all it is important to establish the message priority.
+		// Each message has a desidered priority, but it is the message manager
+		// that must decide at which priority to process this kind of message. So the deal
+		// is to check first in the priority table for this kind of message, and only if a priority
+		// is not found to use the message one.
+		String msgKind = msg.getKind();
+		if( msgKind != null ){
+		    if( this.priorityTable.containsKey(msgKind))
+			priority = this.priorityTable.get(msgKind);
+		    else{
+			priority = msg.getPriority();
+			// store the priority for this kind of message, thus it can
+			// be re-processed later at the same priority
+			this.priorityTable.put(msgKind, priority);
+		    }
 		}
+		else
+		    priority = msg.getPriority();	// the message has no kind, run it at its own priority
+
+
+		
+		// depending on the message priority we can have two cases:
+		// 1) the message has a very high priority and must be processed immediatly
+		// (i.e., without being queued)
+		// 2) the message has a normal priority and must be processed after being queued.
+		if (priority <= Message.UNQUEUED_PRIORITY) {
+		    // process the message immedately
+		    msg.activate(this);
+		    return;
+		} 
+		else{
+		    // queue the message and process when it is  time
+		    
+		    // here it can happen two kind of situations:
+		    // 1) the message has been posted by the current owner, that is from the thread
+		    // that is already processing a message (owner). This could happen, for instance,
+		    // if a message requires the execution of an action that requires another system action
+		    // (for instance receiving a message - thus processing such message as owner - the agent
+		    // requires an action that posts a message - for example to suspend itself).
+		    // See examples.thread.ReentrantThreadAgent for an example.
+		    //
+		    // To process such condition we must place at the top of the queue the current message (i.e., the message
+		    // that is being posted) and immediatly after the message owner (i.e., the one being processed).
+		    // In this way the message re-entrant will be processed as first, and the old owner immediatly after.
+		    //
+		    //
+		    // 2) the message comes from another thread and thus can be inserted into the message queue
+		    //
+		    
+		    if( this.isOwner() && oneway == false ){
+			// place the current owner into the message queue with the re-entrant priority
+			reentrantOwner = owner;
+			reentrantOwner.setPriority(Message.REENTRANT_PRIORITY);
+			this.message_queue.insertAtTop(reentrantOwner);
+			
+			// now place on top the current message
+			msg.setPriority(Message.REENTRANT_PRIORITY);
+			msg.setThread(this.owner.getThread());		// copy the thread, thus if a thread has already been assigned we don't 
+									// need to get one new thread from the thread pool
+			msg.setReplyAvailable();			// needed if we want to work with the sendMessage methods, since they will
+									// block waiting for a reply, that will never come since the agent will not
+									// respond to itself!
+			AgletThread aThread = this.owner.getThread();
+			if( aThread != null )
+			    aThread.setReentrant(true);			// with this the aglet thread that is processing the owner message
+									// knows that it is re-entrant, and thus that it will process this message too
+			
+			this.message_queue.insertAtTop(msg);
+			
+			// process a new message. This will cause the message queue to place the top message
+			// (i.e., msg) as owner and to activate the message (i.e., to take a thread and process it).
+			// Once the thread has finished processing the message, it will call pushThreadAndExitIfOwner
+			// and thus it will notice that it is the owner of the message manager, therefore will process another
+			// message. The next message this time will be the old owner, that will now be processed.
+			this.processNextMessage();
+			
+		    }
+		    else{
+			// normal message, queue it
+			msg.setPriority(priority);
+			this.message_queue.insert(msg);
+			
+			// now process a message only if there is not a thread processing
+			// already a message
+			this.processNextMessageIfEmpty();
+		    }
+		    
+		}
+	    }	// end of the synchronized block
+		
+    
+	    logger.debug("message queue\n" + this.message_queue.toString());
+	    
 	}
+	
+	
+	
+	/**
+	 * This method starts the real processing of a message, and it is usually called
+	 * within the postMessage methods. The basic idea is to peek the first message on top
+	 * of the message queue and to activate it. Activating a message will require the message
+	 * manager to pop a thread from the thread pool and the message to call handleMessage on such
+	 * thread, and thus the thread will process the message.
+	 * 
+	 * Messages will not be processed if the message manager is destroyed, it is not running
+	 * or it is sleeping (since they must be enqueued waiting for the message manager to wake upo again).
+	 * Please note that messages can be processed if the message manager is closed, since it will
+	 * consume all the messages in the queue.
+	 *
+	 */
+	private void processNextMessage() {
+
+	    // don't process a message if the message manager is not running,
+	    // if it has been destroyed or if it is sleeping
+	    if ( (! isRunning() ) || this.isSleeping() || this.isDestroyed()) {
+		logger.debug("Message manager will not process the next message since it is not running, sleeping or even destroyed!!");
+		return;
+	    } 
+
+	    // now peek the first message from the message queue and activate it!
+	    if (message_queue.peek() != null) {
+		// process the message: set the message as current owner of the 
+		// message manager and activate it. Making the message as owner is useful
+		// to know which message (and thread) is currently processing the message
+		// manager
+		owner = message_queue.pop();
+		owner.activate(this);
+	    } else {
+		// nothing to process
+		owner = null;
+	    } 
+	}
+	
+	
+	/**
+	 * Processes the next message only if the message manager has not already started
+	 * a processing cycle, that is only if the message manager owner is null. Since this 
+	 * method wraps the processNextMessage() one, all the rules of the latter applies to the
+	 * former.
+	 *
+	 */
+	private void processNextMessageIfEmpty() {
+		if (owner == null) {
+			processNextMessage();
+		} 
+	}
+	
+	
 	void pushMessage(MessageImpl msg) {
 		postMessage(msg, true);
 	}
-
-
-/*	void pushThread(AgletThread thread) {
-		synchronized (threadSpool) {
-			if (isDestroyed()) {
-				thread.invalidate();
-				return;
-			} 
-			threadSpool.push(thread);
-		} 
-	}
-*/
-	/**
-	 * Releases a thread and replace it into the <b>global</b> pool.
-	 * @param thread the thread to release
+	/*
+	 * void pushThreadAndExitMonitorIfOwner(AgletThread thread) {
+	 * synchronized(message_queue) {
+	 * synchronized(threadSpool) {
+	 * pushThread(thread);
+	 * if (isOwner()) {
+	 * processNextMessage();
+	 * }
+	 * }
+	 * }
+	 * }
 	 */
-	void pushThread(AgletThread thread){
-		this.threadPool.push(thread);
+
+	/**
+	 * Places a thread back in the pool. Before the thread is placed in the pool
+	 * it's references are deleted (that is the message manager and the message stored
+	 * in the thread must be erased to avoid processing a message for error).
+	 */
+	void pushThread(AgletThread thread) {
+	    try{
+        	    // check the argument
+        	    if( thread == null )
+        		return;
+        	    
+        	    // place the thread in the pool
+        	    this.threadPool.push(thread);
+	    }catch(AgletException ex){
+		logger.error("Exception caught while pushing the thread into the thread pool", ex);
+	    }
 	}
 	
 	
-	
-	void pushThreadAndExitMonitorIfOwner(AgletThread thread) {
+	public void pushThreadAndExitMonitorIfOwner(AgletThread thread) {
 		synchronized (message_queue) {
-			pushThread(thread);
-			if (isOwner()) {
-				processNextMessage();
-			} 
+		    // process another message
+		    if (isOwner()) {
+			processNextMessage();
+		    }
+		    
+		    // push the thread
+		    pushThread(thread);
 		} 
 	}
 	/*
@@ -810,14 +726,10 @@ public   class MessageManagerImpl implements MessageManager,
 			throws IOException, ClassNotFoundException {
 		s.defaultReadObject();
 
-		// state = UNINITIALIZED;
-		this.threadPool = AgletThreadPool.getInstance();
 		message_queue = new MessageQueue();
 		waiting_queue = new MessageQueue();
 	}
-	void removeThread(AgletThread thread) {
-		this.threadPool.push(thread);
-	}
+	
 	public void resume() {		// ThreadGroup group) {
 		synchronized (message_queue) {
 			if (isRunning() || isDestroyed()) {
@@ -922,43 +834,23 @@ public   class MessageManagerImpl implements MessageManager,
 	}
 	
 	
-	
-	
 	public String toString() {
-		int i = 0;
-		StringBuffer buff = new StringBuffer("Active queue\n");
-		buff.append( this.message_queue.toString() );
-		buff.append("\nWaiting queue\n");
-		buff.append( this.waiting_queue.toString() );
-		return buff.toString();
+	    StringBuffer buffer = new StringBuffer(1000);
+	    
+	    buffer.append("MessageManagerImpl queues: ");
+	    buffer.append("\n");
+	    buffer.append(this.message_queue.toString());
+	    buffer.append(this.waiting_queue.toString());
+	    
+	    return buffer.toString();
 	}
-	
-	
 	
 	public void waitMessage() {
 		waitMessage(0);
 	}
-	
-	
-	/**
-	 * Waits untill a message come.
-	 * This method works as follows:
-	 * the owner message (the one currently being processed) is placed
-	 * in the waiting queue and the processNextMessage() method is called
-	 * (i.e., the next message is processed). After that, if the timeout
-	 * is zero the thread is suspended until a new message is activated (i.e, the notify
-	 * into the activate method of MessageImpl is called). Otherwise, a wait(timoeut)
-	 * is called. In the latter case, when the thread wakes up, it checks if the
-	 * message placed in the waiting queue (the old owner, since now it should be
-	 * another) is still waiting. If so, nobody has pulled it out of the waiting
-	 * queue, thus it is removed and inserted in the message queue and 
-	 * processNextMessageIfEmpty is called. This produces the message processing
-	 * only if the current owner is null. When the notifyMessage is called, the waiting
-	 * message is extracted from the waiting queue and reactivated.
-	 */
 	public void waitMessage(long timeout) {
 
-		Message wait = null;
+		MessageImpl wait = null;
 
 		synchronized (message_queue) {
 			if (isOwner() == false) {
@@ -968,24 +860,17 @@ public   class MessageManagerImpl implements MessageManager,
 
 			// put the owner message to the waiting queue
 			waiting_queue.append(wait);
-			wait.setWaiting(true);
+			wait.setWaiting();
 			processNextMessage();
 		} 
 
 		// wait outside of synchronized block to avoid dead lock
 		if (timeout == 0) {
-			// no timeout specified, wait until a new message
-			// comes
-			this.doWait( wait );
-		} 
-		else {
-			// wait for the specified timeout
-			this.doWait( wait, timeout);
-			
-			
-			// if here the timeout expired, thus the wait
-			// message should be processed, check it
-			
+
+			// short cut
+			wait.doWait();
+		} else {
+			wait.doWait(timeout);
 			synchronized (message_queue) {
 				if (wait.isWaiting()) {
 
@@ -996,27 +881,35 @@ public   class MessageManagerImpl implements MessageManager,
 					// consider priority
 					message_queue.insertAtTop(wait);
 
-					// process the message only if there's no other
-					// message being processed
+					// kick
 					processNextMessageIfEmpty();
 
+					// message_queue.notify();
 				} 
 			} 
 
-			// now that the timeout has expired, notify 
-			// the next message
-			// is it right???????????????????????????
-			// Please note that if here the running thread is the
-			// one that owns the message manager, and thus can notify
-			// the message.
-			this.notifyMessage();
+			// if still waiting,
+			// wait again until the handler loop activates this message
+			wait.doWait();
 		} 
 	}
 	
+	/**
+	 * Gets back the sleeping flag value. While the message manager (and the agent) is sleeping
+	 * messages can be enqueued, but the message manager should not process them. 
+	 * @return the sleeping value, true if the message manager is sleeping, false
+	 * if it is not.
+	 */
+	protected synchronized boolean isSleeping() {
+	    return sleeping;
+	}
 	
-	protected void enableMessageQueue(boolean enable){
-		if( this.message_queue != null ){
-			this.message_queue.setEnabled(enable);
-		}
+	/**
+	 * Sets the sleeping value.
+	 * @param sleeping the sleeping to set
+	 */
+	protected synchronized void setSleeping(boolean sleeping) {
+	    logger.debug("The message manager is going to sleep " + sleeping);
+	    this.sleeping = sleeping;
 	}
 }

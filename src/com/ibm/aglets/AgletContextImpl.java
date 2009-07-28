@@ -17,8 +17,10 @@ package com.ibm.aglets;
 import com.ibm.maf.*;
 
 import com.ibm.aglet.*;
+import com.ibm.aglet.message.FutureReply;
 import com.ibm.aglet.message.Message;
 import com.ibm.aglet.message.MessageException;
+import com.ibm.aglet.message.ReplySet;
 import com.ibm.aglet.system.ContextEvent;
 import com.ibm.aglet.system.ContextListener;
 import com.ibm.aglet.util.ImageData;
@@ -80,14 +82,14 @@ import java.applet.AudioClip;
  * environment where the aglets are protected from each other and the host
  * system is secured against malicious aglets.
  * 
- * @version     1.20	$Date: 2009/07/27 10:31:41 $
+ * @version     1.20	$Date: 2009/07/28 07:04:53 $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
  */
 
 final public class AgletContextImpl implements AgletContext {
-    private static LogCategory logCategory = LogInitializer.getCategory("com.ibm.aglets.AgletContextImpl");
+    	private static AgletsLogger logger = AgletsLogger.getLogger(AgletContextImpl.class.getName());
     
 	/*
 	 * secure/unsecure
@@ -161,10 +163,10 @@ final public class AgletContextImpl implements AgletContext {
 
 	AgletID context_aid = new AgletID("00");
 
-	/*
-	 * 
+	/**
+	 * A list of context listeners.
 	 */
-	ContextListener listeners = null;
+	ListenerList listeners = null;
 
 	EventRunner erunner = null;
 
@@ -248,54 +250,52 @@ final public class AgletContextImpl implements AgletContext {
 		// REMIND: critical session
 		_agletProxies.put(aid, proxy);
 	}
-	synchronized public void addContextListener(ContextListener o) {
-		if (ADD_LISTENER_PERMISSION == null) {
-			ADD_LISTENER_PERMISSION = new ContextPermission("listener", 
-					"add");
-		} 
-		checkPermission(ADD_LISTENER_PERMISSION);
-		if (listeners == null) {
-			listeners = o;
-			return;
-		} 
-		synchronized (listeners) {
-			if (listeners instanceof ListenerList) {
-				ListenerList tmp = (ListenerList)listeners;
-
-				if (!tmp.contains(o)) {
-					tmp.addElement(o);
-				} 
-			} else {
-				ListenerList tmp = new ListenerList();
-
-				tmp.addElement(listeners);
-				tmp.addElement(o);
-				listeners = tmp;
-			} 
-		} 
-	}
-	/*
-	 * check permission
+	
+	/**
+	 * Adds the specified context listener to the listener lists, only if the listener
+	 * is not already contained in the listener list and if the agent has the right permission.
 	 */
-
-	// accessable in package
-	void checkPermission(Permission p) {
-		if (!_secure) {
-			return;
-		} 
-
-		// ---- I don't make sense why doPricileged()
-		// - 	final Permission perm = p;
-		// - 	AccessController.doPrivileged(new PrivilegedAction() {
-		// - 	    public Object run() {
-		// - 		AccessController.checkPermission(perm);
-		// - 		return null;
-		// - 	    }
-		// - 	});
-
-		// System.out.println("permission="+String.valueOf(p));
-		AccessController.checkPermission(p);
+	public synchronized void addContextListener(ContextListener listener) {
+	    // check params
+	    if(listener == null)
+		return;
+	    
+	    // check if I've the permission to add a listener
+	    // First of all check if I've got a permission already built, otherwise
+	    // build the add listener permission type and store it.
+	    if (ADD_LISTENER_PERMISSION == null) {
+		ADD_LISTENER_PERMISSION = new ContextPermission("listener","add");
+	    } 
+	    
+	    checkPermission(ADD_LISTENER_PERMISSION);
+	    
+	    // if the listener container is null create a new one
+	    if (listeners == null) 
+		listeners = new ListenerList();
+	    
+	    // now add the new element
+	    if( ! this.listeners.contains(listener)){
+		logger.debug("Adding the context listener " + listener);
+		this.listeners.add(listener);
+	    }
 	}
+	
+	
+	/**
+	 * Checks the specified permission calling the access controller.
+	 * @param permission the permission to check
+	 */
+	void checkPermission(Permission permission) {
+	    // check arguments
+	    if ((! this._secure) || (permission == null)) {
+		return;
+	    } 
+
+	    // check the permission
+	    AccessController.checkPermission(permission);
+	}
+	
+	
 	/**
 	 * Clear the cache
 	 */
@@ -348,6 +348,7 @@ final public class AgletContextImpl implements AgletContext {
 			} 
 			if (url == null) {
 				url = _rm_factory.lookupCodeBaseFor(classname);
+				
 
 				// System.out.println("lookupCodeBaseFor("+classname+")="+String.valueOf(url));
 				if (url == null) {
@@ -966,25 +967,35 @@ final public class AgletContextImpl implements AgletContext {
 			} 
 		} 
 	}
-	synchronized public void removeContextListener(ContextListener o) {
-		if (REMOVE_LISTENER_PERMISSION == null) {
-			REMOVE_LISTENER_PERMISSION = new ContextPermission("listener", 
-					"remove");
-		} 
-		checkPermission(REMOVE_LISTENER_PERMISSION);
-		if (listeners == null) {
-			return;
-		} 
-
-		synchronized (listeners) {
-			if (listeners == o) {
-				listeners = null;
-			} else if (listeners != null 
-					   && listeners instanceof ListenerList) {
-				((ListenerList)listeners).removeElement(o);
-			} 
-		} 
+	
+	/**
+	 * Removes the specified context listener from the list.
+	 */
+	public synchronized void removeContextListener(ContextListener listener) {
+	    // check args
+	    if( listener == null )
+		return;
+	    
+	    // check to see if the agent has the permission to remove the context
+	    // listener. 
+	    if (REMOVE_LISTENER_PERMISSION == null) {
+		REMOVE_LISTENER_PERMISSION = new ContextPermission("listener","remove");
+	    } 
+	    
+	    checkPermission(REMOVE_LISTENER_PERMISSION);
+	    
+	    // if the listener list is null create a new one
+	    if( this.listeners == null )
+		this.listeners = new ListenerList();
+	    
+	    // now remove the specified listener
+	    if( this.listeners.contains(listener)){
+		logger.debug("Removing the context listener " + listener);
+		this.listeners.remove(listener);
+	    }
 	}
+	
+	
 	public AgletProxy retractAglet(Ticket ticket, AgletID aid) 
 			throws IOException, AgletException {
 
@@ -1150,7 +1161,7 @@ final public class AgletContextImpl implements AgletContext {
 
 		_timer.destroy();
 
-		logCategory.info("shutting down.");
+		logger.info("shutting down.");
 		synchronized (creationLock) {
 			while (creating > 0) {
 				try {
@@ -1172,7 +1183,7 @@ final public class AgletContextImpl implements AgletContext {
 			} catch (InvalidAgletException ex) {}
 		} 
 
-		logCategory.debug("[waiting for response..]");
+		logger.debug("[waiting for response..]");
 
 		while (set.hasMoreFutureReplies()) {
 			set.waitForNextFutureReply(5000);
@@ -1184,7 +1195,7 @@ final public class AgletContextImpl implements AgletContext {
 			} 
 		} 
 
-		logCategory.info("[terminating aglets.]");
+		logger.info("[terminating aglets.]");
 
 		MAFFinder finder = null;
 
@@ -1286,7 +1297,7 @@ final public class AgletContextImpl implements AgletContext {
 			_hostingURL = new URL(url.getProtocol(), url.getHost(), 
 								  url.getPort(), '/' + _name);
 		} catch (MalformedURLException ex) {
-			logCategory.error(ex);
+			logger.error(ex);
 		} 
 
 		// 
@@ -1329,14 +1340,14 @@ final public class AgletContextImpl implements AgletContext {
 					ex.printStackTrace();
 				} 
 			} else {
-				logCategory.info("removing deactivated aglets in the context(" 
+				logger.info("removing deactivated aglets in the context(" 
 							 + _name + ")");
 				for (Enumeration e = _persistence.entryKeys(); 
 						e.hasMoreElements(); ) {
 					String key = (String)e.nextElement();
 
 					if (!key.equals("properties-" + _name)) {
-						logCategory.debug("\t" + key);
+						logger.debug("\t" + key);
 						_persistence.removeEntry(key);
 					} 
 				} 

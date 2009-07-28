@@ -20,8 +20,10 @@ import com.ibm.aglet.AgletProxy;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.*;
-import com.ibm.aglets.tahiti.utils.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+
+import org.aglets.util.gui.GUICommandStrings;
 
 /**
  * Class RemoveAgletDialog represents the dialog for removing an Aglet
@@ -32,11 +34,18 @@ import com.ibm.aglets.tahiti.utils.*;
  * @author	Mitsuru Oshima
  */
 
-public class DisposeAgletDialog extends TahitiDialog 
+final class DisposeAgletDialog extends TahitiDialog 
 	implements ActionListener {
+    
+    
+    /**
+     * A list of the agent proxies that must be disposed.
+     */
+    private LinkedList<AgletProxy> proxies = null;
+    
 
 	/*
-	 * The proxies of the Aglet that is to be disposed.
+	 * The proxy of the Aglet that is to be disposed.
 	 */
 	private AgletProxy[] _proxies = null;
 
@@ -44,53 +53,97 @@ public class DisposeAgletDialog extends TahitiDialog
 	 * Constructs the remove Aglet window.
 	 */
 	DisposeAgletDialog(MainWindow parent, AgletProxy proxies[]) {
-		super(parent, bundle.getString("dialog.dispose.title"), false);
-
-		if(proxies==null || proxies.length==0){
-		    JOptionPane.showMessageDialog(this,bundle.getString("dialog.dispose.error.proxy"),bundle.getString("dialog.dispose.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("proxy"));
-		    return;
-		}
+	    super(parent);
+	    
+	    // build up a list from the proxy array
+	    if( proxies != null && proxies.length > 0 ){
+		LinkedList<AgletProxy> proxyList = new LinkedList<AgletProxy>();
 		
-		String msg[] = new String[proxies.length];
-
-		for (int i = 0; i < proxies.length; i++) {
-		    msg[i] = this.getAgletName(proxies[i]);
-		} 
-
+		for(int i=0; i< proxies.length; i++)
+		    proxyList.add(proxies[i]);
 		
+		// add the information about the proxies
+		this.showAgletProxies(proxyList);
+		this.proxies = proxyList;
 		
-		
-		this.getContentPane().add("North", new JLabel(bundle.getString("dialog.dispose.message"), JLabel.CENTER));
-		this.getContentPane().add("Center", new MessagePanel(msg,JLabel.LEFT,false));
-
-		// add buttons
-		this.addJButton(bundle.getString("dialog.dispose.button.ok"),TahitiCommandStrings.OK_COMMAND,IconRepository.getIcon("ok"),this);
-		this.addJButton(bundle.getString("dialog.dispose.button.cancel"),TahitiCommandStrings.CANCEL_COMMAND,IconRepository.getIcon("cancel"),this);
-		
-		_proxies = proxies;
+		// add a text
+		this.showMessage("Please confirm the dispose operation over the " + proxies.length + " agents");
+		this.pack();
+	    }
 	}
-	/*
-	 * Changes the look of the remove Aglet window to an error message window.
-	 * void setError(String message) {
-	 * setMessage("ERROR\n" + message);
-	 * setButtons( OKAY );
-	 * }
-	 */
+	
+	
+	DisposeAgletDialog(MainWindow parent, LinkedList<AgletProxy> proxies){
+	    super(parent);
+	    
+	    // store the list of proxies
+	    this.proxies = proxies;
+	    
+	    // show the list of the agent that I'm going to work on
+	    this.showAgletProxies(proxies);
+	    
+	    // add a text
+	    this.showUserMessage();
+	    this.pack();
 
+	}
+	
+	DisposeAgletDialog(MainWindow parent, AgletProxy proxy){
+	    super(parent);
+	    
+	    // create a new list of one element
+	    this.proxies = new LinkedList<AgletProxy>();
+	    this.proxies.add(proxy);
+	    
+	    this.showAgletProxies(this.proxies);
+	    
+		
+	    // add a text
+	    this.showUserMessage();
+	    this.pack();
+
+	}
+	
+	
 	/**
-	 * Manage events from buttons.
-	 * @param event the event to deal with
+	 * Shows a user message for asking confirmation.
+	 *
+	 */
+	protected void showUserMessage(){
+	    String localizedString = this.translator.translate(this.baseKey + ".userMessage");
+	    this.showMessage(localizedString);
+	}
+	
+
+	/*
+	 * Disposes the selected Aglet.
 	 */
 	public void actionPerformed(ActionEvent event) {
-	    String command = event.getActionCommand();
-
-	    if(command.equals(TahitiCommandStrings.OK_COMMAND) && this._proxies!=null && this._proxies.length>0){
-	        for(int i=0; i<this._proxies.length;i++){
-	            this.getMainWindow().disposeAglet(this._proxies[i]);
-	        }
-	    }
+	    if( event == null )
+		return;
 	    
-	    this.setVisible(false);
-	    this.dispose();
+	    String command = event.getActionCommand();
+	    
+	    if( GUICommandStrings.OK_COMMAND.equals(command) 
+	       && this.proxies != null ){
+		// dispose
+		MainWindow mWindow = this.getMainWindow();
+		this.setVisible(false);
+		
+		
+		// iterate on each aglet
+		Iterator iter = this.proxies.iterator();
+		while (iter != null && iter.hasNext()) {
+		    AgletProxy currentProxy = (AgletProxy) iter.next();
+		    mWindow.disposeAglet(currentProxy);
+		    
+		}
+		
+		this.dispose();
+		 
+	    }
+	    else
+		super.actionPerformed(event);    
+		
 	}
 }

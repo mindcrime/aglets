@@ -20,7 +20,7 @@ import java.io.IOException;
  * The <tt>PolicyFileParsingException</tt> class shows that
  * the file cannot be parsed by the reason of illegal format.
  * 
- * @version     1.00    $Date: 2009/07/27 10:31:40 $
+ * @version     1.00    $Date: 2009/07/28 07:04:53 $
  * @author      ONO Kouichi
  */
 public class PolicyFileParsingException extends IOException {

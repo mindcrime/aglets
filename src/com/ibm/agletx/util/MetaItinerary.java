@@ -24,7 +24,7 @@ import java.io.IOException;
  * an itineray class to log visited and unvisited destinations during
  * an aglet's tour.
  * 
- * @version     1.20    $Date: 2009/07/27 10:31:41 $
+ * @version     1.20    $Date: 2009/07/28 07:04:53 $
  * @author      Yariv Aridor
  */
 public class MetaItinerary extends MobilityAdapter 

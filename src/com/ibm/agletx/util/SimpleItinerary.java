@@ -61,7 +61,7 @@ import java.io.IOException;
  * In this way, an aglet can specify both a destination
  * to go and a message to be handled at the destination.
  * 
- * @version     1.00    $Date: 2009/07/27 10:31:41 $
+ * @version     1.00    $Date: 2009/07/28 07:04:53 $
  * @author      Mitsuru Oshima
  */
 

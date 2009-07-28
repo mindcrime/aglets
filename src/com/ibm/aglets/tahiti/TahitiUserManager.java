@@ -24,7 +24,7 @@ public final class TahitiUserManager extends UserManager {
 		d.popupAtCenterOfScreen();
 		d.toFront();
 		d.waitForAuthentication();
-		if (d.isAuthenticated() == false) {
+		if (d.checkAuthentication() == false) {
 			System.out.println("Authentication Failed");
 			System.exit(1);
 		} 

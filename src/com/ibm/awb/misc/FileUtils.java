@@ -271,7 +271,7 @@ public class FileUtils {
 			return (abs.toUpperCase().startsWith(path) || 
 
 			// 
-			// the file is like /e:/test/bar..
+			// the file is like /e:/test/memoryBar..
 			// 
 			(abs.charAt(0) == '/' && abs.length() > 2 && abs.charAt(2) == ':' 
 			 && abs.toUpperCase().startsWith('/' + path)));

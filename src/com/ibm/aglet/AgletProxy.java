@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Enumeration;
 
+import com.ibm.aglet.message.FutureReply;
 import com.ibm.aglet.message.Message;
 import com.ibm.aglet.message.MessageException;
 
@@ -38,7 +39,7 @@ import com.ibm.aglet.message.MessageException;
  * interface is to provide a mechanism to control and limit direct access to
  * aglets.
  * 
- * @version     1.50    $Date: 2009/07/27 10:31:41 $
+ * @version     1.50    $Date: 2009/07/28 07:04:53 $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi

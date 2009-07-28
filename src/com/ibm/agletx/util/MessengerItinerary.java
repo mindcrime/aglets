@@ -73,7 +73,7 @@ import java.io.IOException;
  * aglet. The invocation of <tt>itinerary.startTrip()</tt> causes the
  * messenger aglet to start its trip among the hosts of the receiver aglets.
  * 
- * @version     1.20    $Date: 2009/07/27 10:31:41 $
+ * @version     1.20    $Date: 2009/07/28 07:04:53 $
  * @author      Yariv Aridor
  */
 

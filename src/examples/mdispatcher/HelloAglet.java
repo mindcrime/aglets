@@ -36,7 +36,7 @@ import java.awt.event.*;
  * <tt> HelloAglet </tt> is a revised version of examples.hello.HelloAglet,
  * which uses MethodDispatcher class to handle incoming messages.
  * 
- * @version     1.00	$Date: 2009/07/27 10:31:41 $
+ * @version     1.00	$Date: 2009/07/28 07:04:53 $
  * @author	Danny B. Lange
  * @author	Mitsuru Oshima
  * @see examples.hello.HelloAglet

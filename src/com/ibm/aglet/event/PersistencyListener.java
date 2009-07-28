@@ -26,7 +26,7 @@ package com.ibm.aglet.event;
 /**
  * The listener interface for receiving persistency events on an aglet.
  * 
- * @version     1.00    $Date: 2009/07/27 10:31:41 $
+ * @version     1.00    $Date: 2009/07/28 07:04:53 $
  * @author      Mitsuru Oshima
  */
 public interface PersistencyListener extends java.util.EventListener, 

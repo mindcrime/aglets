@@ -25,10 +25,10 @@ final class EventMessage extends MessageImpl {
 		future = new FutureReplyImpl();
 		event = ev;
 	}
-	final void handle(LocalAgletRef ref) throws InvalidAgletException {
+	public final void handle(LocalAgletRef ref) throws InvalidAgletException {
 		ref.dispatchEvent(event);
 	}
-	public final boolean isDelegatable() {
+	boolean isDelegatable() {
 		return false;
 	}
 	public String toString() {

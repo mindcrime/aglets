@@ -53,7 +53,7 @@ final class MessageBroker {
 				MessageImpl origin = (MessageImpl)msg;
 				MessageImpl clone = (MessageImpl)origin.clone();
 
-				FutureReplyImpl future = (FutureReplyImpl)origin.getFutureReply();
+				FutureReplyImpl future = origin.future;
 				byte msg_bytes[] = MessageOutputStream.toByteArray(rm, msg);
 
 				MAFAgentSystem local = 

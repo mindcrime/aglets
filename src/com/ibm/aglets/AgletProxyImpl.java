@@ -25,6 +25,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import com.ibm.aglet.*;
+import com.ibm.aglet.message.FutureReply;
 import com.ibm.aglet.message.Message;
 import com.ibm.aglet.message.MessageException;
 
@@ -37,7 +38,7 @@ import com.ibm.awb.weakref.VirtualRef;
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
  */
-final class AgletProxyImpl extends VirtualRef implements AgletProxy {
+public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
 
 	static final long serialVersionUID = 4237434474691700860L;
 
@@ -330,7 +331,17 @@ final class AgletProxyImpl extends VirtualRef implements AgletProxy {
 			throw new InvalidAgletException(ex.getMessage());
 		} 
 	}
+	
 	public String toString() {
 		return "AgletProxyImpl : " + getAgletRef();
+	}
+	
+	public String toHTMLString(){
+	    AgletRef ref = this.getAgletRef();
+	    
+	    if( ref instanceof LocalAgletRef )
+		return ((LocalAgletRef)ref).toHTMLString();
+	    else
+		return ref.toString();
 	}
 }

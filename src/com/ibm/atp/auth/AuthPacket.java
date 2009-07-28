@@ -42,15 +42,14 @@ import org.aglets.log.*;
  * The <tt>AuthPacket</tt> class is the challenge-response authentication
  * packet class.
  * 
- * @version     1.00    $Date: 2009/07/27 10:31:41 $
+ * @version     1.00    $Date: 2009/07/28 07:04:53 $
  * @author      ONO Kouichi
  */
 public class AuthPacket extends Object {
     
     // Logging
-    private final static LogCategory log
-            = LogInitializer.getCategory( AuthPacket.class.getName() );
-            
+    private static AgletsLogger logger = AgletsLogger.getLogger(AuthPacket.class.getName());
+    
 	/**
 	 * carriage return & line feed
 	 */
@@ -888,7 +887,7 @@ public class AuthPacket extends Object {
 		return authManner;
 	}
 	static final void verboseOut(String msg) {
-        log.debug("VO:" +msg);
+        logger.debug("VO:" +msg);
 	}
 	/**
 	 * Writes packet to output stream.

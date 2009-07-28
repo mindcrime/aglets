@@ -45,7 +45,7 @@ import java.util.Enumeration;
  * AGLET
  * BYTECODE
  * 
- * @version     1.20	$Date: 2009/07/27 10:31:41 $
+ * @version     1.20	$Date: 2009/07/28 07:04:53 $
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
  */

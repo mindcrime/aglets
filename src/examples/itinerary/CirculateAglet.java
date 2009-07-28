@@ -26,7 +26,7 @@ import java.awt.event.*;
 /**
  * <tt> CirculateAglet </tt> illustrates how to use SeqPlanItinerary.
  * 
- * @version     1.00	$Date: 2009/07/27 10:31:42 $
+ * @version     1.00	$Date: 2009/07/28 07:04:53 $
  * @author	Mitsuru Oshima
  */
 public class CirculateAglet extends Aglet {

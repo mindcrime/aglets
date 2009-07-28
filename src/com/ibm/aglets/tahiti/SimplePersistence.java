@@ -26,7 +26,7 @@ import com.ibm.awb.misc.FileUtils;
 
 
 /**
- * @version     1.10	$Date: 2009/07/27 10:31:40 $
+ * @version     1.10	$Date: 2009/07/28 07:04:53 $
  * @author      Mitsuru Oshima
  */
 final class SimplePersistence implements com.ibm.aglets.Persistence {

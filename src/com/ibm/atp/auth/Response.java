@@ -20,7 +20,7 @@ import com.ibm.awb.misc.Hexadecimal;
  * The <tt>Response</tt> class is byte sequence which is a response
  * authentication.
  * 
- * @version     1.00    $Date: 2009/07/27 10:31:41 $
+ * @version     1.00    $Date: 2009/07/28 07:04:53 $
  * @author      ONO Kouichi
  */
 final public class Response extends ByteSequence {

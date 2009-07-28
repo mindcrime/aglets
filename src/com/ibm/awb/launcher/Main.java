@@ -22,6 +22,8 @@ import java.util.Vector;
 import java.util.Enumeration;
 import java.security.cert.Certificate;
 
+import javax.swing.SwingUtilities;
+
 import com.ibm.maf.*;
 import com.ibm.aglet.*;
 import com.ibm.aglet.system.*;
@@ -34,15 +36,15 @@ import com.ibm.aglets.tahiti.TahitiDaemon;
 import com.ibm.awb.misc.FileUtils;
 import com.ibm.awb.misc.Resource;
 import com.ibm.awb.misc.LogStream;
-import org.aglets.log.LogCategory;
-import org.aglets.log.LogInitializer;
+
+import org.aglets.log.AgletsLogger;
 
 /**
  *  Aglets server bootstrap.
  *
  * @author     Hideki Tai
  * @created    July 22, 2001
- * @version    $Revision: 1.9 $ $Date: 2009/07/27 10:31:42 $ $Author: cat4hire $
+ * @version    $Revision: 1.10 $ $Date: 2009/07/28 07:04:54 $ $Author: cat4hire $
  */
 public class Main {
     private final static String         VIEWER_TAHITI =
@@ -67,6 +69,7 @@ public class Main {
 
     private static String               FS;
     private static String               PS;
+    private static AgletsLogger logger = AgletsLogger.getLogger(Main.class.getName());
 
 
     /**
@@ -102,12 +105,15 @@ public class Main {
         if (_control_port_num > 0) {
             system_props.put("maf.controlport", Integer.toString(_control_port_num));
         }
-        try {
-            // Logging starts here!
-            bootstrap();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+
+        try{
+	    bootstrap();
+	}catch(Exception e){
+	    System.err.println("Exception while performing the platform bootstrap, unable to start!");
+	    e.printStackTrace();
+	    System.exit(1);
+	}
+        
     }
 
 
@@ -259,11 +265,9 @@ public class Main {
     private static void bootstrap() throws Exception {
 
         // Initialize logging system.
-        String initializerName = System.getProperty("aglets.logger.class",
-            "org.aglets.log.quiet.QuietInitializer" );
+        String initializerName = System.getProperty("aglets.logger.class","com.ibm.awb.launcher.Main" );
         Class.forName(initializerName);
-        LogCategory cat = LogInitializer.getCategory(Main.class.getName());
-        cat.info("Logging system initialized!");
+        logger.info("Logging system initialized!");
 
         // Initializes AWT and Audio classes.
         if (!(_nogui || _daemon)) {
@@ -329,7 +333,7 @@ public class Main {
         MAFAgentSystem maf_system = new MAFAgentSystem_AgletsImpl(runtime);
         String protocol = System.getProperties().getProperty("maf.protocol");
 
-        cat.debug("Initializing handler: "+protocol);
+        logger.debug("Initializing handler: "+protocol);
         MAFAgentSystem.initMAFAgentSystem(maf_system, protocol);
 
         // Initializes Tahiti(part of the agent system)
@@ -577,16 +581,6 @@ public class Main {
         // Get mandatory properties
         String aglets_home = props.getProperty("install.root");
 
-
-        // Luca: only beacuse I don't understand how to pass these values thru eclipse!
-        aglets_home="f:\\aglets2.0.2";
-        String icons_file = aglets_home+"\\cnf\\icons.prop";
-        props.setProperty("aglets.home",aglets_home);
-        props.setProperty("aglets.icons",icons_file);
-        props.setProperty("aglets.icons.path",aglets_home+"\\icons");
-        System.out.println("Aglets_home = "+aglets_home);
-
-        
         // install.root will be given the script produced
         // by InstallShield JavaEdition.
         if (aglets_home == null) {
@@ -595,17 +589,9 @@ public class Main {
                 System.err.println("Please specify aglets.home property");
                 System.exit(1);
             }
-            else{
-            	System.out.println("Running for the aglet installation aglets_home="+aglets_home);
-            }
         }
-        
-        
-        
+
         String user_home = props.getProperty("user.home", null);
-        
-        System.out.println("Aglets home: "+aglets_home);
-        
 
         if (user_home == null || user_home.length() == 0) {
             user_home = FileUtils.getUserHome();
@@ -626,10 +612,15 @@ public class Main {
         }
 
         // aglets.class.path
-        p = props.getProperty("aglets.class.path", null);
-        if (p == null) {
-            props.put("aglets.class.path", pathConcat(aglets_home, "public"));
-        }
+        p = props.getProperty("aglets.class.path", props.getProperty("java.class.path"));
+        String agletClasspath= pathConcat(aglets_home, "public");
+        if( agletClasspath != null && agletClasspath.length() > 0 )
+            p+= File.pathSeparator + agletClasspath;
+        
+        props.put("aglets.class.path", p);
+        logger.info("Classpath is specified as " + props.get("aglets.class.path"));
+        logger.info("Real classpath = "  +props.getProperty("java.class.path"));
+
 
         // aglets.public.root
         p = props.getProperty("aglets.public.root", null);
@@ -686,5 +677,8 @@ public class Main {
         System.err.println("        properties in the following file will override");
         System.exit(1);
     }
+
+
+  
 }
 

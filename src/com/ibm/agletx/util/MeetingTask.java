@@ -18,7 +18,7 @@ import com.ibm.agletx.patterns.Meeting;
 /**
  * This class objectifies a task to be perform upon arrival to a meeting.
  * 
- * @version     1.20    $Date: 2009/07/27 10:31:41 $
+ * @version     1.20    $Date: 2009/07/28 07:04:53 $
  * @author      Yariv Aridor
  * @see MeetingsItinerary
  */

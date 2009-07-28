@@ -18,136 +18,172 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
-import java.io.FileInputStream;
 import java.security.cert.Certificate;
-import java.util.Properties;
-
-import com.ibm.aglet.system.AgletRuntime;
-import com.ibm.aglets.tahiti.utils.IconRepository;
 
 import javax.swing.*;
-import com.ibm.aglets.tahiti.utils.*;
 
-/**
- * Converted to swing by Luca Ferrari.
- *
- */
-public class LoginDialog extends TahitiWindow implements ActionListener {
+import org.aglets.util.gui.GUICommandStrings;
+import org.aglets.util.gui.ImagePanel;
+import org.aglets.util.gui.JComponentBuilder;
 
-	String _username = null;
-	Certificate _certificate = null;
+import com.ibm.aglet.system.AgletRuntime;
+import javax.swing.border.*;
 
-	JTextField _account = new JTextField(12);
-	JPasswordField _password = new JPasswordField(12);
+public class LoginDialog extends TahitiWindow {
 
-	private JButton _LoginButton = null;
+    	/**
+    	 * The username of the user that is going to login.
+    	 */
+	protected String username = null;
+	
+	/**
+	 * The certifcate of the user.
+	 */
+	protected Certificate certificate = null;
 
+	/**
+	 * The texfields for the username and the password.
+	 */
+	protected JTextField     usernameField = null;
+	protected JPasswordField passwordField = null;
+	
+
+	
 	private boolean auth = false;
 	Object lock = new Object();
 
-	public LoginDialog() {
-		super(bundle.getString("dialog.login.title"));
-		
-		// initialize the icon repository
-		IconRepository.loadIconFromPropertyFile(System.getProperty("aglets.icons"));
-		// set the icon of this window
-		this.setIconImage(IconRepository.getImage("login"));
-
-				
-		_username = UserManager.getDefaultUsername();
-		_account.setText(_username);
-		_password.setEchoChar('*');
-		_password.setText("");
-
-		GridBagPanel p = new GridBagPanel();
-		GridBagConstraints cns = new GridBagConstraints();
-
-		cns.fill = GridBagPanel.HORIZONTAL;
-		p.setConstraints(cns);
-
-		p.addLabeled("Username:", _account);
-		p.addLabeled("Password:", _password);
-		ImagePanel image =new ImagePanel(System.getProperty("aglets.home")+"/icons/logo_aglets.jpg");
-		this.getContentPane().add("Center", image);
-		this.getContentPane().add("North", p);
-		
-		
-		// add buttons
-		this.addJButton(bundle.getString("dialog.login.button.ok"),TahitiCommandStrings.OK_COMMAND,IconRepository.getIcon("ok"),this,bundle.getString("dialog.login.button.tooltip.ok"));
-		this.addJButton(bundle.getString("dialog.login.button.cancel"),TahitiCommandStrings.CANCEL_COMMAND,IconRepository.getIcon("cancel"),this,bundle.getString("dialog.login.button.tooltip.cancel"));
-
-		// add the listener for the password field
-		this._password.setActionCommand(TahitiCommandStrings.OK_COMMAND);
-		this._password.addActionListener(this);
-		
-		this.setSize(image.getWidth(),image.getHeight()+100);
-		
-				
-	}
-	
-	/**
-	 * Manage events from buttons.
-	 * @param event the event to manage
-	 */
-	public void actionPerformed(ActionEvent event) {
-		String command = event.getActionCommand();
-		
-		if(command.equals(TahitiCommandStrings.OK_COMMAND)){
-		    this.checkPassword();
-		}
-		else
-		if(command.equals(TahitiCommandStrings.CANCEL_COMMAND)){
-		    System.exit(1);
-		}
-	}
-		
 	
 	
 	/**
-	 * Check the inserted password.
+	 * Builds up the login dialog with the main components, that are a text field
+	 * for the username and one for the password.
 	 *
 	 */
-	public void checkPassword() {
-		_username = _account.getText();
-		String password = new String(_password.getPassword());
-		AgletRuntime runtime = AgletRuntime.getAgletRuntime();
+	public LoginDialog() {
+		super();
+		this.setTitle("Tahiti Log-in");
+		this.shouldExitOnClosing = true;	// if this window is closed without the ok button
+							// exit from the application
+		
+		
+		// get the default username
+		username = UserManager.getDefaultUsername();
+		
+		// create and initialize the text fields
+		this.usernameField = JComponentBuilder.createJTextField(12,this.username, this.baseKey + ".usernameField");
+		this.passwordField = JComponentBuilder.createJPasswordField(12);
+		this.usernameField.setText(this.username);
 
-		if (runtime == null) {
-			return;
-		} 
-		_certificate = runtime.authenticateOwner(_username, password);
-		if (_certificate != null) {
-			auth = true;
-			dispose();
-			synchronized (lock) {
-				lock.notifyAll();
-			} 
-		} else {
-			JOptionPane.showMessageDialog(this,bundle.getString("dialog.login.error.loginfailed"),bundle.getString("dialog.login.error.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("error"));
-			_password.setText("");
-		} 
-	}
+		// create a panel for containing the username and password field
+		JPanel northPanel = new JPanel();
+		northPanel.setLayout(new GridLayout(2,2));
+		JLabel label = JComponentBuilder.createJLabel(this.baseKey + ".usernameLabel");
+		northPanel.add(label);
+		this.usernameField = JComponentBuilder.createJTextField(15, this.username, this.baseKey + ".usernameField");
+		northPanel.add(this.usernameField);
+		label = JComponentBuilder.createJLabel(this.baseKey + ".passwordLabel");
+		northPanel.add(label);
+		this.passwordField = JComponentBuilder.createJPasswordField(15);
+		northPanel.add(this.passwordField);
+		
+		// create the image panel with the logo
+		ImagePanel imgPanel = JComponentBuilder.createLogoPanel();
+		
+		
+		this.add(northPanel, BorderLayout.NORTH);
+		if( imgPanel != null  ){
+		    // create a pseudo-panel to center the image
+		    JPanel cPanel = new JPanel();
+		    cPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+		    cPanel.add(imgPanel);
+		    this.add(cPanel, BorderLayout.CENTER);
+		}
+		
+	
+		this.pack();
+		this.setVisible(true);
 
-	public Certificate getCertificate() {
-		return _certificate;
 	}
 	
-	public String getUsername() {
-		return _username;
+	
+
+	
+	/**
+	 * Manages events from the button
+	 */
+	public void actionPerformed(ActionEvent ev) {
+	    if( ev == null )
+		return;
+	    
+		String command = ev.getActionCommand();
+		
+		
+		if( GUICommandStrings.OK_COMMAND.equals(command)){
+		    // ok button pressed, check for the authentication
+		    if( ! this.checkAuthentication() )
+			// show a gui with problem for authentication here
+			JComponentBuilder.showErrorDialog(this, this.baseKey + ".errorDialog");
+		}
+		else
+		    super.actionPerformed(ev);
 	}
 	
-	public boolean isAuthenticated() {
-		return auth;
+	/**
+	 * Checks if the username and password are correct and the user can authenticate
+	 * itself into the system.
+	 * @return true if the user has been authenticated.
+	 */
+	public  boolean checkAuthentication(){
+	    // get the username and the password
+	    this.username = this.usernameField.getText();
+	    String password = new String(this.passwordField.getPassword());
+	    
+	    // now get the aglet runtime and try to authenticate
+	    AgletRuntime runtime = AgletRuntime.getAgletRuntime();
+	    // check if the aglet runtime works well
+	    if( runtime == null ){
+		logger.error("Cannot get the aglet runtime object!");
+		return false;
+	    }
+	    
+	    // get the certificates
+	    this.certificate = runtime.authenticateOwner(this.username, password);
+	    if( this.certificate != null ){
+		// the user has been authenticated
+		logger.info("Authenticated user " + this.username);
+		this.auth = true;
+		this.dispose();
+		synchronized( this.lock ){
+		    this.lock.notify();
+		}
+		return true;
+	    }
+	    else{
+		logger.error("Cannot authenticate the user " + this.username);
+		this.auth = false;
+		this.passwordField.setText("");
+		return false;
+	    }
+		
 	}
 	
+	/**
+	 * If the username field is empty than move the focus on it, otherwise
+	 * move the focus on the password field.
+	 */
 	private void requestFocusOnInputText() {
-		if (_username == null || _username.equals("")) {
-			_account.requestFocus();
-		} else {
-			_password.requestFocus();
-		} 
+	    if (this.username == null || this.username.equals("")) 
+		this.usernameField.requestFocus();
+	    else
+		this.passwordField.requestFocus();
+		
 	}
 	
+	
+	/**
+	 * Waits for the user to make the authentication.
+	 *
+	 */
 	public void waitForAuthentication() {
 		synchronized (lock) {
 			requestFocusOnInputText();		// It looks no effect.
@@ -161,6 +197,57 @@ public class LoginDialog extends TahitiWindow implements ActionListener {
 		} 
 	}
 	
-	
 
+	
+	 /**
+	 * Gets back the username.
+	 * @return the username
+	 */
+	public synchronized final String getUsername() {
+	    return username;
+	}
+
+
+
+
+	/**
+	 * Sets the username value.
+	 * @param username the username to set
+	 */
+	public synchronized final void setUsername(String username) {
+	    this.username = username;
+	}
+
+
+
+
+	/**
+	 * Gets back the certificate.
+	 * @return the certificate
+	 */
+	public synchronized final Certificate getCertificate() {
+	    return certificate;
+	}
+
+
+
+
+	// only for testing
+	public static void main(String argv[]){
+	    LoginDialog dialog = new LoginDialog();
+	    //JFrame f = new JFrame();
+	    //f.setSize(300,300);
+	    //f.setJMenuBar(new TahitiMenuBar(null));
+	    //f.add(new TahitiToolBar(null));
+	    //f.setVisible(true);
+	    //dialog.setVisible(true);
+	    //TahitiDialog dialog2 = new TahitiDialog(dialog);
+	    //dialog2.setVisible(true);
+	    //CloneAgletDialog dialog2 = new CloneAgletDialog(new MainWindow(null), null);
+	    //dialog2.setVisible(true);
+	    //dialog2.setModal(true);
+	    MainWindow window = new MainWindow(null);
+	    
+	}
+	
 }

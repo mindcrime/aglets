@@ -70,7 +70,7 @@ import java.io.IOException;
  * object (assigned to the <tt>SlaveItinerary</tt> object via <tt>setTask()</tt>)
  * is automatically invoked.
  * 
- * @version     1.20    $Date: 2009/07/27 10:31:41 $
+ * @version     1.20    $Date: 2009/07/28 07:04:53 $
  * @author      Yariv Aridor
  */
 

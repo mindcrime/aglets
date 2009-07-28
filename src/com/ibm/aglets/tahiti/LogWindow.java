@@ -30,11 +30,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ResourceBundle;
-
-import javax.swing.*;
-import com.ibm.aglets.tahiti.utils.*;
-import java.awt.*;
 
 /**
  * <tt> LogWindow </tt>
@@ -44,17 +39,17 @@ import java.awt.*;
  * @author	Mitsuru Oshima
  */
 
-final class LogWindow extends TahitiWindow implements ActionListener {
+final class LogWindow extends Frame implements ActionListener {
 
-    
-    
-    
 	/*
 	 * The text area in which log messages are shown.
 	 */
-	private JTextArea _logList = new JTextArea();
+	private TextArea _logList = new TextArea();
 
-	
+	/*
+	 * Layouts all components
+	 */
+	GridBagLayout grid = new GridBagLayout();
 
 	private int lastPos = 0;	// for the performance reason.
 
@@ -65,47 +60,52 @@ final class LogWindow extends TahitiWindow implements ActionListener {
 	 * Constructs a log window.
 	 */
 	LogWindow() {
-	    super(bundle.getString("window.log.title"));
-		_logList.setBackground(Color.yellow);
-		this._logList.setForeground(Color.BLACK);
+		super("Log Information");
+		Util.setBackground(this);
+		Util.setFixedFont(_logList);
+
+		// setBackground( DefaultResource.getBackground() );
+		// _logList.setFont( DefaultResource.getFixedFont() );
+		_logList.setBackground(Color.white);
 		_logList.setEditable(false);
 
-		// add the log panel
-		this.getContentPane().add("Center",new JScrollPane(this._logList));
-		
-		
-		
-		// button panel
-		this.addJButton(bundle.getString("window.log.button.clear"),TahitiCommandStrings.CLEAR_CACHE_COMMAND,IconRepository.getIcon("clear_cache"),this,bundle.getString("window.log.tooltip.clear"));
-		this.addJButton(bundle.getString("window.log.button.close"),TahitiCommandStrings.CANCEL_COMMAND,IconRepository.getIcon("cancel"),this,bundle.getString("window.log.tooltip.close"));
-		
+		GridBagConstraints cns = new GridBagConstraints();
+
+		setLayout(grid);
+
+		cns.weightx = 1.0;
+		cns.gridwidth = GridBagConstraints.REMAINDER;
+		cns.fill = GridBagConstraints.HORIZONTAL;
+		cns.insets = new Insets(5, 5, 5, 5);
+
+		cns.weighty = 1.0;
+		cns.fill = GridBagConstraints.BOTH;
+		addCmp(_logList, cns);
+
+		cns.weighty = 0.0;
+		cns.fill = GridBagConstraints.HORIZONTAL;
+		addCmp(makeButtonPanel(), cns);
+
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent ev) {
-			    
 				setVisible(false);
-				dispose();
 			} 
 		});
-		
-		// set the window visible
-		this.pack();
 	}
 	
-	
-	public void actionPerformed(ActionEvent event) {
-		String command = event.getActionCommand();
+	public void actionPerformed(ActionEvent ev) {
+		String cmd = ev.getActionCommand();
 
-		if(command.equals(TahitiCommandStrings.CLEAR_CACHE_COMMAND)){
-		    // clear the log panel
-		    this.clearLog();
-		}
-		else
-		if(command.equals(TahitiCommandStrings.CANCEL_COMMAND)){
-		    this.setVisible(false);
-		}
+		if ("close".equals(cmd)) {
+			setVisible(false);
+		} else if ("clear".equals(cmd)) {
+			clearLog();
+		} 
 	}
-	
-	
+	private void addCmp(Component cmp, GridBagConstraints cns) {
+		grid.setConstraints(cmp, cns);
+		add(cmp);
+	}
 	public void appendText(String line) {
 		line = line + '\n';
 		_logList.insert(line, lastPos);
@@ -127,12 +127,33 @@ final class LogWindow extends TahitiWindow implements ActionListener {
 	/*
 	 * Clears logs shown in the console.
 	 */
-	public synchronized void clearLog() {
+	public void clearLog() {
+		synchronized (_logList) {
 			lastPos = 0;
 			_logList.setText("");
-		 
+		} 
 	}
-	
-	
+	/*
+	 * Closes log window
+	 */
+	private void closeLog() {
+		setVisible(false);
+	}
+	private Panel makeButtonPanel() {
+		Panel buttonPanel = new Panel();
 
+		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+		Button c = new Button("Close");
+
+		c.setActionCommand("close");
+		c.addActionListener(this);
+		buttonPanel.add(c);
+
+		c = new Button("Clear Log");
+		c.setActionCommand("clear");
+		c.addActionListener(this);
+		buttonPanel.add(c);
+		return buttonPanel;
+	}
 }

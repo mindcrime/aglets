@@ -19,14 +19,15 @@ import com.ibm.aglet.AgletProxy;
 import com.ibm.aglet.AgletInfo;
 
 import com.ibm.aglets.*;
-import com.ibm.aglets.tahiti.utils.IconRepository;
-import com.ibm.aglets.tahiti.utils.TahitiCommandStrings;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Label;
-import javax.swing.*;
-import java.awt.*;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+import org.aglets.util.gui.*;
 
 /**
  * Class CloneAgletDialog is the dialog for cloning an Aglet instance.
@@ -41,58 +42,70 @@ final class CloneAgletDialog extends TahitiDialog implements ActionListener {
 	/*
 	 * The proxy of the Aglet that is to be cloned
 	 */
-	private AgletProxy _proxy = null;
+	private AgletProxy proxy = null;
 
 	/*
 	 * Constructs the clone Aglet window.
-	 * @param parent the TahitiWindow parent of this dialog window
-	 * @param proxy the proxy of the aglet to clone
 	 */
 	CloneAgletDialog(MainWindow parent, AgletProxy proxy) {
-		super(parent, bundle.getString("dialog.clone.title"), true);
-		
-		_proxy = proxy;
-
-		String msg = "Invalid Aglet";
-
-		try {
-			AgletInfo info = proxy.getAgletInfo();
-			msg = (proxy == null ? "No Aglet selected" : info.getAgletClassName());
-		} catch (InvalidAgletException ex) {
-		    ex.printStackTrace();
-		}
-
-		this.getContentPane().add("North",new JLabel(bundle.getString("dialog.clone.message"),JLabel.CENTER));
-		this.getContentPane().add("Center", new MessagePanel(msg));
-
-		JButton clone = new JButton(bundle.getString("dialog.clone.button.clone"),IconRepository.getIcon("clone"));
-		clone.setActionCommand(TahitiCommandStrings.CLONE_COMMAND);
-		clone.addActionListener(this);
-		JButton close = new JButton(bundle.getString("dialog.clone.button.cancel"),IconRepository.getIcon("cancel"));
-		close.setActionCommand(TahitiCommandStrings.CANCEL_COMMAND);
-		close.addActionListener(this);
-		
-		JPanel buttonPanel  = new JPanel();
-		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		buttonPanel.add(clone);
-		buttonPanel.add(close);
-		
-		this.getContentPane().add("South",buttonPanel);
-		this.pack();
-	}
-	
-	/**
-	 * Manage action events.
-	 * @param event the event to manage
-	 */
-	public void actionPerformed(ActionEvent event) {
-	    String command = event.getActionCommand();
+	    super((JFrame) parent);
 	    
-	    if(command!=null && command.equals(TahitiCommandStrings.CLONE_COMMAND)){
-	        getMainWindow().cloneAglet(_proxy);    
+	    // set the title
+	    this.setTitle(JComponentBuilder.getTitle(this.baseKey));
+	    
+	    // store the proxy
+	    this.proxy = proxy;
+
+	    // try to understand if this is a valid agent
+	    String message = null;
+	    AgletInfo info = null;
+	    try{
+	    if( this.proxy == null || (info = this.proxy.getAgletInfo()) == null ){
+		// show an error message
+		message = this.translator.translate(this.baseKey + ".selectionError");
+		this.showMessage(message);
+	    }
+	    else
+		// try to get the information about this agent
+		message = this.translator.translate(this.baseKey + ".confirmMessage");
+		this.showMessage(message);
+		this.showAgletInfo(info);
+		
+	    }catch(InvalidAgletException ex){
+		JOptionPane.showMessageDialog(this,
+			                      this.translator.translate(this.baseKey + ".infoError"),
+			                      this.translator.translate(this.baseKey + ".infoError.title"),
+			                      JOptionPane.ERROR_MESSAGE
+			                      );
+	    }
+	    finally{
+		this.pack();
 	    }
 	    
-		setVisible(false);
-		dispose();
+
+	}
+	
+	
+	/**
+	 * Manages events from the buttons and other components.
+	 * If the command comes from the OK/Clone event that means the user wants
+	 * to clone the agent, and thus I clone it and dispose this window, otherwise
+	 * I leave the parent frame to manage the event.
+	 */
+	public void actionPerformed(ActionEvent ev) {
+	    // check params
+	    if( ev == null )
+		return;
+	    
+	    String command = ev.getActionCommand();
+	    
+	    if( GUICommandStrings.OK_COMMAND.equals(command) ){
+		// the user wants to clone the agent
+		this.getMainWindow().cloneAglet(this.proxy);
+		this.setVisible(false);
+		this.dispose();
+	    }
+	    else
+		super.actionPerformed(ev);
 	}
 }

@@ -32,7 +32,7 @@ import java.awt.event.*;
  * Remote stationary aglets are created afterwhich a mobile aglet
  * meet with them to dispose them.
  * 
- * @version     1.00	$Date: 2009/07/27 10:31:42 $
+ * @version     1.00	$Date: 2009/07/28 07:04:53 $
  * @author	Yariv Aridor
  */
 public class VisitingAglet extends Aglet {

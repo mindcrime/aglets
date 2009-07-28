@@ -14,7 +14,8 @@ package com.ibm.aglets;
  * deposited with the U.S. Copyright Office.
  */
 
-import com.ibm.aglet.MessageManager;
+import com.ibm.aglet.message.MessageManager;
+import com.ibm.aglets.thread.AgletThread;
 
 // import com.ibm.awb.misc.DigestTable;
 import com.ibm.awb.misc.Archive;

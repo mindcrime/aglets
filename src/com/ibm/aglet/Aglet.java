@@ -26,7 +26,9 @@ package com.ibm.aglet;
 import java.security.PermissionCollection;
 
 import com.ibm.aglet.event.*;
+import com.ibm.aglet.message.FutureReply;
 import com.ibm.aglet.message.Message;
+import com.ibm.aglet.message.MessageManager;
 
 import java.net.URL;
 import java.io.IOException;
@@ -34,21 +36,28 @@ import java.io.NotSerializableException;
 import java.awt.Image;
 import java.applet.AudioClip;
 
+import org.aglets.log.AgletsLogger;
+import org.aglets.util.AgletsTranslator;
+import org.apache.log4j.Logger;
+
+import java.util.*;
+
 /**
  * The <tt>Aglet</tt> class is the abstract base class for aglets. Use this
  * class to create your own personalized aglets.
  * 
- * @version     2.00    $Date: 2009/07/27 10:31:41 $
+ * @version     2.00    $Date: 2009/07/28 07:04:53 $
  * @author      Danny B. Lange
  * @author      Mitsuru Oshima
+ * @author      Luca Ferrari
  */
 public abstract class Aglet implements java.io.Serializable {
 
 	/*
 	 * Current API version of the Aglet class.
 	 */
-	public static final short MAJOR_VERSION = 1;
-	public static final short MINOR_VERSION = 2;
+	public static final short MAJOR_VERSION = 2;
+	public static final short MINOR_VERSION = 1;
 
 	/**
 	 * State of Aglet.
@@ -66,6 +75,17 @@ public abstract class Aglet implements java.io.Serializable {
 	private CloneListener cloneListener = null;
 	private MobilityListener mobilityListener = null;
 	private PersistencyListener persistencyListener = null;
+	
+	/**
+	 * The translator object for this agent. This should be reloaded on each platform, since
+	 * the agent should be localized to the platform it is running on.
+	 */
+	private transient AgletsTranslator translator = AgletsTranslator.getInstance(this.getClass().getName(), Locale.getDefault());
+
+	/**
+	 * The logger associated with this agent.
+	 */
+	private transient AgletsLogger logger = AgletsLogger.getLogger(this.getClass().getName());
 
 	/**
 	 * Constructs an uninitialized aglet. This method is called only
@@ -318,7 +338,7 @@ public abstract class Aglet implements java.io.Serializable {
 	 * Handles the message form outside.
 	 * @param msg the message sent to the aglet
 	 * @return true if the message was handled. Returns false if the message
-	 * was not handled. If false is returned, the <tt>MessageNotHandled</tt> exception
+	 * was not handled. If false is returned, the <tt>NotHandledException</tt> exception
 	 * is thrown in the <tt>FutureReply.getReply</tt> and <tt>AgletProxy.sendMessage</tt>
 	 * methods.
 	 * @see FutureReply#getReply
@@ -567,28 +587,45 @@ public abstract class Aglet implements java.io.Serializable {
 	public final void subscribeMessage(String name) {
 		_stub.subscribeMessage(name);
 	}
+	
+	
 	/**
-	 * <b>This is an experimental feature.</b>
-	 * <p>This is almost like <tt>deactivate(long duration)</tt>,
-	 * but there are some differences.
-	 * <ol>
-	 * <li>The object of the aglet remains at the memory.
-	 * <li>No event is notified, thus ContextListener and PersistencyListener
-	 * cannot know the suspend/activation.
-	 * </ol>
-	 * The aglet will be re-activated by the <tt>resume()</tt>.
-	 * The caller will need the "deactivate" permissoin.
+	 * This method allows the suspension of a running agent for the specified
+	 * number of millisecs. During the suspension the agent will "sleep", that means it will
+	 * not do anything but it will still receive messages. Incoming messages will be
+	 * enqueued and will be processed once the agent woke up.
 	 * 
-	 * @param duration duration of the aglet deactivating in milliseconds.
-	 * If this is 0, it will be activeted at the next startup time.
-	 * @exception AgletException if the aglet cannot be suspended.
-	 * @exception IllegalArgumentException if the minutes parameter is
-	 * negative.
+	 * During the sleeping phase the agent will stay in memory.
+	 * 
+	 * You should not interact directly with the agent thread calling Thread.sleep() method,
+	 * you should use this that takes into account synchronization and messaging issues.
+	 * 
+	 * @param duration the number of millisecs the agent will sleep. If zero the agent will not sleep.
+	 * @throws AgletException if something goes wrong with the agent/stub/message manager
+	 * @throws IllegalArgumentException if the duration is less then zero
 	 */
-	public final void suspend(long duration) 
-			throws AgletException, IllegalArgumentException {
+	public final void suspend(long duration) throws AgletException, IllegalArgumentException {
+	    // check params
+	    if( duration < 0 )
+		throw new IllegalArgumentException("Sleeping time cannot be negative! Please specify a positive millisecs value!");
+	    else
+	    if( duration == 0 )
+		return;
+	    else
 		_stub.suspend(duration);
 	}
+	
+	/**
+	 * A methods to make the agent sleep. The method is a wrapper for the suspend one, thus calling
+	 * sleep or suspend produces the same effects. Please see the comments for the suspend method.
+	 * @param duration the duration of the sleeping period, in millisecs
+	 * @throws AgletException if something goes wrong with the agent/stub/message manager
+	 * @throws IllegalArgumentException if the duration is less then zero
+	 */
+	public final void sleep(long duration) throws AgletException, IllegalArgumentException {
+	    this.suspend(duration);
+	}
+	
 	/**
 	 * Unsubscribes from all message kinds.
 	 */
@@ -627,32 +664,49 @@ public abstract class Aglet implements java.io.Serializable {
 		getMessageManager().waitMessage(timeout);
 	}
 	
+	/**
+	 * Inits (or reinitis) the currnet AgletTranslator object with the specified
+	 * base name and locale.
+	 * @param baseName the identifier basename for the translator object (e.g., the name of a property file or a class name)
+	 * @param locale the locale to use (or null).
+	 */
+	protected synchronized void initTranslator(String baseName, Locale locale){
+	    this.translator = AgletsTranslator.getInstance(baseName, locale);
+	}
+	
 	
 	/**
-	 * Suspends the agent execution for the specified amount of time.
-	 * @param timeout the number of millisecs. the agent must be suspended.
+	 * Gets back the translator.
+	 * @param reinitialize true if the translator must be reinitialized. This should be
+	 * used after a moving or cloning operation, to be sure the translator has been re-initialized.
+	 * @return the translator
 	 */
-	public final void sleep(long timeout){
-		long startTime = System.currentTimeMillis();
-		long countDown = 0;
+	protected final AgletsTranslator getTranslator(boolean reinitialize) {
+	    if( this.translator == null && reinitialize )
+		this.translator = AgletsTranslator.getInstance(this.getClass().getName(), Locale.getDefault());
 		
-		// suspend the message manager
-		MessageManager manager = this.getMessageManager();
-		manager.sleep();
-		
-		countDown = timeout;
-		do{
-			try{
-				Thread.currentThread().sleep(countDown);
-			}catch(InterruptedException e){
-				System.err.println("Sleeping interrupted!");
-				e.printStackTrace();
-			}
-		}while( (countDown = System.currentTimeMillis() - startTime) < timeout );
-		
-		// wake up the manager
-		manager.wakeUp();
-		
-		
+	    return translator;
 	}
+	/**
+	 * Sets the translator value.
+	 * @param translator the translator to set
+	 */
+	protected final void setTranslator(AgletsTranslator translator) {
+	    this.translator = translator;
+	}
+	
+	
+	/**
+	 * Provides the logger associated to this agent.
+	 * @param reinitialize true if the logger must be reinitialized
+	 * @return the logger associated to this agent
+	 */
+	protected final AgletsLogger getLogger(boolean reinitialize){
+	    if( this.logger == null && reinitialize)
+		this.logger = AgletsLogger.getLogger(this.getClass().getName());
+	    
+	    return this.logger;
+	}
+	
+	
 }

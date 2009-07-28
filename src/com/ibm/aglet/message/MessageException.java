@@ -30,7 +30,7 @@ import com.ibm.aglet.AgletException;
 /**
  * Signals that the exception occured while processsing the message.
  * 
- * @version     1.10    $Date: 2009/07/27 10:31:42 $
+ * @version     1.10    $Date: 2009/07/28 07:04:53 $
  * @author	Mitsuru Oshima
  */
 

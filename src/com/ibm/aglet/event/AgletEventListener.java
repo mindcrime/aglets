@@ -31,7 +31,7 @@ import java.util.Enumeration;
  * all aglet related listener. It is not normally used by
  * the aglet programmers.
  * 
- * @version     1.00    $Date: 2009/07/27 10:31:41 $
+ * @version     1.00    $Date: 2009/07/28 07:04:53 $
  * @author      Mitsuru Oshima
  */
 public class AgletEventListener implements CloneListener, MobilityListener, 

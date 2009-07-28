@@ -24,7 +24,7 @@ import java.text.ParseException;
 /**
  * The <tt>DateString</tt> class is a converter between Date and String.
  * 
- * @version     1.00    $Date: 2009/07/27 10:31:40 $
+ * @version     1.00    $Date: 2009/07/28 07:04:53 $
  * @author      ONO Kouichi
  */
 final public class DateString {

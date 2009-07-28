@@ -19,7 +19,7 @@ import java.io.Serializable;
 /**
  * A class which defines a task to be performed during a sequential itinerary.
  * 
- * @version     1.20    $Date: 2009/07/27 10:31:41 $
+ * @version     1.20    $Date: 2009/07/28 07:04:53 $
  * @author      Yariv Aridor
  * @see SeqItinerary
  */

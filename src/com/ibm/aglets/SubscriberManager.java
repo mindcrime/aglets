@@ -14,9 +14,9 @@ package com.ibm.aglets;
  * deposited with the U.S. Copyright Office.
  */
 
-import com.ibm.aglet.ReplySet;
 import com.ibm.aglet.InvalidAgletException;
 import com.ibm.aglet.message.Message;
+import com.ibm.aglet.message.ReplySet;
 
 import java.util.Hashtable;
 import java.util.Vector;
@@ -62,7 +62,7 @@ final class SubscriberManager {
 
 			// MessageManagerImpl mm =
 			// (MessageManagerImpl) ref.getMessageManager();
-			MessageManagerImpl mm = (MessageManagerImpl)ref.messageManager;
+			MessageManagerImpl mm = ref.messageManager;
 
 			if (mm == null) {
 				System.out.println("MessageManager is null. " 

@@ -14,14 +14,15 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-import javax.swing.*;
-import com.ibm.aglets.tahiti.utils.*;
 import com.ibm.aglet.InvalidAgletException;
 import com.ibm.aglet.AgletProxy;
 
 import com.ibm.aglets.*;
 import com.ibm.awb.misc.Resource;
+import com.sun.org.apache.xerces.internal.util.URI.MalformedURIException;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Color;
@@ -35,188 +36,212 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.StringTokenizer;
-import javax.swing.event.*;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+
+import org.aglets.util.gui.*;
 
 /**
  * Class DispatchAgletDialog represents the dialog for dispatching an Aglet.
  * 
- * @version     1.02    $Date: 2009/07/27 10:31:40 $
+ * @version     1.02    $Date: 2009/07/28 07:04:52 $
  * @author      Danny B. Lange
  * Mitsuru Oshima
  */
 
 final class DispatchAgletDialog extends TahitiDialog 
-	implements ActionListener,ListSelectionListener {
+	implements ActionListener, ItemListener {
 
 	/*
 	 * The proxy to be dispatched.
 	 */
 	private AgletProxy proxy = null;
 
-	/*
-	 * GUI components
-	 */
-	private JTextField _arlSelection;
-	private AgentListPanel _arlList;
-	private JButton _add;
-	private JButton _remove;
+	
+	
+	private JTextField remoteURL = null;
+	private AgletListPanel<URL> urlList = null;
+	private JButton addURL = null;
+	private JButton removeURL = null;
 
 	/*
 	 * Constructs a new Aglet dispatch dialog.
 	 */
 	DispatchAgletDialog(MainWindow parent, AgletProxy proxy) {
-		super(parent, bundle.getString("dialog.dispatch.title"), false);
-		this.proxy = proxy;
-
-		// create the agent list panel
-		this._arlList = new AgentListPanel();
-		this._arlList.addListSelectionListener(this);
-		_arlSelection = new JTextField(40);
-		
-		
-
-		// add the buttons
-		this.addJButton(bundle.getString("dialog.dispatch.button.ok"),TahitiCommandStrings.OK_COMMAND,IconRepository.getIcon("ok"),this);
-		this.addJButton(bundle.getString("dialog.dispatch.button.cancel"),TahitiCommandStrings.CANCEL_COMMAND,IconRepository.getIcon("cancel"),this);
-		
-		// other buttons
-		_add = new JButton(bundle.getString("dialog.dispatch.button.add"),IconRepository.getIcon("add"));
-		_remove = new JButton(bundle.getString("dialog.dispatch.button.remove"),IconRepository.getIcon("remove"));
-		_add.setActionCommand(TahitiCommandStrings.ADD_COMMAND);
-		_add.addActionListener(this);
-		_remove.setActionCommand(TahitiCommandStrings.REMOVE_COMMAND);
-		_remove.addActionListener(this);
-
-		
-		this.getContentPane().add("Center", makePanel());
-		
-		
-		updateList();
-		
-		this.pack();
+	    super(parent);
+	    
+	    // store the proxy to dispatch
+	    this.proxy = proxy;
+	    
+	    // create components
+	    this.remoteURL = JComponentBuilder.createJTextField(40, "atp://", this.baseKey + ".remoteURL");
+	    this.addURL = JComponentBuilder.createJButton(this.baseKey + ".addURL", GUICommandStrings.ADD_COMMAND, this);
+	    this.removeURL = JComponentBuilder.createJButton(this.baseKey + ".removeURL", GUICommandStrings.REMOVE_COMMAND, this);
+	    this.urlList = new AgletListPanel<URL>();
+	    
+	    // create the north panel
+	    JPanel northPanel = new JPanel();
+	    northPanel.setLayout(new BorderLayout());
+	    JPanel northPanel1 = new JPanel();
+	    northPanel1.setLayout(new FlowLayout(FlowLayout.RIGHT));
+	    JLabel label = JComponentBuilder.createJLabel(this.baseKey + ".URL");
+	    northPanel1.add(label);
+	    northPanel1.add(this.remoteURL);
+	    northPanel.add(northPanel1, BorderLayout.NORTH);
+	    JPanel northPanel2 = new JPanel();
+	    northPanel2.setLayout(new FlowLayout(FlowLayout.RIGHT));
+	    northPanel2.add(this.addURL);
+	    northPanel2.add(this.removeURL);
+	    northPanel.add(northPanel2, BorderLayout.SOUTH);
+	    this.add(northPanel, BorderLayout.NORTH);
+	    
+	    // the center panel will be the agent list
+	    this.urlList.setTitleBorder(this.translator.translate(this.baseKey + ".URL.title"));
+	    this.add(this.urlList, BorderLayout.CENTER);
+	    
+	    this.pack();
+	    
 	}
-	
-	
-	/**
-	 * Manage events from the buttons.
-	 * @param event the event to manage
+	/*
+	 * Creates an Aglet dispatch dialog.
 	 */
 	public void actionPerformed(ActionEvent event) {
-		String command = event.getActionCommand();
+	    if( event == null )
+		return;
+	    
+	    String command = event.getActionCommand();
+	    
+	    try{
+        	    if( GUICommandStrings.ADD_COMMAND.equals(command)){
+        		URL url = new URL(this.remoteURL.getText());
+        		this.urlList.addItem(url);
+        	    }
+        	    else
+        	    if( GUICommandStrings.REMOVE_COMMAND.equals(command)){
+        		URL url = new URL(this.remoteURL.getText());
+        		this.urlList.removeItem(url);
+        	    }
+        	    else
+        	    if( GUICommandStrings.OK_COMMAND.equals(command)){
+        		this.setVisible(false);
+        		this.getMainWindow().dispatchAglet(this.proxy, new URL(this.remoteURL.getText()));
+        		this.dispose();
+        	    }
+        	    else
+        		super.actionPerformed(event);
+	    
+	    }catch(MalformedURLException e){
+		this.logger.error("Exception caught while converting a string to an url", e);
+		JOptionPane.showMessageDialog(this,
+			                      this.translator.translate(this.baseKey + ".error.URL"),
+			                      this.translator.translate(this.baseKey + ".error.URL.title"),
+			                      JOptionPane.ERROR_MESSAGE);
 		
-		if(command.equals(TahitiCommandStrings.ADD_COMMAND) && this._arlSelection.getText()!=null){
-		    // add an entry to the list
-		    this._arlList.addItem(this._arlSelection.getText());
-		    return;
-		}
-		else
-		if(command.equals(TahitiCommandStrings.REMOVE_COMMAND)){
-		    // remove the selected item
-		    this._arlList.removeSelectedItem();
-		    return;
-		}
-		else
-		if(command.equals(TahitiCommandStrings.OK_COMMAND) && this._arlSelection.getText()!=null 
-		        && this.proxy!=null && this._arlSelection.getText().equals("")==false){
-		    // dispatch the agent
-		    this.getMainWindow().dispatchAglet(this.proxy,this._arlSelection.getText());
-		}
+	    }
 		
-		// close the window
-		this.setVisible(false);
-		this.dispose();
+	    
 	}
 	
 	
 	/*
-	 * Layouts all Components
+	 * Adds an item to the list
 	 */
-	protected GridBagPanel makePanel() {
-		GridBagPanel p = new GridBagPanel();
-
-		GridBagConstraints cns = new GridBagConstraints();
-
-		cns.insets = new Insets(5, 5, 5, 5);
-		cns.fill = GridBagConstraints.HORIZONTAL;
-		cns.gridwidth = GridBagConstraints.REMAINDER;
-		cns.weightx = 1.0;
-
-
-		p.setConstraints(cns);
-
-		// get the agent name
-		String agentName ="CIAO";// this.getAgletName(this.proxy);
-		// ask the user for the URL
-		p.add(new JLabel(bundle.getString("dialog.dispatch.url")), 1, 0.0);
-
-		cns.fill = GridBagConstraints.HORIZONTAL;
-		cns.gridwidth = GridBagConstraints.REMAINDER;
-		cns.weightx = 1.0;
-		p.add(_arlSelection);
-		_arlSelection.addActionListener(this);
-
-		/*
-		 * Hot List
-		 */
-		cns.weightx = 1.0;
-		cns.gridwidth = 1;
-		cns.fill = GridBagConstraints.NONE;
-		cns.anchor = GridBagConstraints.WEST;
-		p.add(new JLabel(bundle.getString("dialog.dispatch.addressbook")));
-
-		cns.anchor = GridBagConstraints.EAST;
-		p.add(_add);
-
-		cns.gridwidth = GridBagConstraints.REMAINDER;
-		p.add(_remove);
-
-		cns.weighty = 1.0;
-		cns.anchor = GridBagConstraints.WEST;
-		cns.fill = GridBagConstraints.BOTH;
-		p.add(_arlList);
-
-		
-
-		// _arlList.setFont(DefaultResource.getFixedFont());
-		_arlList.setBackground(Color.white);
-
-		return p;
+	protected final void addURL(){
+	    try{
+	    String url = this.remoteURL.getText();
+	    
+	    // check if the url is valid
+	    if( url == null || url.length() == 0 )
+		return;
+	    else
+		this.urlList.addItem(new URL(url));
+	    }catch(MalformedURLException e){
+		this.logger.error("Exception caught while converting a string to an url", e);
+		JOptionPane.showMessageDialog(this,
+			                      this.translator.translate(this.baseKey + ".error.URL"),
+			                      this.translator.translate(this.baseKey + ".error.URL.title"),
+			                      JOptionPane.ERROR_MESSAGE);
+	    }
+	}
+	
+	
+	
+	// Handles list box selections.
+	// 
+	public void itemStateChanged(ItemEvent event) {
+	    if( event == null )
+		return;
+	    
+	    this.remoteURL.setText(this.urlList.getSelectedItem().toString());
+	    
 	}
 
+	/*
+	 * Delete an item from the list
+	 */
+	protected final void removeURL() {
+	    try{
+		    String url = this.remoteURL.getText();
+		    
+		    // check if the url is valid
+		    if( url == null || url.length() == 0 )
+			return;
+		    else
+			this.urlList.removeItem(new URL(url));
+		    }catch(MalformedURLException e){
+			this.logger.error("Exception caught while converting a string to an url", e);
+			JOptionPane.showMessageDialog(this,
+				                      this.translator.translate(this.baseKey + ".error.URL"),
+				                      this.translator.translate(this.baseKey + ".error.URL.title"),
+				                      JOptionPane.ERROR_MESSAGE);
+		    }
+	}
+	
+	
+	public void dispose(){
+	    this.storeURLList();
+	    super.dispose();
+	}
+	
+	
 	/*
 	 * Updates the addressbook
 	 */
-	private void updateList() {
+	private void loadURLList() {
 		Resource res = Resource.getResourceFor("aglets");
-		if(res!=null){
-			String items[] = res.getStringArray("aglets.addressbook", " ");
-	
-				for (int i = 0; i < items.length; i++) {
-				this._arlList.addItem(items[i]);
-			} 
+		String items[] = res.getStringArray("aglets.addressbook", " ");
+
+		try{
+		    this.urlList.removeAllItems();
+		    for (int i = 0; i < items.length; i++) 
+			this.urlList.addItem(new URL(items[i]));
+		}catch(MalformedURLException e){
+		    this.logger.error("Exception caught while converting a string to an url", e);
+		    JOptionPane.showMessageDialog(this,
+			                          this.translator.translate(this.baseKey + ".error.URL"),
+			                          this.translator.translate(this.baseKey + ".error.URL.title"),
+			                          JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
 	
-	private void updateProperty() {
-		synchronized (this) {
+	
+	private void storeURLList() {
+		synchronized (this.urlList) {
+			int num = this.urlList.getItemCount();
+			String addressList = "";
+
+			for (int i = 0; i < num; i++) {
+				addressList += (this.urlList.getItem(i).toString() + " ");
+			} 
 			Resource res = Resource.getResourceFor("aglets");
-			if(res!=null){
-				res.setResource("aglets.addressbook", this._arlList.getAllItems());
-				res.save("Tahiti");
-			}
+
+			res.setResource("aglets.addressbook", addressList);
+			res.save("Tahiti");
 		} 
 	}
-	
-	/**
-	 * Manage selections over the list.
-	 * @param event the event
-	 */
-	public void valueChanged(ListSelectionEvent event){
-	    this._arlSelection.setText(this._arlList.getSelectedItem());
-	}
-	
-	
-	
 }

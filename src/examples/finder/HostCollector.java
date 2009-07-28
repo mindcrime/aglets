@@ -31,7 +31,7 @@ import java.util.Enumeration;
  * it appends a list of server name to list in the HostList and
  * then get the list belongs to the HostList.
  * 
- * @version     1.00    $Date: 2009/07/27 10:31:41 $
+ * @version     1.00    $Date: 2009/07/28 07:04:53 $
  * @author      Yoshiaki Mima
  * @see examples.finder.HostList
  */

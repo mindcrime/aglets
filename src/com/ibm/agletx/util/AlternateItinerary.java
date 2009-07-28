@@ -60,7 +60,7 @@ import java.net.MalformedURLException;
  * If fails, it throws an <tt>IOException</tt> exception (in case of communication
  * problems) or <tt>SecurityException</tt> (otherwise).
  * 
- * @version     1.20    $Date: 2009/07/27 10:31:41 $
+ * @version     1.20    $Date: 2009/07/28 07:04:53 $
  * @author      Yariv Aridor
  */
 

@@ -66,7 +66,7 @@ import com.ibm.agletx.patterns.Meeting;
  * corresponding task (defined by the <tt>MeetingTask</tt> objects) is automatically
  * executed.
  * 
- * @version     1.20    $Date: 2009/07/27 10:31:41 $
+ * @version     1.20    $Date: 2009/07/28 07:04:53 $
  * @author      Yariv Aridor
  * @see com.ibm.agletx.patterns.Meeting
  */

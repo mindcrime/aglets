@@ -17,6 +17,7 @@ import java.security.Permissions;
 
 // # import com.ibm.aglets.security.Allowance;
 import com.ibm.aglet.*;
+import com.ibm.aglet.message.FutureReply;
 import com.ibm.aglet.message.Message;
 import com.ibm.aglet.message.MessageException;
 

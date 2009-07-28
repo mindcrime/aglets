@@ -35,6 +35,7 @@ import com.ibm.aglets.security.MessagePermission;
 import com.ibm.aglets.security.ContextPermission;
 
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Properties;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -69,106 +70,181 @@ import java.awt.Toolkit;
 import sun.audio.*;
 import java.applet.AudioClip;
 
-/*
- * This class is used to hold the set of observers of an observable
- * object whenever there is more than one observer.
+/**
+ * This class is used to hold a list of context listeners and to forward an event to each 
+ * listener. The class works as a linked list, and for each call to notify an event, the class extract
+ * each context listener and forwards the event to it.
+ * 
+ * @author Luca Ferrari - cat4hire@users.sourceforge.net
+ *
+ * 25/ago/07
  */
-final class ListenerList extends java.util.Vector implements ContextListener {
+public final class ListenerList extends java.util.LinkedList<ContextListener> implements ContextListener {
 
-	/* synchronized */
-	public void agletActivated(ContextEvent event) {
-		for (Enumeration e = elements(); e.hasMoreElements(); ) {
-			((ContextListener)e.nextElement()).agletActivated(event);
-		} 
+	/**
+	 * Notifies all listeners than the aglet has been activated.
+	 */
+	public synchronized void agletActivated(ContextEvent event) {
+	    Iterator listener = this.iterator();
+	    while (listener != null && listener.hasNext()) {
+		((ContextListener) listener.next()).agletActivated(event);
+		
+	    }
 	}
-	/* synchronized */
-	public void agletArrived(ContextEvent event) {
-		for (Enumeration e = elements(); e.hasMoreElements(); ) {
-			((ContextListener)e.nextElement()).agletArrived(event);
-		} 
+	
+	/**
+	 * Notifies all listeners than an aglet has arrived.
+	 */
+	public synchronized void agletArrived(ContextEvent event) {
+	    Iterator listener = this.iterator();
+	    while (listener != null && listener.hasNext()) {
+		((ContextListener) listener.next()).agletArrived(event);
+		
+	    } 
 	}
-	/* synchronized */
-	public void agletCloned(ContextEvent event) {
-		for (Enumeration e = elements(); e.hasMoreElements(); ) {
-			((ContextListener)e.nextElement()).agletCloned(event);
-		} 
+	
+	/**
+	 * Notifies all listeners than an aglet has been cloned.
+	 */
+	public synchronized void agletCloned(ContextEvent event) {
+	    Iterator listener = this.iterator();
+	    while (listener != null && listener.hasNext()) {
+		((ContextListener) listener.next()).agletCloned(event);
+		
+	    }
 	}
-	/* synchronized */
-	public void agletCreated(ContextEvent event) {
-		for (Enumeration e = elements(); e.hasMoreElements(); ) {
-			((ContextListener)e.nextElement()).agletCreated(event);
-		} 
+	
+	/**
+	 * Notifies all listeners than an aglet has been created.
+	 */
+	public synchronized void agletCreated(ContextEvent event) {
+	    Iterator listener = this.iterator();
+	    while (listener != null && listener.hasNext()) {
+		((ContextListener) listener.next()).agletCreated(event);
+		
+	    }
 	}
-	/* synchronized */
-	public void agletDeactivated(ContextEvent event) {
-		for (Enumeration e = elements(); e.hasMoreElements(); ) {
-			((ContextListener)e.nextElement()).agletDeactivated(event);
-		} 
+	
+	/**
+	 * Notifies all listeners than the aglet has been deactivated.
+	 */
+	public synchronized void agletDeactivated(ContextEvent event) {
+	    Iterator listener = this.iterator();
+	    while (listener != null && listener.hasNext()) {
+		((ContextListener) listener.next()).agletDeactivated(event);
+		
+	    }
+
 	}
-	/* synchronized */
-	public void agletDispatched(ContextEvent event) {
-		for (Enumeration e = elements(); e.hasMoreElements(); ) {
-			((ContextListener)e.nextElement()).agletDispatched(event);
-		} 
+	
+	/**
+	 * Notifies all listeners than an aglet has been dispatched.
+	 */
+	public synchronized void agletDispatched(ContextEvent event) {
+	    Iterator listener = this.iterator();
+	    while (listener != null && listener.hasNext()) {
+		((ContextListener) listener.next()).agletDispatched(event);
+		
+	    }
+
 	}
-	/* synchronized */
-	public void agletDisposed(ContextEvent event) {
-		for (Enumeration e = elements(); e.hasMoreElements(); ) {
-			((ContextListener)e.nextElement()).agletDisposed(event);
-		} 
+	
+	/**
+	 * Notifies all listeners than an aglet has been disposed.
+	 */
+	public synchronized void agletDisposed(ContextEvent event) {
+	    Iterator listener = this.iterator();
+	    while (listener != null && listener.hasNext()) {
+		((ContextListener) listener.next()).agletDisposed(event);
+		
+	    }
 	}
-	/* synchronized */
-	public void agletResumed(ContextEvent event) {
-		for (Enumeration e = elements(); e.hasMoreElements(); ) {
-			((ContextListener)e.nextElement()).agletResumed(event);
-		} 
+	
+	/**
+	 * Notifies all listeners than an aglet has been resumed.
+	 */
+	public synchronized void agletResumed(ContextEvent event) {
+	    Iterator listener = this.iterator();
+	    while (listener != null && listener.hasNext()) {
+		((ContextListener) listener.next()).agletResumed(event);
+		
+	    }
 	}
-	/* synchronized */
+	
+	/**
+	 * Notifies all listeners than an aglet has been called home.
+	 */
 	public void agletReverted(ContextEvent event) {
-		for (Enumeration e = elements(); e.hasMoreElements(); ) {
-			((ContextListener)e.nextElement()).agletReverted(event);
-		} 
+	    Iterator listener = this.iterator();
+	    while (listener != null && listener.hasNext()) {
+		((ContextListener) listener.next()).agletReverted(event);
+		
+	    }
 	}
-	/* synchronized */
-	public void agletStateChanged(ContextEvent event) {
-		for (Enumeration e = elements(); e.hasMoreElements(); ) {
-			((ContextListener)e.nextElement()).agletStateChanged(event);
-		} 
+	
+	/**
+	 * Notifies all listeners than the state of the agent has changed.
+	 */
+	public synchronized void agletStateChanged(ContextEvent event) {
+	    Iterator listener = this.iterator();
+	    while (listener != null && listener.hasNext()) {
+		((ContextListener) listener.next()).agletStateChanged(event);
+		
+	    }
 	}
-	/* synchronized */
-	public void agletSuspended(ContextEvent event) {
-		for (Enumeration e = elements(); e.hasMoreElements(); ) {
-			((ContextListener)e.nextElement()).agletSuspended(event);
-		} 
+	
+	/**
+	 * Notifies all listeners than the state of the agent has been suspended.
+	 */
+	public synchronized void agletSuspended(ContextEvent event) {
+	    Iterator listener = this.iterator();
+	    while (listener != null && listener.hasNext()) {
+		((ContextListener) listener.next()).agletSuspended(event);
+		
+	    }
 	}
-	/* synchronized */
-	public void contextShutdown(ContextEvent event) {
-		for (Enumeration e = elements(); e.hasMoreElements(); ) {
-			((ContextListener)e.nextElement()).contextShutdown(event);
-		} 
+	
+	/**
+	 * Notifies all listeners that the context has been shut down.
+	 */
+	public synchronized void contextShutdown(ContextEvent event) {
+	    Iterator listener = this.iterator();
+	    while (listener != null && listener.hasNext()) {
+		((ContextListener) listener.next()).contextShutdown(event);
+		
+	    }
 	}
-	/* synchronized */
-	public void contextStarted(ContextEvent event) {
-
-		// int i = size();
-		// 
-		// while (--i >= 0) {
-		// ((ContextListener) elementAt(i)).contextStarted(event);
-		// }
-		for (Enumeration e = elements(); e.hasMoreElements(); ) {
-			((ContextListener)e.nextElement()).contextStarted(event);
-		} 
+	
+	/**
+	 * Notifies all listeners that the context has been started.
+	 */
+	public synchronized void contextStarted(ContextEvent event) {
+	    Iterator listener = this.iterator();
+	    while (listener != null && listener.hasNext()) {
+		((ContextListener) listener.next()).contextStarted(event);
+		
+	    }
 	}
-	/* synchronized */
-	public void showDocument(ContextEvent event) {
-		for (Enumeration e = elements(); e.hasMoreElements(); ) {
-			((ContextListener)e.nextElement()).showDocument(event);
-		} 
+	
+	/**
+	 * Notifies of a show document call.
+	 */
+	public synchronized void showDocument(ContextEvent event) {
+	    Iterator listener = this.iterator();
+	    while (listener != null && listener.hasNext()) {
+		((ContextListener) listener.next()).showDocument(event);
+		
+	    }
 	}
-	/* synchronized */
-	public void showMessage(ContextEvent event) {
-		for (Enumeration e = elements(); e.hasMoreElements(); ) {
-			((ContextListener)e.nextElement()).showMessage(event);
-		} 
+	
+	/**
+	 * Notifies of a show message call.
+	 */
+	public synchronized void showMessage(ContextEvent event) {
+	    Iterator listener = this.iterator();
+	    while (listener != null && listener.hasNext()) {
+		((ContextListener) listener.next()).showMessage(event);
+		
+	    }
 	}
 }

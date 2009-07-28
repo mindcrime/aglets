@@ -26,7 +26,7 @@ import java.net.URL;
 
 /**
  * 
- * @version     1.00    $Date: 2009/07/27 10:31:42 $
+ * @version     1.00    $Date: 2009/07/28 07:04:54 $
  * @author      Mitsuru Oshima
  * @see examples.talk.TalkSlave
  */

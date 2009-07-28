@@ -26,17 +26,26 @@ package com.ibm.aglet.message;
 import java.util.Hashtable;
 
 import com.ibm.aglet.Aglet;
-import com.ibm.aglet.FutureReply;
-import com.ibm.aglet.MessageManager;
-import com.ibm.aglet.util.Arguments;
 
 /**
  * The <tt>Message</tt> class is a object that holds its kind
  * and arguments passed to the receiver. In handleMessage() method
  * on Aglet class, the reply to the request can be set if any.
  * 
- * @version     1.70    $Date: 2009/07/27 10:31:42 $
+ * Note by Luca Ferrari:
+ * the message now includes the concept of priority, that was hidden in the MessageImpl
+ * subclass. Since the messages are enqueued and delivered with a priority, as well as they can
+ * be processed depending on their priority, I've moved the priority mechanism here. Moreover
+ * it is the message that defines the priority types and no more the MessageManager, thus the
+ * priority are centralized.
+ * 
+ * Now the message also includes an empty constructor, that will build the message with a special
+ * kind equal to the class name. This is useful if there is the needing to subclass the message, since
+ * it will allow the kind mechanism to work having different message classes.
+ * 
+ * @version     2.0 9-8-2007
  * @author	Mitsuru Oshima
+ * @author      Luca Ferrari  - cat4hire@users.sourceforge.net
  */
 public class Message implements java.io.Serializable {
 
@@ -60,20 +69,6 @@ public class Message implements java.io.Serializable {
 	static final public String DEACTIVATE = "_deactivate";
 	static final public String REVERT = "_revert";
 
-	/**
-	 * The priority of this message.
-	 */
-	protected int priority = MessageManager.NORM_PRIORITY;
-	
-	transient protected FutureReply future = null;
-	
-	/**
-	 * This flags indicates if the message is waiting to be
-	 * processed.
-	 */
-	protected boolean waiting = false;
-	
-	
 	/*
 	 * An arbitrary argument.
 	 */
@@ -88,7 +83,100 @@ public class Message implements java.io.Serializable {
 	 * The time when the message was sent.
 	 */
 	protected long timestamp;
+	
 
+	/**
+	 * The min priority a message can have.
+	 */
+	public static final int MIN_PRIORITY = 1;
+	
+	/**
+	 * The normal priority of a message.
+	 */
+	public static final int NORMAL_PRIORITY = 5;
+	
+	/**
+	 * The max priority a message can have.
+	 */
+	public static final int MAX_PRIORITY = 10;
+	
+	/**
+	 * The re-entrant priority is a special priority value, higher than every other
+	 * priority value (even of the MAX_PRIORITY) and it is used for messages
+	 * that an agent sends to itself while processing another message.
+	 */
+	public static final int REENTRANT_PRIORITY = 0xffffffff;
+	
+	/**
+	 * The system priority is the priority of a system message, that is
+	 * a message used to notify special cases from the platform to the agent (e.g.,
+	 * start execution, migrate, etc.).
+	 */
+	public static final int SYSTEM_PRIORITY = REENTRANT_PRIORITY - 1;
+	public static final int REQUEST_PRIORITY = SYSTEM_PRIORITY - 1;
+	
+	/**
+	 * All messages with a priority less or equal than this will be
+	 * processed immediatly, without being placed in the message queue.
+	 */
+	public static final int UNQUEUED_PRIORITY = 0;
+
+	/**
+	 * The priority of this message (usually normal).
+	 */
+	protected int priority = NORMAL_PRIORITY;
+
+	/**
+	 * Gets back the priority.
+	 * @return the priority
+	 */
+	public final int getPriority() {
+	    return priority;
+	}
+	/**
+	 * Sets the priority value.
+	 * This method calls the normalizePriority() one in order to define the normalized priority for a message. 
+	 * In the case the message implementation (i.e., the message handled internally by the server or by the
+	 * message handling procedure) needs to set other special priorities, override the normalizePriority() method.
+	 * @param priority the priority to set
+	 */
+	public final void setPriority(int priority) {
+	    // if a system message priority already set, don't do anything
+	    if( this.priority == SYSTEM_PRIORITY )
+		return;
+
+	    this.priority = this.normalizePriority(priority);
+	}
+	
+	/**
+	 * Normalizes a priority for a message. If the priority is not included in the bounds
+	 * of min/max priority, then a normal priority is returned.
+	 * The priority should be in a range between the MIN and MAX priority
+	 * values. If the priority is outside the bounds it will be set at norm priority by default. Please note
+	 * that if the message has been created with the SYSTEM_PRIORITY it will not be possible to change
+	 * its priority (this is to avoid that a system message can be lowered).
+	 * @param priority the priority of the message that the user wants to set
+	 * @return the effective priority this message should use.
+	 */
+	protected int normalizePriority(int priority){
+	    if( priority < MIN_PRIORITY || priority > MAX_PRIORITY )
+		return NORMAL_PRIORITY;
+	    else
+		return priority;
+	}
+	
+	/**
+	 * Builds a message with a pre-defined kind that is the class type.
+	 * This constructor is useful when sub-classing the message type.
+	 *
+	 */
+	public Message(){
+	    super();
+	    this.kind = this.getClass().getName();
+	    this.arg = new Arguments();
+	}
+	
+	
 	/**
 	 * Constructs a message. The message object created by
 	 * this constructor have a hashtable which can be used
@@ -150,18 +238,6 @@ public class Message implements java.io.Serializable {
 		this.kind = kind;
 		this.arg = arg;
 	}
-	
-	/**
-	 * Constructor that specifies the priority of a message.
-	 * @param kind the kind of the message
-	 * @param arg ther argument of a message
-	 * @param priority the priority of a messag
-	 */
-	public Message(String kind, Object arg, int priority){
-		this(kind,arg);
-		this.priority = priority;
-	}
-	
 	/**
 	 * Constructs a message with an argument value.
 	 * @param kind a kind of this message.
@@ -245,10 +321,7 @@ public class Message implements java.io.Serializable {
 	 * @param k a string to compare
 	 */
 	public boolean sameKind(String k) {
-		if( this.kind != null && k != null)
-			return kind.equals(k);
-		else
-			return false;
+		return kind.equals(k);
 	}
 	/**
 	 * Sets a exception to this message.
@@ -424,33 +497,22 @@ public class Message implements java.io.Serializable {
 	}
 	
 	/**
-	 * Get priority of this message.
-	 * @return the priority level of the message
+	 * Increases the message priority, catching a possible wrap-around over the MAX_PRIORITY.
+	 * If the message priority is greater than MAX_PRIORITY, the method does nothing (i.e., the
+	 * priority is keeped at MAX_PRIORITY), otherwise the message priority is incremented by one.
+	 *
 	 */
-	public int getPriority(){
-		return this.priority;
-	}
-	
-	
-	/**
-	 * Enable/disable the waiting flag.
-	 * @param the status of the waiting flag
-	 */
-	public void setWaiting(boolean waiting){
-		this.waiting = waiting;
+	public synchronized void increasePriority(){
+	    if( (this.priority + 1) < MAX_PRIORITY )
+		this.priority += 1;
 	}
 	
 	/**
-	 * Gets the status of the waiting flag.
-	 * @return true if the message is marked as waiting, false
-	 * otherwise
+	 * Decreases the message priority by one until it reaches the MIN_PRIORITY.
+	 *
 	 */
-	public boolean isWaiting(){
-		return this.waiting;
+	public synchronized void decreasePriority(){
+	    if( (this.priority - 1) > MIN_PRIORITY )
+		this.priority -= 1;
 	}
-	
-	public void setPriority(int newPriority){
-		this.priority = newPriority;
-	}
-	
 }

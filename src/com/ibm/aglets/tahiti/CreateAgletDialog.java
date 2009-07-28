@@ -14,8 +14,9 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-import javax.swing.*;
+import java.awt.Button;
 import java.awt.GridBagConstraints;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Label;
 import java.awt.Color;
@@ -29,18 +30,23 @@ import java.awt.event.WindowEvent;
 
 import java.util.StringTokenizer;
 
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import org.aglets.util.gui.GUICommandStrings;
+import org.aglets.util.gui.JComponentBuilder;
+
 import com.ibm.awb.misc.Resource;
-import com.ibm.aglets.tahiti.utils.*;
 import java.awt.*;
-import java.util.*;
-import javax.swing.event.*;
+
 /**
  * Class CreateAgletDialog represents the dialog for creating a new Aglet
  * instance. The class uses a CardLayout to handle the GUI differences
  * between creating an Aglet for a system class, local class file, remote
  * URL, and the hotlist of recently used Aglet classes.
  * 
- * @version     1.04    $Date: 2009/07/27 10:31:40 $
+ * @version     1.04    $Date: 2009/07/28 07:04:52 $
  * @author      Danny B. Lange
  */
 
@@ -50,228 +56,268 @@ final class CreateAgletDialog extends TahitiDialog implements ActionListener,
 	/*
 	 * Singleton instance reference.
 	 */
-	private static CreateAgletDialog _instance = null;
+	private static CreateAgletDialog mySelf = null;
 
+	
 	/*
 	 * GUI components
 	 */
-	private JTextField _classField = new JTextField(20);
-	private JTextField _urlField = new JTextField(20);
-	private AgentListPanel agentList;
+	protected JTextField classField = null;
+	protected JTextField urlField = null;
+	protected AgletListPanel<String> selectionList = null;
+	protected JCheckBox reload = null;
 
 	/**
 	 * Constructs a new Aglet creation dialog.
 	 * @param parent the parent frame.
 	 */
-	private CreateAgletDialog(MainWindow parent) {
-		super(parent, bundle.getString("dialog.create.title"), false);
-
-	
-		// set the layout of this window
-		this.getContentPane().setLayout(new BorderLayout());
-		
-		// create the panel with the agent name and sourcebase
-		this.getContentPane().add("North",this.createUpperPanel());
-		// add the agent list
-		this.getContentPane().add("Center",this.createAgentListPanel());
-		
-		
-		// create the button panel
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new BorderLayout());
-		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		JButton create = new JButton(bundle.getString("dialog.create.button.create"),IconRepository.getIcon("create"));
-		create.setActionCommand(TahitiCommandStrings.CREATE_COMMAND);
-		create.addActionListener(this);
-		buttonPanel.add("South",create);
-		JButton clearcreate = new JButton(bundle.getString("dialog.create.button.clearcreate"),IconRepository.getIcon("create"));
-		clearcreate.setActionCommand(TahitiCommandStrings.CLEAR_CREATE_COMMAND);
-		clearcreate.addActionListener(this);
-		buttonPanel.add("South",clearcreate);
-		JButton add = new JButton(bundle.getString("dialog.create.button.add"),IconRepository.getIcon("add"));
-		add.setActionCommand(TahitiCommandStrings.ADD_COMMAND);
-		add.addActionListener(this);
-		buttonPanel.add("North",add);
-		JButton remove = new JButton(bundle.getString("dialog.create.button.remove"),IconRepository.getIcon("remove"));
-		remove.setActionCommand(TahitiCommandStrings.REMOVE_COMMAND);
-		remove.addActionListener(this);
-		buttonPanel.add("North",remove);
-		JButton close = new JButton(bundle.getString("dialog.create.button.close"),IconRepository.getIcon("close"));
-		close.setActionCommand(TahitiCommandStrings.CANCEL_COMMAND);
-		close.addActionListener(this);
-		buttonPanel.add("South",close);
-		
-		this.getContentPane().add("South",buttonPanel);
-		
-		this.pack();
-				
-	}
-	
-	/**
-	 * Creates the upper panel, with fields for the agent name and code base
-	 * @return the panel.
-	 */
-	protected JPanel createUpperPanel(){
-	    JPanel ret = new JPanel();
-	    ret.setLayout(new BorderLayout());
+	protected CreateAgletDialog(MainWindow parent) {
+	    super(parent);
 	    
-	    // nested panels
-	    JPanel p1 = new JPanel();
-	    p1.setLayout(new FlowLayout(FlowLayout.RIGHT));
-	    p1.add(new JLabel(bundle.getString("dialog.create.label.agletname")));
-	    p1.add(this._classField);
+	    // set the title
+	    this.setTitle(JComponentBuilder.getTitle(this.baseKey));
 	    
-	    JPanel p2 = new JPanel();
-	    p2.setLayout(new FlowLayout(FlowLayout.RIGHT));
-	    p2.add(new JLabel(bundle.getString("dialog.create.label.codebase")));
-	    p2.add(this._urlField);
-	    
-	    ret.add("North",p1);
-	    ret.add("South",p2);
-	    
-	    return ret;
-	}
-	
-	/**
-	 * Creates a panel that contains the list of the agents.
-	 * @return the panel
-	 */
-	protected JPanel createAgentListPanel(){
-	    	    
-	    // get a new agentlist
-	    AgentListPanel ret = new AgentListPanel();
-	    
-
-	    
-	    // add this class as listselection listener
-	    ret.addListSelectionListener(this);
-	    // store the panel
-	    this.agentList = ret;
-	    
-	    // get the list of agents from the property file
+	    // create the gui components
+	    this.classField = JComponentBuilder.createJTextField(20, null, 
+		                                                 this.baseKey + ".agletClassName");
+	    this.urlField = JComponentBuilder.createJTextField(20, null, 
+		                                                  this.baseKey + ".agletURL");
+	    this.selectionList = new AgletListPanel<String>();
+	    this.selectionList.setTitleBorder(this.translator.translate(this.baseKey + ".border"));
+	    this.selectionList.addListSelectionListener(this);
 	    this.updateList();
 	    
-	    return ret;
 	    
+	    // add the gui components
+	    JPanel northPanel1 = new JPanel();
+	    northPanel1.setLayout( new GridLayout(2,2));
+	    JLabel label = JComponentBuilder.createJLabel(this.baseKey + ".agletClassName");
+	    northPanel1.add(label);
+	    northPanel1.add(this.classField);
+	    label = JComponentBuilder.createJLabel(this.baseKey + ".agletURL");
+	    northPanel1.add(label);
+	    northPanel1.add(this.urlField);
+	    JPanel northPanel2 = new JPanel();
+	    northPanel2.setLayout(new FlowLayout(FlowLayout.RIGHT));
+	    JButton addButton = JComponentBuilder.createJButton(this.baseKey + ".addButton",
+		                                                GUICommandStrings.ADD_COMMAND,
+		                                                this);
+	    JButton removeButton = JComponentBuilder.createJButton(this.baseKey + ".removeButton",
+		    						   GUICommandStrings.REMOVE_COMMAND,
+		    						   this);
+	    northPanel2.add(addButton);
+	    northPanel2.add(removeButton);
+	    
+	    JPanel northPanel3 = new JPanel();
+	    northPanel3.setLayout(new FlowLayout(FlowLayout.RIGHT));
+	    this.reload = JComponentBuilder.createJCheckBox(this.baseKey + ".reload", 
+		                                            true, null);
+	    northPanel3.add(this.reload);
+	    
+	    JPanel northPanel = new JPanel();
+	    northPanel.setLayout(new BorderLayout());
+	    northPanel.add(northPanel1, BorderLayout.NORTH);
+	    northPanel.add(northPanel3, BorderLayout.CENTER);
+	    northPanel.add(northPanel2, BorderLayout.SOUTH);
+	    
+	    JPanel okCancelPanel = JComponentBuilder.createOkCancelButtonPanel(this.baseKey + ".createButton",
+		    								this.baseKey + ".cancelButton",
+		    								this);
+	    // add the components to the window
+	    this.add(northPanel, BorderLayout.NORTH);
+	    this.contentPanel.add(this.selectionList);
+	    //this.add(okCancelPanel, BorderLayout.SOUTH);
+
+	    this.pack();
 	}
 	
-	/**
-	 * Manage events from buttons
-	 * @param event the event to manage
+	
+	
+	/*
+	 * Creation without reloading class.
 	 */
 	public void actionPerformed(ActionEvent event) {
-		String command = event.getActionCommand();
-		
-		if(command!=null && command.equals(TahitiCommandStrings.CREATE_COMMAND) && this._classField.getText()!=null){
-		    // create the specified aglet
-		    createAglet(false);
-		}
-		else
-		if(command!=null && command.equals(TahitiCommandStrings.ADD_COMMAND) && this._classField.getText()!=null){
-		    this.agentList.addItem(this._classField.getText());
-		    return;
-		}
-		else
-		if(command != null && command.equals(TahitiCommandStrings.REMOVE_COMMAND)){
-		    this.agentList.removeSelectedItem();
-		    return;
-		}
-		else
-		if(command !=null && command.equals(TahitiCommandStrings.CLEAR_CREATE_COMMAND) && this._classField.getText()!=null){
-		    createAglet(true);
-		}
+	    // check params
+	    if( event == null )
+		return;
+	    
+	    // get the command
+	    String command = event.getActionCommand();
 
+	    // parse the command
+	    if( GUICommandStrings.OK_COMMAND.equals(command)){
+		// create a new aglet
+		this.createAglet( this.reload.isSelected());
 		this.setVisible(false);
 		this.dispose();
+	    }
+	    else
+            if( GUICommandStrings.ADD_COMMAND.equals(command)){
+        	// add the specified agent to the list of agents
+        	this.addAgletToList();
+            }
+            else
+            if( GUICommandStrings.REMOVE_COMMAND.equals(command)){
+        	// remove the agent from the list
+        	this.removeAgletFromList();
+            }
+            else
+        	super.actionPerformed(event);
+
+
+	}
+	
+	
+	/**
+	 * Adds a new entry to the aglet list and immediatly saves it to the
+	 * aglet resource.
+	 *
+	 */
+	protected void addAgletToList() {
+		String name = this.urlField.getText().trim();
+
+		if (name.length() > 0 && name.charAt(name.length() - 1) != '/') {
+			name += '/';
+		} 
+		name += classField.getText().trim();
+
+		if (name.length() == 0) {
+			return;
+		} 
+
+		int num = this.selectionList.getItemCount();
+
+		for (int i = 0; i < num; i++) {
+			if (this.selectionList.getItem(i).equals(name)) {
+				return;
+			} 
+		} 
+		this.selectionList.addItem(name);
+		updateProperty();
 	}
 	
 	
 	
-	/*
-	 * Creates an agent. 
-	 * @param reload if true forces a creation with a new classloader.
+	/**
+	 * Creates a new aglet from the specified classname and codebase.
+	 * This method calls the parentwindow createAglet method.
+	 * @param reload true if the agent must be reloaded
 	 */
 	synchronized void createAglet(boolean reload) {
-		
-	    if((this._classField.getText()==null || this._classField.getText().equals("")) &&
-		        this.agentList.getSelectedItem()!=null){
-		    this._classField.setText(this.agentList.getSelectedItem());
-		}
-	    
-		this.setVisible(false);
-		String classname = _classField.getText().trim();
-		String codebase = _urlField.getText().trim();
+		String classname = classField.getText().trim();
+		String codebase = urlField.getText().trim();
 
-		// check if there's data
-		if(classname ==null){
-		    JOptionPane.showMessageDialog(this,"Please specify an aglet class name!");
-		    return;
-		}
-		
-		
-		getMainWindow().createNewAglet(codebase, classname, reload);
+		// System.out.println("createAglet("+codebase+","+classname+","+reload+")");
+		getMainWindow().createAglet(codebase, classname, reload);
+	}
+
+	/**
+	 * Manages the event produced by the list.
+	 */
+	public void itemStateChanged(ItemEvent ev) {
+	    // get the list selected in the list
+	    String selectedItem = this.selectionList.getSelectedItem();
+	    if( selectedItem == null || selectedItem.length() == 0 )
+		return;
+
+	    // get the pieces of the string to show
+	    if (selectedItem.toLowerCase().startsWith("http://") 
+		    || selectedItem.toLowerCase().startsWith("https://") 
+		    || selectedItem.toLowerCase().startsWith("atps://") 
+		    || selectedItem.toLowerCase().startsWith("atp://") 
+		    || selectedItem.toLowerCase().startsWith("file://")) {
+		int delimiter = selectedItem.lastIndexOf('/');
+
+		classField.setText(selectedItem.substring(delimiter + 1));
+		urlField.setText(selectedItem.substring(0, delimiter));
+	    } else {
+		classField.setText(selectedItem);
+		urlField.setText("");
+	    } 
 	}
 	
 	
-	/*
-	 * Singleton method to get the instance
+	/**
+	 * Removes the specified item from the list of known agents.
+	 *
 	 */
-	static synchronized CreateAgletDialog getInstance(MainWindow parent) {
-		if (_instance == null) {
-			_instance = new CreateAgletDialog(parent);
+	protected void removeAgletFromList() {
+		if (this.selectionList.getSelectedIndex() != -1) {
+			this.selectionList.removeItem(this.selectionList.getSelectedIndex());
+			classField.setText("");
+			urlField.setText("");
+			updateProperty();
 		} 
-		
-		return _instance;
 	}
 	
 	/**
-	 * Handles list events
-	 * @param event the event to manage
+	 * Loads all resources from the saved resources and shows them into the
+	 * agent list
+	 *
 	 */
-	public void valueChanged(ListSelectionEvent event){
-	    if(event==null){
-	        return;
-	    }
-	    
-	    String selectedItem = this.agentList.getSelectedItem();
-	   
-	    if (selectedItem.toLowerCase().startsWith("http://") 
-				|| selectedItem.toLowerCase().startsWith("https://") 
-				|| selectedItem.toLowerCase().startsWith("atps://") 
-				|| selectedItem.toLowerCase().startsWith("atp://") 
-				|| selectedItem.toLowerCase().startsWith("file://")) {
-			int delimiter = selectedItem.lastIndexOf('/');
+	protected  void updateList() {
+		Resource res = Resource.getResourceFor("aglets");
+		String lists = res.getString("aglets.agletsList");
 
-			_classField.setText(selectedItem.substring(delimiter + 1));
-			_urlField.setText(selectedItem.substring(0, delimiter));
-		} else {
-			_classField.setText(selectedItem);
-			_urlField.setText("");
-		} 
-	    
+		this.selectionList.removeAllItems();
+
+		StringTokenizer st = new StringTokenizer(lists, " ", false);
+
+		while (st.hasMoreTokens()) {
+		    String token = st.nextToken();
+		    this.logger.debug("Adding the item " + token + "to the agent list");
+		    this.selectionList.addItem(token);
+		}
+		
 	}
 	
-		/*
-	 * Updates the hotlist
+	
+	/**
+	 * Saves the list and its content to the aglet resource.
+	 *
 	 */
-	private void updateList() {
-		Resource res = Resource.getResourceFor("aglets");
-		String list = res.getString("aglets.agletsList");
+	protected void updateProperty() {
+		synchronized (this.selectionList) {
+			int num = this.selectionList.getItemCount();
+			String agletsList = "";
 
-		StringTokenizer stz = new StringTokenizer(list," ");
-	    while(stz.hasMoreTokens()){
-	        this.agentList.addItem(stz.nextToken());
-	    }
-	    
-	}
-	private void updateProperty() {
-		synchronized (this) {
-		    String agletsList = this.agentList.getAllItems();
-		    		    
+			for (int i = 0; i < num; i++) {
+				agletsList += (this.selectionList.getItem(i) + " ");
+			} 
 			Resource res = Resource.getResourceFor("aglets");
+
 			res.setResource("aglets.agletsList", agletsList);
 			res.save("Tahiti");
 		} 
 	}
+
+
+	/**
+	 * Manages events from the list.
+	 * @param e the event
+	 */
+	public void valueChanged(ListSelectionEvent e) {
+	    // get the list selected in the list
+	    String selectedItem = this.selectionList.getSelectedItem();
+	    if( selectedItem == null || selectedItem.length() == 0 )
+		return;
+
+	    // get the pieces of the string to show
+	    if (selectedItem.toLowerCase().startsWith("http://") 
+		    || selectedItem.toLowerCase().startsWith("https://") 
+		    || selectedItem.toLowerCase().startsWith("atps://") 
+		    || selectedItem.toLowerCase().startsWith("atp://") 
+		    || selectedItem.toLowerCase().startsWith("file://")) {
+		int delimiter = selectedItem.lastIndexOf('/');
+
+		classField.setText(selectedItem.substring(delimiter + 1));
+		urlField.setText(selectedItem.substring(0, delimiter));
+	    } else {
+		classField.setText(selectedItem);
+		urlField.setText("");
+	    } 	
+	}
+	
+
 	
 }

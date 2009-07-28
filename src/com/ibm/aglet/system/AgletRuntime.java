@@ -40,14 +40,14 @@ import org.aglets.log.*;
  * of the local or remote context. Neither of an application nor aglet
  * can create its own instance of this runtime class.
  * 
- * @version     1.10    $Date: 2009/07/27 10:31:42 $
+ * @version     1.10    $Date: 2009/07/28 07:04:54 $
  * @author      Mitsuru Oshima
  * @see AgletRuntime#getAgletRuntime
  */
 public abstract class AgletRuntime {
 
 	final static String runtimePackagePrefix = "aglet.runtime.packagePrefix";
-    static LogCategory logCategory = LogInitializer.getCategory("com.ibm.aglet.system.AgletRuntime");
+	private static AgletsLogger logger = AgletsLogger.getLogger(AgletRuntime.class.getName());
 
 	private boolean _secure = true;
 
@@ -258,13 +258,13 @@ public abstract class AgletRuntime {
 			if (obj instanceof AgletRuntime) {
 				runtime = (AgletRuntime)obj;
 			} else {
-				logCategory.error("[ \"" + classname + "\" is not Runtime]");
+				logger.error("[ \"" + classname + "\" is not Runtime]");
 			} 
 		} catch (ClassNotFoundException ex) {
-			logCategory.error("[ The class \"" + classname 
+			logger.error("[ The class \"" + classname 
 							   + "\" not found]");
 		} catch (Exception ex) {
-			logCategory.error("[ An instance of \"" + classname 
+			logger.error("[ An instance of \"" + classname 
 							   + "\" cannot be created]");
 		} 
 

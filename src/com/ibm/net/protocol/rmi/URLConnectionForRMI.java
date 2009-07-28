@@ -33,7 +33,7 @@ import java.util.Properties;
  * An instance of this class creates a communication link between an
  * application and an atp server.
  * 
- * @version     1.10	$Date: 2009/07/27 10:31:42 $
+ * @version     1.10	$Date: 2009/07/28 07:04:54 $
  * @author      Mitsuru Oshima
  */
 

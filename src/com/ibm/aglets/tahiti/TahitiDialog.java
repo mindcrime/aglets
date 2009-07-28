@@ -16,269 +16,493 @@ package com.ibm.aglets.tahiti;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+
+import javax.print.DocFlavor.URL;
 import javax.swing.*;
-import com.ibm.aglet.*;
-import com.ibm.aglets.*;
-import com.ibm.aglets.tahiti.utils.*;
+import javax.swing.border.TitledBorder;
 
-/**
- * The Tahiti base dialog window, used for messages and other UI windows.
- * Ported from AWT to Swing by Luca Ferrari.
- */
-public class TahitiDialog extends JDialog {
-    
-    // load resources
-    protected static ResourceBundle bundle = null;
-	static {
-		bundle = ResourceBundle.getBundle("tahiti");
-	}
-    
+import org.aglets.log.AgletsLogger;
+import org.aglets.util.gui.*;
+import org.aglets.util.*;
+
+import com.ibm.aglet.AgletInfo;
+import com.ibm.aglet.AgletProxy;
+
+import java.util.*;
+
+
+public class TahitiDialog extends BaseAgletsDialog implements ActionListener{
 	static final public String lineSeparator = "\n";
-
-	static protected class MessagePanel extends JPanel {
+/*
+	static protected class MessagePanel extends Panel {
+		private GridBagConstraints cns = new GridBagConstraints();
+		private GridBagLayout grid = new GridBagLayout();
 		private boolean raised;
-		private int alignment = JLabel.LEFT;
+		private int alignment = Label.LEFT;
 
-		
-		/*
-		 * Constructs a message panel with the message.
-		 * @param message
-		 * @param alignment
-		 * @param raised
-		 */
-		public MessagePanel(String message) {
-			this(message, JLabel.LEFT);
-		}
-		
-		public MessagePanel(String[] messages,int alignment, boolean raised){
-		    super();
-		    JPanel p2 = new JPanel();
-		    for(int i=0; messages!=null && i<messages.length; i++){
-		        p2.add(new JLabel(messages[i], alignment));
-		    }
-		    this.add(new JScrollPane(p2));
+		public MessagePanel(String message, int alignment, boolean raised) {
+			this(split(message), alignment, raised);
 		}
 
-		public MessagePanel(String message, int alignment) {
+		public MessagePanel(String messages[], int alignment, 
+							boolean raised) {
 			this.alignment = alignment;
-			
-			JLabel msg = new JLabel(message,alignment);
-			this.add(new JScrollPane(msg));
-			
-		}
-	}
+			this.raised = raised;
+			cns.gridwidth = GridBagConstraints.REMAINDER;
+			cns.fill = GridBagConstraints.BOTH;
+			cns.weightx = 1.0;
+			cns.weighty = 1.0;
+			cns.insets = new Insets(3, 3, 3, 3);
+			setLayout(grid);
+			for (int i = 0; i < messages.length; i++) {
+				Label l = new Label(messages[i], alignment);
 
-
-
-	private JPanel buttonPanel = new JPanel();
-	private boolean shown = false;
-	private JButton _closeButton = null;
-
-	protected TahitiDialog(JFrame f) {
-		this(f, "", false);
-	}
-	protected TahitiDialog(JFrame f, String title, boolean modal) {
-		super(f, title, modal);
-		this.getContentPane().setLayout(new BorderLayout());
-		setTitle(title);
-		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		this.getContentPane().add("South", buttonPanel);
-
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				if (TahitiDialog.this.windowClosing(e)) {
-					dispose();
-				} else {
-					setVisible(false);
-				} 
+				grid.setConstraints(l, cns);
+				add(l);
 			} 
-		});
+		}
 
-	}
-	public JButton addButton(String name) {
-		JButton b = new JButton(name);
+		public void paint(Graphics g) {
+			super.paint(g);
+			g.setColor(getBackground());
+			Dimension d = getSize();
 
-		buttonPanel.add(b);
-		return b;
+			g.fillRect(0, 0, d.width, d.height);
+			g.draw3DRect(1, 1, d.width - 2, d.height - 2, raised);
+		} 
 	}
-	protected JButton addButton(String name, ActionListener listener) {
-		JButton b = addButton(name);
 
-		b.setActionCommand(name);
-		b.addActionListener(listener);
-		return b;
-	}
+	*/
+	// TODO rimuovere il blocco qui sopra
 	
 	/**
-	 * Creates and adds a JButton to the south button panel.
-	 * @param label the label of the button
-	 * @param actionCommand the action command of the button (if null => the label)
-	 * @param icon the icon of the button
-	 * @param listener the actionlistener for the button
+	 * The main window of this dialog.
 	 */
-	protected void addJButton(String label, String actionCommand, Icon icon, ActionListener listener){
-	    if(label==null){ return; }
-	    if(actionCommand == null){ actionCommand = label; }
+	protected MainWindow mainWindow = null;
+	
+	
+	/**
+	 * A panel for containing the buttons.
+	 */
+	private JPanel buttonPanel = null;
+	
+	/**
+	 * The panel for the ok/close buttons.
+	 */
+	private OkCancelButtonPanel okCancelButtonPanel = null;
+	
+	/**
+	 * A panel for the content.
+	 */
+	protected JPanel contentPanel = null;
+	
+	private boolean shown = false;
+	private Button _closeButton = null;
+	
+	/**
+	 * A message area for a text message to display in the content panel.
+	 */
+	protected JTextArea messageArea = null;
+	
+	/**
+	 * Creates the dialog window displaying the main components. Please note that
+	 * the dialog window will have a main component, called content panel, at the center
+	 * and a button panel at the south where user can add buttons. Moreover there will be
+	 * standard buttons at the south for managing the ok/cancel operation.
+	 * @param parentFrame the frame owner of this dialog.
+	 */
+	protected TahitiDialog(JFrame parentFrame){
+	    super(parentFrame);
 	    
-	    JButton button = new JButton(label,icon);
-	    button.setActionCommand(actionCommand);
-	    button.addActionListener(listener);
+	    // store the main window if it is a main window
+	    if( parentFrame instanceof MainWindow )
+		this.mainWindow = (MainWindow) parentFrame;
+	    
+	    // create the translator
+	    this.translator = AgletsTranslator.getInstance("tahiti", Locale.getDefault());
+	    
+	    // set the layout for this dialog
+	    this.setLayout(new BorderLayout() );
+	    
+	    // set the title
+	    this.setTitle(JComponentBuilder.getTitle(this.baseKey));
+	    
+	    // create the ok/cancel button panel
+	    this.okCancelButtonPanel = JComponentBuilder.createOkCancelButtonPanel(this.baseKey + ".okButton", this.baseKey + ".cancelButton", this);
+	    
+	    // create the button panel
+	    this.buttonPanel = new JPanel();
+	    this.buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+	    
+	    // add the button panels
+	    JPanel bPanel = new JPanel();
+	    bPanel.setLayout(new BorderLayout());
+	    bPanel.add(this.buttonPanel, BorderLayout.NORTH);
+	    bPanel.add(this.okCancelButtonPanel, BorderLayout.SOUTH);
+	    this.add(bPanel, BorderLayout.SOUTH);
+	    
+	    // create the content panel
+	    this.contentPanel = new JPanel();
+	    this.contentPanel.setLayout( new BorderLayout() );
+	    this.add(this.contentPanel, BorderLayout.CENTER);
+	    
+	    // set the default button
+	    this.getRootPane().setDefaultButton( this.okCancelButtonPanel.getOkButton() );
+	    
+	    
+	    this.pack();
+	    
+	}
+	
+	
+	/**
+	 * Builds the dialog window with the specified title and modal way.
+	 * @param parentFrame the fram owner of this dialog
+	 * @param title the title of this window
+	 * @param modal the modal or not
+	 */
+	@Deprecated
+	protected TahitiDialog(JFrame parentFrame, String title, boolean modal){
+	    this(parentFrame);
+	    this.setTitle(title);
+	    this.setModal(modal);
+	}
+	
+	
+	/**
+	 * Adds a button to the button panel.
+	 * @param key the key for looking up the button locales
+	 * @param listener the listener to associate to the button
+	 * @param keyListener the key listener for the button
+	 * @return the button for further evaluation
+	 */
+	public JButton addButton(String key, ActionListener listener, KeyListener keyListener){
+	    // check params
+	    if( key == null )
+		return null;
+	    
+	    // get the button
+	    JButton button = JComponentBuilder.createJButton(key, key, listener);
+	    button.addKeyListener(keyListener);
+	    
+	    // add the button to the panel
 	    this.buttonPanel.add(button);
+	    
+	    // return the button
+	    return button;
 	}
 	
 	/**
-	 * A method to get the agent name as a string starting from its proxy. The method can show
-	 * a dialog window to report errors.
-	 * @param proxy the agent proxy
-	 * @return a special string if there's an error, or the agent name
+	 * Adds the button to the button panel.
+	 * @param key the key of the button
+	 * @param listener the listener for this button
+	 * @return the button for further evaluation
 	 */
-	protected String getAgletName(AgletProxy proxy){
-	    if(proxy==null){
-	        JOptionPane.showMessageDialog(this,bundle.getString("dialog.tahitidialog.error.proxynull"),bundle.getString("dialog.tahitidialog.error.title"),JOptionPane.ERROR_MESSAGE, IconRepository.getIcon("proxy"));
-	        return bundle.getString("dialog.tahitidialog.error.proxy2name");
+	public JButton addButton(String key, ActionListener listener){
+	    return this.addButton(key, listener, null);
+	}
+	
+	/**
+	 * Adds the specified button to the button panel
+	 * @param key the key for the button
+	 * @return the button, for further evaluation
+	 */
+	public JButton addButton(String key){
+	    return this.addButton(key, null, null);
+	}
+	
+	
+	/**
+	 * Adds the specified component to the content panel.
+	 * @param component the component to show
+	 */
+	protected final void addContent(JComponent component){
+	    // check params
+	    if( component == null )
+		return;
+	    else
+		this.contentPanel.add(component);
+	}
+	
+	
+	/**
+	 * Shows the specified message into a text area within the content panel.
+	 * Please note that only one message can be shown per time.
+	 * The message is shown at the center of the content pane.
+	 * @param message the message to show (must be not-null)
+	 */
+	protected final void showText(String message){
+	    // check params
+	    if( message == null || message.length() == 0 )
+		return;
+	    else{
+		// check if the message area has been already created
+		if( this.messageArea == null ){
+		    this.messageArea = new JTextArea();
+		    this.contentPanel.add(this.messageArea, BorderLayout.CENTER);
+		    this.messageArea.setEnabled(false);
+		}
+		
+		// add the text message
+		this.messageArea.setText(message);
+		
+	    }
+	}
+	
+	
+	/**
+	 * Adds the specified message to the content panel using a JLabel. This method
+	 * is suitable for small messages. The message is shown at the top of the content pane.
+	 * @param message the short message to display
+	 */
+	protected final void showMessage(String message){
+	    // check params
+	    if( message == null || message.length() == 0 )
+		return;
+	    else
+		this.contentPanel.add( new JLabel(message), BorderLayout.NORTH );
+	}
+	
+	/**
+	 * Builds a table with a list of the aglet info properties and their values.
+	 * The infoes are shown at the bottom of the content pane.
+	 * @param info the aglet info for the agent
+	 */
+	protected final void showAgletInfo(AgletInfo info){
+	    // check params
+	    if( info == null )
+		return;
+	    
+	    JScrollPane scrollTable = buildAgletInfoTable(info);
+	    this.contentPanel.add(scrollTable, BorderLayout.SOUTH);	    
+	}
+
+
+	/**
+	 * Builds a table with the iformation about an agent.
+	 * @param info the aglet info
+	 * @return a scrollpane with the table to display
+	 */
+	private JScrollPane buildAgletInfoTable(AgletInfo info) {
+	    // display all the information about the aglet
+	    String address = info.getAddress();
+	    String className = info.getAgletClassName();
+	    String codeBase = info.getCodeBase().toExternalForm();
+	    String creationTime = "" + info.getCreationTime();
+	    String AgletID = info.getAgletID().toString();
+	    String APIMajor = "" + info.getAPIMajorVersion();
+	    String APIMinor = "" + info.getAPIMinorVersion();
+	    String origin = info.getOrigin();
+	    String certificate = info.getAuthorityCertificate().toString();
+	    
+	    String infoes[][] = new String[9][2];
+	    
+	    infoes[0][0] = translator.translate("AgletID");
+	    infoes[0][1] = AgletID;
+	    infoes[1][0] = translator.translate("AgletCodeBase");
+	    infoes[1][1] = codeBase;
+	    infoes[2][0] = translator.translate("AgletClassName");
+	    infoes[2][1] = className;
+	    infoes[3][0] = translator.translate("AgletAddress");
+	    infoes[3][1] = address;
+	    infoes[4][0] = translator.translate("AgletOrigin");
+	    infoes[4][1] = origin;
+	    infoes[5][0] = translator.translate("AgletCertificate");
+	    infoes[5][1] = certificate;
+	    infoes[6][0] = translator.translate("AgletAPIMajor");
+	    infoes[6][1] = APIMajor;
+	    infoes[7][0] = translator.translate("AgletAPIMinor");
+	    infoes[7][1] = APIMinor;
+	    infoes[8][0] = translator.translate("AgletCreationTime");
+	    infoes[8][1] = creationTime;
+	    
+	    
+	    String header[] = new String[2];
+	    header[0] = translator.translate("AgletPropertyName");
+	    header[1] = translator.translate("AgletPropertyValue");
+	    
+	    // build a jtable for the info
+	    JTable table = new JTable(infoes, header);
+	    
+	    // add the table to the content pane
+	    table.setEnabled(false);
+	    JScrollPane scrollTable = new JScrollPane(table);
+	    TitledBorder border = new TitledBorder(translator.translate(this.baseKey + ".agletInfo.title") );
+	    border.setTitleJustification(TitledBorder.RIGHT);
+	    border.setTitleColor(Color.BLUE);
+	    scrollTable.setBorder(border);
+	    return scrollTable;
+	}
+	
+
+	/**
+	 * Prepars an alert dialog window.
+	 * @param frame the owner of the dialog
+	 * @param message the message to show (it must be already translated)
+	 * @return the dialog window
+	 */
+	public static TahitiDialog alert(JFrame frame, String message){
+	    // check params
+	    if( frame == null || message == null )
+		return null;
+	    
+	    
+	    // build a new TahitiDialog
+	    TahitiDialog dialog = new TahitiDialog(frame);
+	    
+	    dialog.setTitle(JComponentBuilder.getTitle(dialog.baseKey + ".alert"));
+	    
+	    // add the message to a textarea
+	    JTextArea text = new JTextArea();
+	    text.setText(message);
+	    text.setEditable(false);
+	    
+	    // now add the text area to the content pane of the
+	    // tahiti dialog
+	    dialog.addContent(text);
+	    dialog.pack();
+	    
+	    // all done
+	    return dialog;
+	}
+	
+
+	/**
+	 * Builds a tahiti dialog with a message.
+	 * @param frame the frame owner of the dialog
+	 * @param title the title (could be null) already translated
+	 * @param msg the message to show
+	 * @return the dialog
+	 */
+	public static TahitiDialog message(JFrame frame, String title, String msg){
+	    // check params
+	    if( frame == null || msg == null )
+		return null;
+	    
+	    // build a new TahitiDialog
+	    TahitiDialog dialog = new TahitiDialog(frame);
+	    
+	    if( title != null )
+		dialog.setTitle(title);
+	    else
+		dialog.setTitle(JComponentBuilder.getTitle(dialog.baseKey + ".message"));
+	    
+	    // add the message to a textarea
+	    JTextArea text = new JTextArea();
+	    text.setText(msg);
+	    text.setEditable(false);
+	    
+	    // now add the text area to the content pane of the
+	    // tahiti dialog
+	    dialog.addContent(text);
+	    dialog.pack();
+	    
+	    // all done
+	    return dialog;
+	    
+	}
+	
+	protected static final TahitiDialog info(JFrame parentFrame, AgletProxy proxy){
+	    // check params
+	    if( proxy == null )
+		return  null;
+	    
+	    // build a new tahiti dialog
+	    TahitiDialog dialog = null;
+	    try{
+        	    dialog = new TahitiDialog(parentFrame);
+        	    dialog.setTitle(JComponentBuilder.getTitle(dialog.baseKey + ".info"));
+        	    dialog.addContent( dialog.buildAgletInfoTable( proxy.getAgletInfo() ) );
+        	    dialog.pack();
+        	    return dialog;
+	    }catch(Exception e){
+		if( dialog != null )
+		    dialog.logger.error("Exception caught while trying to build an aglet info dialog", e);
+		return null;
+	    }
+
+	}
+	
+	
+	/**
+	 * Adds a panel showing each aglet in the dialog window.
+	 * @param proxies the list of proxies to show
+	 */
+	protected final void showAgletProxies(LinkedList<AgletProxy> proxies){
+	    // check params
+	    if( proxies == null || proxies.size() == 0 )
+		return;
+	    
+	    // add an aglet list with the proxies
+	    AgletListPanel<AgletProxy> agletPanel = new AgletListPanel<AgletProxy>(proxies.size());
+	    agletPanel.setRenderer(new AgletListRenderer(agletPanel));
+	    
+	    // add each proxy
+	    Iterator iter = proxies.iterator();
+	    while (iter != null && iter.hasNext()) {
+		AgletProxy currentProxy = (AgletProxy) iter.next();
+		agletPanel.addItem(currentProxy);
+		
 	    }
 	    
-	    // try to get the aglet name from the proxy
-	    String agletName = "Invalid Aglet";
-		try {
-			agletName = (proxy == null ? "No Aglet" : proxy.getAgletClassName());
-		} catch (InvalidAgletException ex) {
-		    JOptionPane.showMessageDialog(this,bundle.getString("dialog.tahitidialog.error.proxyexception"),bundle.getString("dialog.tahitidialog.error.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("proxy"));
-		    return bundle.getString("dialog.tahitidialog.error.proxy2name");
-		}
-		
-		return agletName;
+	    // add the panel to the content panel
+	    this.addContent(agletPanel);
 	}
 	
 	
-	protected JButton addButton(String name, ActionListener actionListener, 
-							   KeyListener keyListener) {
-		JButton b = addButton(name);
-
-		b.setActionCommand(name);
-		b.addActionListener(actionListener);
-		b.addKeyListener(keyListener);
-		return b;
-	}
 	
-	protected JButton addCloseButton(String name) {
-		class AlertCloseListener extends ActionAndKeyListener {
-			Dialog target;
-
-			AlertCloseListener(Dialog d) {
-				target = d;
-			}
-			protected void doAction() {
-				target.dispose();
-				closeButtonPressed();
-			} 
-		}
-		if (name == null) {
-			name = bundle.getString("dialog.close");
-		} 
-		ActionAndKeyListener listener = new AlertCloseListener(this);
-
-		_closeButton = addButton(name, listener, listener);
-		return _closeButton;
-	}
-	/*
-	 * Alert Dialog
+	
+	
+	/**
+	 * Gets back the mainWindow.
+	 * @return the mainWindow
 	 */
-	public static TahitiDialog alert(JFrame f, String msg) {
-		TahitiDialog dialog = null;
+	public synchronized final MainWindow getMainWindow() {
+	    return mainWindow;
+	}
 
-		try {
-			final JFrame fFrame = f;
-			final String fMsg = msg;
-			final ResourceBundle fBundle = bundle;
 
-			dialog = 
-				(TahitiDialog)AccessController
-					.doPrivileged(new PrivilegedAction() {
-				public Object run() {
-					TahitiDialog d = 
-						new TahitiDialog(fFrame, 
-										 fBundle.getString("title.alert"), 
-										 true);
+	/**
+	 * Sets the mainWindow value.
+	 * @param mainWindow the mainWindow to set
+	 */
+	public synchronized final void setMainWindow(MainWindow mainWindow) {
+	    this.mainWindow = mainWindow;
+	}
 
-					d.getContentPane().add("Center", 
-						  new MessagePanel(fMsg, JLabel.LEFT));
-					d.addCloseButton(null);
-					return d;
-				} 
-			});
-		} catch (SecurityException ex) {
-			ex.printStackTrace();
-		} 
-		return dialog;
+
+	
+	
+	/**
+	 * Makes the dialog window visible (if it is not already).
+	 *
+	 */
+	@Deprecated
+	public void popup(){
+	    if( ! this.isVisible() ){
+		this.pack();
+		this.setVisible(true);
+	    }
 	}
-	public void beep() {
-		getToolkit().beep();
-	}
-	protected void closeButtonPressed() {}
-	public MainWindow getMainWindow() {
-		return (MainWindow)getParent();
-	}
-	static public void main(String a[]) {
-	    
-        for(int i=0;a!=null && i<a.length;i++){
-            TahitiDialog.alert(new JFrame(), a[0]).popupAtCenterOfScreen();
-        }
-        
-        if(a==null){
-            TahitiDialog.alert(new JFrame(), "Tahiti dialog test!").popupAtCenterOfScreen();
-        }
-	}
-	/*
+
+	
+	/**
+	 * Makes the dialog window visible at the center of the parent window. 
 	 * 
+	 *
 	 */
-	public static TahitiDialog message(JFrame f, String title, String msg) {
-		TahitiDialog dialog = null;
-
-		try {
-			final JFrame fFrame = f;
-			final String fTitle = title;
-			final String fMsg = msg;
-			final ResourceBundle fBundle = bundle;
-
-			dialog = 
-				(TahitiDialog)AccessController
-					.doPrivileged(new PrivilegedAction() {
-				public Object run() {
-					TahitiDialog d = 
-						new TahitiDialog(fFrame, 
-										 fBundle.getString("title.message"), 
-										 true);
-
-					d.getContentPane().add("North", new Label(fTitle));
-					d.getContentPane().add("Center", 
-						  new MessagePanel(fMsg, JLabel.LEFT));
-					d.addCloseButton(null);
-					return d;
-				} 
-			});
-		} catch (SecurityException ex) {
-			ex.printStackTrace();
-		} 
-		return dialog;
-	}
-	public void popup() {
-		if (shown == false) {
-			pack();
-			shown = true;
-		} 
-		show();
-	}
+	@Deprecated
 	public void popupAtCenterOfParent() {
-		if (shown == false) {
-			pack();
-			shown = true;
-		} 
+	    // check params
+	    if( this.isVisible() || this.getParent() == null )
+		return;
+	    
 		Dimension d = getToolkit().getScreenSize();
-		Frame parent = (Frame)getParent();
+		JFrame parent = (JFrame)getParent();
 
 		Point ploc = parent.getLocationOnScreen();
 		Dimension psize = parent.getSize();
@@ -304,35 +528,26 @@ public class TahitiDialog extends JDialog {
 		} 
 		setLocation(x, y);
 
-		show();
+		this.setVisible(true);
 	}
+	
+	
+	
+	/**
+	 * Makes the dialog visible at the center of the screen.
+	 *
+	 */
+	@Deprecated
 	public void popupAtCenterOfScreen() {
-		if (shown == false) {
-			pack();
-			shown = true;
-		} 
+	    if( this.isVisible() )
+		return;
+	 
 		Dimension d = getToolkit().getScreenSize();
 
 		setLocation((d.width - getSize().width) / 2, 
 					(d.height - getSize().height) / 2);
-		show();
+		this.setVisible(true);
 	}
-	/*
-	 * 
-	 * public static TahitiDialog message(Frame f, String title, String msg, String detail) {
-	 * TahitiDialog dialog = null;
-	 * try {
-	 * AccessController.beginPrivileged();
-	 * dialog = new TahitiDialog(f, "Message", true);
-	 * dialog.add("North", new Label(title));
-	 * dialog.add("Center", new MessagePanel(msg, Label.LEFT, false));
-	 * dialog.addCloseButton(null);
-	 * } finally {
-	 * AccessController.endPrivileged();
-	 * }
-	 * return dialog;
-	 * }
-	 */
 
 	public static String[] split(String str) {
 		String msg[] = new String[50];
@@ -349,9 +564,4 @@ public class TahitiDialog extends JDialog {
 		System.arraycopy(msg, 0, ret, 0, i);
 		return ret;
 	}
-	protected boolean windowClosing(WindowEvent e) {
-		return true;
-	}
-	
-
 }

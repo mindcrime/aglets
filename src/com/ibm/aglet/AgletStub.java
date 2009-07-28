@@ -28,6 +28,8 @@ import java.security.PermissionCollection;
 
 // # import com.ibm.aglets.security.Allowance;
 import com.ibm.aglet.event.*;
+import com.ibm.aglet.message.MessageManager;
+
 import java.net.URL;
 import java.io.IOException;
 
@@ -35,7 +37,7 @@ import java.io.IOException;
  * Abstract class AgletStub is used to implement an aglet behavior.
  * It is not normally used by aglet programmers.
  * 
- * @version     1.30    $Date: 2009/07/27 10:31:41 $
+ * @version     1.30    $Date: 2009/07/28 07:04:53 $
  * @author	Mitsuru Oshima
  * @author	ONO Kouichi
  */

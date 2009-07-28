@@ -1,281 +1,269 @@
 package com.ibm.aglets.thread;
+import org.aglets.log.*;
 
-
-import com.ibm.aglets.*;
+import com.ibm.aglet.AgletException;
+import com.ibm.aglet.message.MessageManager;
+import com.ibm.aglets.MessageManagerImpl;
 
 import java.util.*;
-import com.ibm.aglet.AgletProxy;
-import com.ibm.aglet.MessageManager;
-import com.ibm.aglet.message.*;
 
 /**
- * This class represents a pool for a set of aglet threads. Agents
- * and message managers can pop and push threads from the pool
- * in order to handle execution threads. Using a singleton pool
- * like this avoid the creation of a lot of threads within the
- * platform.
- * @author Luca Ferrari cat4hire@users.sourceforge.net
- * 28-mag-2005
- * @version 1.0
+ * A thread pool that provides pooling base mechanism for aglet threads. The idea behind this pool is
+ * quite simple: once a new thread is required the pool must be able to provide it. Provide a
+ * thread means either:
+ * a) provide an already created and idle thread;
+ * b) create a new thread if no one idle thread is available.
+ * Once a thread has finished its work it must be inserted again in the pool, thus it can be
+ * used in further thread needed conditions.
+ * @author Luca Ferrari - cat4hire@users.sourceforge.net
+ *
  */
 public class AgletThreadPool {
+    // the logger for this pool
+    private AgletsLogger logger = AgletsLogger.getLogger(AgletThreadPool.class.getName());
+    
+    /**
+     * The minimum size of the pool, that is the minimum number thread this pool must
+     * create on startup.
+     */
+    private int minPoolSize = 10;
+    
+    /**
+     * The max size of the pool, that is the max number of thread this pool can contain.
+     * After such number has been reached, the pool must suspend each request of a new thread
+     * until one becomes idle (and thus available) again.
+     */
+    private int maxPoolSize = 100;
+    
+    /**
+     * A self reference to this object. This class is supposed to be a singleton,
+     * thus only one pool can exists in the whole system.
+     */
+    private static AgletThreadPool mySelf = null;
+    
+    /**
+     * The pool will keep the threads into a stack container.
+     */
+    private Stack<AgletThread> threads = null;
+    
+    /**
+     * A thread group that contains all the threads this pool will create.
+     */
+    private ThreadGroup threadGroup = new ThreadGroup("AgletThreadGroup");
+    
+    /**
+     * A counter that indicates how many threads this pool has created until now.
+     * It is useful for checking that the pool has not gone over the maxPoolSize value.
+     */
+    private int createdThread = 0;
+    
+    /**
+     * A counter that provides an information about the number of busy threads in the pool.
+     */
+    private int busyThreads = 0;
+    
+    /**
+     * Initializes the structures of the pool and creates the first threads (the minimum
+     * available threads) that will be used.
+     *
+     */
+    private AgletThreadPool(){
+	super();
+	this.threads = new Stack();
+	
+	
+	// create the min threads
+	logger.info("AgletThreadPool starting with " + this.minPoolSize + " min threads");
+	for(int i=0; i<this.minPoolSize; i++)
+	    this.createNewThread();
+	
+	logger.info("AgletThreadPool ready");
+    }
+    
+    /**
+     * An utility method that creates a new thread, sets the group of the thread and 
+     * pushes it into the stack, thus the new thread is available to the pool. Moreover,
+     * this method increases the createdThread value, thus to store the number of threads
+     * created by this pool.
+     *
+     */
+    protected void createNewThread(){
+	logger.debug("Creating a new thread (thread number " + this.createdThread + ")");
+	AgletThread thread = new AgletThread(this.threadGroup);
+	thread.setName("PooledAgletThread num." + this.createdThread);
+	thread.setDaemon(true);			// all the pooled thread are daemons, they are utility threads
+	this.threads.push(thread);
+	this.createdThread++;
+    }
+    
+    /**
+     * Creates a new instance of the pool and returns it to the caller.
+     * @return the instance of the thread pool for the running platform.
+     */
+    public synchronized static AgletThreadPool getInstance(){
+	// check if the pool is already ready
+	if( mySelf != null )
+	    return mySelf;
+	else{
+	    mySelf = new AgletThreadPool();
+	    return mySelf;
+	}
+    }
+    
+    
+    /**
+     * Provides a new AgletThread to the caller. The AgletThread will be used combined with
+     * the specified message manager (that must be not-null). This method checks the pool to see if a 
+     * good thread is contained in it, and thus such thread is returned. Otherwise, if possible (i.e., 
+     * the pool has not yet reached the max size) a new thread is created. In the case there are no
+     * available threads and no more thread can be created (due to the reach of the max pool size), the
+     * caller thread is suspended waiting for a new thread to be available.
+     * @param messageManager the message manager that will be used for the new thread
+     * @return the AgletThread to use to manage messages.
+     * @throws AgletException if the specified message manager is null, or a problem occurs while
+     * waiting for a new thread to be available on the pool.
+     */
+    public synchronized AgletThread pop(MessageManager messageManager) throws AgletException{
+	// first of all check if the message manager is valid
+	if( (messageManager == null) || (! (messageManager instanceof MessageManagerImpl)) )
+	    throw new AgletException("Cannot get a thread for a null message manager");
 
-	/**
-	 * A self refernce to myself, used to create
-	 * a singleton.
-	 */
-	private static AgletThreadPool myself = null;
-		
-	/**
-	 * The real pool that will contain the threads.
-	 */
-	private Stack pool = null;
+	// the thread to return...
+	AgletThread thread = null;
 	
-	
-	/**
-	 * A pool of special threads, used to deliver a single message to an agent.
-	 */
-	private Stack deliveryPool = null;
-	
-	/**
-	 * The max number of thread this pool must handle.
-	 */
-	private int size;
-	
-	/**
-	 * The number of thread handled currenlty.
-	 */
-	private int handled;
-	
-	
-	/**
-	 * Base constructor: it creates the pool-stack and initializes
-	 * the size of the pool.
-	 * @param size the max number of threads this pool can create
-	 */
-	protected AgletThreadPool(int size){
-		super();
-		this.size = size;
-		AgletThreadPool.myself = this;
-		this.pool = new Stack();
-		this.deliveryPool = new Stack();
-		this.handled = 0;
+	// check the size of the stack/pool. If it is zero there are not threads available
+	// thus a new thread should be created, but this only if the number of created
+	// threads does not exceed the maxPoolSize, otherwise it is required to wait...
+	if( (this.threads.size() == 0) && (this.createdThread < this.maxPoolSize) ){
+	    // create a new thread
+	    this.createNewThread();
 	}
+	else
+	while( (this.threads.size() == 0) && (this.createdThread > this.maxPoolSize) ){
+	    // I cannot create no more threads, the max size of the pool has already been
+	    // reached, thus the caller must wait until a new thread is available
+	    logger.debug("Waiting for a thread to re-enter the pool and be available...");
+	    try{
+		this.wait();
+	    }catch(InterruptedException ex){
+		logger.error("Exception caught while waiting for a thread to be available in the pool!", ex);
+		throw new AgletException();
+	    }
+	    
+	}		// end of while
 	
+	// now if I'm here there must be at least an available thread in the pool, pop
+	// it and return it to the caller.
+	logger.debug("Popping a thread from the pool");
+	thread = this.threads.pop();
+	this.busyThreads++;
+	logger.debug("Returning the thread " + thread);
 	
+	// sets the message manager for this thread
+	thread.setMessageManager((MessageManagerImpl)messageManager);
 	
-	/**
-	 * Obtains the current instance of the pool. If no instance have been
-	 * created yet, creates an instance for 10 threads.
-	 * @return the reference to the pool
-	 */
-	public static AgletThreadPool getInstance(){
-		if( AgletThreadPool.myself != null ){
-			return AgletThreadPool.myself;
-		}
-		else{
-			synchronized (AgletThreadPool.class){
-				AgletThreadPool.myself = new AgletThreadPool(10);
-				return AgletThreadPool.myself;
-				
-			}
-		}
-			
-	}
-	
-	
-	
-	/**
-	 * A service to get an AgletThread. If possible, a thread is exctracted from the
-	 * queue, otherwise a new thread is created. If the maximum count of the pool is reached,
-	 * the process is suspended (wait) until a new thread becomes available
-	 * in the pool.
-	 * <B>Important</B>: in a shared thread environment like this, it is important
-	 * to set the right message manager for the thread, otherwise messages
-	 * will be delivered to the wrong aglet.
-	 * @param group the group of the (in case) new thread
-	 * @param manager the message manager that must be associated to the thread
-	 * @return
-	 */
-	protected synchronized final AgletThread getThread(ThreadGroup group, MessageManager manager){
-		// as first I need to check if there's an available
-		// thread in the pool
-		
-		AgletThread t = null;
-		
-		
-		if( this.pool.size() >= 1 ){
-			// I've got at least one ready thread, get it
-			t = (AgletThread) this.getWaitingThread();
-		}
-		else{
-			// if here there's no thread in the pool, I should
-			// create a new thread but it depends on the
-			// number of threads I've already created.
-			
-			// If the number of created thread has reached the
-			// maximun count, then stop the creation and wait
-			// until a new thread becomes available
-			if( this.handled == this.size ){
-				try{
-					while( this.pool.size() == 0){
-						this.wait();
-					}
-					
-					// if here at least one thread is in the pool
-					t = (AgletThread)this.getWaitingThread();
-															
-				}catch(InterruptedException ex){
-					System.err.println("Cannot wait for another thread in the pool");
-					ex.printStackTrace();
-					return null;
-				}
-			}
-			else{
-				// i can create a new thread
-				t = new AgletThread(group, manager);
-				t.setMessageManager(manager);
-				// should I change the group of the thread????
-				this.handled++;
-				
-			}
-		}
-		
-		
-		// if here I've got the thread
-		t.setMessageManager(manager);
-		return t;
-	}
-	
-	
-	/**
-	 * A service to extract a waiting thread from the pool. It is important
-	 * to note that once placed in the pool the thread could be not yet sleeping,
-	 * that means it is going to call the wait method, but it hasn't done yet.
-	 * For this reason this method searches in the pool for a thread that
-	 * is effectively waiting (i.e., it has done the wait call). The loop is
-	 * performed twice on the pool, to avoid infinite loop.
-	 * @return the first waiting thread in the pool
-	 */
-	protected final AgletThread getWaitingThread(){
-		AgletThread t = null;
-		boolean find = false;
-		
-		if( this.pool != null && this.pool.size() >= 1){
-			int looper = this.pool.size()*2;
-			
-			while( find == false && looper >= 0){
-				t = (AgletThread) this.pool.pop();
-				looper--;
-				
-				if( t.isWaiting() == false){
-					// re-insert the thread in the pool
-					this.pool.push(t);
-				}
-				else
-					find = true;
-			}
-		}
-		
-		return t;
-	}
-	
-	
-	/**
-	 * A method to place a thread in the pool, that means releasing
-	 * a thread thus other agents/message managers can use it. The thread
-	 * is inserted in the pool only if it does not already is in the pool
-	 * and if the max number of thread managed from this pool has not been reached
-	 * yet (to avoid continue pushing of new threads). In the case
-	 * a process is waiting for a thread (wiat), it is notified.
-	 * @param thread the thread to release
-	 * @return true if the thread is placed in the pool, false otherwise.
-	 */
-	public synchronized boolean push(AgletThread thread){
-		// check the argument
-		if( thread == null ){
-			return false;
-		}
-		
-		// check if the thread is already contained in the pool
-		// or if the maximum size of the pool has been reached
-		// (i.e., avoid continue pushing of new threads!)
-		if( this.pool.contains(thread) || this.pool.size() == this.size ){
-			return false;
-		}
-		
-		// now insert the thread in the pool
-		this.pool.push(thread);
-		
-		// notify sleeping threads
-		this.notifyAll();
-		
-		
-		return true;
-	}
-	
-	
-	/**
-	 * A service to get a thread from the pool.
-	 * @param manager the message manager to use with the thread
-	 * @return the thread obtained from the pool (could be a new thread).
-	 */
-	public AgletThread pop(MessageManager manager){
-		AgletThread t = this.getThread(Thread.currentThread().getThreadGroup(), manager);
-		//t.notifyAll();
-		return t;
-	}
+	// all done!
+	return thread;
 
+    }
+    
+    /**
+     * Inserts (or re-inserts) a thread into the pool, making it available for other
+     * requests. Please note that if the pool already contains a reference to such thread
+     * or a number of threads greater than the maxPoolSize have been pushed, the pushing is aborted.
+     * An exception is thrown if it is forced to push a thread that does not belong to the
+     * thread group of the pooled threads.
+     * @param thread the thread to insert into the pool.
+     * @exception if the thread group is different from the one the pool has set at the thread creation.
+     */
+    public synchronized void push(AgletThread thread) throws AgletException{
+	// check if the thread is valid, or if it is already contained in the pool
+	// or if too much threads have been already be pushed in the pool!
+	if( thread == null || this.contains(thread) || this.threads.size() > this.maxPoolSize)
+	    return;
 	
-	protected void dumpPool(){
-		for(int i=0; i<this.pool.size(); i++){
-			System.out.println("Thread in pool: "+this.pool.elementAt(i));
-		}
+	// check if the thread group is strictly the same of the pool thread group
+	if( this.threadGroup.equals(thread.getThreadGroup()) == false ){
+	    logger.error("Trying to push a thread with a group different from the pool thread group!");
+	    throw new AgletException("Trying to push a thread with a group different from the pool thread group!");
 	}
 	
+	// simply push the thread to the stack
+	logger.debug("Pushing back the thread in the pool");
+	thread.setMessageManager(null);
+	this.threads.push(thread);
+	this.busyThreads--;
+    }
 
-	/**
-	 * Returns a delivery message thread. Please note that this code does not keep into account of the size
-	 * of the thread pool, that means, each time a delivery thread is required and no one is available, it
-	 * will be created. This is due to the fact that the number of delivery thread created should be less
-	 * than the number of thread used to execute agents.
-	 * @param proxy the proxy for the delivery thread.
-	 * @param message the message to deliver.
-	 * @return
-	 */
-	public DeliveryMessageThread getDeliveryMessageThread(AgletProxy proxy, Message message){
-		// check parameters
-		if( proxy == null || message == null )
-			return null;
-		
-		// synchornize
-		synchronized(this){
-			if( this.deliveryPool.size() == 0 ){
-				// no delivery thread yet created, create a new one				
-				DeliveryMessageThread dmt = new DeliveryMessageThread(proxy, message);
-				return dmt;
-			}
-			else{
-				// we have a thread in the pool, get it
-				DeliveryMessageThread dmt = (DeliveryMessageThread) this.deliveryPool.pop();
-				return dmt;
-			}
-		}
-	}
-	
-	
-	/**
-	 * Re-insert a thread in the pool of the delivery thread.
-	 * @param thread the thread to re-insert.
-	 */
-	public void pushDeliveryMessageThread(DeliveryMessageThread thread){
-		if( thread != null && this.deliveryPool != null && this.deliveryPool.contains(thread) == false )
-			synchronized(this){
-				this.deliveryPool.push(thread);
-			}
-		else
-			return;
-	}
-	
-	
+    /**
+     * Gets back the maxPoolSize.
+     * @return the maxPoolSize
+     */
+    public synchronized int getMaxPoolSize() {
+        return maxPoolSize;
+    }
+
+    /**
+     * Sets the maxPoolSize value.
+     * @param maxPoolSize the maxPoolSize to set
+     */
+    public synchronized void setMaxPoolSize(int maxPoolSize) {
+        this.maxPoolSize = maxPoolSize;
+    }
+
+    /**
+     * Gets back the minPoolSize.
+     * @return the minPoolSize
+     */
+    public synchronized int getMinPoolSize() {
+        return minPoolSize;
+    }
+
+    /**
+     * Sets the minPoolSize value.
+     * @param minPoolSize the minPoolSize to set
+     */
+    public synchronized void setMinPoolSize(int minPoolSize) {
+        this.minPoolSize = minPoolSize;
+    }
+
+    /**
+     * Gets back the threadGroup.
+     * @return the threadGroup
+     */
+    public synchronized final ThreadGroup getThreadGroup() {
+        return threadGroup;
+    }
+    
+    /**
+     * Checks if a specific thread is currently owned by the thread pool.
+     * @param thread the thread to check
+     * @return true if the thread is currently handled by this pool
+     */
+    public synchronized final boolean contains(AgletThread thread){
+	if( thread == null || this.threads.size() == 0 )
+	    return false;
+	else
+	    return this.threads.contains(thread);
+    }
+    
+    
+    /**
+     * Provides the information about how many threads are busy at the moment
+     * in the pool.
+     * @return the number of busy threads
+     */
+    public synchronized final int getBusyThreadsNumber(){
+	return this.busyThreads;
+    }
+
+    /**
+     * Returns the number of created threads of this pool.
+     * @return the number of threads that this pool has created up to now
+     */
+    public synchronized int getCreatedThread() {
+	return this.createdThread;
+    }
+
+
 }

@@ -1,8 +1,8 @@
 package com.ibm.aglets.tahiti;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
 import java.awt.Frame;
+import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.TextField;
 import java.awt.GridBagConstraints;
@@ -10,8 +10,14 @@ import java.awt.event.ActionEvent;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 
-import com.ibm.aglets.tahiti.utils.IconRepository;
-import com.ibm.aglets.tahiti.utils.TahitiCommandStrings;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.*;
+
+import org.aglets.util.gui.GUICommandStrings;
+import org.aglets.util.gui.JComponentBuilder;
+
 import com.ibm.atp.auth.SharedSecrets;
 import com.ibm.atp.auth.SharedSecret;
 
@@ -19,121 +25,131 @@ import com.ibm.atp.auth.SharedSecret;
  * Dialog for shared secret creation.
  * @author: Hideki Tai
  */
-class CreateSharedSecretDialog extends TahitiDialog 
-	implements java.awt.event.ActionListener {
-	
-	private static final String ACTION_OK = "OK";
-	private JTextField domain;
+class CreateSharedSecretDialog extends TahitiDialog implements java.awt.event.ActionListener {
 
+	/**
+	 * GUI Components
+	 */
+	private JTextField domain = null;
 	private JTextField creatorAlias = null;
-	private JPasswordField creatorPassword = null;
+	private JTextField creatorPassword = null;
 
-	CreateSharedSecretDialog(JFrame f) {
-		super(f, bundle.getString("dialog.createsharedsecret.title"), true);
+	CreateSharedSecretDialog(JFrame parent) {
+	    super(parent);
+	    
+	    // create the gui components
+	    this.domain = JComponentBuilder.createJTextField(20, null, this.baseKey + ".domain");
+	    this.creatorAlias = JComponentBuilder.createJTextField(20,null, this.baseKey + ".alias");
+	    this.creatorPassword = JComponentBuilder.createJTextField(20,null, null);
 
-		// set the layout for this window
-		this.getContentPane().setLayout(new BorderLayout());
-		
-		// place a label
-		this.getContentPane().add("North", new JLabel(bundle.getString("dialog.createsharedsecret.message"), JLabel.CENTER));
-		GridBagPanel p = new GridBagPanel();
+	    
+	    // create a panel to display the components
+	    JPanel centerPanel = new JPanel( new GridLayout(0,2) );
+	    
+	    JLabel label = JComponentBuilder.createJLabel(this.baseKey + ".domain.label");
+	    centerPanel.add(label);
+	    centerPanel.add(this.domain);
+	    
+	    label = JComponentBuilder.createJLabel(this.baseKey + ".alias.label");
+	    centerPanel.add(label);
+	    centerPanel.add(this.creatorAlias);
+	    
+	    label = JComponentBuilder.createJLabel(this.baseKey + ".password.label");
+	    centerPanel.add(label);
+	    centerPanel.add(this.creatorPassword);
+	    
 
-		this.getContentPane().add("Center",p);
-
-		// Sets the input field for domain name
-		domain = new JTextField(20);
-		GridBagConstraints cns = new GridBagConstraints();
-
-		cns.fill = GridBagPanel.HORIZONTAL;
-		cns.anchor = GridBagConstraints.WEST;
-		cns.gridwidth = GridBagConstraints.REMAINDER;
-		p.setConstraints(cns);
-		p.addLabeled(bundle.getString("dialog.createsharedsecret.domain"), domain);
-		domain.addActionListener(this);
-
-		// Sets the input field for creator's alias
-		creatorAlias = new JTextField(20);
-		p.addLabeled(bundle.getString("dialog.createsharedsecret.alias"), creatorAlias);
-
-		// Sets the input field for creator's password
-		creatorPassword = new JPasswordField(20);
-		p.addLabeled(bundle.getString("dialog.createsharedsecret.password"), creatorPassword);
-
-		// create the button panel
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		JButton ok = new JButton(bundle.getString("dialog.createsharedsecret.button.ok"), IconRepository.getIcon("ok"));
-		JButton cancel = new JButton(bundle.getString("dialog.createsharedsecret.button.cancel"),IconRepository.getIcon("cancel"));
-		ok.addActionListener(this);
-		ok.setActionCommand(TahitiCommandStrings.OK_COMMAND);
-		cancel.addActionListener(this);
-		cancel.setActionCommand(TahitiCommandStrings.CANCEL_COMMAND);
-		buttonPanel.add(ok);
-		buttonPanel.add(cancel);
-		this.getContentPane().add("South",buttonPanel);
-		    
-		this.pack();
-		
+	    
+	    this.contentPanel.add( centerPanel, BorderLayout.CENTER);
+	    this.pack();
 	}
 	
 	
 	/**
-	 * Handles the button actions.
-	 * @param event the event to deal with 
+	 * Handles "OK" button - creates a new shared secret and registers it.
 	 */
 	public void actionPerformed(ActionEvent event) {
-	    	String command = event.getActionCommand();
-	    	String domainName="";
-	    	String keyAlias="";
-	    	String keyPassword="";
-	    	
-	    	if(command.equals(TahitiCommandStrings.CANCEL_COMMAND)){
-	    	    this.setVisible(false);
-	    	    this.dispose();
-	    	    return;
-	    	}
-	    	else
-	    	if(command.equals(TahitiCommandStrings.OK_COMMAND)){
-	    	    // I need to create the new shared secret, check if all the data is available
-	    	    domainName = domain.getText();
-	    		keyAlias = creatorAlias.getText();
-	    		keyPassword = new String(creatorPassword.getPassword());
+	    // check params
+	    if( event == null )
+		return;
 	    
-	    		// check values
-	    		if(domainName == null || domainName.equals("")){
-	    		    JOptionPane.showMessageDialog(this,bundle.getString("dialog.createsharedsecret.error.domain"),bundle.getString("dialog.createsharedsecret.error.domain"),JOptionPane.ERROR_MESSAGE, IconRepository.getIcon("sharedsecret"));
-	    		    return;
-	    		}
-	    		
-	    		if(keyAlias == null || keyAlias.equals("")){
-	    		    JOptionPane.showMessageDialog(this,bundle.getString("dialog.createsharedsecret.error.alias"),bundle.getString("dialog.createsharedsecret.error.alias"),JOptionPane.ERROR_MESSAGE, IconRepository.getIcon("sharedsecret"));
-	    		    return;
-	    		}
-	    		
-	    	}
+	    String command = event.getActionCommand();
 	    
-		// Checks if the secret of the domain name is already exists.
+	    // if the ok button has been pressed then
+	    // it is time to create the shared secret
+	    if( GUICommandStrings.OK_COMMAND.equals(command) ){
+		
+		// get the data the user has entered
+		String domainName = this.domain.getText();
+		String keyAlias = this.creatorAlias.getText();
+		String keyPassword = this.creatorPassword.getText();
+		
+
+		
+		
+		// check and prompt the user for valid strings
+		
+		if( domainName == null || domainName.length() == 0 ){
+		    JOptionPane.showMessageDialog( this,
+			                           this.translator.translate(this.baseKey + ".error.domain"),
+			                           this.translator.translate(this.baseKey + ".error.domain.title"),
+			                           JOptionPane.ERROR_MESSAGE);
+		    return;
+		}
+		
+		if( keyAlias == null || keyAlias.length() == 0 ){
+		    JOptionPane.showMessageDialog( this,
+	                           this.translator.translate(this.baseKey + ".error.alias"),
+	                           this.translator.translate(this.baseKey + ".error.alias.title"),
+	                           JOptionPane.ERROR_MESSAGE);
+		    return;
+		}
+		
+		if( keyPassword == null || keyPassword.length() == 0 ){
+		    JOptionPane.showMessageDialog( this,
+	                           this.translator.translate(this.baseKey + ".error.password"),
+	                           this.translator.translate(this.baseKey + ".error.password.title"),
+	                           JOptionPane.ERROR_MESSAGE);
+		    return;
+		}
+		    
+		
+		// now get the shared secrets and check if a secret already exists
+		// for the specified domain
 		SharedSecrets secrets = SharedSecrets.getSharedSecrets();
 		SharedSecret secret = secrets.getSharedSecret(domainName);
 
-		if (secret != null) {
-		    JOptionPane.showMessageDialog(this,bundle.getString("dialog.createsharedsecret.error.alreadyexists"),bundle.getString("dialog.createsharedsecret.error.alreadyexists"),JOptionPane.ERROR_MESSAGE, IconRepository.getIcon("sharedsecret"));
+		if( secret != null ){
+		    JOptionPane.showMessageDialog( this,
+	                           this.translator.translate(this.baseKey + ".error.domainExists"),
+	                           this.translator.translate(this.baseKey + ".error.domainExists.title"),
+	                           JOptionPane.ERROR_MESSAGE);
+		    return;
 		}
-		else{
 
-			// Creates a new shared secret.
-			secret = SharedSecret.createNewSharedSecret(domainName, keyAlias, 
-														keyPassword);
-			if (secret == null) {
-			    JOptionPane.showMessageDialog(this,bundle.getString("dialog.createsharedsecret.error.notcreated"),bundle.getString("dialog.createsharedsecret.error.notcreated"),JOptionPane.ERROR_MESSAGE, IconRepository.getIcon("sharedsecret"));
-			} else {
-				secrets.addSharedSecret(secret);
-				secrets.save();
-				JOptionPane.showMessageDialog(this,bundle.getString("dialog.createsharedsecret.created"),bundle.getString("dialog.createsharedsecret.created"),JOptionPane.OK_OPTION, IconRepository.getIcon("sharedsecret"));
-			}
+		// create and check the shared secret
+		secret = SharedSecret.createNewSharedSecret(domainName, keyAlias, keyPassword);
+		
+		if( secret == null )
+		    JOptionPane.showMessageDialog( this,
+	                           this.translator.translate(this.baseKey + ".error.secret"),
+	                           this.translator.translate(this.baseKey + ".error.secret.title"),
+	                           JOptionPane.ERROR_MESSAGE);
+		else{
+		    // add the secret to the shared secrets
+		    secrets.addSharedSecret(secret);
+		    secrets.save();
+		    JOptionPane.showMessageDialog( this,
+	                           this.translator.translate(this.baseKey + ".secret"),
+	                           this.translator.translate(this.baseKey + ".secret.title"),
+	                           JOptionPane.INFORMATION_MESSAGE);
 		}
-		dispose();
+		
+		this.setVisible(false);
+		this.dispose();
+	    }	    	
+	    else
+		super.actionPerformed(event);
+
 	}
-	
-	
 }

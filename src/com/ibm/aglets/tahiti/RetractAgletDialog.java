@@ -14,6 +14,7 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
+import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Checkbox;
 import java.awt.Color;
@@ -38,179 +39,262 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
 
-import java.util.ResourceBundle;
 import java.util.Vector;
 import java.util.Enumeration;
 
 import java.net.*;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+import org.aglets.util.gui.GUICommandStrings;
+import org.aglets.util.gui.JComponentBuilder;
+
+import com.ibm.aglet.AgletProxy;
+import com.ibm.aglet.system.Aglets;
 import com.ibm.awb.misc.Resource;
-import javax.swing.*;
-import com.ibm.aglets.tahiti.utils.*;
 
 /**
  * Class RetractAgletDialog represents the dialog for Retracting an Aglet.
  * 
- * @version     1.02    $Date: 2009/07/27 10:31:40 $
+ * @version     1.02    $Date: 2009/07/28 07:04:53 $
  * @author      Danny B. Lange
  * @author	Mitsuru Oshima
  */
 
 final class RetractAgletDialog extends TahitiDialog implements ActionListener, 
-		 Runnable {
+		ItemListener {
 
-    /* Load resources */
-    static ResourceBundle bundle = null;
-	static {
-		bundle = ResourceBundle.getBundle("tahiti");
-	} 
-    
-    
-	/*
-	 * Singleton instance reference.
-	 */
-	private static RetractAgletDialog _instance = null;
 
 	
+	private JComboBox servers = null;
+	private AgletListPanel<AgletProxy> agletsList = null;
+	private JButton refreshProxies = null;
 	
-	/*
-	 * GUI components
-	 */
-	private JComboBox _servers = new JComboBox();
+	private String defaultServerString = null;
 
-	private AgentListPanel _agletsList = new AgentListPanel();
-
-	private GridBagLayout grid = new GridBagLayout();
 
 	String currentList = null;
 
-	com.ibm.aglet.AgletProxy proxies[] = null;
-
-	Thread handler = null;
-
-	/*
-	 * Constructs a new Aglet retract dialog.
-	 */
-	private RetractAgletDialog(MainWindow parent) {
-		super(parent, bundle.getString("dialog.retract.title"), true);
-
-		this.getContentPane().add("Center",this.makePanel());
-		
-		this.addJButton(bundle.getString("dialog.retract.button.ok"),TahitiCommandStrings.OK_COMMAND,IconRepository.getIcon("retract"),this);
-		this.addJButton(bundle.getString("dialog.retract.button.cancel"),TahitiCommandStrings.OK_COMMAND,IconRepository.getIcon("cancel"),this);
-	}
-	
-	
 	/**
-	 * Manages events from the buttons.
-	 * @param event the event to manage
+	 * A list of selected proxies that represents the proxy available on the
+	 * selected remote context/server.
+	 */
+	private AgletProxy proxies[] = null;
+
+
+
+	/**
+	 * The main constructor of this dialog window.
+	 * @param parent the parent frame of the dialog window
+	 */
+	protected RetractAgletDialog(MainWindow parent) {
+	    super(parent);
+	    
+	    // build up a list of agents
+	    this.agletsList = new AgletListPanel<AgletProxy>();
+	    this.agletsList.setRenderer(new AgletListRenderer(this.agletsList));
+	    
+	    this.defaultServerString = this.translator.translate(this.baseKey + ".serverHeader");
+	    
+	    // the combobox for the server
+	    this.servers = new JComboBox();
+	    this.servers.setEditable(true);
+	    this.servers.addItemListener(this);
+	    this.updateServerList();
+	    this.refreshProxies = JComponentBuilder.createJButton(this.baseKey + ".refreshButton",
+		    					          GUICommandStrings.REFRESH_COMMAND,
+		    					          this);
+	    
+	    // create a north panel
+	    JPanel northPanel = new JPanel();
+	    northPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+	    JLabel label = JComponentBuilder.createJLabel(this.baseKey + ".serverLabel");
+	    northPanel.add(label);
+	    northPanel.add(this.servers);
+	    northPanel.add(this.refreshProxies);
+	    this.add(northPanel, BorderLayout.NORTH);
+	    
+	    // add the aglet list panel at the center
+	    this.add(this.agletsList, BorderLayout.CENTER);
+	    
+	    // pack
+	    this.pack();    
+	    
+	}
+	/*
+	 * Creates an Aglet retract dialog.
 	 */
 	public void actionPerformed(ActionEvent event) {
-	    String command=event.getActionCommand();
+	    if( event == null )
+		return;
 	    
-	    if(command.equals(TahitiCommandStrings.OK_COMMAND)){
-	        int selected = this._agletsList.getSelectedIndex();
-	        
-	        if(selected >= 0){
-	            this.getMainWindow().retractAglet(proxies[selected]);
-	        }
+	    // if the event comes from the jcombobox (i.e., the user has pressed
+	    // enter on the combobox) I must refresh the proxy list
+	    if( event.getSource() == this.servers ){
+		this.getRemoteProxies();
+		this.updateAgletList();
+		return;
 	    }
 	    
-	    this.setVisible(false);
-	    dispose();
-
-	}
-	
-	/*
-	 * Singleton method to obtain the instance
-	 */
-	static RetractAgletDialog getInstance(MainWindow parent) {
-		if (_instance == null) {
-			_instance = new RetractAgletDialog(parent);
-		} 
-		_instance.buildServerList();
-		_instance.run();
-		return _instance;
-	}
-	
-	
-	
-	protected GridBagPanel makePanel() {
-		GridBagPanel p = new GridBagPanel();
-		GridBagConstraints cns = new GridBagConstraints();
-
-		cns.fill = GridBagConstraints.BOTH;
-		cns.anchor = GridBagConstraints.WEST;
-		cns.insets = new Insets(5, 5, 5, 5);
-		cns.weighty = 0.0;
-		cns.gridwidth = 1;
-		cns.weightx = 0.1;
-
-
-		p.add(new JLabel(bundle.getString("dialog.retract.label")), GridBagPanel.REMAINDER);
-		
-		p.addLabeled(bundle.getString("dialog.retract.label.server"), _servers);
-
-	cns.gridwidth = GridBagConstraints.REMAINDER;
-		cns.weighty = 1.0;
-		p.add(_agletsList, cns);
-		return p;
-	}
-	
-	
-	/**
-	 * A method to retrieve the list of agent on a server. Originally this method was
-	 * executed by a separated thread, now it's just a normal object method.
-	 */
-	public void run() {
 	    
-	    // get the destination server
-		String dest = (String)_servers.getSelectedItem();
-
-		try {
-		    // get all proxies on the destination server
-			proxies = com.ibm.aglet.system.Aglets.getAgletProxies(dest);
-
-			if (proxies == null) {
-				return;
-			} 
-
-			// remove all items from the list
-			_agletsList.removeAll();
-
-			for (int i = 0; i < proxies.length; i++) {
-				com.ibm.aglet.AgletInfo info = proxies[i].getAgletInfo();
-				_agletsList.addItem(info.getAgletClassName() + " : " 	+ info.getAgletID());
-			}
-		} catch (Exception ex) {
-		    ex.printStackTrace();
-		    return;
-		}
- 
+	    // the action comes from a menu
+	    
+	    String command = event.getActionCommand();
+	    
+	    if( GUICommandStrings.OK_COMMAND.equals(command)){
+		AgletProxy selectedProxy = (AgletProxy) this.agletsList.getSelectedItem();
+		this.setVisible(false);
+		this.getMainWindow().retractAglet(selectedProxy);
+		this.dispose();
+	    }
+	    else
+	    if( GUICommandStrings.REFRESH_COMMAND.equals(command)){
+		this.getRemoteProxies();
+		this.updateAgletList();
+	    }
+	    else
+		super.actionPerformed(event);	
 	}
 	
 	
+	
+	
 	/**
-	 * A method to build the aglets servers list.
+	 * Handles the events on the combobox menu.
+	 */
+	public synchronized void itemStateChanged(ItemEvent event) {
+	    // check params
+	    if( event == null || this.servers.getSelectedItem() == null )
+		return;
+	    
+	    // try to get the selected URL
+	    this.getRemoteProxies();
+	    
+	}
+
+	/**
+	 * Gets the list of remote proxies. 
+	 */
+	private void getRemoteProxies() {
+	    try{
+		String finalDestination = null;
+		
+		Object selection = this.servers.getSelectedItem();
+		this.logger.debug("Remote server has been selected as " + selection);
+		
+		if( selection instanceof URL )
+		    finalDestination = (String) ((URL) selection).toExternalForm();
+		else
+		if( selection instanceof String && (!(this.defaultServerString.equals((String) selection))) )
+		    finalDestination = (String) this.servers.getSelectedItem();
+		else
+		    return;
+	    
+	    
+		// update the aglet proxy list for such URL
+		if( finalDestination != null ){
+		    this.proxies = Aglets.getAgletProxies(finalDestination);
+		    // update the list
+		    this.updateAgletList();
+		    
+		    // store the remote server in the combobox
+		    this.addServerItem();
+		}
+		
+	    }catch(Exception e){
+		this.logger.error("Exception caught while trying to get the list of remote proxies from "  + this.servers.getSelectedItem(), e);
+		this.agletsList.removeAllItems();
+		JOptionPane.showMessageDialog(this,
+  	                  this.translator.translate(this.baseKey + ".error.proxy"),
+  	                  this.translator.translate(this.baseKey + ".error.proxy.title"),
+  	                  JOptionPane.ERROR_MESSAGE
+  	                  );
+	    }
+	}
+	
+	/**
+	 *Updates the aglet proxy list supposing the array of proxies has
+	 *been already updated.
+	 *
 	 *
 	 */
-	protected void buildServerList(){
-	    // read the server list from the properties
-	    Resource res = Resource.getResourceFor("aglets");
-		String list = res.getString("aglets.addressbook");
-
-		// add all the items
-		if (list != null && list.equals(currentList) == false) {
-			currentList = list;
-			_servers.removeAll();
-			String items[] = res.getStringArray("aglets.addressbook", " ");
-
-			for (int i = 0; i < items.length; i++) {
-				_servers.addItem(items[i]);
-			} 
-		} 
+	private void updateAgletList() {
+	    // supposing I've already got the proxy list, I can update it
+	    this.agletsList.removeAllItems();
+	    
+	    if( this.proxies != null && this.proxies.length > 0 )
+		for( int i=0; i< this.proxies.length; i++ )
+		    this.agletsList.addItem(this.proxies[i]);
+	    
 	}
 	
+	
+	
+	/**
+	 * Adds a new item to the server list if not already present.
+	 * @param serverItem the item to add
+	 */
+	private void addServerItem(Object serverItem){
+	    boolean toInsert = true;
+	    
+	    int items = this.servers.getItemCount();
+	    for(int i=0; i<items; i++)
+		if( this.servers.getItemAt(i).equals(serverItem))
+		    toInsert = false;
+	    
+	    if( toInsert )
+		this.servers.addItem(serverItem);
+	    
+	    this.pack();
+	}
+	
+	/**
+	 * Adds the item editable.
+	 *
+	 */
+	private void addServerItem(){
+	    this.addServerItem( this.servers.getSelectedItem() );
+	}
+	
+	
+	/**
+	 * Updates the server list in the combobox.
+	 *
+	 */
+	protected void updateServerList() {
+		Resource res = Resource.getResourceFor("aglets");
+		String list = res.getString("aglets.addressbook");
+
+		if (list != null && list.equals(currentList) == false) {
+			this.currentList = list;
+			this.servers.removeAllItems();
+			this.servers.addItem( this.defaultServerString );
+			
+			
+			// get all the know servers
+			String items[] = res.getStringArray("aglets.addressbook", " ");
+
+			
+			for (int i = 0; i < items.length; i++) {
+			    try{
+				this.servers.addItem( new URL(items[i]) );
+			    }catch(MalformedURLException e){
+				this.logger.error("Exception caught while converting a string to an URL", e);
+			    }
+			}
+			    /*JOptionPane.showMessageDialog(this,
+				    	                  this.translator.translate(this.baseKey + ".error.URL"),
+				    	                  this.translator.translate(this.baseKey + ".error.URL.title"),
+				    	                  JOptionPane.ERROR_MESSAGE
+				    	                  );
+				    	              */
+		} 
+	}
+
 	
 
 }

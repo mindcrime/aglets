@@ -41,7 +41,7 @@ import java.net.URL;
  * address when the job is completed, the aglet have to have the following
  * block
  * 
- * @version     1.10    $Date: 2009/07/27 10:31:41 $
+ * @version     1.10    $Date: 2009/07/28 07:04:53 $
  * @author      Mitsuru Oshima
  * @author      Yariv Aridor
  */

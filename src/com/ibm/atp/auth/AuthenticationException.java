@@ -18,7 +18,7 @@ package com.ibm.atp.auth;
  * The <tt>AuthenticationException</tt> class is
  * the authentication protocol exception class.
  * 
- * @version     1.00    $Date: 2009/07/27 10:31:41 $
+ * @version     1.00    $Date: 2009/07/28 07:04:53 $
  * @author      ONO Kouichi
  */
 public class AuthenticationException extends Exception {

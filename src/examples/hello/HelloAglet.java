@@ -45,7 +45,7 @@ import java.util.Enumeration;
  * <p>4. (Execution of "atHome" message) Display a string "I'm back"
  * for 2 secs and destroy itself.
  * 
- * @version     1.00    $Date: 2009/07/27 10:31:42 $
+ * @version     1.00    $Date: 2009/07/28 07:04:54 $
  * @author      Danny B. Lange
  * @author      Mitsuru Oshima
  */

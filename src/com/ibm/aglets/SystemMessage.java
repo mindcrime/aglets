@@ -53,7 +53,7 @@ final class SystemMessage extends MessageImpl {
 			// 
 			// RUN method should NORM priority
 			// 
-			priority = MessageManagerImpl.SYSTEM_PRIORITY;
+			priority = Message.SYSTEM_PRIORITY;
 		} 
 		delegatable = false;
 	}
@@ -65,7 +65,7 @@ final class SystemMessage extends MessageImpl {
 		super(arg);
 		this.kind = kind;
 		this.type = type;
-		priority = MessageManagerImpl.SYSTEM_PRIORITY;
+		priority = Message.SYSTEM_PRIORITY;
 		delegatable = false;
 	}
 	Permission getPermission(String authority) {
@@ -112,8 +112,8 @@ final class SystemMessage extends MessageImpl {
 	 * }
 	 */
 
-	void handle(LocalAgletRef ref) throws InvalidAgletException {
-		FutureReplyImpl f = (FutureReplyImpl)this.getFutureReply();
+	public void handle(LocalAgletRef ref) throws InvalidAgletException {
+		FutureReplyImpl f = future;
 		Aglet aglet = ref.aglet;
 
 		switch (type) {

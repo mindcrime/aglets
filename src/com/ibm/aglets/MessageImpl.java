@@ -15,24 +15,28 @@ package com.ibm.aglets;
  */
 
 import com.ibm.aglet.Aglet;
+import com.ibm.aglet.AgletException;
 import com.ibm.aglet.AgletProxy;
 import com.ibm.aglet.InvalidAgletException;
-import com.ibm.aglet.MessageManager;
 import com.ibm.aglet.RequestRefusedException;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
-import com.ibm.aglet.FutureReply;
 
 // import com.ibm.awb.misc.Debug;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.Permission;
+
+import org.aglets.log.AgletsLogger;
+
 import com.ibm.aglets.security.MessagePermission;
+import com.ibm.aglets.thread.AgletThread;
 import com.ibm.aglet.message.Message;
+import com.ibm.aglet.message.MessageManager;
 import com.ibm.aglet.security.MessageProtection;
 
 /**
@@ -44,8 +48,8 @@ import com.ibm.aglet.security.MessageProtection;
  */
 public class MessageImpl extends Message implements Cloneable {
 
-	transient MessageImpl next = null;
-	
+	transient FutureReplyImpl future = null;
+
 	private int msg_type;
 	private boolean defered = false;
 
@@ -53,16 +57,16 @@ public class MessageImpl extends Message implements Cloneable {
 
 	transient AgletThread thread = null;
 
-	private final int msg_type2;
-
+	boolean waiting = false;
 	
+	private static AgletsLogger logger = AgletsLogger.getLogger("com.ibm.aglets.MessageImpl");
+
 	/*
 	 * For system and event message. These are all synchronus.
 	 */
 	protected MessageImpl() {
 		super(null, null);
 		msg_type = Message.SYNCHRONOUS;
-		msg_type2 = msg_type;
 		timestamp = System.currentTimeMillis();
 	}
 	/*
@@ -72,43 +76,46 @@ public class MessageImpl extends Message implements Cloneable {
 					   long timestamp) {
 		super(msg.getKind(), msg.getArg());
 		this.future = future;
-		msg_type2 = msg_type;
 		this.msg_type = msg_type;
 		this.timestamp = timestamp;
 	}
 	protected MessageImpl(Object arg) {
 		super(null, arg);
 		msg_type = Message.SYNCHRONOUS;
-		msg_type2 = msg_type;
 		timestamp = System.currentTimeMillis();
 	}
 	final void activate(MessageManagerImpl manager) {
-
+	    try{
 		if (thread == null) {
 			thread = manager.popThread();
+		}
 			thread.handleMessage(this);
 
-		} else {
-			synchronized (this) {
-				waiting = false;
-				notifyAll();
-			} 
-		} 
+//		} else {
+//			synchronized (this) {
+//				waiting = false;
+//				notifyAll();
+//			} 
+//		}
+	    }catch(AgletException e){
+		logger.error("Exception caught while trying to activate a message",e);
+	    }
 	}
+	
 	final synchronized void cancel(String explain) {
 		if (future != null) {
-			((FutureReplyImpl)future).cancel(explain);
+			future.cancel(explain);
 		} 
 	}
 	public Object clone() {
-		MessageImpl c = new MessageImpl((Message)this, (FutureReplyImpl)this.future, this.msg_type, this.timestamp);
+		MessageImpl c = new MessageImpl(this, future, msg_type, timestamp);
 
 		c.priority = priority;
 		return c;
 	}
 	final synchronized void destroy() {
 		if (thread == Thread.currentThread()) {
-			System.err.println("warning: tryin to destroy itself");
+			System.err.println("waring: tring to destroy itself");
 		} 
 
 		if (waiting) {
@@ -175,17 +182,12 @@ public class MessageImpl extends Message implements Cloneable {
 	final public void enableDeferedReply(boolean b) {
 		defered = b;
 	}
-	
-	
 	/**
-	 * A message is delegatale if it cannot be delivered even if the message manager
-	 * is inactive.
+	 * 
 	 */
-	final synchronized void  enableDelegation() {
+	final void enableDelegation() {
 		delegatable = true;
 	}
-	
-	
 	final public int getMessageType() {
 		return msg_type;
 	}
@@ -199,8 +201,8 @@ public class MessageImpl extends Message implements Cloneable {
 		// or MessageProtection(authority)
 		return new MessageProtection(authority, /*"message." +*/ getKind());
 	}
-	void handle(LocalAgletRef ref) throws InvalidAgletException {
-		FutureReplyImpl f = (FutureReplyImpl)future;
+	public void handle(LocalAgletRef ref) throws InvalidAgletException {
+		FutureReplyImpl f = future;
 		Aglet aglet = ref.aglet;
 		Throwable result_ex = null;
 		boolean handled = false;
@@ -238,34 +240,34 @@ public class MessageImpl extends Message implements Cloneable {
 			} 
 		} 
 	}
-	
-	/**
-	 * Indicates if the message can be delegated or not.
-	 * @return true if the message can be delegated
-	 */
-	protected synchronized boolean isDelegatable() {
-		return delegatable && future != null &&!future.isAvailable();
+	/* synchronized */
+	boolean isDelegatable() {
+		return delegatable && future != null &&!future.available;
 	}
-	
+	final boolean isWaiting() {
+		return waiting;
+	}
 	/**
 	 * 
 	 */
 	final public void sendException(Exception exp) {
-		((FutureReplyImpl)future).setExceptionAndNotify(exp);
+		future.setExceptionAndNotify(exp);
 	}
 	/**
 	 * 
 	 */
 	final public void sendReply() {
-		((FutureReplyImpl)future).setReplyAndNotify(null);
+		future.setReplyAndNotify(null);
 	}
 	/**
 	 * Sets the reply of the message.
 	 */
 	final public void sendReply(Object arg) {
-		((FutureReplyImpl)future).setReplyAndNotify(arg);
+		future.setReplyAndNotify(arg);
 	}
-	
+	final void setWaiting() {
+		waiting = true;
+	}
 	public String toString() {
 		StringBuffer buff = new StringBuffer();
 
@@ -278,21 +280,35 @@ public class MessageImpl extends Message implements Cloneable {
 
 		return buff.toString();
 	}
-	
 	/**
-	 * A method to get the future reply of this message.
-	 * @return the future reply contained in the Message object.
+	 * Gets back the thread.
+	 * @return the thread
 	 */
-	public FutureReply getFutureReply(){
-		return this.future;
+	protected synchronized AgletThread getThread() {
+	    return thread;
+	}
+	/**
+	 * Sets the thread value.
+	 * @param thread the thread to set
+	 */
+	protected synchronized void setThread(AgletThread thread) {
+	    this.thread = thread;
 	}
 	
-	
-	/**
-	 * A method to set the future reply.
-	 * @param reply the reply to be used for this message
-	 */
-	protected void setFutureReply(FutureReply reply){
-		this.future = reply;
+	protected synchronized void setReplyAvailable(){
+	    this.future.available = true;
 	}
+	
+
+	/**
+	 * Overrides the method that normalizes the priority. This method simply returns
+	 * the priority provided as argument, thus you can set a system priority.
+	 * @param priority the priority you want to set for this message
+	 * @return the unchanged priority argument
+	 */
+	protected int normalizePriority(int priority){
+	    return priority;
+	}
+	
+
 }

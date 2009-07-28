@@ -34,7 +34,7 @@ import com.ibm.aglet.security.AgletProtection;
  * <tt>ProtectionAglet</tt> is a test aglet for selecting actions
  * to be protected or not.
  * 
- * @version     1.00    $Date: 2009/07/27 10:31:42 $
+ * @version     1.00    $Date: 2009/07/28 07:04:53 $
  * @author      ONO Kouichi
  */
 public class ProtectionAglet extends Aglet {

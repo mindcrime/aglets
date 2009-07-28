@@ -33,17 +33,18 @@ import java.util.Locale;
 
 public final class Version {
 
-	// -------------------------------------------------------------------
-	// -- Instance variables.
+    /**
+     * The description of the product.
+     */
+    private String product = "";
 
-	// -- Product information.
-	private String _kind = "";
-
-	// -- Release information.
-    //-- Release information.
-    private int _majorVersion;
-    private int _minorVersion;
-    private int _microVersion;
+    /**
+     * Release information.
+     */
+    private int majorVersion;
+    private int minorVersion;
+    private int microVersion;
+    private boolean isStable = true;
 
 	/**
 	 * Creates a version object which will never expire.
@@ -54,25 +55,95 @@ public final class Version {
 	 * @param date date of this version.
 	 */
 	public Version(String kind, int major, int minor, int micro) {
-		_kind = (kind != null) ? kind : "";
-		_majorVersion = major;
-		_minorVersion = minor;
-		_microVersion = micro;
+		product = (kind != null) ? kind : "";
+		majorVersion = major;
+		minorVersion = minor;
+		microVersion = micro;
+	}
+	
+	/**
+	 * Builds a version identifier.
+	 * @param kind the description of the product.
+	 * @param major the major versione number M.x.x
+	 * @param minor the minor version number x.M.x
+	 * @param micro the micro version number x.x.M
+	 * @param isStable true if this product is stable, false otherwise
+	 */
+	public Version(String kind, int major, int minor, int micro, boolean isStable){
+	    this(kind, major, minor, micro);
+	    this.isStable = isStable;
 	}
 
 	/**
 	 * Gets the string that describes what is versioned.
+	 * @deprecated see getProduct()
 	 */
+	@Deprecated
 	public String getKind() {
-		return _kind;
+		return this.getProduct();
 	}
 
     /**
-     * Returns a long text representation of the version numbers:
-     * e.g., Alpha2b, Beta1, V2.0.
+     * Provides a representation of the Version. The string returned is composed
+     * with the product kind, the major.minor.micro version and a string
+     * that provides information about the stable/unstable version.
      */
     public String toString() { 
-		return _kind + " " +
-			_majorVersion + "." + _minorVersion + "." + _microVersion;
+	StringBuffer buffer = new StringBuffer(50);
+	buffer.append( this.product );
+	buffer.append( " - ");
+	buffer.append( this.majorVersion );
+	buffer.append( "." );
+	buffer.append( this.minorVersion );
+	buffer.append( "." );
+	buffer.append( this.microVersion );
+	
+	if( this.isStable )
+	    buffer.append( " (stable)" );
+	else
+	    buffer.append( " (unstable)" );
+	
+	return buffer.toString();
+	
+    }
+
+    /**
+     * Gets back the isStable.
+     * @return the isStable
+     */
+    public boolean isStable() {
+        return isStable;
+    }
+
+    /**
+     * Gets back the majorVersion.
+     * @return the majorVersion
+     */
+    public int getMajorVersion() {
+        return majorVersion;
+    }
+
+    /**
+     * Gets back the microVersion.
+     * @return the microVersion
+     */
+    public int getMicroVersion() {
+        return microVersion;
+    }
+
+    /**
+     * Gets back the minorVersion.
+     * @return the minorVersion
+     */
+    public int getMinorVersion() {
+        return minorVersion;
+    }
+
+    /**
+     * Gets back the product.
+     * @return the product
+     */
+    public String getProduct() {
+        return product;
     }
 }

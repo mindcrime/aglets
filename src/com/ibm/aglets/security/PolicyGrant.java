@@ -32,7 +32,7 @@ import java.security.PublicKey;
  * The <tt>PolicyGrant</tt> class represents a grant
  * of Java policy database.
  * 
- * @version     1.00    $Date: 2009/07/27 10:31:40 $
+ * @version     1.00    $Date: 2009/07/28 07:04:53 $
  * @author      ONO Kouichi
  */
 public class PolicyGrant {
@@ -455,5 +455,39 @@ public class PolicyGrant {
 		lines.addElement(line);
 
 		return lines;
+	}
+	
+	
+	/**
+	 * Returns the number of the permission stored whitin this grant.
+	 * @return the number of permission within this grant, zero if there are no permissions.
+	 */
+	public final int getPermissionCount(){
+	    if( this._permissions == null )
+		return 0;
+	    else
+		return this._permissions.size();
+	}
+	
+	/**
+	 * Returns the number of signers for the current policy grant.
+	 * @return the number of signers (>= 0)
+	 */
+	public final int getSignersCount(){
+	    if( this._signers == null )
+		return 0;
+	    else
+		return this._signers.size();
+	}
+	
+	/**
+	 * Returns the number of onwers for this policy grant.
+	 * @return the numbero fo owners or zero if no one has been specified.
+	 */
+	public final int getOwnersCount(){
+	    if( this._owners == null )
+		return 0;
+	    else
+		return this._owners.size();
 	}
 }

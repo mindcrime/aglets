@@ -36,7 +36,7 @@ import java.security.Identity;
  * 
  * @see com.ibm.aglet.system.ContextListener
  * @see com.ibm.aglet.system.ContextEvent
- * @version     1.10    $Date: 2009/07/27 10:31:40 $
+ * @version     1.10    $Date: 2009/07/28 07:04:52 $
  * @author	Mitsuru Oshima
  */
 public final class CommandLine implements ContextListener, Runnable {
@@ -218,7 +218,7 @@ public final class CommandLine implements ContextListener, Runnable {
 			} else if ("list".equalsIgnoreCase(cmd)) {
 				list(System.out);
 			} else if ("threads".equalsIgnoreCase(cmd)) {
-				MainWindow.showThreads();
+				MainWindow.dumpThreads(System.out);
 			} else if ("debug".equalsIgnoreCase(cmd)) {
 				if (st.hasMoreTokens()) {
 					if ("on".equalsIgnoreCase(st.nextToken())) {

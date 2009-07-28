@@ -14,35 +14,56 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-import javax.swing.*;
-import com.ibm.aglets.tahiti.utils.*;
+import java.awt.*;
+import java.awt.Button;
+import java.awt.Checkbox;
+import java.awt.Dialog;
+import java.awt.Event;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Choice;
+import java.awt.Frame;
 import java.awt.CardLayout;
-
+import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.Label;
+import java.awt.List;
+import java.awt.Panel;
+import java.awt.TextField;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import java.util.Vector;
 import java.util.Hashtable;
 import java.util.Enumeration;
-
+import java.util.StringTokenizer;
 
 import java.io.File;
 import java.io.IOException;
 
-
+import java.security.Policy;
 import com.ibm.aglets.security.PolicyDB;
 import com.ibm.aglets.security.PolicyFileReader;
 import com.ibm.aglets.security.PolicyFileWriter;
 import com.ibm.aglets.security.PolicyGrant;
+import com.ibm.aglets.security.PolicyPermission;
+import com.ibm.aglets.security.PolicyFileParsingException;
 
 import com.ibm.awb.misc.URIPattern;
-
+import com.ibm.awb.misc.MalformedURIPatternException;
 import com.ibm.awb.misc.Resource;
+import java.security.*;
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-import javax.swing.event.*;
+import org.aglets.util.gui.GUICommandStrings;
+import org.aglets.util.gui.JComponentBuilder;
 
 /**
  * Class SecurityConfigDialog represents the dialog for
@@ -51,90 +72,264 @@ import javax.swing.event.*;
  * @author      Danny B. Lange
  */
 
-final class SecurityConfigDialog extends TahitiDialog 
-	implements ActionListener, ListSelectionListener {
+// TODO testare a modo
 
+final class SecurityConfigDialog extends TahitiDialog 
+	implements ActionListener, ItemListener, ListSelectionListener {
+
+	// Labels
+	private static final String LABEL_TITLE = "Security Preferences";
+	private static final String LABEL_OK = "OK";
+	private static final String LABEL_CLOSE = "Close";
+	private static final String LABEL_RELOAD = "Reload";
+	private static final String LABEL_GRANT_PANEL = "Code Base";
 
 	/*
 	 * Singleton instance reference.
 	 */
-	private static SecurityConfigDialog _instance = null;
+	private static SecurityConfigDialog mySelf = null;
 
 	private PolicyDB _db = null;
 
-	private AgentListPanel _grantList = new AgentListPanel(5);
+	private List _grantList = new List(5, false);
 	private GrantEditor _grantEditor = new GrantEditor();
 	private GrantEditPanel _grantPanel = null;
 	GridBagPanel _panel = new GridBagPanel();
-	JPanel setting_panel = new JPanel();
+	Panel setting_panel = new Panel();
 	CardLayout layout = new CardLayout();
 	Hashtable privileges = new Hashtable();
-
-	/*
-	 * Constructs a security configuration dialog.
-	 */
-	private SecurityConfigDialog(MainWindow parent) {
-		super(parent, bundle.getString("dialog.secprefs.title"), true);
-		loadPolicyFile();
-		makePanel();
-		this.getContentPane().add("Center",this._panel);
-		
-		// add buttons
-		this.addJButton(bundle.getString("dialog.secprefs.button.ok"),TahitiCommandStrings.OK_COMMAND,IconRepository.getIcon("ok"),this);
-		this.addJButton(bundle.getString("dialog.secprefs.button.cancel"),TahitiCommandStrings.CANCEL_COMMAND,IconRepository.getIcon("cancel"),this);
 	
+	/**
+	 * A list of stored code bases.
+	 */
+	private AgletListPanel<PolicyGrant> codeBaseList = null;
+	
+	/**
+	 * A list of permissions.
+	 */
+	private AgletListPanel<PolicyPermission> permissionList = null;
+	
+	/**
+	 * Text fields related to the code bases.
+	 */
+	private JTextField codeSourceField = null;
+	private JTextField signedByField   = null;
+	private JTextField ownedByField    = null;
+	
+	/**
+	 * Permission properties that the user can edit.
+	 */
+	private JTextField permissionSigner = null;
+	private JTextField permissionActions = null;
+	private JTextField permissionObjective = null;
+	private JTextField permissionClassName = null;
+	
+	
+	/**
+	 * A selection of permission types.
+	 */
+	private JComboBox permissionType = null;
+	
+	private SecurityConfigDialog(MainWindow parentWindow){
+	    super(parentWindow);
+	    
+	    
+	    // create a panel for the code source
+	    JPanel codeSourcePanel = new JPanel();
+	    codeSourcePanel.setLayout( new BorderLayout() );
+	    
+	    JPanel codeSourceFieldPanel = new JPanel();
+	    codeSourceFieldPanel.setLayout( new GridLayout(0,2) );
+	    JLabel label = JComponentBuilder.createJLabel( this.baseKey + ".codeSource");
+	    this.codeSourceField = JComponentBuilder.createJTextField(20, null, this.baseKey + ".codeSourceField");
+	    codeSourceFieldPanel.add(label);
+	    codeSourceFieldPanel.add(this.codeSourceField);
+	    
+	    this.signedByField = JComponentBuilder.createJTextField(20, null , this.baseKey + ".signedByField");
+	    label = JComponentBuilder.createJLabel( this.baseKey + ".signedBy");
+	    codeSourceFieldPanel.add(label);
+	    codeSourceFieldPanel.add(this.signedByField);
+	    
+	    this.ownedByField = JComponentBuilder.createJTextField(20, null , this.baseKey + ".ownedByField");
+	    label = JComponentBuilder.createJLabel( this.baseKey + ".ownedBy");
+	    codeSourceFieldPanel.add(label);
+	    codeSourceFieldPanel.add(this.ownedByField);
+	    
+	    this.codeBaseList = new AgletListPanel<PolicyGrant>();
+	    this.codeBaseList.setTitleBorder( this.translator.translate(this.baseKey + ".codeSourceList") );
+	    this.codeBaseList.addListSelectionListener(this);
+	    this.codeBaseList.setRenderer(new PolicyGrantPermissionRenderer());
+	    
+	    	    
+	    JButton addButton = JComponentBuilder.createJButton( this.baseKey + ".addButton", 
+		                                                  GUICommandStrings.ADD_CODE_SOURCE_COMMAND,
+		                                                  this);
+	    
+	    JButton removeButton = JComponentBuilder.createJButton( this.baseKey + ".removeButton", 
+                    						    GUICommandStrings.REMOVE_CODE_SOURCE_COMMAND,
+                                                                    this);
+	    
+	    JPanel codeSourceButtonPanel = new JPanel();
+	    codeSourceButtonPanel.setLayout( new GridLayout(1,2) );
+	    codeSourceButtonPanel.add(addButton);
+	    codeSourceButtonPanel.add(removeButton);
+	    codeSourcePanel.add(codeSourceButtonPanel);
+	    
+	    codeSourcePanel.add(codeSourceFieldPanel, BorderLayout.NORTH);
+	    codeSourcePanel.add(this.codeBaseList, BorderLayout.CENTER);
+	    codeSourcePanel.add(codeSourceButtonPanel, BorderLayout.SOUTH);
+	    this.contentPanel.add(codeSourcePanel, BorderLayout.WEST);
+	    
+	    
+	    
+	    // make a panel for editing the single permissions
+	    JPanel rightPanel = new JPanel();
+	    rightPanel.setLayout( new BorderLayout() );
+	    
+	    // the permission will be displayed in a list
+	    this.permissionList = new AgletListPanel<PolicyPermission>();
+	    this.permissionList.setTitleBorder( this.translator.translate( this.baseKey + ".permissionList" ) );
+	    this.permissionList.addListSelectionListener( this );
+	    this.permissionList.setRenderer( new PolicyGrantPermissionRenderer() );
+
+	    // a panel with the active components of a permission
+	    //
+	    // Show the class name of the permission that is going to be edited and
+	    // three text components: action, codebase and objective
+	    JPanel permissionPanel = new JPanel();
+	    permissionPanel.setLayout( new GridLayout(0,2) );
+	    label = JComponentBuilder.createJLabel( this.baseKey + ".permissionClassName");
+	    permissionPanel.add(label);
+	    this.permissionClassName = JComponentBuilder.createJTextField(20,
+		                                                          null,
+		                                                          this.baseKey + ".permissionClassName");
+	    this.permissionClassName.setEditable(false);
+	    permissionPanel.add( this.permissionClassName );
+	    
+	    
+	    label = JComponentBuilder.createJLabel( this.baseKey + ".permissionActionsLabel");
+	    this.permissionActions = JComponentBuilder.createJTextField(20,
+		    							null,
+		    							this.baseKey + ".permissionSigner");
+
+	    permissionPanel.add( label );
+	    permissionPanel.add( this.permissionActions );
+	    
+	    this.permissionObjective = JComponentBuilder.createJTextField(20,
+                    							  null,
+                    							  this.baseKey + ".permissionObjective");
+	    label = JComponentBuilder.createJLabel( this.baseKey + ".permissionObjectiveLabel");
+	    permissionPanel.add( label );
+	    permissionPanel.add( this.permissionObjective );
+	    
+
+	    label = JComponentBuilder.createJLabel( this.baseKey + ".permissionSignerLabel");
+	    this.permissionSigner = JComponentBuilder.createJTextField( 20,
+		    							null,
+		    							this.baseKey + ".permissionActions");
+	    permissionPanel.add( label );
+	    permissionPanel.add( this.permissionSigner );
+
+	    
+	    // a panel with the button for adding and removing the permissions
+	    JPanel permissionButtonPanel = new JPanel();
+	    permissionButtonPanel.setLayout( new FlowLayout(FlowLayout.RIGHT) );
+	    JButton addPermissionButton = JComponentBuilder.createJButton( this.baseKey + ".addPermissionButton", 
+                                                                           GUICommandStrings.ADD_PERMISSION_COMMAND,
+                                                                           this);
+
+	    JButton removePermissionButton = JComponentBuilder.createJButton( this.baseKey + ".removePermissionButton", 
+			                                                      GUICommandStrings.REMOVE_PERMISSION_COMMAND,
+                                                                              this);
+	    permissionButtonPanel.add(addPermissionButton);
+	    permissionButtonPanel.add(removePermissionButton);
+	    
+	    // place each component in the permission panel
+	    rightPanel.add( this.permissionList, BorderLayout.NORTH );
+	    rightPanel.add( permissionPanel, BorderLayout.CENTER );
+	    rightPanel.add( permissionButtonPanel, BorderLayout.SOUTH );
+	    
+	    // all done
+	    this.contentPanel.add( rightPanel, BorderLayout.EAST );
+	    
+	    // load the policy db
+	    this.loadPolicyFile();
+	    this.showPolicyGrants();
+	    
+	    // all done
+	    this.pack();
+
 	}
+	
+
 
 	/**
 	 * *****************************************************************
 	 * The call back methods
 	 */
 
-	/**
-	 * Manage events from buttons.
-	 * @param event the event to deal with
-	 */
-	public void actionPerformed(ActionEvent event) {
-	    if(event==null){
-	        return;
-	    }
-	    
-	    
-		String command = event.getActionCommand();
-		
-		if(command==null || command.equals("")){ 
-		    return;
-		}
+	// Creates an Aglet creation dialog.
+	// 
+	/*
+	public void actionPerformed(ActionEvent ev) {
+		String cmd = ev.getActionCommand();
 
-		if(command.equals(TahitiCommandStrings.OK_COMMAND)){
-		    // save the policy
-		    this.save();
-		    this.setVisible(false);
-		    JOptionPane.showMessageDialog(this,bundle.getString("dialog.secprefs.reboot"),bundle.getString("dialog.secprefs.reboot.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("warning"));
-		}
-		else
-		if(command.equals(TahitiCommandStrings.CANCEL_COMMAND)){
-		    this.setVisible(false);
-		}
-		
-		this.dispose();
+		if (LABEL_OK.equals(cmd)) {
+			save();
+
+			// -       Policy policy = Policy.getPolicy();
+			// -       if(policy!=null) {
+			// - 	policy.refresh();
+			// -       }
+			// to work around the bug in JDK1.1 for UNIX
+			// -       dispose();
+			setVisible(false);
+			ShutdownDialog sd = 
+				new ShutdownDialog((MainWindow)getParent(), 
+								   "To be effective, you need reboot the server.");
+
+			sd.popupAtCenterOfParent();
+		} else if (LABEL_CLOSE.equals(cmd)) {
+			setVisible(false);
+
+			// -     } else if(LABEL_RELOAD.equals(cmd)) {
+			// - //System.out.println("remove all");
+			// - //      mySelf.removeAll();
+			// -       restoreDefaults();
+			// -       _grantPanel.removeAll();
+			// -       _panel.removeAll();
+			// - System.out.println("load policy file");
+			// -       loadPolicyFile();
+			// - System.out.println("make panel");
+			// -       makePanel();
+			// - //System.out.println("add buttons");
+			// - //	addButton(LABEL_OK, this);
+			// - //	addCloseButton(null);
+			// - //	addButton(LABEL_RELOAD, this);
+			// - System.out.println("update values");
+			// -       mySelf.updateValues();
+			// - System.out.println("done.");
+		} 
 	}
+	*/
 	
 	
 	
 	
-
+	
+	
 	private void addGrantPanel(PolicyGrant grant) {
 		addGrantPanel(getGrantName(grant), grant);
 	}
-	
 	public void addGrantPanel(String name) {
 		addGrantPanel(name, null);
 	}
 	
+	
+	
 	private void addGrantPanel(String name, PolicyGrant grant) {
 		if (!hasGrant(name)) {
-			this._grantList.addItem(name);
+			this.codeBaseList.addItem(grant);
 			SecurityConfigPanel panel = new SecurityConfigPanel(name, grant);
 
 			privileges.put(name, panel);
@@ -142,6 +337,7 @@ final class SecurityConfigDialog extends TahitiDialog
 			panel.setupPanels();
 		} 
 	}
+	
 	
 	private static String getGrantName(PolicyGrant grant) {
 		final URIPattern codeBase = grant.getCodeBase();
@@ -164,21 +360,26 @@ final class SecurityConfigDialog extends TahitiDialog
 		return EditorPanel.toText(args);
 	}
 	
-	/*
-	 * Singletion method to get the instnace
+	
+	
+	/**
+	 * Singleton method to get the instance of this window.
+	 * @param parent the window onwer of this dialog
+	 * @return the instance of the dialog
 	 */
-	static SecurityConfigDialog getInstance(MainWindow parent) {
-		if (_instance == null) {
-			_instance = new SecurityConfigDialog(parent);
+	protected static synchronized SecurityConfigDialog getInstance(MainWindow parent) {
+		if (mySelf == null) {
+			mySelf = new SecurityConfigDialog(parent);
 		} 
-		_instance.updateValues();
-		return _instance;
+		
+		mySelf.updateValues();
+		return mySelf;
 	}
+	
 	
 	private boolean hasGrant(PolicyGrant grant) {
 		return hasGrant(getGrantName(grant));
 	}
-	
 	private boolean hasGrant(String name) {
 		String[] grants = _grantList.getItems();
 		int i = 0;
@@ -190,29 +391,33 @@ final class SecurityConfigDialog extends TahitiDialog
 		} 
 		return false;
 	}
-	
+	/*
+	 * Handles the events
+	 */
+	public void itemStateChanged(ItemEvent ev) {
+		String item = _grantList.getSelectedItem();
+
+		if (item != null) {
+			showGrantPanel(item);
+		} 
+	}
 	
 	/**
-	 * Events from the list
-	 * @param event the event to work with
+	 * Loads the policy file and initializes the db.
+	 *
 	 */
-	public void valueChanged(ListSelectionEvent event) {
-		String selected = (String) this._grantList.getSelectedItem();
-
-		if(selected!=null){
-		    this.showGrantPanel(selected);
-		}
+	private void loadPolicyFile() {
+	    final String file = PolicyFileReader.getUserPolicyFilename();
+	    this.logger.info("Loading the policy file " + file);
+	    PolicyFileReader reader = new PolicyFileReader(file);
+	    _db = reader.getPolicyDB();
 	}
 	
-	private void loadPolicyFile() {
-		final String file = PolicyFileReader.getUserPolicyFilename();
-		PolicyFileReader reader = new PolicyFileReader(file);
-
-		_db = reader.getPolicyDB();
-	}
+	
 	/*
 	 * Layouts all components.
 	 */
+	/*
 	void makePanel() {
 		GridBagConstraints cns = new GridBagConstraints();
 
@@ -223,7 +428,7 @@ final class SecurityConfigDialog extends TahitiDialog
 		cns.insets = new Insets(10, 5, 5, 5);
 
 		_panel.setConstraints(cns);
-		BorderPanel grantPanel = new BorderPanel(bundle.getString("dialog.secprefs.grantpanel"));
+		BorderPanel grantPanel = new BorderPanel(LABEL_GRANT_PANEL);
 
 		_panel.add(grantPanel, 1, 0.0);
 		setupGrantPanel(grantPanel);
@@ -251,7 +456,7 @@ final class SecurityConfigDialog extends TahitiDialog
 
 		showGrantPanel(firstGrant);
 	}
-	
+	*/
 	public void removeGrantPanel(int idx, String name) {
 		if (hasGrant(name)) {
 			_grantList.remove(idx);
@@ -265,7 +470,6 @@ final class SecurityConfigDialog extends TahitiDialog
 			} 
 		} 
 	}
-	
 	public void save() {
 		PolicyDB db = new PolicyDB();
 		final int num = _grantList.getItemCount();
@@ -306,8 +510,6 @@ final class SecurityConfigDialog extends TahitiDialog
 			System.err.println(excpt.toString());
 		} 
 	}
-	
-	
 	/*
 	 * setup Grant Panel
 	 */
@@ -326,7 +528,7 @@ final class SecurityConfigDialog extends TahitiDialog
 		cns.weighty = 0.1;
 		_grantPanel = new GrantEditPanel(this, _grantList, _grantEditor);
 		panel.add(_grantPanel, GridBagConstraints.REMAINDER, 1.0);
-		this._grantList.addListSelectionListener(this);
+		_grantList.addItemListener(this);
 
 		cns.insets.top = 0;
 		cns.fill = GridBagConstraints.HORIZONTAL;
@@ -364,4 +566,176 @@ final class SecurityConfigDialog extends TahitiDialog
 			System.err.println(excpt.toString());
 		} 
 	}
+
+
+
+	/**
+	 * Manages selection on the grant list.
+	 */
+	public void valueChanged(ListSelectionEvent event) {
+	    if( event == null )
+		return;
+
+
+	    
+	    if( this.codeBaseList.getSelectedItem() != null ){
+	    
+		// get the code source from the list panel
+		PolicyGrant selectedGrant = this.codeBaseList.getSelectedItem();
+
+		if( selectedGrant == null ){
+		    this.codeSourceField.setText("");
+		    this.ownedByField.setText("");
+		    this.signedByField.setText("");
+		    this.permissionList.removeAllItems();
+		    this.permissionClassName.setText("");
+		    this.permissionSigner.setText("");
+		    this.permissionObjective.setText("");
+		    this.permissionActions.setText("");		
+		}
+		else{
+		    // show the value of the code source
+		    this.codeSourceField.setText( selectedGrant.getCodeBase().toString() );
+		    this.ownedByField.setText( selectedGrant.getOwnerNames() );
+		    this.signedByField.setText( selectedGrant.getSignerNames() );
+
+		    for(Enumeration enumer = selectedGrant.getPermissions(); enumer.hasMoreElements(); )
+			this.permissionList.addItem( (PolicyPermission) enumer.nextElement() );
+		}
+	    }
+
+	    
+	    if( this.permissionList.getSelectedItem() != null ){
+		PolicyPermission selectedPermission = this.permissionList.getSelectedItem();
+		
+		if( selectedPermission == null ){
+		    this.permissionClassName.setText("");
+		    this.permissionActions.setText("");
+		    this.permissionObjective.setText("");
+		    this.permissionSigner.setText("");
+		}
+		else{
+
+		    this.permissionClassName.setText( selectedPermission.getPermission().getClass().getName() );
+		    this.permissionActions.setText( selectedPermission.getActions() );
+		    this.permissionObjective.setText( selectedPermission.getTargetName() );
+		    this.permissionSigner.setText( selectedPermission.getSignerNames() );
+		}
+	    }
+	    
+	}
+	
+	
+
+	
+	
+	/**
+	 * Gets all the policy grants from the database and display them in the 
+	 * policy grant list.
+	 *
+	 */
+	private void showPolicyGrants(){
+	    if( this._db == null ){
+		this.logger.warn("The PolicyDB has not been initialized");
+		return;
+	    }
+	    
+	    for(Enumeration enumer = this._db.getGrants(); enumer.hasMoreElements(); ){
+		PolicyGrant currentGrant = (PolicyGrant) enumer.nextElement();
+		this.codeBaseList.addItem(currentGrant);
+	    }
+	}
+	
+	
+	private PolicyGrant getGrant() throws MalformedURIPatternException{
+	    // get the values
+	    String codebase = this.codeSourceField.getText();
+	    String signedby = this.signedByField.getText();
+	    String ownedby = this.ownedByField.getText();
+
+	    if( (codebase != null) || (signedby != null) || (ownedby != null) ){
+		// produce a grant
+
+		PolicyGrant grant = new PolicyGrant();
+		grant.setCodeBase(codebase);
+		grant.setSignerNames(signedby);
+		grant.setOwnerNames(ownedby);
+		return grant;
+	    }
+	    else
+		return null;
+
+	}
+	
+	
+	public void actionPerformed(ActionEvent event){
+	    if( event == null )
+		return;
+	    
+	    String command = event.getActionCommand();
+	    
+	    try{
+	    
+		if( GUICommandStrings.ADD_CODE_SOURCE_COMMAND.equals(command) 
+			|| GUICommandStrings.REMOVE_CODE_SOURCE_COMMAND.equals(command) ){
+
+
+		    PolicyGrant grant = this.getGrant();
+		    
+		    if( grant == null )
+			return;
+
+		    if( GUICommandStrings.ADD_CODE_SOURCE_COMMAND.equals(command))
+			this._db.addGrant(grant);
+		    else
+			System.out.println("Not Implemented Yet!");
+
+		    this.showPolicyGrants();
+
+		}
+		else
+		if( GUICommandStrings.ADD_PERMISSION_COMMAND.equals(command)
+		    || GUICommandStrings.REMOVE_PERMISSION_COMMAND.equals(command)){
+		    
+		    // get the values
+		    String className = this.permissionClassName.getText();
+		    String actions = this.permissionActions.getText();
+		    String signers = this.permissionSigner.getText();
+		    String objective = this.permissionObjective.getText();
+		    
+		    PolicyGrant grant = this.getGrant();
+		    if( grant == null )
+			return;
+		    
+		    if( className != null && (actions != null || signers != null || objective != null) ){
+			PolicyPermission permission = new PolicyPermission(className);
+			permission.setActions(actions);
+			permission.setSignerNames(signers);
+			permission.setTargetName(objective);
+			grant.addPermission(permission);
+			this._db.addGrant(grant);
+			this.permissionList.addItem(permission);
+		    }
+		    
+		}
+		else	
+		    super.actionPerformed(event);
+	    
+	    }catch(MalformedURIPatternException e){
+		this.logger.error("Exception caught while building the policy grant", e);
+		JOptionPane.showMessageDialog(this, 
+			                      this.translator.translate(this.baseKey + ".uriError"),
+			                      this.translator.translate(this.baseKey + ".uriError.title"),
+			                      JOptionPane.ERROR_MESSAGE);
+	    }
+	    catch(ClassNotFoundException e){
+		this.logger.error("Exception caught while building the policy permission", e);
+		JOptionPane.showMessageDialog(this, 
+			                      this.translator.translate(this.baseKey + ".permissionError"),
+			                      this.translator.translate(this.baseKey + ".permissionError.title"),
+			                      JOptionPane.ERROR_MESSAGE);
+	    }
+	}
+	
 }
+

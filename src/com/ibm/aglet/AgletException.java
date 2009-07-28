@@ -28,7 +28,7 @@ import java.io.*;
 /**
  * Signals that an aglet exception has occurred.
  * 
- * @version     1.10   $Date: 2009/07/27 10:31:41 $
+ * @version     1.10   $Date: 2009/07/28 07:04:53 $
  * @author      Danny B. Lange
  */
 public class AgletException extends Exception implements Serializable {
@@ -42,6 +42,15 @@ public class AgletException extends Exception implements Serializable {
 	public AgletException() {
 		super();
 	}
+	
+	/**
+	 * Creates an exception with another exception as cause.
+	 * @param initialException the cause of this exception
+	 */
+	public AgletException(Exception initialException){
+	    super(initialException);
+	}
+	
 	/**
 	 * Constructs an AgletException with the specified detail message.
 	 * A detail message is a string that describes this particular exception.
