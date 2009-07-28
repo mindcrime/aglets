@@ -1,0 +1,3121 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.05 [en] (WinNT; I) [Netscape]">
+   <TITLE>Aglets Specification </TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<HR size=3 NOSHADE width=80%>
+<CENTER>
+<H1>
+Aglets Specification 1.1 Draft</H1></CENTER>
+
+<HR size=3 NOSHADE width=80%>
+<DL>
+<DT>
+Draft 0.65</DT>
+
+<DT>
+September, 8th, 1998</DT>
+
+<DT>
+     Author: <A HREF="mailto:moshima@trl.ibm.co.jp">Mitsuru Oshima</A>,
+     <A HREF="mailto:gka@zurich.ibm.com">Guenter Karjoth</A>, and
+     <A HREF="mailto:onono@trl.ibm.co.jp">Kouichi Ono</A>
+</DT>
+
+<DT>
+<I><A HREF="mailto:aglets@yamato.ibm.co.jp">Send comments to aglets@yamato.ibm.co.jp.</A></I></DT>
+</DL>
+<B>This is a draft specification, and is therefore subject to change.</B>
+<BR><!--
+  The latest version of this draft is available at: <br>
+  <a href=http://sirius.trl.ibm.com:8080/~sirius/index.html>
+  http://sirius.trl.ibm.com:8080/~moshima/ </a> <p>
+-->
+<UL>
+<LI>
+<A HREF="#Introduction">Introduction</A></LI>
+
+<LI>
+<A HREF="#ObjectModel">Aglet Object Model</A></LI>
+
+<LI>
+<A HREF="#Architecture">System Architecture</A></LI>
+
+<LI>
+<A HREF="#Security">Security in Aglets</A></LI>
+
+<LI>
+<A HREF="#Building">Building Application with Aglets</A></LI>
+
+<LI>
+<A HREF="#Itinerary">Itinerary and Patterns</A></LI>
+
+<LI>
+<A HREF="#changes">Changes List</A></LI>
+</UL>
+
+<DL><I>History</I>
+<DT>
+<B>Draft 0.05</B></DT>
+
+<DD>
+A very early draft that was circulated among a limited number of members
+for review.</DD>
+
+<DT>
+<B>Draft 0.06</B></DT>
+
+<DD>
+Descriptions of remote messaging, serialization in Aglets, the difference
+between readObject/writeObject and listeners, system architecture, Aglets
+Server API, and Client API were added.</DD>
+
+<DT>
+<B>Draft 0.07</B></DT>
+
+<DD>
+Descriptions of priority in Messaging and security, written by Dr. Guenter
+Karjoth, were added.</DD>
+
+<DT>
+<B>Draft 0.08</B></DT>
+
+<DD>
+The section entitled "Aglet API Overview" was added.</DD>
+
+<BR>The Lifecycle, Messaging and Migration sections were modified.
+<BR>Feedback provided by Mima-san was incorporated.
+<DT>
+<B>Draft 0.09</B></DT>
+
+<DD>
+The sections entitled "Class Loading and Mobility" and "HTTP tunneling
+via Proxies" were added.</DD>
+
+<BR>Reviewed by Dr. Guenter Karjoth and Mr. Mike McDonald.
+<BR>The chapter "Aglets Server API, and Client API" was renamed "Building
+Application with Aglets."
+<DT>
+<B>Draft 0.1</B></DT>
+
+<DD>
+The first public release of this document was made, with the Architecture
+chapters eliminated. chapter has been eliminated.</DD>
+
+<DT>
+<B>Draft 0.11</B></DT>
+
+<DD>
+The sections entitled "Agent Transfer Protocol" and "Thread Usage in ATP"
+were added.</DD>
+
+<BR>The Overview section of Architecture chapter and the Security chapter
+were modified.
+<DT>
+<B>Draft 0.12</B></DT>
+
+<DD>
+The content of the chapter "Building Applications with Aglets" was added.</DD>
+
+<DT>
+<B>Draft 0.20</B></DT>
+
+<DD>
+The second public draft, reviewed by Mr. Mike McDonald.</DD>
+
+<DT>
+<B>Draft 0.30</B></DT>
+
+<DD>
+Package names are renamed, and moved to the beta.</DD>
+
+<DT>
+<B>Draft 0.50</B></DT>
+
+<DD>
+Several chapters and sections has been renamed and improved. ("Object Mobility",
+"Class Loading and Mobility", "Architecture Overview"). "Aglet Object Structure"
+has been added, and "Security" chapter now describes "beta" security.</DD>
+
+<DT>
+<B>Draft 0.55</B></DT>
+
+<DD>
+Descriptions of Ticket</DD>
+
+<DT>
+<B>Draft 0.65</B></DT>
+
+<DD>
+fine-grained access control with aglets security policy</DD>
+</DL>
+<A NAME="Introduction"></A>
+<HR size=3>
+<H1>
+Introduction</H1>
+
+<HR size=3>
+<H1>
+Overview</H1>
+Aglets are Java objects that can move from one host on the network to another.
+That is, an aglet that executes on one host can suddenly halt execution,
+dispatch to a remote host, and start executing again. When the aglet moves,
+it takes along its program code as well as the states of all the objects
+it is carrying. A built-in security mechanism makes it safe to host untrusted
+aglets.
+<H1>
+System Goals</H1>
+
+<UL>
+<LI>
+Provide an easy and comprehensive model for programming mobile agents without
+requiring modifications to Java VM or native code.</LI>
+
+<LI>
+Support dynamic and powerful communication that enables agents to communicate
+with unknown agents as well as well-known agents.</LI>
+
+<LI>
+Design a reusable and extensible architecture.</LI>
+
+<LI>
+Design a harmonious architecture with existing Web/Java technology.</LI>
+
+<LI>
+[Provide security mechanisms that are comprehensive and simple enough to
+allow end users to trust mobile agents]</LI>
+</UL>
+<A NAME="ObjectModel"></A>
+<HR size=3>
+<H1>
+Aglet Object Model</H1>
+
+<HR size=3><A NAME="APIOverview"></A>
+<H1>
+Aglet API Overview</H1>
+The Aglet API defines the fundamental functionality of mobile agents. The
+following figure shows the major interfaces and classes defined in the
+Aglet API and the relationship between these interfaces.
+<CENTER></CENTER>
+
+<CENTER><IMG SRC="images/component.gif" VSPACE=10 ></CENTER>
+
+<DL>
+<DT>
+<B>com.ibm.aglet.Aglet</B></DT>
+
+
+<P>The <TT>Aglet</TT> abstract class defines the fundamental methods (for
+example, <TT>dispatch(URL)</TT>) used to control the mobility
+and life cycles of mobile agents. All mobile agents defined in Aglet have to
+extend this abstract class. The <TT>Aglet.dispatch(URL)</TT> primitive causes
+an aglet to move from the local machine to the destination specified as its
+argument. The <TT>Aglet.deactivate(long time)</TT> primitive allows an aglet to
+be stored in secondary storage, and the <TT>Aglet.clone()</TT> primitive spawns
+a new instance of the aglet that has the same state as the original aglet.
+Note that the object returned by the <TT>clone</TT> primitive is not an
+Aglet object but an AgletProxy object.
+
+<P>The Aglet class is also used to access the attributes associated with
+an aglet. The <TT>com.ibm.aglet.AgletInfo</TT> object, which can be obtained
+by the <TT>Aglet.getAgletInfo()</TT> primitive, contains an aglet's inherent
+attributes,
+such as its creation time and codebase, as well as its dynamic attributes,
+such as its arrival time and the address of its current context.
+
+<P>The following table shows some primary methods and their semantics.
+<TABLE BORDER >
+<TR>
+<TD><B>Method</B></TD>
+
+<TD><B>Behavior</B></TD>
+</TR>
+
+<TR>
+<TD>dispose()</TD>
+
+<TD>Dispose of the aglet.</TD>
+</TR>
+
+<TR>
+<TD>dispatch(URL)</TD>
+
+<TD>Dispatch the aglet to the destination specified in the URL.</TD>
+</TR>
+
+<TR>
+<TD>deactivate(long duration)</TD>
+
+<TD>Instruct the aglet to store itself into a persistent medium.</TD>
+</TR>
+
+<TR>
+<TD>getAgletInfo()</TD>
+
+<TD>Get information on the aglet</TD>
+</TR>
+</TABLE>
+
+<DT>
+<B>com.ibm.aglet.AgletID</B></DT>
+
+
+<P>All aglet instances have their own unique identities that are immutable
+throughout the life cycle of the aglet. An identity may consist of several
+attributes such as a user's id, the type of an agent system, and some large
+number. The <TT>AgletID</TT> is an object that keeps an unique identifier for
+the given agent, while encapsulating its representation details.
+<DT>
+<B>com.ibm.aglet.AgletProxy</B></DT>
+
+
+<P>The <TT>AgletProxy</TT> interface object acts as a handle of an aglet
+and provides a common way of accessing the aglet behind it. Since an aglet
+class has several public methods that should not be accessed directly from
+other aglets for security reasons, any aglet that wants to communicate
+with other aglets has to first obtain the proxy object, and then interact
+through this interface. In other words, the aglet proxy acts as a shield
+object that protects an agent from malicious agents. When invoked, the
+proxy object consults the SecurityManager to determine whether the caller
+is permitted to perform the method. Another important role of the AgletProxy
+interface is to provide the aglet with location transparency. If the actual
+aglet resides at a remote host, it forwards the requests to the remote
+host and and returns the result to the local host.
+
+<P>The AgletProxy can be obtained in the following ways:
+<UL>
+<LI>
+Get an enumeration of proxies in a context by calling the primitive <TT>AgletContext.getAgletProxies()</TT>.</LI>
+
+<LI>
+Get an AgletProxy for a given <TT>AgletID</TT> via either <TT>AgletContext.getAgletProxy(AgletID)</TT>
+or <TT>Aglets.getAgletProxy(String contextName, AgletID)</TT>.</LI>
+
+<LI>
+Get an <TT>AgletProxy</TT> object by message passing. An <TT>AgletProxy</TT>
+object can be put into the Message object as an argument, and sent to the
+aglet locally or remotely.</LI>
+
+<LI>
+Put an AgletProxy object into the context-property by <TT>AgletContext.setProperty(String,Object)</TT>,
+and share the proxy object.</LI>
+</UL>
+The runtime library is responsible for providing the implementation of
+the <TT>AgletProxy</TT> interface; thus, aglet programmers do not have
+to implement this interface.
+<DT>
+<B>com.ibm.aglet.AgletContext</B></DT>
+
+
+<P>The <TT>AgletContext</TT> class provides an interface to the runtime
+environment that occupies the aglet. Any aglet can obtain a reference to
+its current AgletContext object via the <TT>Aglet.getAgletContext()</TT>
+primitive, and use it to obtain local information such as the address of
+the hosting context and the enumeration of AgletProxies, or to create a
+new aglet in the context. Once the aglet has been dispatched, the context
+object currently occupied is no longer available, and the destination context
+object is attached instead when arrived.
+
+<P>The runtime library is responsible for providing the implementation
+of this interface; thus, aglet programmers do hot have to implement this
+interface.
+<DT>
+<B>com.ibm.aglet.Message</B></DT>
+
+
+<P>Aglet objects communicate by exchanging objects of the <TT>Message</TT>
+class. A message object has a String object to specify the kind of the
+message and arbitrary objects as arguments. A message can be sent to the
+aglet by calling <TT>Object AgletProxy.sendMessage(Message msg) </TT>,
+<TT>FutureReply AgletProxy.sendAsyncMessage(Message msg) </TT>, or <TT>void
+AgletProxy.sendOnewayMessage(Message msg) </TT>and it is passed as an argument
+to <TT>Aglet.handleMessage(Message msg)</TT>. Please see the <A HREF="#message">section
+on messaging</A> for more details.
+<DT>
+<B>com.ibm.aglet.Ticket</B></DT>
+
+
+<P>A Ticket object is used to specify both of a destination and a quality
+of transfer. In other words, it defines the way in which an aglet is transferred.
+It may include the destination, the protocol to be used, and quality such
+as timeout, the level of integrity or confidentiality that must be secured.
+This object is used where URL were used as the way to specify the destination.
+<DT>
+<B>com.ibm.aglet.FutureReply</B></DT>
+
+
+<P>An object of the <TT>FutureReply</TT> interface is returned by the asynchronous
+message-passing and used as a placeholder to receive the result later asynchronously.
+With this interface, the receiver can determine whether a reply is available,
+and can wait for the result with a specified timeout value so that it can
+continue its execution if a reply was not returned within the specified
+time.</DL>
+In the following sections, you will see more classes and interfaces that
+allow you to control the activities of an aglet.
+<H1>
+Extending the Aglet class</H1>
+Here are general guidelines for defining a subclass of the abstract <TT>Aglet</TT>
+class.
+<UL>
+<LI>
+A user-defined Aglet class extends the <TT>com.ibm.aglet.Aglet</TT> class.</LI>
+
+<LI>
+It can extend another Aglet implementation class.</LI>
+
+<LI>
+It may implement a <TT>java.io.Externalizable</TT> interface to customize
+the serialization process of the aglet. But you need to call <TT>super.writeExternal</TT>
+and <TT>super.readExternal</TT> to properly serialize/deserialize the state
+define in the <TT>Aglet class</TT>.</LI>
+
+<LI>
+It cannot override pre-defined Aglet API methods, such as <TT>dispatch()</TT>
+and <TT>getAgletContext()</TT> since these are declared to be final.</LI>
+
+<LI>
+Unlike normal Java objects, it should not implement a constructor to initialize
+the objects because the instance of the Aglet class is initialized after
+this instantiation. You should use <TT>onCreation</TT> method instead.</LI>
+
+<LI>
+If it implements <TT>java.io.Externalizable</TT>, the public constructor
+without arguments would be needed to successfully deserialize the object.
+In addition, the constructor should not have any side effects because the
+constructor is called every time the deserialization is taken place.</LI>
+</UL>
+The following methods of the Aglet class are supposed to be overridden
+by a subclass to allow an aglet to implement its own specific behavior:
+<DL>
+<DT>
+<B><TT>void Aglet.onCreation(Object init)</TT></B></DT>
+
+
+<P>This method is called only once during its lifecycle, when it is created.
+Aglet programmers have to use <TT>onCreation(Object init)</TT> to initialize
+an aglet, because the Aglet API (e.g. <TT>dispatch(URL)</TT>) is not ready
+in the constructor.
+<DT>
+<B><TT>void Aglet.onDisposing()</TT></B></DT>
+
+
+<P>This method is called just after the <TT>dispose()</TT> method is called.
+The aglet should release any resources previously allocated. It can perform
+additional actions in response to its own disposal.
+<DT>
+<B><TT>void Aglet.run()</TT></B></DT>
+
+
+<P>The <TT>run()</TT> method in the <TT>Aglet</TT> class is called whenever
+an instance is created or resumed. Because this method is called whenever
+it occupies the context, this is a good place to define the common task.
+<DT>
+<B><TT>boolean Aglet.handleMessage(Message msg);</TT></B></DT>
+
+
+<P>All messages sent to the aglet are passed to the <TT>handleMessage</TT>
+method. Aglet programmers can check whether the incoming message is a known
+message, and can perform the task according to the kind of message.</DL>
+
+<PRE>
+    public class HelloAglet extends Aglet {
+        public void onCreation(Object init) {
+            System.out.println("created!");
+        }
+        public void run() {
+            System.out.println("hello!");
+        }
+        public boolean handleMessage(Message msg) {
+            if (msg.sameKind("sayHelloAgain") {
+                System.out.println("hello!");
+                return true;
+            }
+            return false;
+        }
+        public void onDisposing() {
+            System.out.println("bye!");
+        }
+    }</PRE>
+
+<H1>
+Aglet Object and Its Life Cycle</H1>
+The <TT>com.ibm.aglet.Aglet</TT> class provides the basic functionality
+for a mobile object, and every aglet (aglet objects) has to be an instance
+of a subclass of it. To use an aglet, you first has to <I>instantiated</I>
+it. There are two ways to create a new instance of an aglet. The first
+is to instantiate a completely new aglet from class definitions by calling
+<TT>AgletContext.createAglet(URL codebase, String name, Object init)</TT>.
+This primitive creates a new instance within the specified context and
+initializes it if necessary, then invokes <TT>Aglet.onCreation(Object init)</TT>
+on the created object along with the initializer object passed to the <TT>createAglet</TT>
+primitive. The other way is to create a copy of an existing aglet by using
+the <TT>Aglet.clone()</TT> primitive. The cloned aglet has the same state
+as the original one but has a different <TT>AgletID</TT> object, an thus
+a distinct identity.
+
+<P>Once created, an aglet object can be dispatched to and/or retracted
+from a remote server, deactivated and placed in secondary storage, then
+activated later.
+<CENTER><IMG SRC="images/lifecycle.gif" VSPACE=10 ></CENTER>
+An aglet can dispatch itself to a remote server by calling the <TT>Aglet.dispatch(URL
+dest)</TT> primitive. To be more precise, an aglet occupies the aglet context
+and can move from this context to others during its execution. Because
+the server may serve multiple contexts within one Java VM, and one host
+may serve multiple servers in one host the context are named as the following
+set
+<UL>
+<LI>
+the address of the host, typically IP-address.</LI>
+
+<LI>
+the port number to which the server is listening.</LI>
+
+<LI>
+the name of context within the server.</LI>
+</UL>
+
+<PRE>
+Example:
+   atp://aglets.ibm.com:1434/context_name</PRE>
+Dispatching causes an aglet to suspend its execution, serialize its internal
+state and bytecode into the standard form and then to be transported to
+the destination. On the receiver side, the Java object is reconstructed
+according to the data received from the origin, and a new thread is assigned
+and executed.
+
+<P>Aglets can be persistent. Since a mobile aglet needs to be serializable
+into a bit-stream, all mobile aglet can be persistent in nature. The <TT>Aglet.deactivate(long
+timeout)</TT> primitive causes an aglet to be stored in secondary storage
+and to sleep for a specified number of milliseconds. After the given time
+has passed or another program has requested its activation, the aglet is
+activated within the same context where as that in which it was deactivated.
+
+<P>Unlike normal Java objects, which are automatically released by garbage
+collector, an aglet object, since it is active, can decide whether or not
+to die. If you call the <TT>dispose()</TT> method to kill the aglet, <TT>onDisposing()
+</TT>is called to perform the finalization suitable for the current state
+of the aglet. (Note that this is different from Java's <TT>finalizer()</TT>,
+which is invoked when the object is garbage-collected.) Aglet programmers
+are responsible for releasing allocated resources such as file descriptors
+or DB connections, because these may not be released automatically.
+
+<P><!-- ADDENDUM -->
+<HR size=1>Once disposed of, the instance becomes an invalid entity, and
+any attempt to operate it will result in a SecurityException. <I>(This
+may be replaced with another Exception class)</I>. 
+<HR size=1>
+<H1>
+Aglet Events and Delegation Event Model</H1>
+Java VM does not allow stack frames to be stored or a thread object to be
+resumed from them. It is impossible for a thread object to migrate from
+one JVM to another while preserving its execution state.
+<BR>Instead, Aglets uses an event model to give programmers a way of
+implementing an action that emulates the migration. When an aglet dispatches,
+the Aglet runtime system issues the corresponding event to notify the aglet
+that it is being dispatched, or that it is arriving at the destination.
+<CENTER><IMG SRC="images/events.gif" ></CENTER>
+For example, the following code fragment defines the <TT>MyListener</TT>
+class, which implements the <TT>MobilityListener</TT> interface, and <TT>MyAglet</TT>,
+which extends the <TT>Aglet</TT> class.
+<PRE>
+    import com.ibm.aglet.Aglet;
+    import com.ibm.aglet.event.MobilityEvent;
+    import com.ibm.aglet.event.MobilityListener;
+
+    class MyListener implements MobilityListener {
+        public void onDispatching(MobilityEvent l) {
+            closeWindow();
+            closeFile();
+        }
+        public void onReverting(MobilityEvent l) {
+            openWindow();
+            donNextJob();
+        }
+        public void onArrival(MobilityEvent l) {
+        }
+    }
+
+    public class MyAglet extends Aglet {
+        public void onCreation(Object init) {
+            MobilityListener listener = new MyListener();
+            addMobilityListener(listener);            
+        }
+    }
+</PRE>
+<p>
+The <tt>onDispatching()</tt> method of the MyListener object is called before
+an aglet is actually dispatched, and the <tt>onArrival()</tt> method is called
+after it arrives at its destination. If an aglet has multiple listeners,
+they are called in the order in which they were attached. In this way,
+an aglet programmer can implement an action such as <tt>onDispatching</tt>
+that should be taken in response to the following events,
+regardless of when or by whom an aglet is dispatched.
+</p>
+<CENTER><TABLE BORDER >
+<TR>
+<TH>When </TH>
+
+<TH>Event Object </TH>
+
+<TH>Listener </TH>
+
+<TH>Method called </TH>
+</TR>
+
+<TR>
+<TD>Just before cloning</TD>
+
+<TD>CloneEvent</TD>
+
+<TD>CloneListener</TD>
+
+<TD>onCloning</TD>
+</TR>
+
+<TR>
+<TD>When clone is created</TD>
+
+<TD>CloneEvent </TD>
+
+<TD>CloneListener </TD>
+
+<TD>onClone </TD>
+</TR>
+
+<TR>
+<TD>After creation of clone </TD>
+
+<TD>CloneEvent</TD>
+
+<TD>CloneListener</TD>
+
+<TD>onCloned </TD>
+</TR>
+
+<TR>
+<TD>Just before dispatch </TD>
+
+<TD>MobilityEvent </TD>
+
+<TD>MobilityListener </TD>
+
+<TD>onDispatching </TD>
+</TR>
+
+<TR>
+<TD>Just before retraction </TD>
+
+<TD>MobilityEvent </TD>
+
+<TD>MobilityListener </TD>
+
+<TD>onReverting </TD>
+</TR>
+
+<TR>
+<TD>After arrival at the destination </TD>
+
+<TD>MobilityEvent </TD>
+
+<TD>MobilityListener <T/D></TD>
+
+<TD>onArrival</TD>
+</TR>
+
+<TR>
+<TD>Just before deactivation </TD>
+
+<TD>PersistencyEvent </TD>
+
+<TD>PersistencyListener </TD>
+
+<TD>onDeactivating </TD>
+</TR>
+
+<TR>
+<TD>After activation </TD>
+
+<TD>PersistencyEvent </TD>
+
+<TD>PersistencyListener </TD>
+
+<TD>onActivation </TD>
+</TR>
+</TABLE></CENTER>
+More than one listener objects can be added. Complex tasks can be divided
+into multiple listeners so that some of them can be reused by other aglets.
+For example, the following code fragments define the Updater class, which
+updates the information on its location registered in a RegistryAglet.
+Since this listener object is pluggable, it can be added at runtime and
+used for any aglets.
+<PRE>
+    public class Updater extends MobilityAdapter {
+        AgletProxy _finder;
+        Message _update_msg = new Message("update");
+
+        public Updater(AgletProxy finder, String name) {
+            _finder = finder;
+            _update_msg.setArg("name", name);
+        }
+
+        public void onArrival(MobilityEvent ev) {
+            try {
+                _update_msg.setArg("proxy", ev.getAgletProxy());
+                _finder.sendMessage(_update_msg);
+            } catch (Exception ex) {
+            }       
+        }
+
+        public void removeFromRegistry() {
+            try {
+                Message remove = new Message("remove");
+                remove.setArg("name", _update_msg.getArg("name"));
+                _finder.sendMessage( remove );
+            } catch (Exception ex) {
+            }
+        }
+    }
+
+    public class Registry extends Aglet {
+        Hashtable _registry = new Hashtable();
+        public boolean handleMessage(msg msg) {
+            if (msg.sameKind("Lookup") {
+                msg.sendReply(_registry.get(msg.getArg("name")));
+            } else if (msg.sameKind("Update") {
+                _registry.put(msg.getArg("name"), msg.getArg("proxy"));
+            } else if (msg.sameKind("Remove") {
+                _registry.remove(msg.getArg("name"));
+            } else return false;
+            return true;
+        }
+    }</PRE>
+<!--
+<pre>
+      public class CloneLimiter implements CloneListener {
+          boolean original = true;
+          int number_of_clones = 0;
+          public void onCloning(CloneEvent ev) {
+              if (original == false) {
+                  throw new SecurityException("Clone cannot create a clone");
+                  // this exception may be replaced with another class.
+              }
+              if (number_of_clones>10) {
+                  throw new SecurityException("Exceeds the limit");
+              }
+          }
+          public void onClone(CloneEvent ev) {
+              original = false;
+          }
+          public void onCloned(CloneEvent ev) {
+              number_of_clone++;
+          }
+      }
+</pre>
+-->
+One thing programmers should bear in mind is that these listener objects
+are called in sequence. Therefore, the listener object being added last
+may not be called, depending on the behavior of the former listeners. For
+example, if a listener object disposes of the aglet in the <TT>onArrival</TT>,
+subsequent listeners are never invoked. 
+
+<HR size = 1>Note that these event callbacks are also queued and processed one
+by one. You may not receive them until the current message handling is
+completed. See the section "Messaging in Aglets" for more details.
+<HR size = 1><!--
+    ObjectSerialization provides an object with a way of customizing
+    its own serialization by overriding two method, called
+    <tt>writeObject(ObjectOutputStream)</tt> and
+    <tt>readObject(ObjectInputStream)</tt>.
+    These can be used to implement an action
+    that should be taken in response to an AgletEvent, because
+    these two methods are always called when such an event occurs.
+
+    The AgletEvent callbacks are different from the readObject/writeObject
+    method in the sense that the aglet programmer can determine what
+    kind of event occurred and can thus implement a different behavior for
+    each event. For example, different behaviors are often implemented for
+    the original object and its clone object, depending on whether
+    the object is a parent or a child. The following code fragments
+    define the CloneLimiter, which controls the maximum number of
+    clones the aglet can create.
+
+    Unlike overriding the readObject/writeObject methods, listener
+    objects are pluggable and can be added to and removed from the aglet at
+    runtime, so listener classes can be used as a library for aglets.
+    You can use the CloneLimiter class for any aglet class to
+    specify the maximum number of clones, for example. <BR>
+-->
+<H1>
+Object Mobility</H1>
+
+<H2>
+Serializing an Aglet Object</H2>
+When an aglet is dispatched, cloned, or deactivated, it is marshaled into
+a byte array, then unmarshaled from it later. Aglets uses the standard Java
+ObjectSerialization mechanism to marshal and unmarshal an aglet. While
+the serialization is being executed, all objects within the object-graph
+starting from an aglet instance are regarded as its state to be marshaled.
+Therefore, these objects need to implement the <TT>java.io.Serializable</TT>
+interface or <TT>java.io.Externalizable</TT> interface, or else they must be
+referenced as <I>transient</I>. If a non-serializable object is found in the
+object graph, it results in a <TT>java.io.NotSerializableException</TT>
+being thrown.
+<PRE>
+   class ListingAglet extends Aglet {
+       // result and its contents are transferred.
+       private Vector result = new Vector();
+       transient InputStream in = new InputStream(); // will not be transferred
+   }</PRE>
+
+<H2>Objects Moved by Value</H2>
+<p>
+Through the serialization/deserialization process, ordinary objects that
+are a part of its state are moved by <I>value</I>. One of the consequences of
+this is that once serialized, an object shared by multiple aglets is
+<I>copied</I> and <I>is no longer shared</I> after the dispatch, clone and
+deactivate/activate operations.
+</p>
+
+<H2>Objects Moved by References</H2>
+<p>
+When an aglet proxy is transferred, on the other hand, it keeps the aglet
+id and its address, and uses that information to restore the correct reference
+to the original aglet. Therefore, AgletProxy objects can keep the reference
+to the actual aglet even if the proxy is transferred to a remote host or
+deactivated, as long as the aglet resides at the same location.
+<PRE>
+   class Transferrable implements java.io.Serializable {
+       Hashtable hash; // Hashtable is also serializable
+   }
+   class NotTransferrable {
+       int dummy;
+   }
+   class MyClass extends Aglet {
+       transient FileDescriptor fd; // never get transferred.
+       int value;  // moved by value
+       String str; // moved by value
+       Object transferable = new Transferrable(); // move by value
+       Object not_transferable = new NonTransferable(); // throws NotSerializableException.
+       AgletProxy proxy; // moved by reference
+   }</PRE>
+
+</p>
+<H2>Class Variables</H2>
+<p>
+Since a class variable is not a part of an object, the values of class
+variables are never serialized. Thus, class variables are local to their
+class, and the aglet may obtain a different value when it arrives at a
+new destination.
+
+<PRE>
+    public class MyAglet {
+        static int class_variable = 0;
+        public void onCreation(Object init) {
+            class_variable = 10;
+            dispatch("atp://next.place");
+        }
+        public void run() {
+            if (class_variable != 10) {
+                System.out.println("Class variable never get transferred!");
+            }
+        }
+    }</PRE>
+</p>
+
+<H2>
+Transferring RMI Objects</H2>
+<p>
+The remote interface of RMI is used to define remote objects whose methods
+can be invoked remotely. A client-side RMI object (stub) works well with
+the Aglets library without modification. That is, when an aglet is dispatched
+along with a remote object, the remote object is automatically rebound
+to the server object when the aglet is unmarshaled.
+</p>
+
+<P>However, Aglets cannot handle server objects. Transfer of an RMI server
+object results in the creation of another copy of the server object at the
+destination site.
+<PRE>
+  public class MyAglet extends Aglet {
+      RMIHelloImpl impl = new RMIHelloImpl();
+      String naming = "//naming.com/hello";
+      public void onCreation(Object init) {
+          java.rmi.Naming.rebind(naming, impl);
+
+          addMobilityListener(new MobilityAdapter() {
+              void onArrival(MobilityEvent ev) {
+                  java.rmi.Naming.rebind(naming, impl);
+                  impl.hello(); // calling local method
+                                // It cannot be Stub anyway because it's impl!
+              }
+          });
+      }
+  }
+</PRE>
+
+This is a limitation of RMI in JDK1.1. (Note: JDK1.2 supports "unexporting"
+of a remote object, which solves the above problem.)
+</p>
+
+<H2>Implementing writeObject/readObject Methods</H2>
+<p>
+Aglet programmers who want to customize writeObject/readObject methods
+on serializable objects should be aware that <tt>onDispatching()</tt> is called
+while the aglet is running, while <tt>writeObject()</tt> is called after the
+aglet has been suspended. Similarly, <tt>readObject()</tt> is called while the
+aglet is being unmarshaled, which means that Aglet primitives such as
+<tt>getAgletContext()</tt> do not work.
+On the other hand, onArrival() is called after the entire aglet has been
+restored and activated successfully, so you can call the Aglet API.
+</p>
+
+<H2>Proxy Object Whose Aglet Has Been Dispatched</H2>
+<p>
+Currently, the AgletProxy cannot keep track of roaming aglets. Once an aglet
+has been dispatched, the proxy previously referencing the aglet is no longer
+valid. A mechanism for preserving the reference will be provided in the
+future.
+
+<P><!--
+    <h2>How Dispatch Works</h2>
+    When an aglet is dispatched, corresponding listener objects are called
+    immediately.
+    If these invocations are successfully completed, a thread
+    is suspended first, then ObjectSerialization is called and
+    the aglet and its associated objects are marshaled. After these
+    objects have been successfully marshaled and transported to the
+    destination, the thread is killed and related resources are
+    deallocated.<BR>
+
+    If the aglet has more than one thread created by itself,
+    these threads are also automatically terminated. To avoid any problem
+    caused by unexpected termination, an aglet should implement a listener
+    interface and terminate these threads in the listener's callback method.
+--><A NAME="message"></A>
+<H1>
+Messaging in Aglets</H1>
+An application or aglets can communicate with other aglets by message passing.
+An aglet that wants to communicate with another aglet first has to create
+a message object, then send it to the target aglet. A message object has
+a kind and an optional argument object. The receiver aglet determine what
+to do by checking the kind of received message and get parameters as the
+argument object in the <TT>Aglet.handleMessage()</TT> method.
+<PRE>
+    MyAglet extends Aglet {
+        public boolean handleMessage(Message msg) {
+            if (msg.sameKind("doJob")) {
+                doJob();
+            } else if (msg.sameKind("shutdown")) {
+                deactivate(0);
+            }
+        }
+    }</PRE>
+Aglets supports the following types of message passing:
+<DL>
+<DT>
+<B>Now-type:</B> <TT><A HREF="http://www.trl.ibm.co.jp/aglets/">AgletProxy.sendMessage(Message
+msg)</A></TT><A HREF="http://www.trl.ibm.co.jp/aglets/"></A></DT>
+
+<DD>
+A now-type message is synchronous and blocks the current execution until the
+receiver has completed the handling of the message.</DD>
+
+<PRE>
+     String answer = proxy.sendMessage(new Message("question"));
+     System.out.println(answer);</PRE>
+
+<DT>
+<B>Future-type:</B> <TT>AgletProxy.sendAsyncMessage(Message msg)</TT></DT>
+
+<DD>
+A future-type message is asynchronous and does not block the current execution.
+The method returns an <TT>FutureReply</TT> object, which can be used to
+obtain the result or wait for it later.</DD>
+
+<PRE>
+     FutureReply future =
+         proxy.sendAsyncMessage(new Message("question"));
+     int num_task = 10;
+     // do private job at most 10 times while waiting for the result.
+     while(future.isAvailable() == false &amp;&amp; num_task-- >0) {
+         doPrivateJob();
+     }
+     System.out.println( (String)future.getReply() );</PRE>
+<I><B>Note:</B> If an aglet sends a message to itself, the message is not
+put at the tail of the queue. Instead, it is placed at the head of the
+queue and executed immediately, to avoid deadlock.</I>
+<DT>
+<B>Oneway-type:</B> <TT>AgletProxy.sendOnewayMessage(Message msg)</TT></DT>
+
+<DD>
+A oneway-type message is asynchronous and does not block the current execution.
+It differs from a future-type message in the way it is placed at the tail
+of the queue even if it is sent to the aglet itself.</DD>
+
+<PRE>
+       proxy.sendOnewayMessage(new Message("question"));</PRE>
+
+<DT>
+<B>Delegation-type:</B> <TT>AgletProxy.delegateMessage(Message msg)</TT></DT>
+</DL>
+The receiver aglet has to define its <TT>handleMessage(Message msg)</TT>
+method to handle incoming messages. In the <TT>handleMessage()</TT> method,
+a message object is passed as an argument and can be used to perform the
+operation according to the kind of message. In the method, you have to
+return a boolean value indicating whether it has been handled or not.
+<PRE>
+    public boolean handleMessage(Message msg) {
+        if (msg.sameKind("sayHello")) {
+            System.out.println("Hello");
+            return true; // i know this message...
+        }
+        return false; // false, otherwise
+    }</PRE>
+If it returns false, the sender of the message receives a NotHandledException
+and thus knows that the message has not been handled. There is no way of
+knowing whether a one-way message has been handled or not.
+<PRE>
+    Future future = proxy.sendAsyncMessage();
+    ...
+    try {
+        Object reply = future.getReply();
+    } catch (NotHandledException ex) {
+        // the receiver didn't handled the message
+    } catch (MessageException ex) {
+        // an exception has been thrown in the receiver's handleMessage()
+        System.out.println(ex.getException());
+    }</PRE>
+Messages in Aglets also support acknowledge-type replies, whereby the receiver
+can send the reply (result) even before completing the handling of the
+message. When you have a return value, you need to use this interface to
+return the value. Once you send a reply via the <TT>Message.sendReply()</TT>
+method, you cannot send a reply again, and the return value of <TT>handleMessage
+</TT>will be ignored.
+<PRE>
+    public boolean handleMessage(Message msg) {
+        if (msg.sameKind("accessDB")) {
+            openDB(); // pseudo code
+            Object reply = accessDB(msg.getArg());
+            msg.sendReply(reply);
+            closeDB();
+            return true; // i know this message...
+        }
+        return false; // false, otherwise
+    }</PRE>
+
+<H2>
+Message Queue and Priority</H2>
+Every aglet object has a message queue object. All incoming messages are
+stored in the message queue, and then handled one by one. The messaging
+in Aglets follows the <I>transmission-ordering law</I>; that is, messages
+arrive in the order in which they were sent. For example, if you send messages
+in the order "A", "B", "C", the receiver receives them in the same order
+"A", "B", "C".
+<PRE>
+                   queue
+         [A]  ->         {}: Aglet
+         [B]  ->      {[A]}: Aglet
+         [C]  ->   {[B][A]}: Aglet
+                   {[C][B]}: Aglet ( handling [A] )
+                      {[C]}: Aglet ( handling [B] )
+                         {}: Aglet ( handling [C] )</PRE>
+You can specify the priority associated with kinds of messages. The messages
+with high priority will be handled before messages with lower priority.
+Because the message is handled concurrently, giving the priority does not
+guarantee the order. It is simply to increase the likelihood that a certain
+message is handled earlier than the other.
+
+<P>Suppose that there are three messages in the queue, with the priorities
+3, 5, and 6, and that you send two messages with priorities 4 and 7 asynchronously.
+Even if you sent the message with priority 4 first, the message with priority
+7 will be handled first.
+<PRE>
+                 {[3][5][6]}: Aglet
+       [4]  ->   {[3][5][6]}: Aglet
+       [7]  ->   {[3][4][5]}: Aglet (handling [6])
+              {[3][4][5][7]}: Aglet (handling [6] cont'd)
+                 {[3][4][5]}: Aglet (handling [7])</PRE>
+Aglets also supports a NOT_QUEUED priority, whereby the message is not
+queued. Suppose the Message [D] has priority NOT_QUEUED; then that message
+will be passed to an aglet and handled immediately in parallel.
+<PRE>
+         [A]  ->         {}: Aglet
+         [B]  ->      {[A]}: Aglet
+         [D]  ->   {[B][A]}: Aglet
+                      {[B]}: Aglet ( handling [A] ) ( handling [D] )
+                         {}: Aglet ( handling [B] ) ( handling [D] )
+                         {}: Aglet ( handling [D] )</PRE>
+You can set priority of the message by the primitive <TT>MessageManager.setPriority(String,
+int)</TT>, and a MessageManager object of the agent can be obtained via
+<TT>Aglet.getMessageManager()</TT> primitive.
+<H2>
+Synchronizing Messages</H2>
+Although messages are normally handled one by one, it often happens that
+the thread currently handling the message has to wait until the aglet's
+state meets some condition, or has to inform the waiting thread or incoming
+message that the condition is satisfied. The Aglet messaging API supports
+<I>monitors</I> to describe those concurrency in the similar way to Java.
+The Aglet API has five methods to synchronize messages.
+<DL>
+<DT>
+<B>Aglet.waitMessage();</B></DT>
+
+<BR><B>Aglet.waitMessage(long timeout);</B>
+<DD>
+<TT>Aglet.waitMessage()</TT> causes the current thread to wait until another
+message instructs it to resume its execution. Only the thread that owns
+the monitor can call this method and wait. Otherwise, the IllegalMonitorStateException
+is thrown.</DD>
+
+
+<P>If another thread that is handling another message instructs the waiting
+thread to resume the waiting thread by calling <TT>Aglet.notifyMessage()</TT>,
+it wakes up and resumes execution. If it is not instructed to resume, it
+will wait forever until it is stopped. On the other hand, the <TT>waitMessage(long
+timeout)</TT> is used to wait at most for <B>timeout</B> milliseconds, and
+wakes up when the specified timeout expires.
+<DT>
+<B>Aglet.notifyMessage();</B></DT>
+
+<BR><B>Aglet.notifyAllMessages();</B>
+<DD>
+<TT>Aglet.notifyMessage()</TT> instructs the waiting thread to wake up
+and resume execution. The caller thread is put at the head of the message
+queue and waits until the resumed thread completes the message handling
+or exits the monitor. Only the thread that owns the message-handling monitor
+can call this method. Otherwise the IllegalMonitorStateException will be
+thrown.</DD>
+
+<PRE>
+          queue        waiting
+        {[D][C]}: Aglet {[A][B]}
+           {[D]}: Aglet {[A][B]} (handling[C] calls notifyMessage())
+        {[D][C]}: Aglet {[B]} (handling[A])</PRE>
+<TT>Aglet.notifyAllMessages()</TT> causes all waiting threads to wake up
+one by one. These threads are placed at the head of the message queue and
+the oldest waiting thread is immediately resumed. The caller thread is
+placed at the next position of these thread and will be resumed alter these
+resumed thread has completed. <!--
+        is placed at the next position of the latest waiting thread.
+-->
+<PRE>
+         queue         waiting
+       {[D][C]}: Aglet {[A][B]}
+          {[D]}: Aglet {[A][B]} (handling[C] calls notifyAllMessages())
+    {[D][C][B]}: Aglet (handling[A])</PRE>
+
+<DT>
+<B>Aglet.exitMonitor();</B></DT>
+
+<DD>
+The <TT>exitMonitor() </TT>method causes the current execution thread to
+release the monitor owned by the thread. Then the next incoming message
+in the queue (if any) will be executed. Note that <TT>exitMonitor()</TT>
+does not activate the waiting messages but only the incoming messages.</DD>
+
+<PRE>
+         queue
+       {[C][B]}: Aglet (handling[A]* calls exitMonitor())
+          {[C]}: Aglet (handling[B]*) (handling[A])
+
+Note: * indicates the owner of the monitor</PRE>
+With this API, you can implement a background task while receiving the
+message.
+<PRE>
+      public void SiteWatcherAglet extends Aglet {
+          public void run() {
+              exitMonitor(); // now the next message would start.
+              while( condition == true) {
+                  watchSite("http://home/index.html");
+              }
+          }
+      }</PRE>
+</DL>
+The following "StackAglet" example illustrates how synchronization between
+messages can be achieved.
+<PRE>
+    public StackAglet extends Aglets {
+        static int capacity = 10;
+        Object stack[] = new Object[capacity];
+        int num = 0;
+
+        public handleMessage(Message msg) {
+            if (msg.sameKind("push")) {
+                push(msg);
+            } else if (msg.sameKind("pop")) {
+                pop(msg);
+            } else if (msg.sameKind("isFull")) {
+                msg.sendReply( num == capacity);
+            } else if (msg.sameKind("isEmpty")) {
+                msg.sendReply( num == 0 );
+            } else return false;
+            return true;
+        }
+
+        private void push(Message msg) {
+            while (num == capacity) {
+                waitMessage();
+            }
+            stack[num++] = msg.getArg();
+            if (num==1) {
+                notifyMessage(); // wake up "pop" message
+            }
+        }
+
+        private void pop(Message msg) {
+           while(num==0) {
+               waitMessage();
+           }
+           msg.sendReply(stack[--num]);
+           if (num == (capacity -1)) {
+               notifyMessage(); // wake up "push" message
+           }
+        }
+    }</PRE>
+
+<H2>
+Remote Messaging in Aglets</H2>
+Aglets supports remote message passing, and aglet objects can communicate
+by messages remotely as well as locally. While local messaging can pass
+any kinds of object as arguments, arguments or return value passed by
+remote messaging can be of any Java type that implements
+<I>java.io.Serializable</I>, and are marshaled and unmarshaled by
+ObjectSerialization.
+Sending a remote message is different from dispatching an aglet in a sense
+that <I>a remote message does not cause any transfer of bytecode</I>, and
+therefore the classes used in the message have to be installed in both
+hosts.
+<BR>Remote message passing can be used as a lightweight way of communicating
+between aglets that reside on the different hosts, and can reduce the network
+traffic, the cost of defining classes, and security issues, while dispatching
+an aglet can take advantage of locality, for example disconnected operations
+or intensive interaction with hosts.
+<H1>
+Exception Handling in Aglets</H1>
+T.B.D. <A NAME="Architecture"></A>
+<HR size=3>
+<H1>
+System Architecture</H1>
+
+<HR size=3><!--
+  All aglets programs needs the Aglet runtime system running on the
+  Java VM for their execution. Therefore, the aglet behavior is
+  havily relies on the functionality and behavior of this runtime
+  system. 
+-->
+<H1>Architecture Overview</H1>
+
+<p>
+The Aglets architecture consists of two layers, and two APIs that define
+interfaces for accessing their functions.
+
+<CENTER><IMG SRC="images/arch.gif" VSPACE=10 ></CENTER>
+The Aglets runtime layer is the implementation of the Aglet API, and defines
+the behavior of the API components, such as AgletProxy and AgletContext.
+It provides the fundamental functions for aglets to be created, managed,
+and dispatched to remote hosts.
+
+The communication layer is primarily responsible for transferring a
+serialized agent to a destination and receiving it. It also supports
+agent-to-agent communication and facilities for agent management.
+</P>
+
+<H2>
+Aglets Runtime Layer</H2>
+The Aglets runtime layer implements Aglets interfaces such as AgletContext.
+It also consists of a core framework and subcomponents. The core framework
+provides the following mechanisms fundamental to aglet execution:
+<UL>
+<LI>Serialization and deserialization of aglets</LI>
+
+<LI>Class loading and transfer</LI>
+
+<LI>Reference management and garbage collection</LI>
+</UL>
+
+The subcomponents are designed to be extensible and customizable because
+these services may vary depending on requirements or environments. For
+example, the PersistenceManager for applets may store deactivated aglets
+only in the memory, or else on the Web server if it can do so. In other cases,
+it may have to use the default security manager set by the Web browser.
+
+<UL>
+<LI>
+<B>PersistenceManager</B></LI>
+
+<BR>The PersistenceManager is responsible for storing the serialized agent,
+consisting of the aglet's code and state into a persistent medium such as a
+hard disk.
+<LI>
+<B>CacheManager</B></LI>
+
+<BR>The CacheManager is responsible for maintaining the bytecode used by the
+aglet. Because the bytecode of an incoming aglet needs to be transferred when
+the aglet moves to the next destination, the CacheManager caches all bytecode
+even after the corresponding class has been defined.
+<LI>
+<B>SecurityManager</B></LI>
+
+<BR>The SecurityManager is responsible for protecting hosts and aglets
+from malicious entities. It hooks every security-sensitive operation and
+checks whether the caller is permitted to perform it. There is only one
+instance of SecurityManager in the system, and it cannot be altered once it has
+been installed.
+</UL>
+These components are defined as an interface or an abstract class, so
+server developers can implement these components for their own use and plug
+them into the runtime. Unfortunately, APIs for these components are intended
+for the people who develops the server but not for aglets application
+programmers, and are thus not public and not available to ordinary users at
+present.
+
+<H2>Communication Layer</H2>
+<p>
+The Aglets runtime itself has no communication mechanism for transferring the
+serialized data of an aglet to destinations. Instead, the Aglets runtime
+uses the communication API that abstracts the communication between agent
+systems. This API defines methods for creating and transferring agents,
+tracking agents, and managing agents in an agent-system- and
+protocol-independent way.
+</p>
+
+<P>The current Aglets uses the Agent Transfer Protocol (ATP) as the default
+implementation of the communication layer. ATP is modeled on the HTTP protocol,
+and is an application-level protocol for transmission of mobile agents.
+To enable remote communication between agents, ATP also supports
+message-passing.
+<H3>
+Communication API (MASIF for Java)</H3>
+The communication API used by Aglets runtime is derived from the OMG standard,
+<A HREF="http://www.omg.org/library/schedule/Technology_Adoptions.htmh#Mobile_Agents_Facility">MASIF
+(Mobile Agent System Interoperability Facility)</A>, which allows various
+agent systems to interoperate. This interface abstracts the communication
+layer by defining interfaces and providing a common representation in Java
+that conforms to the IDL defined in the MASIF standard.
+<PRE>
+ // MAF IDL
+ module MAF {
+     .....
+     struct Name {
+         Authority           authority;
+         Identity            identity;
+         AgentSystemType     agent_system_type;
+     };
+     ....
+     interface MAFAgentSystem {
+         // Agent creation and transfer
+         Name create_agent(in Name agent_name, ...) raises (..);
+         void receive_agent(in Name agent_name,
+                            in AgentProfile agent_profile,
+                            in octet_string agent, ...) raises (..);
+
+         // Agent management
+         void get_agent_status(in Name agent_name) raises (..);
+         void list_all_agents(in Name agent_name) raises (..);
+         void suspend_agent(in Name agent_name) raises (..);
+         void resume_agent(in Name agent_name) raises (..);
+         void terminate_agent(in Name agent_name) raises (..);
+         // etc...
+     }
+ }</PRE>
+
+Although MASIF interfaces are intended for CORBA objects, the interfaces
+actually defined in Aglets are not CORBA-based. In fact, they are
+defined as normal Java classes, interfaces or abstract classes that act as 
+common wrappers for the protocols actually being used. Thus, it is possible
+and easy to use various kinds of protocol other than CORBA/IIOP
+such as ATP and RMI.
+
+<P>We chose this approach because relying on the specific transport protocol
+or the specific transport mechanisms has at least two disadvantages. First,
+it would be technically inadequate to require mobile agent systems to use
+a specific protocol unless it became pervasive and widely supported. One of
+the benefits of mobile agents is in their ability to hide the existence of
+network communication. Second, some Java environments such as PersonalJava have
+neither RMI nor CORBA as their core API. Therefore, it would be more
+practically desirable if the runtime could choose the communication mechanisms
+in accordance with its system requirements.
+</P>
+
+<H3>Communication Layer Architecture</H3>
+
+<p>
+The following figure shows the architecture of the communication layer.
+<TT>com.ibm.maf.MAFAgentSystem</TT> is an abstract class that defines
+a set of methods equivalent to the MASIF interface. There are two kinds of
+class that extend this abstract class. One is an implementation class
+that provides the agent system facility, and the other is a stub object that
+transfers a request to a destination.
+
+<CENTER><IMG SRC="images/masif.gif" VSPACE=10 ></CENTER>
+
+An application or client uses a stub object to send a request to the
+destination. An agent system must have a stub class for each protocol it
+supports. Applications or clients can then get and use a stub object for a
+given protocol. Note that it is an agent system's responsibility to instantiate
+and manage stub objects. The latest beta (as of this writing) version of
+Aglets supports two protocols, ATP and RMI.
+</P>
+
+<P>On the other hand, an aglet server has an implementation of
+<TT>MAFAgentSystem</TT> that actually handles the requests. It is the
+agent-system provider's responsibility
+to provide the implementation of MAFAgentSystem. Aglets has the <TT>com.ibm.aglets.MAFAgentSystem_AgletsImpl</TT>
+class as an implementation. Furthermore, a server has one or more daemons
+to accept requests from a sender. A server may support multiple protocols
+by having multiple daemons to handle each protocol. When a daemon accepts
+requests, it then forward these requests to the MAFAgentSytem_AgletsImpl.
+<BR><!--
+<hr width=95%>
+ Note: The current Interface is defined in terms of RMI remote interface, but
+ not IDL. This will be replaced with the IDL based interface in the future
+ release.
+<hr width=95%>
+--><I>Note:
+CORBA-based transport layer will be provided in a future release
+of Aglets. </I>
+
+<!--
+  When an aglet issues a request to dispatch itself to a destination,
+  the request travels down to the Aglets runtime layer,
+  which converts the aglet into the form of a byte array
+  consisting of its state data and its code.
+  If the request is successful, the aglet is terminated, and the byte array
+  is passed to the ATP layer through the ATCI.
+  The ATP, which is the implementation of ATCI, then constructs a bit
+  stream that contains general information such as the agent system name
+  and agent identifier, as well as the byte array from the Aglets runtime.
+
+<center>
+  <IMG src="images/layers.gif" VSPACE="10">
+</center>
+-->
+
+<H1>Aglet Object Structure</H1>
+
+<CENTER><IMG SRC="images/obj.gif" VSPACE=10 ></CENTER>
+
+<p>
+An <tt>AgletRef</tt> object is an internal representation of an aglet
+object. It has all necessary components for the aglet a MessageManager to
+control incoming messages, and a ResourceManager to manage resources consumed
+by the aglet and to manage its related resources such as security information
+and the AgletInfo object. It is also the implementation of the abstract
+methods defined in <tt>Aglet</tt> class. It implements most of the
+functionality to be provided by the <tt>com.ibm.aglet.Aglet</tt> class.
+
+The AgletRef object is what the aglets framework deals with. The latter
+has a reference table to store the mapping from the AgletID to the actual
+aglet instance. An AgletRef object is created and inserted into this table
+when an aglet is created or arrives, and removed from it when the
+aglet is dispatched or disposed of.
+</p>
+
+<H2>Message Manager</H2>
+<p>
+An aglet has a MessageManager object, which governs all incoming messages
+sent to the aglet. The MessageManager manages and controls the order and
+concurrency of these messages. See the <A HREF="#message">Messaging section
+</A>for more details.
+</P>
+
+<H2>
+Resource Management</H2>
+<p>
+An aglet uses local resources such as files or threads to carry out its
+tasks during its lifetime. It may open a dialog window to interact
+with users, or create a new thread to perform some concurrent task.
+</p>
+
+<P>
+These resources are managed by a ResourceManager object, which is allocated
+for each aglet. Currently all threads and windows created by the aglet
+are managed by this ResourceManager. When an aglet is
+dispatched, deactivated, or disposed of, these two resources are
+immediately stopped and disposed of.
+Other kinds of resources such as file and socket, however, are not captured
+by this manager. It is left to the garbage collector to decide
+whether or not such resources will be released, and if so when.
+Therefore, the programmer must release them manually to ensure
+their immediate release.
+</p>
+
+<H2>
+Garbage Collection of Aglet Objects</H2>
+<p>
+Unlike normal Java objects, aglets are never garbage-collected (GC)
+automatically, because an aglet is active and has its own threads of control.
+An aglet programmer needs to explicitly dispose of an aglet.
+</p>
+
+<P>When an aglet has been dispatched, deactivated, or disposed of, the
+AgletRef object is removed from the reference table. In addition, the internal
+reference to that aglet and associated components such as MessageManager
+object or properties are set to <TT>null</TT> so that the garbage collector
+can sweep up these dangling objects.
+</p>
+
+<P>This means that if you have a live reference to this aglet elsewhere,
+it will not be GCed. For example, if you have a reference to the static
+variable of the class, it will not be GCed.
+<PRE>
+    public MyAglet extends Aglet {
+        static MyAglet aglet = null; // the previous one may be GCed.
+        public void onCreation(Object init) {
+            aglet = this; // keep the reference
+        }
+    }
+</PRE>
+</P>
+<!--
+    However, there is a case that requires some specific treatment to handle
+    them. Suppose an Aglet has a critical region. Because a thread in Java
+    is preemptive, the thread may be stopped while processing the critical
+    region. As a result, the state of aglet would become inconsistent.
+    Therefore, aglet programmers should take care of its resources and
+    are responsible to release the corresponding resources before
+    dispatch/deactivate/dispose.
+--><!--
+  <h1>Resoruce and Properties used in Aglets runtime</h1>
+    Aglets library uses four environment variables,
+
+   <UL>
+   <DT> CLASSPATH
+   <DD> Aglets library and Tahiti classes are loaded from CLASSPATH
+        directories.
+   <DT> AGLET_HOME
+   <DD> the AGLET_HOME is the directory where you installed Aglets
+        Workbench.
+   <DT> AGLET_PATH
+   <DD> the AGLET_PATH is the lookup path for aglet creation.
+        If the null argument is specified as codebase in 
+        <tt>AgletContext.createAglet(URL codebase, ....)</tt>, the
+        directories specified in the AGLET_PATH are searched and
+    <DT>AGLET_EXPORT_PATH
+    <DD>The AGLET_EXPORT_PATH specifies the directory that contains
+         classes which can be fetched from remote hosts.
+        (that are publically accessible).
+    </UL>
+-->
+<H1>Class Loading and Transfer</H1>
+<p>
+In mobile agent systems, classes for an agent need to be available at the
+server on which the agent is running. The class of an agent needs to be
+available at the server at the time of creation, and to be available at the
+destination to which it moves. Therefore, a mobile agent system needs to have
+a facility for loading bytecode on demand, or for transferring the bytecode
+along with the agent.
+</p>
+
+<P>Aglets supports two schemes for transferring bytecode more efficiently
+ways, and also make use of a cache to reduce unnecessary downloading of
+classes.
+It is important for aglet programmers to understand class mobility,
+how a class is loaded, and when a class is transferred. The rules of 
+class mobility are explained in the following sections:
+<UL>
+<LI>
+Class Loading.</LI>
+
+<BR>How a class is chosen and loaded.
+<LI>
+Class Transfer.</LI>
+
+<BR>Which classes are transferred and when.
+<LI>
+Class Resumption and Evolution.</LI>
+
+<BR>How a class loader is chosen and a class is resumed within it.</UL>
+
+<H2>
+Class Loading</H2>
+In Aglets, a class for an aglet is determined dynamically at runtime; thus,
+the class for the aglet needs to be loaded dynamically on demand. This dynamic
+class-loading may also happen at certain points in the aglet's execution,
+such as when it is visiting other hosts as well as the original host.
+
+<P>Java has a special class, called <tt>ClassLoader</tt>, that is capable of
+defining a new class from bytecode. Once a class has been defined by the
+class loader, all requests for new classes within that class are handled by
+that class loader. Aglets has a dedicated subclass of <tt>ClassLoader</tt>,
+called <tt>AgletClassLoader</tt>.
+Each aglet is associated with exactly one class loader, and all classes
+required by the aglet are managed by that class loader. (Note that one
+class loader may manage multiple aglet instances.) Suppose there is an
+aglet
+
+<PRE>
+   Ex.1
+   class MyAglet extends Aglets {
+       MyDialog dialog = null;
+       public void onCreation() {
+           dialog = new MyDialog();
+       }
+   }
+</PRE>
+
+and that both MyAglet and MyDialog classes are placed in the codebase below:
+<PRE>
+atp://aglets.codeserver.com/public
+</PRE>
+
+In this example, both MyAglet and the MyDialog classes are managed
+by one AgletClassLoader.
+</P>
+
+<H3>How a class is chosen</H3>
+<p>
+There may be several sources of the bytecode of a given class.
+It is therefore worth understanding which class definition is actually chosen by the class loader and used. AgletClassLoader maintains a cache table for
+classes formerly defined by the class loader, and it first looks up a
+definition in that cache table. If a definition is not found in the cache
+, it asks the system class loader to load it from CLASSPATH (for security).
+If this is not successful either, it defines a new class by extracting
+bytecode from CacheManager if this is available, or by loading from
+the codebase otherwise. Once the new class has been defined, it is cached in
+the cache table and will be reused by other aglets later.
+<PRE>
+
+  Ex.2
+  class MyAglet2 extends Aglets {
+      MyDialog dialog = null;
+      String str = "Hi";
+      // LocalData is installed on the CLASSPATH
+      LocalData data = new LocalData();
+      public void onCreation(Object init) {
+          dialog = new MyDialog();
+      }
+  }
+</PRE>
+
+If MyAglet2 is loaded by the same classloader of MyAglet, the cached
+class is used to resolve the MyDialog class. If it is loaded by a different
+classloader, it will use the bytecode in the CacheManager to define a new
+MyDialog class in the class loader. Since both the <TT>java.lang.String</TT>
+class and the <tt>LocalData</tt> class are locally available on the CLASSPATH,
+they will be loaded by the system class loader and then become system classes.
+</p>
+
+<H2>Class Transfer</H2>
+<p>
+As mentioned before, there are two possible ways of bringing bytecode to the
+server. The first is to download and define a class on demand after an
+aglet moves, and the second is to transfer bytecode as an agent moves.
+Aglets supports these two schemes, and in some case uses a combination of the
+two. This subsection illustrates the rules according to which classes are
+transferred.
+</p>
+
+<H3>Which Class is Transferred?</H3>
+Since an aglet needs its classes in order to execute, it is very important
+to understand which class is transferred and which is resident, so as to
+ensure that the aglet can complete its execution. If even one of the necessary
+classes has not been transferred, execution of the aglets will fail.
+
+<P>Aglets classifies Java classes into four categories, according to where
+they came from, and manages them in different ways:
+<DL>
+<DT>
+<B>Archived Classes</B></DT>
+
+<DD>Classes that are archived in the JAR file.</DD>
+
+<DT>
+<B>Codebase Classes</B></DT>
+
+<DD>Classes that are loaded from the aglets' codebase.</DD>
+
+<DT>
+<B>System Classes</B></DT>
+
+<DD>
+Classes that are loaded from CLASSPATH and thus do not have a codebase.</DD>
+
+<DT>
+<B>Others</B></DT>
+
+<DD>
+An aglet might refer to other classes that are loaded from other codebases
+by other aglets. This happens when an aglet receives a message that includes
+as an argument an object whose class was loaded from the sender's codebase.</DD>
+</DL>
+If the class is archived in the JAR file specified as the aglet's codebase,
+all bytecode in the archive are simply transferred as the aglet moves,
+and is stored in the CacheManager. Therefore, if MyAglet and MyDialog
+are archived in the JAR file, both files are transferred along with the aglet
+itself. Note that what is guaranteed is only that "bytecode" is transferred
+to and available at the destination. The class actually used by the aglet
+whose execution is resumed at the destination is chosen according to the
+above rule.
+
+<P>
+If no archive is specified, only classes loaded from the codebase are
+transferable along with the aglet. By this we mean that all classes located
+in the aglet's codebase can be transferred when it moves except when
+a class with the same name exists on the CLASSPATH.
+
+Such system classes are never transferred. In that of Ex.2, the bytecode of
+the <tt>LocalData</tt> class would never be transferred while that of
+<tt>MyDialog</tt> might be. The set of classes to be transferred are determined
+at runtime in the serialization process. That is, the classes of all objects
+visited during the serialization are collected and transferred.
+</p>
+
+<p>
+Note that the class of a reference with null value is never transferred.
+So what happens if such a reference exists and the class is used after the
+aglet is dispatched? Let's take a look at an example:
+
+<PRE>
+   Ex.3
+   class MyAglet extends Aglet {
+       MyDialog dialog = null;
+       public void onCreation(Object init) {
+           addMobilityListener(new MobilityAdapter() {
+                public void onArrival(MobilityEvent ev) {
+                    // create MyDialog after arriving at the destination.
+                    dialog = new MyDialog();
+                }
+           });
+           dispatch(....);
+       }
+   }
+</PRE>
+
+Since the reference "dialog" is null, the MyDialog class is not transmitted
+when the aglet is dispatched. Instead, the aglet is sent without the MyDialog
+class and then searches for the MyDialog class after it arrives. Because it
+tries to load the class by following the class loading rule explained above,
+it may load the class definition from its codebase, or it may use the cached
+class, if any exists.
+
+<P>If you want to make sure that such classes are also transferred,
+you may include the class instance as its state, like this:
+<PRE>
+   Ex.4
+   class MyAglet extends Aglet {
+       MyDialog dialog = null;
+       Class class_used_later = MyDialog.class;
+   }
+</PRE>
+
+This forces the system to transmit MyDialog along with the aglet.
+
+<P>
+Finally, if an aglet attempts to transfer an object whose class loader
+is different from the aglet's class loader, it fails with a SecurityException.
+This is because Aglets does not allow an aglet either to load a class from
+two different codebases or to extract the bytecode from other aglets, for
+security reasons.
+<p>
+
+<H2>
+Class Resumption and Evolution</H2>
+When an aglet arrives at the destination, bytecode in the stream is retrieved
+and cached in the CacheManager. They are then used by a ClassLoader to
+define the classes needed to reconstruct the aglet.
+
+<P>Since ClassLoader cannot define two classes with the same name, the old
+class already stored in the cache may be used even if the updated class
+has been sent. This would cause a problem in deserializing objects
+because the serialized data might not compatible with it. Even worse, the
+class will behave differently.
+
+<PRE>
+  Ex.5
+
+  // old class
+  class MyAglet extends Aglet {
+     MyDialog dialog = new MyDialog();
+  }
+
+  // revised class
+  class MyAglet extends Aglet {
+      MyDialog dialog = new MyDialog();
+      public void onCreation(Object init) {
+          dialog.show();  // I forgot to show the dialog..
+      }
+  }
+  # MyAglet must be used at the destination
+</PRE>
+
+Even if you fix the source code (Ex.5), you may get the same result as
+before because it might be cached. Therefore, a class definition must be
+forcibly updated as it evolves, while the cost of transmitting and defining 
+new classes must be reduced. The Aglets solves this problem by allocating
+different class loaders for different sets of classes. In the following
+section, we describe how a class loader is chosen and when one is newly created.
+</P>
+
+<h3How a classloader is chosen?</h3>
+<p>
+To avoid the version conflict problem, Aglets sends the information on the
+version of a class as well as its name along with the class definition.
+AgletClassLoader also maintains this information in the cache.
+This version information is taken from the <TT>MANIFEST</tt>
+file in a JAR archive or computed at runtime.
+</p>
+
+<P>With this information, the receiver can find out what classes are used
+within the aglet even before receiving all the bytecode. Thus, it can determine
+the class loader that matches the information in the "ClassLoader cache".
+Note that only classes sent along with the aglet are evaluated
+in searching the class loader. If an aglet requires another class that has
+not appeared in this version table since the aglet arrives
+(MyDialog in Ex.3), the same problem may occur.
+
+<P>
+Note that Aglets does not support the automatic version detection of aglets
+created from <I>plain codebase</i> (without JAR). You may therefore get an
+old version of classes. We recommend you to use a JAR archive if you want to
+make sure that the correct version is used for creation.
+
+<H2>Other Considerations in Class Mobility</H2>
+<!--
+   <h3Deactivation/Activation and Cloning</h3>
+   Altough the previous sections focuses on mechanisms for dispaching,
+   the same scheme is used for deactivation/activation and cloning.
+   That is, the classes stored in the persistent media are collected
+   by the rule in the previous sections, and the ClassLoader used to
+   activate the aglet are chosen by the version table above. It would be also
+   easy to imagne that cloning an aglet always result in using the exactly
+   same classloader with that for the original aglet and thereby
+   the clone consisting of the same set of classes.
+-->
+<H3>
+Efficiency</H3>
+Not surprisingly, in most cases sending all classes would not be efficient,
+since it would consume unnecessary bandwidth. But if we can assume that the
+likelihood of the availability of classes is high, it would be possible to
+reduce the cost of transmitting an agent by not sending class definitions. This
+assumption may hold in most cases, since a mobile agent is quite often sent
+to the same destination.
+
+<P>The current Aglets, however, sends as much bytecode as possible,
+because the above scheme has several drawbacks and the *best* scheme is
+not yet established. For example,
+
+<UL>
+<LI>
+This scheme is not always faster than the current scheme.</LI>
+
+<LI>
+The source of classes for an aglet may not be available when
+it arrives, owing to presence of a firewall or the failure of a node.</LI>
+
+<LI>
+It might be possible to keep bytecode in the cache at the sender node in
+advance, but this raises other issues such as when the bytecode should be
+uploaded and when it should be garbage-collected.</LI>
+</UL>
+
+We understand that there must be a more efficient way than the current
+approach, and such a scheme will be adopted as Aglets evolves.
+<H3>
+Class Mobility in Remote Messaging</H3>
+Aglets supports remote message passing, and aglet objects can communicate
+through messages remotely as well as locally. Parameter objects or return
+values passed by remote messaging can be of any Java type that implements
+<I>java.io.Serializable</I> or Java primitive types, and they can be marshaled
+and unmarshaled by ObjectSerialization. Sending a remote message is different
+from dispatching an aglet in the sense that <I>a remote message does not
+cause any transfer of bytecode</I>. Instead, the classes of objects passed
+along with a message must be available at both sites, either as the system
+class installed or as the aglets's codebase class.
+
+<P> 
+<H3>
+Security</H3>
+When bytecode is being transferred, the runtime consults the SecurityManager
+to determine whether the aglet is allowed to carry it out. When bytecode
+is carried in, the runtime consolts the SecurityManager to determine whether
+the aglet is allowed to carry the bytecode into the runtime and to define the
+class. Furthermore, a request from an aglet that left the server to fetch a
+class file must also be referred to the SecurityManager. If the requested
+file is not allowed to be fetched, the SecurityManager refuses the request.
+
+<P><!--
+TBW:!
+   Aglets does not allow an aglet to take the bytecode from different
+   codebase and.
+   This must be extended that even if it's same codebase, it should not
+   if the signer and owner of the code are different.
+-->
+<H1>
+Agent Transfer Protocol</H1>
+ATP is a simple application-level protocol designed to transmit an agent
+in an agent-system-independent manner. An ATP request consists of a request
+line, header fields, and a content. The request line specifies the method
+of the request, while the header fields contain the parameters of the request.
+ATP defines the following four standard request methods:
+<DL>
+<DT>
+<B>Dispatch</B></DT>
+
+<DD>
+The dispatch method requests a destination agent system to reconstruct
+an agent from the content of a request and to start executing the agent. If
+the request is successful, the sender must terminate the agent and release
+any resources consumed by it.</DD>
+
+<DT>
+<B>Retract</B></DT>
+
+<DD>
+The retract method requests a destination agent system to send a specified
+agent back to the sender. The receiver is responsible for reconstructing
+and resuming the agent. If the agent is successfully transferred, the receiver
+must terminate the agent and release any resources consumed by it.</DD>
+
+<DT>
+<B>Fetch</B></DT>
+
+<DD>
+The fetch method is similar to the GET method in HTTP; it requests a receiver
+to retrieve and send any identified information (normally class files).</DD>
+
+<DT>
+<B>Message</B></DT>
+
+<DD>
+The message method is used to pass a message to an agent identified by a
+agent-id and to return a reply value in the response. Although the protocol
+adopts a request/reply form, it does not lay down any rules for a scheme of
+communication between agents.</DD>
+</DL>
+
+<CENTER><IMG SRC="images/atp.gif" VSPACE=10 ></CENTER>
+See the <A HREF="http://www.trl.ibm.co.jp/aglets/atp/atp.htm">ATP
+specification</A> for more details.
+<H2>
+HTTP Tunneling via Proxy Servers</H2>
+The ATP layer normally attempts to make a direct connection to hosts on
+the network. In almost all intranet situations, however, there is a firewall
+that prevents users from opening a direct socket connection to an external
+node. This means that an aglet cannot be dispatched or retracted through
+the firewall. To make it possible, the ATP layer supports a technique called
+HTTP tunneling that enables an ATP request to be sent outside of the firewall
+as a HTTP POST request and the response to be retrieved as the HTTP response.
+In addition, the Aglets server has to be somehow capable of receiving that
+HTTP-wrapped ATP request. Therefore, the Aglets server can be configured
+so that it can receive an HTTP POST message with the content type "x-atp"
+and can unwrap the ATP request. If it receives an HTTP-wrapped ATP request,
+it sends an HTTP response in the same way.
+<H3>
+Configuring a Sender</H3>
+To send a HTTP tunneling request, you have to specify the HTTP proxy host
+to be used:
+<OL>
+<LI>
+Open the Network Configuration panel by selecting:</LI>
+
+<BR>Options -> Network Preference
+<LI>
+Check the "Use HTTP Proxy" in the "HTTP Tunneling" panel.</LI>
+
+<LI>
+Type the host name and port number of the proxy server.</LI>
+
+<LI>
+Input the beginning string or ending string of the address for which you
+do not want to use a proxy.</LI>
+
+<LI>
+Press the OK button</LI>
+</OL>
+
+<H3>
+Configuring a Receiver</H3>
+To receive an HTTP tunneling request, a receiver has to be configured so
+that it can receive an HTTP-wrapped ATP request:
+<OL>C
+<LI>
+Open the Network Configuration panel by selecting.</LI>
+
+<BR>Options -> Network Preference
+<LI>
+Check the "Accept HTTP Tunneling Request" in the "HTTP tunneling" panel.</LI>
+
+<LI>
+Press the OK button.</LI>
+</OL>
+
+<H3>
+Limitation of HTTP Tunneling</H3>
+Because the firewall allows only a one-way connection to the outside, the
+dispatched aglet cannot fetch a class on demand. Make sure that all necessary
+classes are stored in the stream and transferred to the destination either by
+making references to those classes inside the object, or by putting them into
+one JAR archive and specifying it as the aglet's codebase.
+
+<P>Furthermore, it is impossible for an aglet to dispatch itself back into
+the intranet through the firewall. To get back inside a firewall, an aglet
+has a unique primitive, called <I>retract</I>, which lets a client "pull"
+the dispatched aglet from a remote site. This allows you to dispatch
+an aglet outside the firewall and get it back into the intranet. <!--
+    <h2>Thread Usage in ATP</h2>
+    The ATP implementation does not require creation of a new thread to
+    handle an incoming connection request. Instead, ATP contains a pool of
+    threads and pulls out an available thread from it, then assigns it to
+    handle the request. Consequently, it is possible to handle multiple
+    requests efficiently. Since an aglet has its own threads of control,
+    it is guaranteed that all threads used to call it belong to the aglet's
+    thread group, and are not the same as the threads in the pool.
+
+<center>
+  <IMG src="images/threads.gif" VSPACE="10">
+</center>
+--><A NAME="Security"></A>
+<HR size=3>
+<H1>
+Security in Aglets</H1>
+
+<HR size=3>Security is essential to any mobile agent system, because accepting
+a hostile agent may lead to your computer being damaged or your privacy
+intruded upon. For secure agent execution, the agent system must provide the following
+security services:
+<DL>
+<DT>
+Authentication of the Sender, the Manufacturer and the Owner of the Agent.</DT>
+
+<DD>
+Who is responsible for this agent?</DD>
+
+<DD>
+Who is responsible for the agent code?</DD>
+
+<DD>
+Has the agent (code and state) been tampered with?</DD>
+
+<DT>
+Authorization of the Agent (or Its Owner)</DT>
+
+<DD>
+What can this agent do? (E.g, can this agent access files?) </DD>
+
+<DT>
+Secure Communication between Agent Systems.</DT>
+
+<DD>
+Can the agent protect its privacy?</DD>
+
+<DT>
+Non-repudiation and Auditing.</DT>
+
+<DD>
+How can we ensure that a deal has been actually carried out?</DD>
+
+<DD>
+Security-sensitive activities of agents must be recorded,
+and an administrator must be able to audit them.</DD>
+
+</DL>
+In mobile agent systems, agents must present proper user identities
+so that agent systems can control them according to the access rights of the
+users and the agent's manufacturers. It is therefore important for agent
+systems to be able to authenticate an agent's user and manufacturer.
+The former is much more difficult than the latterr.
+It is reasonably easy to identify the manufacturer by code-signing.
+However, it is difficult to verify the ownership of the agent since the state
+of the agent varies during its travels, and it is practically impossible to
+sign the state part of the agent.
+
+<P>
+Aglets uses an organizational approach whereby all agent systems in
+a certain domain are deemed trustworthy, and evaluates the authenticity of the
+agent depending on the domain in which it has been roaming around. A user
+first authenticates himself/herself to the system, and the system then issues
+the credentials of the user's agent.
+The agent system then evaluates the authenticity of the credentials,
+to determine whether or not they were issued within the same domain.
+It may downgrade the authenticity or simply deny access, depending on
+conditions such as where the agent has traveled and so forth.
+Host authentication is used to identify the domain to which the
+communicating host belongs.
+</p>
+
+<P>Although the current Aglets does not fully support these services because of
+the limited support for encryption in JDK, it does provide a <I>reasonable</I>
+level of security to make it safe to use mobile agent applications. The
+following security features are supported in the latest Aglets runtime:
+<UL>
+<LI>
+Authentication of users and domains.</LI>
+
+<LI>
+Integrity checked communication between servers within a domain.</LI>
+
+<LI>
+Fine-grained authorization similar to the JDK1.2 security model.</LI>
+</UL>
+
+<H2>
+Domain Authentication</H2>
+<p>
+Aglet servers are able to authenticate whether the contacting server belongs
+to a certain domain. All servers that belongs to one domain share a secret key,
+and can authenticate the contacting server by means of that secret key
+using MAC (Message Authentication Code: a secure hash value
+computed from a content and nonce value).
+
+The advantage of this is that MAC does not have to be signed by means of
+encryption algorithms, and it can simply be implemented on top of vanilla JDK.
+</p>
+
+<P>
+After the authentication between servers has been established, the credentials
+of the aglet are sent along with the aglet. The receiver will then decide
+how much it trusts the credentials sent by the server on the basis of the
+information obtained by the host authentication. In Aglets, the server simply
+trusts the credentials if they were sent from the server in the same domain.
+</P>
+
+<P>
+To use the domain authentication, each user (or server administrator)
+needs to obtain the secret key of the domain from the domain authority.
+The domain authority is responsible for generating a domain key for a
+specific server. The shared secret key is signed with the user's password,
+and thus the user is required to give the correct user id and password to make
+it effective. This key file must be kept secret, because it is not encrypted.
+</P>
+
+<P>One disadvantage is that it cannot identify and verify the communicating
+hosts. Once the shared key is stolen from a server in the domain,
+there is no way of distinguishing valid servers and the server from which the
+key was stolen. As a result, all servers in the same domain are exposed
+to dangers.
+<BR><!--
+    Another problem is that the masquerade attack is relatively easy for
+    people inside the domain because the secret is not *encripted* by password.
+    This heavily rely on the assumption that the server implementation is
+    trustworthy and only servers that belong to the domain know the shared
+    secret.
+-->
+</p>
+
+<H2>Integrity-Checked Communication</H2>
+Since all aglet servers within one domain share a secret, the integrity
+checking can be done in the same way as that described under the domain
+authentication. The sender computes the MIC (Message Integrity Code;
+same as MAC) value of the the content and the shared secret, and sends
+it along with the nonce and the content.
+The receiver then verifies the MIC by using the nonce, the content and the
+secret maintained by the receiver itself. Because only a server that knows the
+secret can generate the same MIC, the receiver can make sure that the content
+was sent by a server in the same domain and has not been tampered with.
+
+<H2>
+Program Identification</H2>
+In the current Aglets, the identification of the agent code uses only its
+codebase. As of the time of writing, code signing is not supported.
+
+<H2>Authorization of Aglets</H2>
+When an aglet accesses the security-sensitive information and resources such
+as Java properties, threads, and/or any other external resources such as files,
+it must be controlled under the permissions given to the aglet. The permissions
+can be specified either by a GUI or by direct editing of the policy database.
+The format of the policy database used by Aglets is designed to conform
+to that in the JDK1.2 specification. A user can specify the following
+permissions in the policy database.
+
+<PRE>
+java.io.FilePermission            : File read/write/execute
+java.net.SocketPermission         : Socket resolve/connect/listen/accept
+java.awt.AWTPermission            : showWindowWithoutWarningBanner, accessClipboard
+java.util.PropertyPermission      : Java property
+java.lang.RuntimePermission       : queuePrintJob, load library
+java.security.SecurityPermission  : getPolicy, setSystemScope
+java.security.AllPermission       : all other permissions
+
+com.ibm.aglets.security.ContextPermission  : context property, start, shutdown
+com.ibm.aglets.security.AgletPermission    : dispatch, deactivate, etc.
+com.ibm.aglets.security.MessagePermission  : messaging</PRE>
+
+<UL>
+<DT>
+<B>com.ibm.aglets.security.ContextPermission</B></DT>
+
+<DD>
+<TT>ContextPermission</TT> specifies whether an aglet can access the
+context property, shutdown the context, etc. The name for a ContextPermission
+can be one of the following:
+"start", "retract", "create.&lt;codebase@classname>",
+"listener.add", "listener.remove", "property.&lt;key>".</DD>
+
+<DT>
+<B>com.ibm.aglets.security.AgletPermission</B></DT>
+
+<DD>
+This class represents access to an aglet. An AgletPermission consists of
+a principal name of target aglet and a set of operation names for that
+aglet.
+
+<P>
+The principal name is the user name of the target aglet (e.g., "moshima",
+"guenter", "this", or "anonymous"), and the operation name is the
+method name of the Aglet class (e.g., "dispatch", "dispose");
+</p>
+</DD>
+
+<DT>
+<B>com.ibm.aglets.security.MessagePermission</B></DT>
+
+<DD>
+This class represents permission to send a message to an aglet.
+A MessagePermission consists of the principal name of the target aglet and a
+kind of message.
+
+<P>
+The principal name is the user name of the target aglet (e.g., "moshima",
+"guenter", "this", or "anonymous"), and the kind of the message is the kind of
+message to be sent. The kind of message should be prefixed with
+"message" (e.g., "message.show", "message.getResult");
+</p>
+</DD>
+</UL>
+
+Aglets are identified by their code base and owner. The manufacturer of an
+aglet is currently anonymous because code signing is not supported in the
+current Aglets. Thus, the permissions for aglets are defined in terms
+of the aglets' owners and codebase information. For example, the following
+configuration gives the aglets owned by "oshima" that have the codebase
+<tt>"http://truted.com"</tt> read access to local files on "C:\temp",
+write access to any property in the context, and permission to dispose of any
+aglet owned by oshima.
+<PRE>
+grant codeBase "http://trusted.com",
+      ownedBy "oshima"
+{
+   permission java.io.FilePermission  "C:\\temp", "read";
+   permission com.ibm.aglets.security.ContextPermission  "property.*", "write";
+   permission com.ibm.aglets.security.AgletPermission  "oshima", "dispose";
+   permission com.ibm.aglets.security.MessagePermission  "oshima", "message.getResult";
+}
+</PRE>
+
+This policy file is created at <TT>$HOME/.aglets/security/aglets.policy</TT>
+on an idividual user basis. A domain-based policy is not yet supported.
+
+Once supported, the domain authority should be able to specify domain-wide
+permissions.
+Once code signatures are supported, "signedBy" will be available
+as a means of specifying the manufacturer of an aglet.
+
+<!--
+  <p><em><b>Note:</b> Please report any security problems you uncover to
+  the Aglets team listed at the bottom of this page.  In this alpha
+  release, some security problems should be anticipated.</em>
+
+  <h2>Environment Variables and File Protection</h2>
+
+  The Aglets library is loaded from Java classes on the CLASSPATH.
+  The AGLET_PATH is the default lookup path for aglet creation.
+  The AGLET_EXPORT_PATH
+  directory contains the fetchable aglet classes.  Make sure that all
+  these directories are properly protected, i.e. that only authorized users
+  have write access.  Otherwise it would be possible to replace
+  security-relevant Java classes of the Aglets Workbench,
+  such as ibm.atp.agentsystem.aglets.AgletsSecurity, and thus to
+  bypass security checks.
+
+  <p>Only classes that are not on the CLASSPATH can be transferred and
+  only classes which are on AGLET_EXPORT_PATH are fetchable from
+  remote sites.
+
+  <p>Tahiti stores its security settings in
+  <tt>$HOME/.atp/aglets.properties</tt>.  Again, this file must be
+  properly protected.
+  <h2>Aglet Properties</h2>
+
+  The following information is associated with each aglet: <p>
+
+  <table border="1">
+    <tr><td><b>Aglet Instance</b></td><td><b>Aglet Class</b></td></tr>
+    <tr><td>identity</td> <td>Class name</td></tr>
+    <tr><td>owner id</td> <td> code base</td></tr>
+    <tr><td>creation date</td> <td>version</td></tr>
+    <tr><td>trust</td><td>   </td></tr>
+  </table>
+
+  <p>Aglets are identified by their code base and identity.  The owner
+  of the aglet is identified by his/her user name and e-mail address.
+
+  
+  <h2>Trust</h2>
+
+  Aglets may have different levels of trust.
+  In version Alpha5 of the AWB, aglets are classified as either
+  <em>trusted</em> or <em>untrusted</em>.
+  <P>
+
+  Aglets are considered to be <strong>trusted</strong> if they are
+  launched locally and if their code base is local, that is, if it
+  is either <tt>null</tt> or a local file
+  system (e.g., <tt>file:/SomePath/someClass</tt>).
+  <p>
+  All other aglets are
+  treated as <strong>untrusted</strong>.  Examples of untrusted aglets
+  are aglets that come from an external server or that are generated as
+  instances of an aglet class located at a remote site.    Note
+  that an aglet with code base
+  <tt>atp://localhost/SomePath/SomeClass</tt> is treated as untrusted!
+  <p>
+
+  A trusted aglet has the privilege of creating another trusted aglet on
+  the same aglet server.
+  <p>
+
+  In general, the access control setting is specified more strictly
+  for an untrusted aglet than for a trusted one.
+
+
+  <h2>Security Preferences (Policy Database)</h2>
+
+  A user can specify specific authorizations for trusted and untrusted
+  aglets that govern read/write access to files and
+  libraries, object instantiation, and window access and warning.  These
+  security options are defined for each aglet security category (<B>trusted</B>
+  and <B>untrusted</B>) and are stored in the files
+  
+  <ul>
+    <li> $HOME/.atp/security/trusted (or $JAVA_HOME if there is no $HOME) and
+    <li> $HOME/.atp/security/untrusted (or $JAVA_HOME if there is no $HOME).
+  </ul>
+
+  <p><em><b>Note:</b> Addition or removal of rights should only take
+  place via utilities described below.  It is highly recommended that the
+  above security profile files should not be modified directly, for example,
+  by using an editor.</em>
+
+  <p> Again, the above files have to have proper file access protection.
+  Otherwise, one could modify the privileges of untrusted aglets to include
+  file write access to any subdirectory.  In general,
+  aglets should never have file write access to $HOME/.atp, $CLASSPATH,
+  $AGLET_PATH, and $AGLET_EXPORT_PATH.
+
+  <p>
+  For each security category, the following resource categories are
+  currently supported:
+  FileSystem, Network, Property, and Others.  In the following, we
+  describe a graphical user interface for setting security
+  options. <P>
+-->
+
+<H3>
+Setting Security Options</H3>
+Although it should be possible to directly edit the policy file to specify
+permissions, Tahiti provides you with the GUI that make easy to define
+the security group and set permissions. The config dialog for security
+preferences of tahiti is shown below:
+<P>
+<IMG SRC="images/SecurityConfigDialog.gif" ALT="Security Config Panel" VSPACE=10>
+<P>
+The left field "Code Base" indicates the triples of codeBase phrase,
+signedBy phrase and ownedBy phrase in policy file.
+The right field indicates permissions related to the codebase
+selected in the left field.
+For each codebase/signers/owner of aglets,
+the access control list specified in the left field shall be used.
+The menu at the top of right field shows the selected kind of permission.
+The selected kind "FileSystem" means "java.io.FilePermission". And the field
+"FileSystem" shows FilePermissions for selected codebase.
+<H4>
+File Access Control</H4>
+When the selected kind is "FileSystem", The field shows a list box which
+is a list of java.io.FilePermissions. A line defines a permission
+for pair of file/directory path name pattern and access modes to read, write
+and execute as actions. The path name pattern is accessible in those modes.
+The word "codebase"
+is reserved word which means the filesystem of current code source.
+
+<P>
+<IMG SRC="images/FilePermission.gif" ALT="FilePermission" VSPACE=10>
+<H4>
+Network Access Control</H4>
+When the selected kind is "Socket", The field shows a list box which
+is a list of java.net.SocketPermissions. A line defines a permission
+for pair of host name pattern and port number pattern to accept, listen,
+connect and resolve as actions. The word "codebase" is reserved word
+which means the host name of current code source.
+
+<P>
+<IMG SRC="images/SocketPermission.gif" ALT="SocketPermission" VSPACE=10>
+<H4>
+Window</H4>
+When the selected kind is "Socket", The field shows a list box which
+is a list of java.awt.AWTPermissions. A line defines a permission
+for pair of property name and actions.
+The word "showWindowWithoutWarningBanner" is reserved word
+which means display of a window without also displaying a banner warning
+that the window was created by the aglet.
+
+<P>
+<IMG SRC="images/AWTPermission.gif" ALT="AWTPermission" VSPACE=10>
+<H4>
+Properties</H4>
+When the selected kind is "Property", The field shows a list box which
+is a list of java.util.PropertyPermissions. A line defines a permission
+for pair of property name pattern and actions ("read" and "write").
+
+<P>
+<IMG SRC="images/PropertyPermission.gif" ALT="PropertyPermission" VSPACE=10>
+<H4>
+Runtime</H4>
+When the selected kind is "Runtime", The field shows a list box which
+is a list of java.lang.RuntimePermissions. A line defines a permission
+for pair of property name pattern and actions.
+The prefix "loadLibrary." is reserved word
+which means dynamic linking of the specified library.
+And the prefix "accessClassInPackage." is reserved word
+which means access to the specified package.
+
+<P>
+<IMG SRC="images/RuntimePermission.gif" ALT="RuntimePermission" VSPACE=10>
+<H4>
+Security</H4>
+When the selected kind is "Security", The field shows a list box which
+is a list of java.security.SecurityPermissions. A line defines a permission
+for pair of property name pattern and actions.
+
+<P>
+<IMG SRC="images/SecurityPermission.gif" ALT="SecurityPermission" VSPACE=10>
+<H4>
+All others</H4>
+When the selected kind is "All", The field shows a list box which
+is a list of java.security.AllPermissions. A line defines a permission
+for pair of property name pattern and actions. This is special permission
+which will be regarded as the other permissions.
+If "*" is given as either name and actions, all accesses will be permitted
+to the aglet (like -nosecurity option).
+
+<P>
+<IMG SRC="images/AllPermission.gif" ALT="AllPermission" VSPACE=10>
+<H4>
+Aglet</H4>
+When the selected kind is "Aglet", The field shows a list box which
+is a list of com.ibm.aglets.security.AgletPermissions.
+A line defines a permission
+for pair of user name of aglet who receives the system message and actions
+("dispatch", "dispose", "deactivate", "activate", "clone", "retract").
+
+<P>
+<IMG SRC="images/AgletPermission.gif" ALT="AgletPermission" VSPACE=10>
+<H4>
+Message</H4>
+When the selected kind is "Message", The field shows a list box which
+is a list of com.ibm.aglets.security.MessagePermissions.
+A line defines a permission
+for pair of user name of aglet who receives the user-specified message
+and actions as message kind. The message kind shall be specified with
+prefix "message." (An action "message.getResult" means a message kind
+"getResult").
+
+<P>
+<IMG SRC="images/MessagePermission.gif" ALT="MessagePermission" VSPACE=10>
+<H4>
+Context</H4>
+When the selected kind is "Context", The field shows a list box which
+is a list of com.ibm.aglets.security.ContextPermissions.
+A line defines a permission for pair of target name and actions.
+For example,
+when the target name equals "*" and action equals "create",
+the permission means that the aglet can create any aglet from any codebase.
+
+<P>
+<IMG SRC="images/ContextPermission.gif" ALT="ContextPermission" VSPACE=10>
+<H4>
+Protection (Aglet)</H4>
+When the selected kind is "Protection (Aglet)",
+The field shows a list box which
+is a list of com.ibm.aglet.security.AgletProtections.
+Protection class is a sort of permission class.
+However, it is not a permission for aglet to do actions.
+Every aglet can hold its own protection in itself to protect
+system messages from other aglets.
+A line defines a protection
+for pair of user name of aglet who sends the system message and actions
+("dispatch", "dispose", "deactivate", "activate", "clone", "retract").
+The protection is just default. It can be reset by aglet itself.
+
+<P>
+<IMG SRC="images/AgletProtection.gif" ALT="AgletProtection" VSPACE=10>
+<H4>
+Protection (Message)</H4>
+When the selected kind is "Protection (Message)",
+The field shows a list box which
+is a list of com.ibm.aglet.security.MessageProtections.
+Protection class is a sort of permission class.
+However, it is not a permission for aglet to do actions.
+Every aglet can hold its own protection in itself to protect
+user-specified messages from other aglets.
+A line defines a protection
+for pair of user name of aglet who sends the system message and actions.
+The protection is just default. It can be reset by aglet itself.
+
+<P>
+<IMG SRC="images/MessageProtection.gif" ALT="MessageProtection" VSPACE=10>
+<H4>
+Others</H4>
+
+<UL>
+<LI>
+JDBC-ODBC</LI>
+
+<LI>
+RMI Client</LI>
+
+<LI>
+RMI Server access</LI>
+Like as RMI client.
+</UL>
+
+To enable to use JDBC-ODBC, add RuntimePermission for "loadLibrary.JdbcOdbc",
+and RuntimePermission for "accessClassInPackage.sun.jdbc.odbc".
+
+To enable to use RMI, add PropertyPermission for "java.rmi.*" to "read",
+for "sun.rmi.*" to "read", 
+for "http.proxyHost" to "read", and
+for "proxyHost" to "read".
+
+<H2>
+Possible Attacks</H2>
+
+<UL>
+<LI>
+Creates new sub-agents recursively until the JVM is out of memory. Unable
+to shutdown Tahiti.</LI>
+
+<LI>
+An aglet that cannot be disposed of(?)</LI>
+
+<LI>
+Gets a list of all AgletProxies in the current AgletContext, and disposes
+of/dispatches/deactivates/clones each.</LI>
+</UL>
+
+<!--
+<I>To be rechecked.</I>
+-->
+
+<A NAME="Building"></A>
+<HR size=3>
+<H1>
+Building Applications with Aglets</H1>
+
+<HR size=3>The Aglets library provides developers with a set of APIs to
+build and configure your applications using Aglets technology. With one
+of these APIs, an application can have its own configured viewer, import
+a portion of server facilities, or create and launch an aglet without server
+capabilities.
+<H1>
+Scenarios</H1>
+There are several scenarios for building an application by using Aglets
+technology. While a server can host running aglets, a client can create
+and control an aglet remotely without any aglet context. Users may want
+to use aglets through their web browsers. In this case, applets can be
+used either as a context or a client, although it is impossible to dispatch an
+aglet to an applet.
+
+<H2>
+Aglet Components Only</H2>
+This typical scenario does not require any additional APIs. The application
+only consists solely of set of aglets built on an Aglet API. Such a configuration
+normally includes a stationary aglet that has privileged access to local
+resources such as databases and file systems, and provides services for
+incoming aglets. The classes used to define the stationary aglet can be
+from either local disk (CLASSPATH) or a given codebase. If it's loaded
+from CLASSPATH, no security limitation is enforced by the security manager,
+the aglet has the highest privileges. If it is loaded from a codebase,
+appropriate security enforcement will be applied in accordance with its
+identity.
+
+<P>With this configuration, an incoming aglet normally gains access to
+services via message passing. Then, it can leave for the next server along
+with the result obtained in the server, or send it to the home server by
+remote message passing and die. Message passing is also under the control
+of the security manager and a receiver aglet can also deny a request.
+
+<P>The server can be also configured so that it allows a limited set of
+aglets to access the local resources and services.
+In this case, for example, an aglet may open a direct connection
+to a database and issue a SQL request. This gives an aglet great flexibility
+in an using the server resources, while this also creates the risk that an
+aglet may misuse or abuse these resources, and eventually may cause the
+system to misbehave or even crash.
+
+<H2>
+Customized Aglet Viewer</H2>
+A viewer of an Aglets server can be configured by using the context event
+and listener API, and a server can define its own viewer. Such a viewer
+may provide a sophisticated management tool for an administrator, or a
+easy-to-use and application specific interface for end users.
+
+<P>For example, a administration tool would provide comprehensive ways
+of creating service aglets, monitoring visiting aglets, and disposing of
+them if necessary. Furthermore, the viewer can provide service for an incoming
+aglet in response to its arrival. For example, a gateway server may offer
+an incoming aglet the itinerary object for a further trip inside the gateway
+when it arrives.
+
+<P>On the other hand, the viewer can be customized for users or specific
+services. For example, a desktop-like interface may use an icon for aglets
+and drag and drop operations to manipulate them for people who is familiar
+with PCs, while a kiosk for novice users will define a single-click, Web
+style interface.
+<H2>
+Applications embedding Aglets Server Facility</H2>
+This scenario is a typical way of adding the functionality of accepting
+and hosting aglets into a traditional application. For example, a simple
+groupware application may use Aglets to provide service and to use it,
+or to communicate with members. It would be inadequate for such applications
+to just use the aglet server as it is, even if the developer can implement
+its own viewer.
+
+<P>The Aglets Server API allows developers to embed and bootstrap the aglets
+server in their applications, and to configure the server's SecurityManager,
+Persistence, Viewer, and so on.
+
+<P>Furthermore, an application may not want to accept incoming aglets while
+it is creating an aglet or dispatching and retracting it to obtain a service.
+The Server API allows an application to run the Aglets runtime library
+without daemon capability for this purpose.
+<H2>
+Client Applications</H2>
+A client application has no server facility; it only has communication
+facilities for creating and controlling an aglet remotely, or for sending
+a remote message. Therefore, this configuration requires fewer resources
+to use aglets and reduce security threats, because it downloads no bytecode,
+although it can still take advantage of mobile agents on the server sides.
+
+<P> For example, the console of a massive network management system
+may not have to install the server facility. The console application, which
+typically has a client capability, can create a monitor aglet on a machine,
+and let a detective aglet roam multiple machines and send information back
+to the console.
+<H1>
+Server API Overview</H1>
+Aglets provides developers with a set of APIs that support several kinds
+of server scenario.
+
+<P>The ContextEvent class and ContextListener interface allow you to monitor
+the activities of aglets in the context and to take actions in response
+to these activities. The typical application of this API is "AgletViewer"
+which displays a list of aglets running in the context and lets you control
+them by, for example disposing of them or dispatching them.
+
+<P> The <TT>Aglets Server interface</TT> makes it possible to write
+an application capable of hosting, receiving, and dispatching aglets. With
+this interface, you can take advantage of mobile agent technology in your
+application without running an independent, separate server program such
+as Tahiti.
+<DL>
+<DT>
+<B>com.ibm.aglet.event.ContextListener</B></DT>
+
+<DD>
+The ContextListener interface defines a set of methods to be called when
+a context related event occurs. The Listener object can be set by
+calling the <TT>AgletContext.addContextListener(ContextListener)</TT> primitive.
+The <TT>contextStarted</TT> method is called when the context is started,
+and should define the initialization process to validate the context. The
+<TT>contextShutdown</TT> method is called when the context is shutdown, and
+should perform a finalization process to invalidate the context and
+release the resources used by the context. Note that if you add the context
+listener <I>after the context is started, </I>or if you remove the context
+before the context is shutdown, these two methods will not be called.</DD>
+
+
+<P>The other methods are for receiving notification of the activities of
+aglets. It is guaranteed that when an event occurs, the proxy of an aglet given
+as a parameter in the ContextEvent will still be available via the
+<TT>getAgletProxies()</TT> primitive. If an aglet is being disposed of,
+however, the instance of the aglet is in the middle of an invalidating process
+and may have an intermediate state. Therefore checking methods such as
+<TT>isValid()</TT>, may not return correct values.
+
+<PRE>
+package com.ibm.aglet.system;
+public interface ContextListener {
+
+    public void contextStarted(ContextEvent ev);
+
+    public void contextShutdown(ContextEvent ev);
+
+    public void agletCreated(ContextEvent ev);
+
+    public void agletCloned(ContextEvent ev);
+
+    public void agletArrived(ContextEvent ev);
+
+    public void agletActivated(ContextEvent ev);
+
+    public void agletReverted(ContextEvent ev);
+
+    public void agletDisposed(ContextEvent ev);
+
+    public void agletDispatched(ContextEvent ev);
+
+    public void agletDeactivated(ContextEvent ev);
+
+    public void agletStateChanged(ContextEvent ev);
+
+    public void showDocument(ContextEvent ev);
+
+    public void showMessage(ContextEvent ev);
+}
+</PRE>
+
+<TT>agletStateChanged()</TT> is called when an aglet changes its state
+by, for example, calling the <TT>Aglet.setText(String)</TT> primitive.
+<TT>showDocument()</TT>
+is called when an aglet calls the <TT>Aglet.showDocument(URL)</TT> primitive
+to request that a specified document be shown. It is left to the context
+implementor to decide whether or how to implement the <TT>showDocument
+method.</TT> The default implementation of Tahiti launches an external
+Web browser, but another implementation may use an internal browser written
+in Java to load and display an HTML document.
+<DT>
+<B>com.ibm.aglet.event.ContextEvent</B></DT>
+
+<DD>
+The ContextEvent class is an Event class, which is delivered to listeners
+when the state of the context or aglets in it changes.</DD>
+
+<PRE>
+package com.ibm.aglet.system;
+
+public class ContextEvent extends AgletEvent {
+    public static final int CONTEXT_FIRST = 1000;
+    public static final int CONTEXT_LAST  = 1014;
+
+    public static final int STARTED             = CONTEXT_FIRST;        // 1000
+    public static final int SHUTDOWN            = CONTEXT_FIRST + 1;    // 1001
+    public static final int CREATED             = CONTEXT_FIRST + 2;    // 1002
+    public static final int CLONED              = CONTEXT_FIRST + 3;    // 1003
+    public static final int DISPOSED            = CONTEXT_FIRST + 4;    // 1004
+    public static final int DISPATCHED          = CONTEXT_FIRST + 5;    // 1005
+    public static final int REVERTED            = CONTEXT_FIRST + 6;    // 1006
+    public static final int ARRIVED             = CONTEXT_FIRST + 7;    // 1007
+    public static final int DEACTIVATED         = CONTEXT_FIRST + 8;    // 1008
+    public static final int ACTIVATED           = CONTEXT_FIRST + 9;    // 1009
+    public static final int STATE_CHANGED       = CONTEXT_FIRST + 10;   // 1010
+    public static final int SHOW_DOCUMENT       = CONTEXT_FIRST + 12;   // 1012
+    public static final int MESSAGE             = CONTEXT_FIRST + 13;   // 1013
+    public static final int NO_RESPONSE         = CONTEXT_FIRST + 14;   // 1014
+
+    public Object arg = null;
+
+    public AgletContext getAgletContext();
+    public AgletProxy getAgletProxy();
+    public String getMessage();
+    public String getText();
+    public URL getDocumentURL();
+    public ContextEvent(int id, Object context, AgletProxy target, Object arg);
+    public ContextEvent(int id, Object context, AgletProxy target);
+}</PRE>
+
+<DT>
+<B>com.ibm.maf.MAFAgentSystem</B></DT>
+
+
+<P>
+The <TT>com.ibm.maf.MAFAgentSystem </TT>is an abstract class that defines
+a set of method for creating, transferring, and managing agents. The interface
+is (almost) equivalent to methods defined in the MASIF standard specification,
+but not identical to the MASIF IDL, because this is not CORBA interface,
+as mentioned before. See the <A HREF="#masif_arch">Architecture
+of Communication Layer</A> section for more details of the architecture.
+<BR>The <TT>getMAFAgentSystem</TT> primitive returns the instance of MAFAgentSystem
+for the given address. The AgletsRuntime then uses this object to communicate
+with the remote agent system. The returned object may be a stub object for
+remote access, or a local server object if the address is its own.
+<PRE>
+package com.ibm.maf.MAFAgentSystem;
+public class MAFAgentSystem {
+
+    static public MAFAgentSystem getMAFAgentSystem(Ticket ticket);
+
+    static public MAFAgentSystem getMAFAgentSystem(String address);
+
+    static public MAFAgentSystem getLocalMAFAgentSystem();
+
+    static public void initMAFAgentSystem(MAFAgentSystem runtime, Name name);
+
+    static public void startMAFAgentSystem(MAFAgentSystem runtime, String protocol);
+
+    // MASIF interfaces
+    public Name create_agent(Name name,
+                             AgentProfile profile,
+                             byte[] agent,
+                             Object[] arguments,
+                             ClassName[] class_names,
+                             String code_base,
+                             MAFAgentSystem class_provider);
+
+    public abstract void receive_agent(Name agent_name,
+                                       AgentProfile agent_profile,
+                                       byte[] agent,
+                                       String place_name,
+                                       ClassName[] class_names,
+                                       String code_base,
+                                       MAFAgentSystem class_sender);
+
+    public abstract byte[][] fetch_class(ClassName[] class_name_list,
+                                         String code_base,
+                                         AgentProfile agent_profile);
+
+    public abstract String find_nearby_agent_system_of_profile(AgentProfile profile);
+
+    public abstract MAFFinder get_MAFFinder();
+
+    public abstract AgentStatus get_agent_status(Name agent_name);
+
+    public abstract AgentSystemInfo get_agent_system_info();
+
+    public abstract AuthInfo get_authinfo(Name agent_name);
+
+    public abstract Name[] list_all_agents();
+
+    public abstract Name[] list_all_agents_of_authority(byte[] authority);
+
+    public abstract String[] list_all_places();
+
+
+    public abstract void resume_agent(Name agent_name);
+    public abstract void suspend_agent(Name agent_name);
+    public abstract void terminate_agent(Name agent_name);
+}</PRE>
+
+</P>
+
+<DT>
+<B>com.ibm.aglet.system.AgletRuntime Class</B></DT>
+
+
+<P>The <TT>com.ibm.aglet.system.AgletRuntime</TT> abstract class provides
+an interface for creating and managing the context. The class actually
+used and the instance are automatically chosen and created by the framework.
+Applications should not try to create a runtime object by themselves. Instead,
+an application must use the <TT>getAgletRuntime()</TT> primitive to obtain
+a reference to the runtime object.
+</P>
+
+<P>
+The<TT>createAgletContext(String name)</TT> primitive creates a new instance
+of the runtime with the given name. If there is an existing context with
+the same name, the primitive throws an IllegalArgumentException. These
+contexts created in the AgletRuntime object can be obtained by either the
+<TT>getAgletContext(String name)</TT> or the <TT>getAgletContexts()</TT>
+primitive. <TT>removeAgletContext(AgletContext cxt)</TT> removes the specified
+context from the internal context table.
+A living AgletContext can be removed from the runtime table without shutdown.
+Such a context becomes invisible, and cannot be accessed either remotely
+or locally. This can be used to create a sort of "private" context into
+which no aglet be dispatched.
+<PRE>
+class AgletRuntime {
+
+    AgletRuntime getAgletRuntime();
+
+    public AgletContext createAgletContext(String name);
+
+    public AgletContext getAgletContext(String name);
+
+    public void removeAgletContext(AgletContext cxt);
+
+    public AgletContext[] getAgletContexts();
+
+}</PRE>
+</DL>
+
+<H1>
+Client API</H1>
+
+<H2>
+Aglets Class</H2>
+The <TT>com.ibm.aglet.system.Aglets</TT> class lets an application program
+create and control an aglet remotely without requiring the AgletContext.
+<PRE>
+class Aglets {
+
+    public static AgletProxy createAglet(String contextAddress,
+                                         URL codebase,
+                                         String classname,
+                                         Object init);
+
+    public static AgletProxy getAgletProxy(String contextAddress, AgletID id);
+
+    public static AgletProxy[] getAgletProxies(String contextAddress);
+}</PRE>
+You are not required to do the bootstrapping for client applications.
+<PRE>
+    public void main(String args[]) throws Exception {
+        String contextAddress = "atp://host.name:434/contextName";
+
+        AgletProxy proxy = Aglets.createAglet(contextAddress, null,
+                                              "your.Aglet", null);
+        proxy.sendMessage(new Message("buy", "jewel"));
+
+        AgletProxy proxies[] = Aglets.getAgletProxies(contextAddress);
+
+        // dispose all aglets
+        for (int i=0; i &lt; proxies.length; i++) {
+            proxies[i].dispose();
+        }
+    }</PRE>
+
+<H1>
+Bootstrapping the Server</H1>
+For the Aglet runtime to be able to create AgletContexts, to accept incoming
+aglets, and to host aglets, a bootstrapping application is required to properly
+initialize the system and start up the daemon. The application
+program must follow the steps below:
+<OL>
+<LI>
+Set option definitions if any.</LI>
+
+<LI>
+Initialize the AgletRuntime with optional arguments and obtain the runtime
+object. This automatically imports the options specified in the arguments.</LI>
+
+<LI>
+Authenticate the user id if necessary.</LI>
+
+<LI>
+Create a instance of the MAFAgentSystem_AgletsImpl class, which is ASDK's
+implementation of the MAFAgentSystem.</LI>
+
+<LI>
+Install the factory components if any. Tahiti.installFactories() can be
+used to install default factories.</LI>
+
+<LI>
+Initialize the communication layer with the instance of MAFAgentSystem_AgletsImpl
+and the given protocol.</LI>
+
+<LI>
+Create an AgletContext with/without a name.</LI>
+
+<LI>
+Create a ContextListener for the context and add the listener (if
+any) to it.</LI>
+
+<LI>
+Install the security manager, if any exists. Tahiti.installSecurity() can be
+used to install the default security manager.</LI>
+
+<LI>
+Start the context.</LI>
+
+<LI>
+Start the communication layer.</LI>
+
+<LI>
+From here on, you can use the Aglets facility.</LI>
+</OL>
+The following example shows how to bootstrap the daemon and Aglets runtime.
+<PRE>
+public class MyServer {
+
+    static private Opt options[] = {
+        Opt.Entry("-protocol", "maf.protocol", null),
+    };
+
+    static public void main(String args[]) {
+
+        Opt.setopt(options);
+        AgletRuntime runtime = AgletRuntime.init(args);
+
+        runtime.authenticate(username, password);
+
+        Name system_name = new Name(username.getBytes(), null, (short)1);
+
+        MAFAgentSystem maf_system = new MAFAgentSystem_AgletsImpl(runtime);
+
+        MAFAgentSystem.initMAFAgentSystem(maf_system, "atp");
+
+        Tahiti.installFactories();
+
+        //
+        // Creates a named context. To dispatch to this context, you have to
+        // specify a destination such as "atp://aglets.trl.ibm.com:434/test"
+        //
+        AgletContext cxt = runtime.createAgletContext("test");
+
+        ContextListener listener = new ContextAdapter () {
+            public void agletArrived(ContextEvent ev) {
+                AgletProxy proxy = ev.getAgletProxy();
+                try {
+                    System.out.println("Aglet is arriving."+
+                                       proxy.getAgletInfo());
+                } catch (InvalidAgletException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            public void agletDispatched(ContextEvent ev) {
+                AgletProxy proxy = ev.getAgletProxy();
+                try {
+                    System.out.println("Aglet is leaving."+
+                                       proxy.getAgletInfo());
+                } catch (InvalidAgletException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+        cxt.addContextListener(listener);
+
+        Tahiti.installSecurity();
+
+        //
+        // Start a context
+        //
+        cxt.start();
+
+        MAFAgentSystem.startMAFAgentSystem(maf_system, protocol);
+
+        //
+        AgletProxy myAglet = cxt.createAglet(null, "MyAglet", null);
+
+        myAglet.sendMessage(new Message("startTrip"));
+    }
+}</PRE>
+
+<H1>
+Properties in Aglets</H1>
+
+<H2>
+Aglets Properties</H2>
+The following table contains a list of properties typically used by the
+Aglets runtime library for configuration.
+<TABLE BORDER=3 >
+<CAPTION> </CAPTION>
+
+<TR>
+<TH>Property Name</TH>
+
+<TH>Description</TH>
+
+<TH>Example</TH>
+</TR>
+
+<TR>
+<TD>aglets.class.path</TD>
+
+<TD>Specifies the default lookup path for a codebase. This is used when
+a null value is given as a codebase in the <TT>AgletContext.createAglet(..)</TT>
+primitive. </TD>
+
+<TD>/usr/local/AWB/Aglets/public:/myhome/public C:\AWB\Aglets\public:D:\myaglets\public </TD>
+</TR>
+
+<TR>
+<TD>aglets.viewer</TD>
+
+<TD>Specifies the class name that is used for the server. 
+<BR>The class must implement a ContextListener interface. </TD>
+
+<TD>com.ibm.aglets.tahiti.Tahiti </TD>
+</TR>
+</TABLE>
+The script or executable for the Aglets runtime often uses the environment
+variables to make it easy to specify those values in their platform.
+
+<UL>
+<DT>
+AGLET_PATH</DT>
+
+<DD>
+aglets.class.path</DD>
+
+</UL>
+
+<H2>
+ATP Properties</H2>
+The following table contains a list of properties typically used by the
+ATP transport layer for configuration.
+<TABLE BORDER=3 >
+<CAPTION> </CAPTION>
+
+<TR>
+<TH>Property Name</TH>
+
+<TH>Description</TH>
+
+<TH>Example </th</tr></TH>
+</TR>
+
+<TR>
+<TD>atp.useHttpProxy </TD>
+
+<TD>Switch on and off the http proxy. </TD>
+
+<TD>true/false </TD>
+</TR>
+
+<TR>
+<TD>atp.http.proxyHost </TD>
+
+<TD>Host </TD>
+
+<TD>firewall.ibm.com </TD>
+</TR>
+
+<TR>
+<TD>atp.http.proxyPort </TD>
+
+<TD>Port number </TD>
+
+<TD>8080 </TD>
+</TR>
+
+<TR>
+<TD>atp.noProxy </TD>
+
+<TD>The proxy is not used for the hosts whose addresses start with the
+string specified here. </TD>
+
+<TD>ibm.com </TD>
+</TR>
+</TABLE>
+
+<H2>
+Tahiti Properties</H2>
+The following table contains a list of properties typically used by the
+Tahiti viewer for configuration.
+<TABLE BORDER=3 >
+<CAPTION> </CAPTION>
+
+<TR>
+<TH>Property Name</TH>
+
+<TH>Description</TH>
+
+<TH>Example </TH>
+</TR>
+
+<TR>
+<TD>tahiti.browser_command</TD>
+
+<TD>openurl </TD>
+
+<TD>Specifies the command to launch the browser </TD>
+</TR>
+</TABLE>
+
+<H2>
+Other Properties</H2>
+T.B.D <A NAME="Itinerary"></A>
+<HR size=3>
+<H1>
+Itinerary and Patterns</H1>
+
+<HR size=3>T.B.D.
+<HR size=3><I>Copyright (C) 1997, 1998, IBM Corp. All rights reserved.</I>
+<BR><I>Aglets is a trademark of IBM Corp.</I>
+<BR><I>Java is a trademark of Sun Microsystems, Inc.</I>
+</BODY>
+</HTML>
