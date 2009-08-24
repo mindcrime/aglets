@@ -57,33 +57,27 @@ public class LoggerFactory {
      *
      */
     protected static void configure(){
-    	try{
-    	// check if the file exists
-    	File configFile = new File(loggerConfigFile);
-    	if( configFile.exists() ){
-    		// perform the configuration depending on this file
-    		// configure the logger
-            DOMConfigurator.configure(loggerConfigFile);
-            configured = true;
-    		return;
-    	}
-    	}catch(IOException exception){
-    		System.err.println("\t+------------------- "+getClass().getName()+" ----------------------------------------------+")
-    		System.err.println("\tERROR: the configuration file <"+loggerConfigFile+"> used by log4j does not exist!");
-    		System.err.println("\tA default configuration will be adopted, please note that the logging could not work properly");
-    		exception.printStackTrace();
-    		System.err.println("\t+--------------------------------------------------------------------------------------------+");
-    	}
-    	finally{
-    		// if here an exception has been raised, or the file does not exists, try with a default
-    		// configuration
-    		System.err.print("\tExploiting the property configuration for the loggin facility...");
-       		// try to configure the logging system from the system properties
-    		PropertyConfigurator.configure(System.getProperties());    		
-    		System.err.println("\tdone!");
-    		configured = true;
-    	}
-    
+	try{
+	    // check if the file exists
+	    File configFile = new File(loggerConfigFile);
+	    if( configFile.exists() ){
+		// perform the configuration depending on this file
+		// configure the logger
+		DOMConfigurator.configure(loggerConfigFile);
+		configured = true;
+		return;
+	    }
+	}
+	finally{
+	    // if here an exception has been raised, or the file does not exists, try with a default
+	    // configuration
+	    System.err.print("\tExploiting the property configuration for the loggin facility...");
+	    // try to configure the logging system from the system properties
+	    PropertyConfigurator.configure(System.getProperties());    		
+	    System.err.println("\tdone!");
+	    configured = true;
+	}
+
     }
     
     public synchronized static Logger getLogger(String categoryName){
