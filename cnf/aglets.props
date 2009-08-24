@@ -1,6 +1,10 @@
 # (mandatory) A path under where aglets is installed.  Set on command 
 # line by agletsd but can be overridden here.
+<<<<<<< HEAD:cnf/aglets.props
 #aglets.home=/sviluppo/java/eclipseWorkspace/AgletsGIT
+=======
+#aglets.home=d:\\aglets\\aglets1_2
+>>>>>>> f24aed22e0d2f8ad26d56ecaf0533004f638065d:cnf/aglets.props
 
 # (optional) A path to the directory under where ".aglets"
 # directory resides.  This is also where your KEYSTORE must be.
