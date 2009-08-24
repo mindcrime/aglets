@@ -51,7 +51,7 @@ public class DeliveryMessageThread extends Thread {
 	 */
 	public DeliveryMessageThread(AgletProxy p, Message msg){
 		super("Delivery Message Thread "+DeliveryMessageThread.counter );
-		this.setDaemon( true );		// keep this thread a daemon, so it does not affect the JVM threads!
+		this.setDaemon( true );		// keep this thread as a daemon in order to not interfere with the virtual machine threads
 		DeliveryMessageThread.counter++;
 		this.proxy = p;
 		this.message = msg;
