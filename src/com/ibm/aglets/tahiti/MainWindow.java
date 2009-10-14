@@ -78,7 +78,7 @@ import org.aglets.util.gui.*;
  * Ordered by Keys "Creation time", "Class name"
  * 
  */
-final class MainWindow extends TahitiWindow implements ItemListener, ActionListener, ListSelectionListener {
+public final class MainWindow extends TahitiWindow implements ItemListener, ActionListener, ListSelectionListener {
 	static ResourceBundle bundle = null;
 	static {
 		bundle = 
