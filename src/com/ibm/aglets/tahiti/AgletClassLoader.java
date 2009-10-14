@@ -674,25 +674,41 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
         Class clazz = null;
 
         try {
+            // first step: try loading from system
             clazz = findSystemClass(name);
             if (clazz != null) {
-                logger.debug("Loading " + name + " from System");
-                return clazz;
-            }
-        } catch (ClassNotFoundException ex) {
-        }
+        	logger.debug("Loading " + name + " from System");
+        	return clazz;
+            }        
 
-        clazz = findLoadedClass(name);
-        if (clazz != null) {
-            logger.debug("Using class " + name + " in cache");
+            // Recommended new way of classloading starting in Java 1.6
+            // patch proposed by Fernando
+
+            clazz=Class.forName(name);
+            if (clazz != null) {
+        	logger.debug("Loading " + name + " from System");
+        	return clazz;
+            }
+
+
+            // third step: try loading from the cache
+            clazz = findLoadedClass(name);
+            if (clazz != null) {
+        	logger.debug("Using class " + name + " in cache");
+        	return clazz;
+            }
+
+            // fourth step: try loading from the codebase
+            clazz = loadClassFromCodeBase(name);
+            if (clazz != null) {
+        	logger.debug("Loading class " + name + " from CodeBase");
+            }
+        }catch(ClassNotFoundException ex){
+            logger.error("Exception caught while trying to load a class", ex);
+        }
+        finally{
             return clazz;
         }
-
-        clazz = loadClassFromCodeBase(name);
-        if (clazz != null) {
-            logger.debug("Loading class " + name + " from CodeBase");
-        }
-        return clazz;
     }
 
 
