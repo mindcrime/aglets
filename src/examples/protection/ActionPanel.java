@@ -56,10 +56,10 @@ class ActionPanel extends Panel implements ItemListener, ActionListener {
 
 			panel.setLayout(new FlowLayout(FlowLayout.LEFT));
 			_field.add(label, panel);
-			if (i == ProtectionDialog.INDEX_DISPATCH) {
+			if ( ProtectionDialog.ACTIONS[i].equals( ProtectionDialog.ACTION_DISPATCH) ) {
 				panel.add(new Label("Destination"));
 				panel.add(_destination);
-			} else if (i == ProtectionDialog.INDEX_DEACTIVATE) {
+			} else if ( ProtectionDialog.ACTIONS[i].equals( ProtectionDialog.ACTION_DEACTIVATE) ) {
 				panel.add(new Label("Duration"));
 				panel.add(_duration);
 				panel.add(new Label("[ms]"));
@@ -73,22 +73,21 @@ class ActionPanel extends Panel implements ItemListener, ActionListener {
 	}
 	public void actionPerformed(ActionEvent ev) {
 		if (ev.getSource() == _doButton) {
-			switch (_action) {
-			case ProtectionDialog.INDEX_DISPOSE:
+		    
+		    if( ProtectionDialog.ACTIONS[ this._action ].equals( ProtectionDialog.ACTION_DISPOSE) ){
 				_aglet.disposeTarget();
-				break;
-			case ProtectionDialog.INDEX_CLONE:
+		    } else if ( ProtectionDialog.ACTIONS[ this._action ].equals( ProtectionDialog.ACTION_CLONE) ){
 				_aglet.cloneTarget();
-				break;
-			case ProtectionDialog.INDEX_DISPATCH:
+		    } else if ( ProtectionDialog.ACTIONS[ this._action ].equals( ProtectionDialog.ACTION_DISPATCH) ){
+			
 				String destination = _destination.getText();
 
 				_aglet.dispatchTarget(destination);
-				break;
-			case ProtectionDialog.INDEX_RETRACT:
+		    }else if ( ProtectionDialog.ACTIONS[ this._action ].equals( ProtectionDialog.ACTION_RETRACT) ){
+			
 				_aglet.retractTarget();
-				break;
-			case ProtectionDialog.INDEX_DEACTIVATE:
+		    } else if ( ProtectionDialog.ACTIONS[ this._action ].equals( ProtectionDialog.ACTION_DEACTIVATE) ){
+			
 				long duration = 0;
 
 				try {
@@ -98,8 +97,8 @@ class ActionPanel extends Panel implements ItemListener, ActionListener {
 					return;
 				} 
 				_aglet.deactivateTarget(duration);
-				break;
-			}
+				
+		    }
 		} 
 	}
 	public void itemStateChanged(ItemEvent ev) {
@@ -115,7 +114,7 @@ class ActionPanel extends Panel implements ItemListener, ActionListener {
 		if (action == null) {
 			return;
 		} 
-		for (int i = 0; i < ProtectionDialog.NUMBER_OF_ACTIONS; i++) {
+		for (int i = 0; i < ProtectionDialog.ACTIONS.length; i++) {
 			if (action.equals(ProtectionDialog.ACTIONS[i])) {
 				_action = i;
 				return;

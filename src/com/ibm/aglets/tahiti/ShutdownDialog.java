@@ -57,7 +57,7 @@ final class ShutdownDialog extends TahitiDialog {
 	 */
 	/* package protected */
 	ShutdownDialog(MainWindow parent, String msg) {
-		super(parent, "Shutdown Server", true);
+		super( parent );
 
 		add("North", new Label("Shutdown Server", Label.CENTER));
 		add("Center", new Label(msg, Label.CENTER));

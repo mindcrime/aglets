@@ -84,9 +84,6 @@ public class DeliveryMessageThread extends Thread {
 				this.message = null;
 				
 
-				// now wait for another message to come
-				synchronized(this){
-
 				// now reinsert myself in the pool and wait
 				synchronized(this){
 					AgletThreadPool.getInstance().pushDeliveryMessageThread(this);

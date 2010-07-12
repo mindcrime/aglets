@@ -29,8 +29,7 @@ import java.awt.event.*;
 import com.ibm.aglets.tahiti.utils.*;
 
 
-class ExportSharedSecret extends TahitiDialog implements
-ActionListener {
+class ExportSharedSecret extends TahitiDialog implements ActionListener {
 
 AgentListPanel list;
 
@@ -41,10 +40,10 @@ SharedSecrets secrets;
 NetworkConfigDialog parent;
 
 ExportSharedSecret(JFrame f, SharedSecrets secs, NetworkConfigDialog net) {
-super(f,bundle.getString("dialog.exportsharedsecret.title"), true);
+super( f );
 secrets = secs;
 parent = net;
-this.getContentPane().add("North",  new JLabel(bundle.getString("dialog.exportsharedsecret.label"), JLabel.CENTER));
+this.getContentPane().add("North",  new JLabel(translator.translate("dialog.exportsharedsecret.label"), JLabel.CENTER));
 GridBagPanel p = new GridBagPanel();
 
 this.getContentPane().add(p);
@@ -59,8 +58,8 @@ cns.anchor = GridBagConstraints.WEST;
 cns.gridwidth = GridBagConstraints.REMAINDER;
 
 p.setConstraints(cns);
-p.addLabeled(bundle.getString("dialog.exportsharedsecret.label.domain"), list);
-p.addLabeled(bundle.getString("dialog.exportsharedsecret.label.file"), filename);
+p.addLabeled(translator.translate("dialog.exportsharedsecret.label.domain"), list);
+p.addLabeled(translator.translate("dialog.exportsharedsecret.label.file"), filename);
 Enumeration domains = secrets.getDomainNames();
 
 if (domains != null) {
@@ -74,8 +73,8 @@ if (domains != null) {
 
 
 // add the buttons
-this.addJButton(bundle.getString("dialog.exportsharedsecret.button.ok"),TahitiCommandStrings.OK_COMMAND,IconRepository.getIcon("ok"),this);
-this.addJButton(bundle.getString("dialog.exportsharedsecret.button.cancel"),TahitiCommandStrings.CANCEL_COMMAND,IconRepository.getIcon("cancel"),this);
+this.addButton("dialog.exportsharedsecret.button.ok" ,this);
+this.addButton("dialog.exportsharedsecret.button.cancel",this);
 
 }
 
@@ -87,30 +86,31 @@ if(command.equals(TahitiCommandStrings.OK_COMMAND)){
     // export the secret
     String domainName = this.list.getSelectedItem();
     if (domainName == null || domainName.equals("")) {
-        JOptionPane.showMessageDialog(this,bundle.getString("dialog.exportsharedsecret.error.domain"),bundle.getString("dialog.exportsharedsecret.error.domain.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("error"));
+        JOptionPane.showMessageDialog(this,translator.translate("dialog.exportsharedsecret.error.domain"),
+        	                           translator.translate("dialog.exportsharedsecret.error.domain.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("error"));
         return;
     }
     
     String filen = filename.getText();
 
     if (filen == null || filen.equals("")) {
-        JOptionPane.showMessageDialog(this,bundle.getString("dialog.exportsharedsecret.error.file"),bundle.getString("dialog.exportsharedsecret.error.file.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("error"));
+        JOptionPane.showMessageDialog(this,translator.translate("dialog.exportsharedsecret.error.file"),translator.translate("dialog.exportsharedsecret.error.file.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("error"));
         return;
     }
     
-    String owner = NetworkConfigDialog.getOwnerName();
+    String owner = LoginData.getUsername();
     String workDir = FileUtils.getWorkDirectoryForUser(owner);
     String secretFilename = workDir + File.separator + filen;
     SharedSecret secret = secrets.getSharedSecret(domainName);
 
     if (secret == null) {
-        JOptionPane.showMessageDialog(this,bundle.getString("dialog.exportsharedsecret.error.secret"),bundle.getString("dialog.exportsharedsecret.error.secret.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("error"));
+        JOptionPane.showMessageDialog(this,translator.translate("dialog.exportsharedsecret.error.secret"),translator.translate("dialog.exportsharedsecret.error.secret.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("error"));
         return;
     }
     try {
         secret.save(secretFilename);
     } catch (IOException excpt) {
-        JOptionPane.showMessageDialog(this,bundle.getString("dialog.exportsharedsecret.error.io"),bundle.getString("dialog.exportsharedsecret.error.io.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("error"));
+        JOptionPane.showMessageDialog(this,translator.translate("dialog.exportsharedsecret.error.io"),translator.translate("dialog.exportsharedsecret.error.io.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("error"));
         return;
     }
 

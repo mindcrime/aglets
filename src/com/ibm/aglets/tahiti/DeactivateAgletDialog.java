@@ -54,7 +54,7 @@ final class DeactivateAgletDialog extends TahitiDialog
 	 * Constructs a new Aglet dispatch dialog.
 	 */
 	DeactivateAgletDialog(MainWindow parent, AgletProxy proxy) {
-		super(parent, bundle.getString("dialog.deactivate.title"), false);
+		super( parent );
 		this.proxy = proxy;
 
 		// set the layout of this window
@@ -65,10 +65,10 @@ final class DeactivateAgletDialog extends TahitiDialog
 		// add the button panel
 		JPanel p = new JPanel();
 		p.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		JButton ok = new JButton(bundle.getString("dialog.deactivate.button.ok"),IconRepository.getIcon("ok"));
+		JButton ok = new JButton(translator.translate("dialog.deactivate.button.ok"),IconRepository.getIcon("ok"));
 		ok.addActionListener(this);
 		ok.setActionCommand(TahitiCommandStrings.OK_COMMAND);
-		JButton cancel = new JButton(bundle.getString("dialog.deactivate.button.cancel"),IconRepository.getIcon("cancel"));
+		JButton cancel = new JButton(translator.translate("dialog.deactivate.button.cancel"),IconRepository.getIcon("cancel"));
 		cancel.addActionListener(this);
 		cancel.setActionCommand(TahitiCommandStrings.CANCEL_COMMAND);
 		p.add(ok);
@@ -87,7 +87,9 @@ final class DeactivateAgletDialog extends TahitiDialog
 	    
 	    if(command.equals(TahitiCommandStrings.OK_COMMAND)){
 			if (proxy == null) {
-				JOptionPane.showMessageDialog(this,bundle.getString("dialog.deactivate.error.proxy"),bundle.getString("dialog.deactivate.error.proxy"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("error"));
+				JOptionPane.showMessageDialog(this,translator.translate("dialog.deactivate.error.proxy"),
+								   translator.translate("dialog.deactivate.error.proxy"),
+								   JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("error"));
 			} 
 			if (!"".equals(_time.getText())) {
 				long time = Integer.parseInt(_time.getText());
@@ -126,7 +128,9 @@ final class DeactivateAgletDialog extends TahitiDialog
 						 : proxy.getAgletClassName());
 		} catch (InvalidAgletException ex) {
 		    // cannot get the aglet name
-		    JOptionPane.showMessageDialog(this,bundle.getString("dialog.deactivate.error"),bundle.getString("dialog.deactivate.error"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("proxy"));
+		    JOptionPane.showMessageDialog(this,
+			     			  translator.translate("dialog.deactivate.error"),
+			     			  translator.translate("dialog.deactivate.error"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("proxy"));
 		}
 		p.add(new JLabel(agletname, JLabel.CENTER), cns);
 
@@ -135,7 +139,7 @@ final class DeactivateAgletDialog extends TahitiDialog
 		 */
 		cns.gridwidth = 1;
 		cns.weightx = 0.0;
-		p.add(new JLabel(bundle.getString("dialog.deactivate.time")));
+		p.add(new JLabel(translator.translate("dialog.deactivate.time")));
 
 		cns.fill = GridBagConstraints.HORIZONTAL;
 		cns.gridwidth = GridBagConstraints.REMAINDER;

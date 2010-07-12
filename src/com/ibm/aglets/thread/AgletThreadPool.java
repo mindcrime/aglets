@@ -51,6 +51,12 @@ public class AgletThreadPool {
      */
     private ThreadGroup threadGroup = new ThreadGroup("AgletThreadGroup");
     
+    
+    /**
+     * A stack for a specific type of threads: the delivery message threads.
+     */
+    private Stack<DeliveryMessageThread> deliveryMessageThreads = null;
+    
     /**
      * A counter that indicates how many threads this pool has created until now.
      * It is useful for checking that the pool has not gone over the maxPoolSize value.
@@ -263,6 +269,21 @@ public class AgletThreadPool {
      */
     public synchronized int getCreatedThread() {
 	return this.createdThread;
+    }
+
+    
+    /**
+     * Reinsert the thread in the stack of the delivery threads.
+     * @param deliveryMessageThread the thread to insert
+     */
+    public synchronized void pushDeliveryMessageThread(
+	    DeliveryMessageThread deliveryMessageThread) {
+	// check arguments
+	if( deliveryMessageThread == null || this.deliveryMessageThreads.contains(deliveryMessageThread) )
+	    return;
+	
+	this.deliveryMessageThreads.push(deliveryMessageThread);
+	
     }
 
 

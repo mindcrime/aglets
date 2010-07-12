@@ -70,24 +70,18 @@ import org.aglets.util.gui.*;
  * @author      Yoshiaki Mima
  */
 
-// TODO convertire questa finestra prima di proseguire!!!!
-
 /*
  * Aglets List
  * 
  * Ordered by Keys "Creation time", "Class name"
  * 
  */
-<<<<<<< HEAD
-public final class MainWindow extends TahitiWindow implements ItemListener, ActionListener, ListSelectionListener {
-=======
-final class MainWindow extends TahitiWindow implements ItemListener, ActionListener, ListSelectionListener {
->>>>>>> 218a26853c9210d659d7703d268e4b377f579a3b
+
+public final class MainWindow extends TahitiWindow implements  ItemListener, ActionListener, ListSelectionListener {
 	static ResourceBundle bundle = null;
+	
 	static {
-		bundle = 
-			(ResourceBundle)AccessController
-				.doPrivileged(new PrivilegedAction() {
+		bundle = (ResourceBundle)AccessController.doPrivileged(new PrivilegedAction() {
 			public Object run() {
 				return ResourceBundle.getBundle("tahiti");
 			} 
@@ -1845,6 +1839,20 @@ final class MainWindow extends TahitiWindow implements ItemListener, ActionListe
 	    this.menuBar.enableConditionalItems(enable);
 	    this.toolBar.enableConditionalButtons(enable);
 
+	    
+	}
+
+
+	/**
+	 * Display a dialog to notify the user of an exception.
+	 * @param ex
+	 */
+	public final void showException(Exception ex) {
+	    if( ex == null )
+		return;
+	    
+	    // display an error dialog
+	    JOptionPane.showMessageDialog( this, ex.getStackTrace(), ex.getMessage(), JOptionPane.ERROR_MESSAGE );
 	    
 	}
 }

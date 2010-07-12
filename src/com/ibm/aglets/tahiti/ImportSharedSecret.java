@@ -33,9 +33,9 @@ class ImportSharedSecret extends TahitiDialog implements ActionListener {
     NetworkConfigDialog parent;
 
     ImportSharedSecret(JFrame f,NetworkConfigDialog net) {
-        super(f, bundle.getString("dialog.importsharedsecret.title"), true);
+	super( f );
         this.parent=net;
-        this.getContentPane().add("North", new JLabel(bundle.getString("dialog.importsharedsecret.label"), JLabel.CENTER));
+        this.getContentPane().add("North", new JLabel(translator.translate("dialog.importsharedsecret.label"), JLabel.CENTER));
         GridBagPanel p = new GridBagPanel();
 
         this.getContentPane().add(p);
@@ -49,12 +49,12 @@ class ImportSharedSecret extends TahitiDialog implements ActionListener {
         cns.gridwidth = GridBagConstraints.REMAINDER;
 
         p.setConstraints(cns);
-        p.addLabeled(bundle.getString("dialog.importsharedsecret.filename"), filename);
+        p.addLabeled(translator.translate("dialog.importsharedsecret.filename"), filename);
         filename.addActionListener(this);
         
         // add the buttons
-        this.addJButton(bundle.getString("dialog.importsharedsecret.button.ok"),TahitiCommandStrings.OK_COMMAND,IconRepository.getIcon("ok"),this);
-        this.addJButton(bundle.getString("dialog.importsharedsecret.button.cancel"),TahitiCommandStrings.CANCEL_COMMAND,IconRepository.getIcon("cancel"),this);
+        this.addButton(translator.translate("dialog.importsharedsecret.button.ok"),this);
+        this.addButton(translator.translate("dialog.importsharedsecret.button.cancel"),this);
     }
 
     
@@ -69,12 +69,12 @@ class ImportSharedSecret extends TahitiDialog implements ActionListener {
             String filename= this.filename.getText();
             
             if(filename==null || filename.equals("")){
-                JOptionPane.showMessageDialog(this,bundle.getString("dialog.importsharedsecret.error.message"),bundle.getString("dialog.importsharedsecret.error.title"),JOptionPane.ERROR_MESSAGE,null);
+                JOptionPane.showMessageDialog(this,translator.translate("dialog.importsharedsecret.error.message"),translator.translate("dialog.importsharedsecret.error.title"),JOptionPane.ERROR_MESSAGE,null);
                 return;
             }
         
 
-	        String owner = parent.getOwnerName();
+	        String owner = LoginData.getUsername();
 	        String workDir = FileUtils.getWorkDirectoryForUser(owner);
 	        String secretFilename = workDir + File.separator + filename;
 	        SharedSecret secret = null;
@@ -82,15 +82,15 @@ class ImportSharedSecret extends TahitiDialog implements ActionListener {
 	        try {
 	            secret = SharedSecret.load(secretFilename);
 	        } catch (FileNotFoundException excpt) {
-	            JOptionPane.showMessageDialog(this,bundle.getString("dialog.importsharedsecret.error.filenotfound"),bundle.getString("dialog.importsharedsecret.error.filenotfound.title"),JOptionPane.ERROR_MESSAGE,null);
+	            JOptionPane.showMessageDialog(this,translator.translate("dialog.importsharedsecret.error.filenotfound"),translator.translate("dialog.importsharedsecret.error.filenotfound.title"),JOptionPane.ERROR_MESSAGE,null);
 	            return;
 	        } catch (IOException excpt) {
-	            JOptionPane.showMessageDialog(this,bundle.getString("dialog.importsharedsecret.error.io"),bundle.getString("dialog.importsharedsecret.error.io.title"),JOptionPane.ERROR_MESSAGE,null);
+	            JOptionPane.showMessageDialog(this,translator.translate("dialog.importsharedsecret.error.io"),translator.translate("dialog.importsharedsecret.error.io.title"),JOptionPane.ERROR_MESSAGE,null);
 	            return;
 	        }
 	        
 	        if (secret == null) {
-	            JOptionPane.showMessageDialog(this,bundle.getString("dialog.importsharedsecret.error.secret"),bundle.getString("dialog.importsharedsecret.error.secret.title"),JOptionPane.ERROR_MESSAGE,null);
+	            JOptionPane.showMessageDialog(this,translator.translate("dialog.importsharedsecret.error.secret"),translator.translate("dialog.importsharedsecret.error.secret.title"),JOptionPane.ERROR_MESSAGE,null);
 	            return;
 	        }
 	        String domainName = secret.getDomainName();
@@ -98,12 +98,12 @@ class ImportSharedSecret extends TahitiDialog implements ActionListener {
 	        SharedSecret sec = secrets.getSharedSecret(domainName);
 	
 	        if (sec != null) {
-	            JOptionPane.showMessageDialog(this,bundle.getString("dialog.importsharedsecret.error.alreadyexists"),bundle.getString("dialog.importsharedsecret.error.alreadyexists.title"),JOptionPane.ERROR_MESSAGE,null);
+	            JOptionPane.showMessageDialog(this,translator.translate("dialog.importsharedsecret.error.alreadyexists"),translator.translate("dialog.importsharedsecret.error.alreadyexists.title"),JOptionPane.ERROR_MESSAGE,null);
 	            return;
 	        }
 	        secrets.addSharedSecret(secret);
 	        secrets.save();
-	        JOptionPane.showMessageDialog(this,bundle.getString("dialog.importsharedsecret.ok"),bundle.getString("dialog.importsharedsecret.ok.title"),JOptionPane.INFORMATION_MESSAGE,null);
+	        JOptionPane.showMessageDialog(this,translator.translate("dialog.importsharedsecret.ok"),translator.translate("dialog.importsharedsecret.ok.title"),JOptionPane.INFORMATION_MESSAGE,null);
 	        }
 	        
         this.setVisible(false);

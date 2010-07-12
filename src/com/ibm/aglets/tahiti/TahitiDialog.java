@@ -37,47 +37,7 @@ import java.util.*;
 
 public class TahitiDialog extends BaseAgletsDialog implements ActionListener{
 	static final public String lineSeparator = "\n";
-/*
-	static protected class MessagePanel extends Panel {
-		private GridBagConstraints cns = new GridBagConstraints();
-		private GridBagLayout grid = new GridBagLayout();
-		private boolean raised;
-		private int alignment = Label.LEFT;
 
-		public MessagePanel(String message, int alignment, boolean raised) {
-			this(split(message), alignment, raised);
-		}
-
-		public MessagePanel(String messages[], int alignment, 
-							boolean raised) {
-			this.alignment = alignment;
-			this.raised = raised;
-			cns.gridwidth = GridBagConstraints.REMAINDER;
-			cns.fill = GridBagConstraints.BOTH;
-			cns.weightx = 1.0;
-			cns.weighty = 1.0;
-			cns.insets = new Insets(3, 3, 3, 3);
-			setLayout(grid);
-			for (int i = 0; i < messages.length; i++) {
-				Label l = new Label(messages[i], alignment);
-
-				grid.setConstraints(l, cns);
-				add(l);
-			} 
-		}
-
-		public void paint(Graphics g) {
-			super.paint(g);
-			g.setColor(getBackground());
-			Dimension d = getSize();
-
-			g.fillRect(0, 0, d.width, d.height);
-			g.draw3DRect(1, 1, d.width - 2, d.height - 2, raised);
-		} 
-	}
-
-	*/
-	// TODO rimuovere il blocco qui sopra
 	
 	/**
 	 * The main window of this dialog.
@@ -195,6 +155,21 @@ public class TahitiDialog extends BaseAgletsDialog implements ActionListener{
 	    // return the button
 	    return button;
 	}
+	
+	
+	/**
+	 * Creates a generic "close" button.
+	 * @param key
+	 * @return
+	 */
+	public final JButton addCloseButton( String key ){
+	    if( key == null )
+		key = JComponentBuilder.CANCEL_BUTTON_KEY;
+	    
+	    return addButton( key );
+	}
+	
+	
 	
 	/**
 	 * Adds the button to the button panel.

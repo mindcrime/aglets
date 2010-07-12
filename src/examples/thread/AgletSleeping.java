@@ -1,6 +1,7 @@
 package examples.thread;
 
 import com.ibm.aglet.Aglet;
+import com.ibm.aglet.AgletException;
 import com.ibm.aglet.message.Message;
 
 /**
@@ -20,7 +21,15 @@ public class AgletSleeping extends Aglet {
 		System.out.println("\n\tThe agent will sleep for "+waitTime/1000+" seconds");
 		startTime = System.currentTimeMillis();
 		System.out.println("Current time is " + startTime);
-		this.sleep(waitTime);
+		try {
+		    this.sleep(waitTime);
+		} catch (IllegalArgumentException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		} catch (AgletException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
 		endTime = System.currentTimeMillis();
 		System.out.println("Current time is "+endTime);
 		System.out.println("Aglet slept for "+(endTime-startTime)+" millisecs.");

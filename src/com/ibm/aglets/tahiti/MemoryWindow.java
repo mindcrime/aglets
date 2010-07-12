@@ -19,12 +19,8 @@ public class MemoryWindow extends JFrame{
     public MemoryWindow(){
         super();
         this.mem = new MemoryPanel(250,250,false,true);
-        // use the resource bundle of the memory panel
-        ResourceBundle bundle = MemoryPanel.bundle;
-        this.setTitle(bundle.getString("window.memory.title"));
         this.getContentPane().add(this.mem);
         this.pack();
-        this.mem.startThread();
         this.setVisible(true);
 
     }

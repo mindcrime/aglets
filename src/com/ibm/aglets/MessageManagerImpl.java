@@ -15,6 +15,7 @@ package com.ibm.aglets;
  */
 
 import com.ibm.aglet.Aglet;
+
 import com.ibm.aglet.AgletException;
 import com.ibm.aglet.AgletProxy;
 import com.ibm.aglet.message.FutureReply;

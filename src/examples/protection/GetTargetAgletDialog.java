@@ -90,9 +90,9 @@ class GetTargetAgletDialog extends JDialog implements ActionListener {
 	private void updateAgletList() {
 		Vector v = new Vector();
 		try {
-			Enumeration enum = _masterAglet.getAgletContext().getAgletProxies();
-			while (enum.hasMoreElements()) {
-				AgletProxy proxy = (AgletProxy)enum.nextElement();
+			Enumeration enumer = _masterAglet.getAgletContext().getAgletProxies();
+			while (enumer.hasMoreElements()) {
+				AgletProxy proxy = (AgletProxy)enumer.nextElement();
 				if (proxy.isValid()) {
 					ListEntry entry = new ListEntry(proxy.getAgletInfo());
 					v.addElement(entry);

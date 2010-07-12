@@ -38,9 +38,9 @@ class RemoveSharedSecret extends TahitiDialog implements ActionListener {
     NetworkConfigDialog parent;
 
     RemoveSharedSecret(JFrame f, SharedSecrets secs, NetworkConfigDialog net) {
-        super(f, bundle.getString("dialog.removesharedsecret.title"), true);
+        super ( f );
         secrets = secs;
-        this.getContentPane().add("North", new JLabel(bundle.getString("dialog.removesharedsecret.label"), JLabel.CENTER));
+        this.getContentPane().add("North", new JLabel(translator.translate("dialog.removesharedsecret.label"), JLabel.CENTER));
         
         GridBagPanel p = new GridBagPanel();
 
@@ -57,8 +57,8 @@ class RemoveSharedSecret extends TahitiDialog implements ActionListener {
         cns.gridwidth = GridBagConstraints.REMAINDER;
 
         p.setConstraints(cns);
-        p.addLabeled(bundle.getString("dialog.removesharedsecret.label.list"), list);
-        p.addLabeled(bundle.getString("dialog.removesharedsecret.label.password"), password);
+        p.addLabeled(translator.translate("dialog.removesharedsecret.label.list"), list);
+        p.addLabeled(translator.translate("dialog.removesharedsecret.label.password"), password);
         
         Enumeration domains = secrets.getDomainNames();
 
@@ -72,8 +72,8 @@ class RemoveSharedSecret extends TahitiDialog implements ActionListener {
         
         
         // add the buttons
-        this.addJButton(bundle.getString("dialog.removesharedsecret.button.ok"),TahitiCommandStrings.OK_COMMAND,IconRepository.getIcon("ok"),this);
-        this.addJButton(bundle.getString("dialog.removesharedsecret.button.cancel"),TahitiCommandStrings.CANCEL_COMMAND,IconRepository.getIcon("cancel"),this);
+        this.addButton(translator.translate("dialog.removesharedsecret.button.ok"),this);
+        this.addButton(translator.translate("dialog.removesharedsecret.button.cancel"),this);
     }
 
     
@@ -84,13 +84,13 @@ class RemoveSharedSecret extends TahitiDialog implements ActionListener {
 
         if(command.equals(TahitiCommandStrings.OK_COMMAND)){
 	        if (domainName == null || domainName.equals("")) {
-	           JOptionPane.showMessageDialog(this,bundle.getString("dialog.removesharedsecret.error.nulldomain"),bundle.getString("dialog.removesharedsecret.error.nulldomain.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("error"));
+	           JOptionPane.showMessageDialog(this,translator.translate("dialog.removesharedsecret.error.nulldomain"),translator.translate("dialog.removesharedsecret.error.nulldomain.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("error"));
 	            return;
 	        }
 	        SharedSecret secret = secrets.getSharedSecret(domainName);
 	
 	        if (secret == null) {
-	            JOptionPane.showMessageDialog(this,bundle.getString("dialog.removesharedsecret.error.nullsecret"),bundle.getString("dialog.removesharedsecret.error.nullsecret.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("error"));
+	            JOptionPane.showMessageDialog(this,translator.translate("dialog.removesharedsecret.error.nullsecret"),translator.translate("dialog.removesharedsecret.error.nullsecret.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("error"));
 	            return;
 	        }
 	        AgletRuntime rt = AgletRuntime.getAgletRuntime();
@@ -99,7 +99,7 @@ class RemoveSharedSecret extends TahitiDialog implements ActionListener {
 	        String ownerName = rt.getOwnerName();
 	
 	        if (rt.authenticateOwner(ownerName, password.getText()) == null) {
-	            JOptionPane.showMessageDialog(this,bundle.getString("dialog.removesharedsecret.error.password"),bundle.getString("dialog.removesharedsecret.error.password.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("error"));
+	            JOptionPane.showMessageDialog(this,translator.translate("dialog.removesharedsecret.error.password"),translator.translate("dialog.removesharedsecret.error.password.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("error"));
 	            password.setText("");
 	            return;
 	        }

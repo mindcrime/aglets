@@ -1,6 +1,7 @@
 package examples.thread;
 
 import com.ibm.aglet.Aglet;
+
 import com.ibm.aglet.message.Message;
 import com.ibm.aglets.thread.*;
 
@@ -27,7 +28,7 @@ public class ThreadAgent extends Aglet {
 	System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++");
 	System.out.println("\n\tMessagge number " + messageCounter);
 	Thread t = Thread.currentThread();
-	AgletThread at = (AgletThread) t;
+	com.ibm.aglets.thread.AgletThread at = (com.ibm.aglets.thread.AgletThread) t;
 	System.out.println("Thread name and hash code " + at.getName() + " " + at.hashCode());
 	System.out.println("Aglet thread id " + at.getId());
 	System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++");
