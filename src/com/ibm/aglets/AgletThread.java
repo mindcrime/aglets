@@ -53,7 +53,7 @@ final class AgletThread extends Thread {
 
 	public AgletThread(ThreadGroup group, MessageManager m) {
 		super(group, "No." + (count++) + ']');
-		setManager((MessageManagerImpl)m);
+		setManager(m);
 		setPriority(group.getMaxPriority());
 	}
 	static MessageImpl getCurrentMessage() {
