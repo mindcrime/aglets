@@ -1,0 +1,43 @@
+#!/bin/sh
+# ==================================================
+# $Id: daemoncontrol.in,v 1.5 2006/04/16 10:25:40 maxthomax Exp $
+#
+# TahitiDaemonClient startup script
+#
+# Author: Larry Spector
+# ==================================================
+
+# Set this to your installation directory
+AGLET_HOME=@aglet_home@
+JDK_HOME=@jdk_home@
+
+if test -z "$JDK_HOME" -o -z "$AGLET_HOME"; then
+    echo Please set AGLET_HOME and JDK_HOME environment variable!
+    exit
+fi
+
+#Remove development path when packaging.
+LOCALCLASSPATH="$CLASSPATH:$AGLET_HOME/lib:$AGLET_HOME/lib/classes"
+
+# Add all jars in this directory to the tahiti system classpath
+DIRLIBS=${AGLET_HOME}/lib/*.jar
+for i in ${DIRLIBS}
+do
+    # if the directory is empty, then it will return the input string
+    # this is stupid, so case for it
+    if [ "$i" != "${DIRLIBS}" ] ; then
+        LOCALCLASSPATH="$LOCALCLASSPATH:$i"
+    fi
+done
+
+# If you are using xerces in your aglets code and the sun JVM, you may need to
+# use the "-classic" option to avoid a Segmentation Fault.
+while true ;
+do
+    ${JDK_HOME}/bin/java \
+        -Daglets.home="${AGLET_HOME}" \
+        -classpath "$LOCALCLASSPATH" \
+        TahitiDaemonClient \
+        "$@" \
+    || exit 0
+done

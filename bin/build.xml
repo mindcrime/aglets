@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+
+<!--
+    Install Script for Aglets for Aglet
+    Software Development Kit (ASDK)
+-->
+<project name="Aglets-Install" default="all" basedir=".">
+
+  <property name="aglet.home" location=".."/>
+
+  <target name="all" depends="info,install,grant,keystore"/>
+  
+  <target name="install">
+      <filter token="aglet_home" value="${aglet.home}"/>
+      <filter token="jdk_home" value="${java.home}"/>
+      <filter token="ant_home" value="${aglet.home}"/>
+      <copy todir="." filtering="true" overwrite="true" >
+        <fileset dir=".">
+            <include name="*.in"/>
+        </fileset>
+        <mapper type="glob" from="*.in" to="*" />
+      </copy>
+      <chmod file="agletsd" perm="755"/>
+      <chmod file="ant" perm="755"/>
+      <chmod file="daemoncontrol" perm="755"/>
+  </target>
+  
+  <target name="grant">
+    <echo file="./.java.policy">
+// Entry granting permissions to aglets code.
+grant codeBase "file:${aglet.home}/lib/-" {
+    permission java.security.AllPermission;
+};
+    </echo>
+  </target>
+  
+  <target name="info">
+    <echo>
+*** READ ME *** READ ME *** READ ME *** READ ME ***
+
+In order to run the Aglet Server, you need to update
+${user.home}/.java.policy with the grant entry
+found in ${basedir}/.java.policy.  
+You can simply place the .java.policy file in ${user.home}.
+
+The server also needs a java .keystore file.  One has been provided
+for you in this directory.  The password is "aglets" (without quotes).
+It contains a key for the server "aglet_key", and a key for an anonymous
+user "anonymous".  To use the keystore, copy it to ${user.home}.
+
+WARNING: This keystore is not meant to be secure!  It is
+intended to get new users running easily.
+
+To install both of these files into your home directory
+run the command:  "ant install-home" (no quotes)
+   
+*** READ ME *** READ ME *** READ ME *** READ ME ***
+    </echo>
+  </target>
+  
+  <target name="install-home" >
+    <replace file=".java.policy" token="\" value="/"/>
+    <echo message="Copying .java.policy file..." />
+    <copy file="./.java.policy" tofile="${user.home}/.java.policy" overwrite="true"/>
+    <echo message="Copying .keystore file..." />
+    <copy file="./.keystore" tofile="${user.home}/.keystore" overwrite="true"/>
+  </target>
+  
+  <target name="keystore">
+    <delete file="${basedir}/.keystore"/>
+    <genkey alias="aglet_key" storepass="aglets" keystore="${basedir}/.keystore">
+        <dname>
+            <param name="CN" value="Aglet Server"/>
+            <param name="OU" value="Tahiti"/>
+            <param name="O"  value="Aglets.Org"/>
+            <param name="C"  value="US"/>
+         </dname>
+      </genkey>
+      <genkey alias="anonymous" storepass="aglets" keystore="${basedir}/.keystore">
+        <dname>
+            <param name="CN" value="Anonymous User"/>
+            <param name="OU" value="Tahiti"/>
+            <param name="O"  value="Aglets.Org"/>
+            <param name="C"  value="US"/>
+         </dname>
+      </genkey>
+  </target>
+  
+</project>
+
+
+

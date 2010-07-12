@@ -20,7 +20,11 @@
   
 
   <root>
+<<<<<<< HEAD
     <priority value ="debug" />
+=======
+    <priority value ="info" />
+>>>>>>> 218a26853c9210d659d7703d268e4b377f579a3b
     <appender-ref ref="FileLog"/>
     <appender-ref ref="ConsoleLog"/>
   </root>

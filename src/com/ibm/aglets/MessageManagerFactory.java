@@ -1,5 +1,9 @@
 package com.ibm.aglets;
+<<<<<<< HEAD
 import com.ibm.aglet.message.MessageManager;
+=======
+import com.ibm.aglet.MessageManager;
+>>>>>>> 218a26853c9210d659d7703d268e4b377f579a3b
 
 /**
  * The MessageManagerFactory represents a factory for getting
@@ -25,7 +29,11 @@ public class MessageManagerFactory {
 	public static MessageManager getMessageManager(AgletRef ref){
 		if( ref instanceof LocalAgletRef){
 			LocalAgletRef lref = (LocalAgletRef) ref;
+<<<<<<< HEAD
 			return  new MessageManagerImpl(lref);
+=======
+			return new MessageManagerImpl(lref);
+>>>>>>> 218a26853c9210d659d7703d268e4b377f579a3b
 		}
 		
 		return null;

@@ -5,6 +5,7 @@
  */
 package com.ibm.aglets.tahiti;
 
+<<<<<<< HEAD
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -12,6 +13,12 @@ import javax.swing.JTextArea;
 
 import org.aglets.util.gui.JComponentBuilder;
 
+=======
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import com.ibm.aglets.tahiti.TahitiDialog.MessagePanel;
+>>>>>>> 218a26853c9210d659d7703d268e4b377f579a3b
 import com.ibm.aglets.tahiti.utils.IconRepository;
 import com.ibm.aglets.tahiti.utils.TahitiCommandStrings;
 import com.ibm.aglet.*;
@@ -37,24 +44,38 @@ public class KillAgletDialog extends TahitiDialog implements ActionListener {
      * @param proxies an array of proxies to kill
      */
     public KillAgletDialog(MainWindow parent,AgletProxy[] proxies){
+<<<<<<< HEAD
 		super(parent);
 
 		if(proxies==null || proxies.length==0){
 		    JOptionPane.showMessageDialog(this,this.translator.translate("dialog.kill.error.proxy"),this.translator.translate("dialog.kill.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("proxy"));
+=======
+		super(parent, bundle.getString("dialog.kill.title"), false);
+
+		if(proxies==null || proxies.length==0){
+		    JOptionPane.showMessageDialog(this,bundle.getString("dialog.kill.error.proxy"),bundle.getString("dialog.kill.title"),JOptionPane.ERROR_MESSAGE,IconRepository.getIcon("proxy"));
+>>>>>>> 218a26853c9210d659d7703d268e4b377f579a3b
 		    return;
 		}
 		
 		String msg[] = new String[proxies.length];
+<<<<<<< HEAD
 		JTextArea area = new JTextArea( msg.length, 100);
 		for (int i = 0; i < proxies.length; i++) {
 		    msg[i] = this.getAgletName(proxies[i]);
 		    area.append( msg[i] );
 		    area.append( "\n" );
+=======
+
+		for (int i = 0; i < proxies.length; i++) {
+		    msg[i] = this.getAgletName(proxies[i]);
+>>>>>>> 218a26853c9210d659d7703d268e4b377f579a3b
 		} 
 
 		
 		
 		
+<<<<<<< HEAD
 		this.getContentPane().add("North", JComponentBuilder.createJLabel("dialog.kill.message") );
 		
 		this.getContentPane().add("Center", area);
@@ -64,10 +85,19 @@ public class KillAgletDialog extends TahitiDialog implements ActionListener {
 		JButton cancelButton = JComponentBuilder.createJButton("dialog.kill.button.cancel", TahitiCommandStrings.CANCEL_COMMAND, this );
 		this.getContentPane().add( okButton );
 		this.getContentPane().add( cancelButton );
+=======
+		this.getContentPane().add("North", new JLabel(bundle.getString("dialog.kill.message"), JLabel.CENTER));
+		this.getContentPane().add("Center", new MessagePanel(msg,JLabel.LEFT,false));
+
+		// add buttons
+		this.addJButton(bundle.getString("dialog.kill.button.ok"),TahitiCommandStrings.OK_COMMAND,IconRepository.getIcon("ok"),this);
+		this.addJButton(bundle.getString("dialog.kill.button.cancel"),TahitiCommandStrings.CANCEL_COMMAND,IconRepository.getIcon("cancel"),this);
+>>>>>>> 218a26853c9210d659d7703d268e4b377f579a3b
 		
 		_proxies = proxies;
     }
     
+<<<<<<< HEAD
     
     private String getAgletName(AgletProxy agletProxy) {
 	StringBuffer agletName = new StringBuffer(100);
@@ -89,6 +119,8 @@ public class KillAgletDialog extends TahitiDialog implements ActionListener {
 	}
     }
 
+=======
+>>>>>>> 218a26853c9210d659d7703d268e4b377f579a3b
 	/**
 	 * Manage events from buttons.
 	 * @param event the event to deal with
@@ -102,7 +134,11 @@ public class KillAgletDialog extends TahitiDialog implements ActionListener {
 								AgletRuntime.getAgletRuntime().killAglet(this._proxies[i]);
 		        }
 			} catch (Exception ex) {
+<<<<<<< HEAD
 			    logger.error("Exception caught while killing agents", ex);
+=======
+			    this.getMainWindow().showException(ex);
+>>>>>>> 218a26853c9210d659d7703d268e4b377f579a3b
 			} 
 
 	    }
