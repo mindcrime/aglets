@@ -33,7 +33,7 @@ done
 
 while true ;
 do
-    ${JDK_HOME}/bin/java \
+    cd ${AGLET_HOME} && ${JDK_HOME}/bin/java \
         -Daglets.home="${AGLET_HOME}" \
         -classpath "$LOCALCLASSPATH" \
         com.ibm.awb.launcher.Main \
