@@ -1339,6 +1339,7 @@ public final class MainWindow extends TahitiWindow implements ItemListener,
      */
     public void reboot() {
 	this.logger.info("Tahiti is rebooting....");
+	this._tahiti.reboot = true;
 	this._tahiti.reboot();
     }
 
@@ -1600,10 +1601,12 @@ public final class MainWindow extends TahitiWindow implements ItemListener,
 
     /**
      * Shuts down the Tahiti server.
+     * The tahiti server has the information about the rebooting!
      * 
      */
     public void shutdown() {
 	this.logger.info("Shutting down the Tahiti server");
+	this._tahiti.reboot = false;
 	this._tahiti.exit();
     }
 

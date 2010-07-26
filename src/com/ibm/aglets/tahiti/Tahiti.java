@@ -202,7 +202,7 @@ public final class Tahiti implements ContextListener {
 	Resource res = Resource.getResourceFor("tahiti");
 
 	res.save("Tahiti");
-
+	logger.debug("Tahiti exiting (reboot = " + this.reboot + ")");
 	System.exit(this.reboot == true ? 0 : 1);
     }
 
