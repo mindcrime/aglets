@@ -14,28 +14,32 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-abstract public class ActionAndKeyListener implements ActionListener, 
-		KeyListener {
-	public void actionPerformed(ActionEvent ev) {
-		doAction();
-	}
-	abstract protected void doAction();
-	public void keyPressed(KeyEvent ev) {
-		if (ev.getKeyCode() == KeyEvent.VK_ENTER) {
-			doAction();
-		} 
-	}
-	public void keyReleased(KeyEvent ev) {
+abstract public class ActionAndKeyListener implements ActionListener,
+	KeyListener {
+    public void actionPerformed(ActionEvent ev) {
+	this.doAction();
+    }
 
-		// do nothing
-	}
-	public void keyTyped(KeyEvent ev) {
+    abstract protected void doAction();
 
-		// do nothing
+    public void keyPressed(KeyEvent ev) {
+	if (ev.getKeyCode() == KeyEvent.VK_ENTER) {
+	    this.doAction();
 	}
+    }
+
+    public void keyReleased(KeyEvent ev) {
+
+	// do nothing
+    }
+
+    public void keyTyped(KeyEvent ev) {
+
+	// do nothing
+    }
 }

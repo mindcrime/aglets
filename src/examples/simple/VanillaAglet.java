@@ -15,17 +15,19 @@ package examples.simple;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
+import com.ibm.aglet.Aglet;
 
 /**
  * VanillaAglet
  * 
  * This aglet does not perform anything (just existing.)
  * 
- * @version     1.00
- * @author	Yoshiaki Mima
+ * @version 1.00
+ * @author Yoshiaki Mima
  */
 public class VanillaAglet extends Aglet {
 
-	public void run() {}
+    @Override
+    public void run() {
+    }
 }

@@ -14,43 +14,40 @@ package com.ibm.agletx.util;
  * deposited with the U.S. Copyright Office.
  */
 
-import com.ibm.aglet.*;
-import com.ibm.aglet.event.*;
+import com.ibm.aglet.AgletProxy;
 import com.ibm.aglet.message.Message;
-
-import java.util.Vector;
-import java.util.Enumeration;
-import java.net.URL;
 
 class SeqPlanTask extends Task implements Runnable {
 
-	private Message msg = null;
-	private AgletProxy p = null;
+    private Message msg = null;
+    private SeqItinerary itin = null;
 
-	private SeqItinerary itin = null;
+    public SeqPlanTask(Message msg) {
+	this.msg = msg;
+    }
 
-	public SeqPlanTask(Message msg) {
-		this.msg = msg;
-	}
-	public void execute(SeqItinerary itin) throws Exception {
-		this.itin = itin;
-		new Thread(this).start();
-	}
-	public Message getMessage() {
-		return msg;
-	}
-	public void run() {
-		AgletProxy p = itin.getOwnerAglet();
+    @Override
+    public void execute(SeqItinerary itin) throws Exception {
+	this.itin = itin;
+	new Thread(this).start();
+    }
 
-		try {
-			p.sendMessage(msg);
-		} catch (Exception ex) {
-			itin.handleException(ex);
-		} 
-		if (itin.atLastDestination() & itin.isRepeat()) {
-			itin.startTrip();
-		} else {
-			itin.goToNext();
-		} 
+    public Message getMessage() {
+	return this.msg;
+    }
+
+    public void run() {
+	AgletProxy p = this.itin.getOwnerAglet();
+
+	try {
+	    p.sendMessage(this.msg);
+	} catch (Exception ex) {
+	    this.itin.handleException(ex);
 	}
+	if (this.itin.atLastDestination() & this.itin.isRepeat()) {
+	    this.itin.startTrip();
+	} else {
+	    this.itin.goToNext();
+	}
+    }
 }

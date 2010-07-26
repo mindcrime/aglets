@@ -15,83 +15,90 @@ package examples.talk;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
-import com.ibm.aglet.event.*;
+import com.ibm.aglet.Aglet;
+import com.ibm.aglet.AgletProxy;
+import com.ibm.aglet.event.MobilityAdapter;
+import com.ibm.aglet.event.MobilityEvent;
 import com.ibm.aglet.message.Message;
 
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.io.IOException;
-import java.net.URL;
-
 /**
- * @version     1.00    96/12/19
- * @author      Mitsuru Oshima
+ * @version 1.00 96/12/19
+ * @author Mitsuru Oshima
  */
 public class TalkSlave extends Aglet {
 
-	transient String name = "Unknown";
-	transient TalkWindow window = null;
-	AgletProxy masterProxy = null;
+    transient String name = "Unknown";
+    transient TalkWindow window = null;
+    AgletProxy masterProxy = null;
 
-	public TalkSlave() {}
-	private String getProperty(String key) {
-		return System.getProperty(key, "Unknown");
-	}
-	public boolean handleMessage(Message msg) {
-		if (msg.sameKind("dialog")) {
-			window.show();
+    public TalkSlave() {
+    }
 
-		} else if (msg.sameKind("text")) {
-			String str = (String)msg.getArg();
+    private String getProperty(String key) {
+	return System.getProperty(key, "Unknown");
+    }
 
-			if (window.isVisible() == false) {
-				window.show();
-			} 
-			window.appendText(str);
-			return true;
-		} else if (msg.sameKind("bye")) {
-			window.appendText("Bye Bye..");
-			try {
-				Thread.currentThread().sleep(3000);
-			} catch (Exception ex) {}
-			msg.sendReply();
-			dispose();
-		} 
-		return false;
+    @Override
+    public boolean handleMessage(Message msg) {
+	if (msg.sameKind("dialog")) {
+	    this.window.show();
+
+	} else if (msg.sameKind("text")) {
+	    String str = (String) msg.getArg();
+
+	    if (this.window.isVisible() == false) {
+		this.window.show();
+	    }
+	    this.window.appendText(str);
+	    return true;
+	} else if (msg.sameKind("bye")) {
+	    this.window.appendText("Bye Bye..");
+	    try {
+		Thread.currentThread();
+		Thread.sleep(3000);
+	    } catch (Exception ex) {
+	    }
+	    msg.sendReply();
+	    this.dispose();
 	}
-	public void onCreation(Object o) {
-		masterProxy = (AgletProxy)o;
-		addMobilityListener(new MobilityAdapter() {
-			public void onArrival(MobilityEvent ev) {
-				window = new TalkWindow(TalkSlave.this);
-				window.pack();
-				window.show();
-				try {
-					name = getProperty("user.name");
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				} 
-			} 
-		});
-	}
-	public void onDisposing() {
-		if (window != null) {
-			window.dispose();
-			window = null;
-		} 
-	}
-	private void print(String m) {
-		System.out.println("Receiver : " + m);
-	}
-	public void sendText(String text) {
+	return false;
+    }
+
+    @Override
+    public void onCreation(Object o) {
+	this.masterProxy = (AgletProxy) o;
+	this.addMobilityListener(new MobilityAdapter() {
+	    @Override
+	    public void onArrival(MobilityEvent ev) {
+		TalkSlave.this.window = new TalkWindow(TalkSlave.this);
+		TalkSlave.this.window.pack();
+		TalkSlave.this.window.show();
 		try {
-			if (masterProxy == null) {
-				return;
-			} 
-			masterProxy.sendMessage(new Message("text", name + " : " + text));
+		    TalkSlave.this.name = TalkSlave.this.getProperty("user.name");
 		} catch (Exception ex) {
-			ex.printStackTrace();
-		} 
+		    ex.printStackTrace();
+		}
+	    }
+	});
+    }
+
+    @Override
+    public void onDisposing() {
+	if (this.window != null) {
+	    this.window.dispose();
+	    this.window = null;
 	}
+    }
+
+    public void sendText(String text) {
+	try {
+	    if (this.masterProxy == null) {
+		return;
+	    }
+	    this.masterProxy.sendMessage(new Message("text", this.name + " : "
+		    + text));
+	} catch (Exception ex) {
+	    ex.printStackTrace();
+	}
+    }
 }

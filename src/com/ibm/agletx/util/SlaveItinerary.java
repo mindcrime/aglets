@@ -14,118 +14,131 @@ package com.ibm.agletx.util;
  * deposited with the U.S. Copyright Office.
  */
 
-import com.ibm.aglet.*;
-import com.ibm.aglet.event.*;
-import java.util.*;
-import java.net.*;
-import java.io.IOException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.Vector;
+
+import com.ibm.aglet.Aglet;
 
 /**
  * An Itinerary class to repeatedly perform a specific task in multiple
- * destinations.
- * <br>
+ * destinations. <br>
  * Here is a typical usage of this class.
+ * 
  * <pre>
  * private boolean lastTask = false;
- * private SlaveItinerary itinerary  = null;
+ * private SlaveItinerary itinerary = null;
+ * 
  * class TaskA extends Task {
- * public void execute(SeqItinerary itin) throws Exception {
- * // do some work
- * }
+ *     public void execute(SeqItinerary itin) throws Exception {
+ * 	// do some work
+ *     }
  * }
  * 
  * class TaskB extends Task {
- * public void execute(SeqItinerary itin) throws Exception {
- * // do some work
- * }
+ *     public void execute(SeqItinerary itin) throws Exception {
+ * 	// do some work
+ *     }
  * }
  * 
  * public void onCreation(Object ini) {
- * itinerary = new SlaveItinerary(this,"atp://yariv.trl.ibm.com",new TaskA());
- * itinerary.addPlace("atp://tai.trl.ibm.com");
- * itinerary.startTrip();
+ *     itinerary = new SlaveItinerary(this, &quot;atp://yariv.trl.ibm.com&quot;, new TaskA());
+ *     itinerary.addPlace(&quot;atp://tai.trl.ibm.com&quot;);
+ *     itinerary.startTrip();
  * }
  * 
- * public void run () {
- * if (itinerary.atLastDestination()==true) {
- * if (lastTask==true) {
- * //  completed all tasks.
- * }
- * else {
- * lastTask=true;
- * itinerary.setTask(new TaskB());
- * itinerary.startTrip();
- * }
- * }
+ * public void run() {
+ *     if (itinerary.atLastDestination() == true) {
+ * 	if (lastTask == true) {
+ * 	    // completed all tasks.
+ * 	} else {
+ * 	    lastTask = true;
+ * 	    itinerary.setTask(new TaskB());
+ * 	    itinerary.startTrip();
+ * 	}
+ *     }
  * }
  * </pre>
+ * 
  * The above code defines an aglet which performs 2-phase computation: in the
  * first phase, the aglet travels among multiple destinations to perform a task
- * defined by TaskA. Then, the second phase is started, in which the aglet visits
- * again all these destinations to perform a task of TaskB.
+ * defined by TaskA. Then, the second phase is started, in which the aglet
+ * visits again all these destinations to perform a task of TaskB.
  * <p>
- * In the above code, the invocation of <tt>itinerary.startTrip()</tt> causes the
- * owner aglet to be dispatched sequentially among the destinations.
- * In every destination, the <tt>execute()</tt> of the corresponding <tt>Task</tt>
- * object (assigned to the <tt>SlaveItinerary</tt> object via <tt>setTask()</tt>)
- * is automatically invoked.
+ * In the above code, the invocation of <tt>itinerary.startTrip()</tt> causes
+ * the owner aglet to be dispatched sequentially among the destinations. In
+ * every destination, the <tt>execute()</tt> of the corresponding <tt>Task</tt>
+ * object (assigned to the <tt>SlaveItinerary</tt> object via <tt>setTask()</tt>
+ * ) is automatically invoked.
  * 
- * @version     1.20    $Date: 2009/07/28 07:04:53 $
- * @author      Yariv Aridor
+ * @version 1.20 $Date: 2009/07/28 07:04:53 $
+ * @author Yariv Aridor
  */
 
 public class SlaveItinerary extends SeqItinerary {
 
-	private Task task = null;
+    private Task task = null;
 
-	/**
-	 * Constructor.
-	 * @param aglet the owner aglet
-	 * @param task the task to preform
-	 * @param address an address where the task should be preformed
-	 */
-	public SlaveItinerary(Aglet aglet, String address, Task task) {
-		super(aglet);
-		this.task = task;
-		addPlan(address);
-	}
-	/**
-	 * Constructor.
-	 * @param aglet the owner aglet
-	 * @param task the task to preform
-	 * @param addresses a vector of address where the task should be performed.
-	 */
-	public SlaveItinerary(Aglet aglet, Vector addresses, Task task) {
-		super(aglet);
-		this.task = task;
-		for (Enumeration e = addresses.elements(); e.hasMoreElements(); ) {
-			addPlan(((URL)e.nextElement()).toString());
-		} 
-	}
-	/**
-	 * Add a new address to the itinerary of the owner aglet
-	 */
-	public void addPlan(String address) {
-		addTask(address, task);
-	}
-	/**
-	 * Return the current task to be preformed by the owner aglet
-	 */
-	public Task getTask() {
-		return task;
-	}
-	/**
-	 * Set the task to be preformed by the owner aglet
-	 */
-	public void setTask(Task task) {
-		this.task = task;
-		Enumeration e = addresses();
+    /**
+     * Constructor.
+     * 
+     * @param aglet
+     *            the owner aglet
+     * @param task
+     *            the task to preform
+     * @param address
+     *            an address where the task should be preformed
+     */
+    public SlaveItinerary(Aglet aglet, String address, Task task) {
+	super(aglet);
+	this.task = task;
+	this.addPlan(address);
+    }
 
-		clear();
-		for (; e.hasMoreElements(); ) {
-			String address = (String)e.nextElement();
-
-			addPlan(address);
-		} 
+    /**
+     * Constructor.
+     * 
+     * @param aglet
+     *            the owner aglet
+     * @param task
+     *            the task to preform
+     * @param addresses
+     *            a vector of address where the task should be performed.
+     */
+    public SlaveItinerary(Aglet aglet, Vector addresses, Task task) {
+	super(aglet);
+	this.task = task;
+	for (Enumeration e = addresses.elements(); e.hasMoreElements();) {
+	    this.addPlan(((URL) e.nextElement()).toString());
 	}
+    }
+
+    /**
+     * Add a new address to the itinerary of the owner aglet
+     */
+    public void addPlan(String address) {
+	this.addTask(address, this.task);
+    }
+
+    /**
+     * Return the current task to be preformed by the owner aglet
+     */
+    public Task getTask() {
+	return this.task;
+    }
+
+    /**
+     * Set the task to be preformed by the owner aglet
+     */
+    public void setTask(Task task) {
+	this.task = task;
+	Enumeration e = this.addresses();
+
+	this.clear();
+	for (; e.hasMoreElements();) {
+	    String address = (String) e.nextElement();
+
+	    this.addPlan(address);
+	}
+    }
 }

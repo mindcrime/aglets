@@ -15,148 +15,151 @@ package examples.patterns;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
-import com.ibm.agletx.patterns.*;
-import com.ibm.aglet.util.*;
-
-import java.util.Vector;
-import java.awt.Frame;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import java.awt.Button;
-import java.awt.Graphics;
 import java.awt.Component;
 import java.awt.Event;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.FlowLayout;
+import java.awt.FontMetrics;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Label;
 import java.awt.Panel;
 import java.awt.TextField;
 
-import java.net.URL;
-import java.net.MalformedURLException;
-
-import java.util.Properties;
+import com.ibm.aglet.Aglet;
+import com.ibm.aglet.AgletException;
 
 class WriterSlaveWindow extends Frame {
-	private static final int SIZE = 40;					// -- size of message field
-	private static final String TITLE = "Writer";		// -- title of message window
-	private static final String THANKS = "THANKS!!";	// -- thank message text
-	private GridBagLayout layout;
-	private TextField _messageText = new TextField(SIZE);
-	private Aglet _aglet = null;
+    private static final int SIZE = 40; // -- size of message field
+    private static final String TITLE = "Writer"; // -- title of message window
+    private static final String THANKS = "THANKS!!"; // -- thank message text
+    private GridBagLayout layout;
+    private TextField _messageText = new TextField(SIZE);
+    private Aglet _aglet = null;
 
-	protected Button _thanks = new Button("Thank");
-	protected Button _quit = new Button("Quit");
+    protected Button _thanks = new Button("Thank");
+    protected Button _quit = new Button("Quit");
 
-	// --  Constructs the dialog window.
-	// 
-	public WriterSlaveWindow(Aglet ag, String text, 
-							 String from) throws AgletException {
-		super(TITLE);
-		_aglet = ag;
-		setLayout(layout = new GridBagLayout());
-		SampleWindow.setWindowProperties(this, _aglet);
-		makeMainPanel(text, from);
-		SampleWindow.displayFrame(this);
-		writeMessage(text);
-	}
-	public void dispose() {
-		super.dispose();
-	}
-	protected boolean handleButton(Button button) {
-		if (button == _thanks) {
-			thanks();
-		} else if (button == _quit) {
-			quit();
-		} 
-		return true;
-	}
-	// -- Event Handler...
-	public boolean handleEvent(Event event) {
-		if (event.id == Event.ACTION_EVENT) {
-			if (event.target instanceof Button) {
-				return handleButton((Button)event.target);
-			} 
-		} else if (event.id == Event.WINDOW_ICONIFY) {
-			setVisible(false);
-			return true;
-		} else if (event.id == Event.WINDOW_DESTROY) {
-			quit();
-			return true;
-		} 
-		return super.handleEvent(event);
-	}
-	protected Panel makeButtonPanel() {
-		Panel p = new Panel();
+    // -- Constructs the dialog window.
+    //
+    public WriterSlaveWindow(Aglet ag, String text, String from)
+	    throws AgletException {
+	super(TITLE);
+	this._aglet = ag;
+	this.setLayout(this.layout = new GridBagLayout());
+	SampleWindow.setWindowProperties(this, this._aglet);
+	this.makeMainPanel(text, from);
+	SampleWindow.displayFrame(this);
+	this.writeMessage(text);
+    }
 
-		p.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		p.add(_thanks);
-		p.add(_quit);
-		return p;
+    @Override
+    public void dispose() {
+	super.dispose();
+    }
+
+    protected boolean handleButton(Button button) {
+	if (button == this._thanks) {
+	    this.thanks();
+	} else if (button == this._quit) {
+	    this.quit();
 	}
-	private void makeMainPanel(String text, 
-							   String from) throws AgletException {
-		Component comp;
-		GridBagConstraints constraints = new GridBagConstraints();
+	return true;
+    }
 
-		// button
-		constraints.anchor = GridBagConstraints.CENTER;
-		constraints.gridwidth = GridBagConstraints.REMAINDER;
-		constraints.fill = GridBagConstraints.BOTH;
-		constraints.weightx = 1.0;
-		comp = makeButtonPanel();
-		layout.setConstraints(comp, constraints);
-		add(comp);
-
-		// title
-		constraints.anchor = GridBagConstraints.WEST;
-		constraints.gridwidth = GridBagConstraints.REMAINDER;
-		constraints.fill = GridBagConstraints.BOTH;
-		constraints.weightx = 1.0;
-		comp = new Label("MESSAGE FROM: " + from);
-		layout.setConstraints(comp, constraints);
-		add(comp);
-
-		// message text panel
-		constraints.gridwidth = GridBagConstraints.REMAINDER;
-		constraints.fill = GridBagConstraints.BOTH;
-
-		// _messageText.setEditable(false);
-		comp = _messageText;
-		layout.setConstraints(comp, constraints);
-		add(comp);
+    // -- Event Handler...
+    @Override
+    public boolean handleEvent(Event event) {
+	if (event.id == Event.ACTION_EVENT) {
+	    if (event.target instanceof Button) {
+		return this.handleButton((Button) event.target);
+	    }
+	} else if (event.id == Event.WINDOW_ICONIFY) {
+	    this.setVisible(false);
+	    return true;
+	} else if (event.id == Event.WINDOW_DESTROY) {
+	    this.quit();
+	    return true;
 	}
-	void quit() {
-		dispose();
-		((WriterSlave)_aglet).wakeup();
-	}
-	void thanks() {
-		((WriterSlave)_aglet).setResult(THANKS);
-		quit();
-	}
-	public void update(Graphics g) {
-		paint(g);
-	}
-	private void writeMessage(String text) {
-		FontMetrics fm = getFontMetrics(getFont());
-		int l = _messageText.getSize().width;
-		int l3 = fm.charWidth(' ');
+	return super.handleEvent(event);
+    }
 
-		try {
-			for (int i = 0; i < l; i++) {
-				char msg[] = new char[(l - i) / l3];
+    protected Panel makeButtonPanel() {
+	Panel p = new Panel();
 
-				for (int j = 0; j < msg.length; j++) {
-					msg[j] = ' ';
-				} 
-				String str = new String(msg);
+	p.setLayout(new FlowLayout(FlowLayout.RIGHT));
+	p.add(this._thanks);
+	p.add(this._quit);
+	return p;
+    }
 
-				_messageText.setText(str + text);
-			} 
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+    private void makeMainPanel(String text, String from) throws AgletException {
+	Component comp;
+	GridBagConstraints constraints = new GridBagConstraints();
+
+	// button
+	constraints.anchor = GridBagConstraints.CENTER;
+	constraints.gridwidth = GridBagConstraints.REMAINDER;
+	constraints.fill = GridBagConstraints.BOTH;
+	constraints.weightx = 1.0;
+	comp = this.makeButtonPanel();
+	this.layout.setConstraints(comp, constraints);
+	this.add(comp);
+
+	// title
+	constraints.anchor = GridBagConstraints.WEST;
+	constraints.gridwidth = GridBagConstraints.REMAINDER;
+	constraints.fill = GridBagConstraints.BOTH;
+	constraints.weightx = 1.0;
+	comp = new Label("MESSAGE FROM: " + from);
+	this.layout.setConstraints(comp, constraints);
+	this.add(comp);
+
+	// message text panel
+	constraints.gridwidth = GridBagConstraints.REMAINDER;
+	constraints.fill = GridBagConstraints.BOTH;
+
+	// _messageText.setEditable(false);
+	comp = this._messageText;
+	this.layout.setConstraints(comp, constraints);
+	this.add(comp);
+    }
+
+    void quit() {
+	this.dispose();
+	((WriterSlave) this._aglet).wakeup();
+    }
+
+    void thanks() {
+	((WriterSlave) this._aglet).setResult(THANKS);
+	this.quit();
+    }
+
+    @Override
+    public void update(Graphics g) {
+	this.paint(g);
+    }
+
+    private void writeMessage(String text) {
+	FontMetrics fm = this.getFontMetrics(this.getFont());
+	int l = this._messageText.getSize().width;
+	int l3 = fm.charWidth(' ');
+
+	try {
+	    for (int i = 0; i < l; i++) {
+		char msg[] = new char[(l - i) / l3];
+
+		for (int j = 0; j < msg.length; j++) {
+		    msg[j] = ' ';
+		}
+		String str = new String(msg);
+
+		this._messageText.setText(str + text);
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
+    }
 }

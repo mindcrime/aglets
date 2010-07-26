@@ -23,8 +23,8 @@ package com.ibm.maf;
 
 public final class AgentIsSuspended extends MAFException {
 
-	// constructor
-	public AgentIsSuspended() {
-		super();
-	}
+    // constructor
+    public AgentIsSuspended() {
+	super();
+    }
 }

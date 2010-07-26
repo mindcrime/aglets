@@ -15,32 +15,36 @@ package examples.finder;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
+import com.ibm.aglet.Aglet;
+import com.ibm.aglet.AgletProxy;
 import com.ibm.aglet.message.Message;
 
 public class Test extends Aglet {
-	AgletProxy _finder;
-	Message lookup = new Message("Lookup", "Traveller");
+    AgletProxy _finder;
+    Message lookup = new Message("Lookup", "Traveller");
 
-	public boolean handleMessage(Message msg) {
-		try {
-			AgletProxy proxy = (AgletProxy)_finder.sendMessage(lookup);
+    @Override
+    public boolean handleMessage(Message msg) {
+	try {
+	    AgletProxy proxy = (AgletProxy) this._finder.sendMessage(this.lookup);
 
-			System.out.println(proxy.getAgletInfo());
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} 
-		return true;
+	    System.out.println(proxy.getAgletInfo());
+	} catch (Exception ex) {
+	    ex.printStackTrace();
 	}
-	public void onCreation(Object init) {
-		_finder = (AgletProxy)getAgletContext().getProperty("finder");
+	return true;
+    }
 
-		try {
-			AgletProxy proxy = (AgletProxy)_finder.sendMessage(lookup);
+    @Override
+    public void onCreation(Object init) {
+	this._finder = (AgletProxy) this.getAgletContext().getProperty("finder");
 
-			System.out.println(proxy.getAgletInfo());
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} 
+	try {
+	    AgletProxy proxy = (AgletProxy) this._finder.sendMessage(this.lookup);
+
+	    System.out.println(proxy.getAgletInfo());
+	} catch (Exception ex) {
+	    ex.printStackTrace();
 	}
+    }
 }

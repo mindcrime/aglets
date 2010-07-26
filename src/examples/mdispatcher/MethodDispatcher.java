@@ -15,17 +15,22 @@ package examples.mdispatcher;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
-import com.ibm.aglet.message.Message;
-
-import java.io.*;
-import java.lang.reflect.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Hashtable;
 
+import com.ibm.aglet.message.Message;
+
 /**
- * MethodDispatcher class binds a message and a corresponding method.
- * All methods which has a signature <tt> method(Message msg); </tt>
- * are binded and invoked when it receives the corresponding message.
+ * MethodDispatcher class binds a message and a corresponding method. All
+ * methods which has a signature <tt> method(Message msg); </tt> are binded and
+ * invoked when it receives the corresponding message.
+ * 
  * <pre>
  * MethodDispatcher mdispatcher = null;
  * public void onCreation(Object obj){
@@ -41,96 +46,99 @@ import java.util.Hashtable;
  * // do your job.
  * }
  * </pre>
+ * 
  * This may be incorporated with MessageManager in the future.
  * 
- * @version     1.00	$Date: 2009/07/28 07:04:53 $
- * @author	Mitsuru Oshima
+ * @version 1.00 $Date: 2009/07/28 07:04:53 $
+ * @author Mitsuru Oshima
  */
 public class MethodDispatcher implements Serializable {
 
-	private static Class TYPE = null;
-	private Object target;
+    private static Class TYPE = null;
+    private Object target;
 
-	static {
-		try {
-			TYPE = Class.forName("com.ibm.aglet.Message");
-		} catch (Exception ex) {
-			System.out.println(ex);
-		} 
-	} 
-
-	transient Hashtable method_table = new Hashtable();
-
-	public MethodDispatcher(Object a) {
-		target = a;
-		makeTable();
+    static {
+	try {
+	    TYPE = Class.forName("com.ibm.aglet.Message");
+	} catch (Exception ex) {
+	    System.out.println(ex);
 	}
-	public boolean handleMessage(Message msg) {
-		Method m = (Method)method_table.get(msg.getKind());
+    }
 
-		if (m != null) {
-			try {
-				Object args[] = new Object[1];
+    transient Hashtable method_table = new Hashtable();
 
-				args[0] = msg;
-				m.invoke(target, args);
-			} catch (IllegalAccessException ex) {
+    public MethodDispatcher(Object a) {
+	this.target = a;
+	this.makeTable();
+    }
 
-				// should not happen
-				return false;
-			} catch (IllegalArgumentException ex) {
+    public boolean handleMessage(Message msg) {
+	Method m = (Method) this.method_table.get(msg.getKind());
 
-				// should not happen
-				return false;
-			} catch (InvocationTargetException ex) {
+	if (m != null) {
+	    try {
+		Object args[] = new Object[1];
 
-				// if the exception is thrown in the method
-				try {
-					if (ex.getTargetException() instanceof Exception) {
-						msg.sendException((Exception)ex.getTargetException());
-					} else {
+		args[0] = msg;
+		m.invoke(this.target, args);
+	    } catch (IllegalAccessException ex) {
 
-						// temporary
-						msg.sendException(ex);
-					} 
-
-					// shold not happen
-				} catch (IllegalAccessError exx) {
-
-					// if a reply has already been sent.
-				} 
-				return false;
-			} 
-			return true;
-		} 
+		// should not happen
 		return false;
-	}
-	void makeTable() {
-		method_table = new Hashtable();
-		Class clazz = target.getClass();
-		Method methods[] = clazz.getMethods();
+	    } catch (IllegalArgumentException ex) {
 
-		for (int i = 0; i < methods.length; i++) {
-			Method m = methods[i];
+		// should not happen
+		return false;
+	    } catch (InvocationTargetException ex) {
 
-			Class[] types = m.getParameterTypes();
+		// if the exception is thrown in the method
+		try {
+		    if (ex.getTargetException() instanceof Exception) {
+			msg.sendException((Exception) ex.getTargetException());
+		    } else {
 
-			// 
-			// select the method whose signature is like
-			// type method(Message msg);
-			// 
-			if (types.length == 1 && types[0] == TYPE 
-					&& Modifier.isPublic(m.getModifiers())) {
-				method_table.put(m.getName(), m);
-			} 
-		} 
+			// temporary
+			msg.sendException(ex);
+		    }
+
+		    // shold not happen
+		} catch (IllegalAccessError exx) {
+
+		    // if a reply has already been sent.
+		}
+		return false;
+	    }
+	    return true;
 	}
-	private void readObject(ObjectInputStream s) 
-			throws IOException, ClassNotFoundException {
-		target = (Aglet)s.readObject();
-		makeTable();
+	return false;
+    }
+
+    void makeTable() {
+	this.method_table = new Hashtable();
+	Class clazz = this.target.getClass();
+	Method methods[] = clazz.getMethods();
+
+	for (Method m : methods) {
+	    Class[] types = m.getParameterTypes();
+
+	    //
+	    // select the method whose signature is like
+	    // type method(Message msg);
+	    //
+	    if ((types.length == 1) && (types[0] == TYPE)
+		    && Modifier.isPublic(m.getModifiers())) {
+		this.method_table.put(m.getName(), m);
+	    }
 	}
-	private void writeObject(ObjectOutputStream s) throws IOException {
-		s.writeObject(target);
-	}
+    }
+
+    private void readObject(ObjectInputStream s) throws IOException,
+	    ClassNotFoundException {
+	this.target = s.readObject();
+	this.makeTable();
+    }
+
+    private void writeObject(ObjectOutputStream s) throws IOException {
+	s.writeObject(this.target);
+    }
 }

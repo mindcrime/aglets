@@ -1,0 +1,6 @@
+The Aglets Software Development Kit is currently maintaned by Luca Ferrari <cat4hire@users.sourceforge.net>.
+Developers of this release are:
+- Ranganath Prasannakumar 
+- Thomas Herlea
+
+and others.

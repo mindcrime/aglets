@@ -23,8 +23,8 @@ package com.ibm.maf;
 
 public final class ResumeFailed extends MAFException {
 
-	// constructor
-	public ResumeFailed() {
-		super();
-	}
+    // constructor
+    public ResumeFailed() {
+	super();
+    }
 }

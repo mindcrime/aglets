@@ -16,22 +16,25 @@ package com.ibm.aglets;
 
 /**
  * 
- * @version     1.10    96/10/01
- * @author	Mitsuru Oshima
+ * @version 1.10 96/10/01
+ * @author Mitsuru Oshima
  */
 public class ShuttingDownException extends com.ibm.aglet.AgletException {
 
-	/*
-	 * Constructs a ShuttingDownException.
-	 * @param s the detailed message
-	 */
-	public ShuttingDownException() {}
-	/*
-	 * Constructs a ShuttingDownException with the specified detailed
-	 * message.
-	 * @param s the detailed message
-	 */
-	public ShuttingDownException(String s) {
-		super(s);
-	}
+    /*
+     * Constructs a ShuttingDownException.
+     * 
+     * @param s the detailed message
+     */
+    public ShuttingDownException() {
+    }
+
+    /*
+     * Constructs a ShuttingDownException with the specified detailed message.
+     * 
+     * @param s the detailed message
+     */
+    public ShuttingDownException(String s) {
+	super(s);
+    }
 }

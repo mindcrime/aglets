@@ -28,22 +28,24 @@ import java.security.Permission;
 import com.ibm.aglets.security.PlainAgletPermission;
 
 /**
- * The <tt>AgletProtection</tt> class represents the protection of
- * system messages for aglet.
+ * The <tt>AgletProtection</tt> class represents the protection of system
+ * messages for aglet.
  * 
- * @version     1.00	$Date: 2009/07/28 07:04:53 $
- * @author	ONO Kouichi
+ * @version 1.00 $Date: 2009/07/28 07:04:53 $
+ * @author ONO Kouichi
  */
 
-public final class AgletProtection extends PlainAgletPermission 
-	implements Protection {
-	public AgletProtection(String name, String actions) {
-		super(name, actions);
+public final class AgletProtection extends PlainAgletPermission implements
+	Protection {
+    public AgletProtection(String name, String actions) {
+	super(name, actions);
+    }
+
+    @Override
+    public boolean implies(Permission p) {
+	if (!(p instanceof AgletProtection)) {
+	    return false;
 	}
-	public boolean implies(Permission p) {
-		if (!(p instanceof AgletProtection)) {
-			return false;
-		} 
-		return super.implies(p);
-	}
+	return super.implies(p);
+    }
 }

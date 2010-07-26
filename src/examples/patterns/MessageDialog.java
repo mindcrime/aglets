@@ -15,95 +15,105 @@ package examples.patterns;
  * will not be liable for any third party claims against you.
  */
 
-import java.awt.Button;
-import java.awt.Dialog;
-import java.awt.Event;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.Label;
-import java.awt.Panel;
 import java.awt.Component;
-import java.awt.Rectangle;
-import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Label;
 
 /**
  * The <tt>MessageDialog</tt> class is a common and generic dialog to display
  * the messages
  * 
- * @version     1.00    96/07/03
- * @author      M.Oshima
+ * @version 1.00 96/07/03
+ * @author M.Oshima
  */
 
 public class MessageDialog extends GeneralDialog {
 
-	/*
-	 * Message panel used in this dialog
-	 */
-	private MessagePanel message_panel = null;
+    /*
+     * Message panel used in this dialog
+     */
+    private MessagePanel message_panel = null;
 
-	/*
-	 * Constructs the remove Aglet window.
-	 * @param parent
-	 * @param title
-	 * @param message
-	 * @param alignment
-	 * @param object
-	 * @param modal
-	 */
-	public MessageDialog(Frame parent, Component callback_component, 
-						 String title, String message, int alignment, 
-						 Object object, boolean modal) {
+    /*
+     * Constructs the remove Aglet window.
+     * 
+     * @param parent
+     * 
+     * @param title
+     * 
+     * @param message
+     * 
+     * @param alignment
+     * 
+     * @param object
+     * 
+     * @param modal
+     */
+    public MessageDialog(Frame parent, Component callback_component,
+	    String title, String message, int alignment, Object object,
+	    boolean modal) {
 
-		super(parent, callback_component, title, object, modal);
+	super(parent, callback_component, title, object, modal);
 
-		message_panel = new MessagePanel(message, alignment, false);
-		layoutComponents();
-	}
-	/*
-	 * Constructs a message dialog window
-	 * @param parent
-	 * @param title
-	 * @param message
-	 */
-	public MessageDialog(Frame parent, String title, String message) {
-		this(parent, parent, title, message, Label.CENTER, null, true);
-	}
-	/*
-	 * Constructs a message dialog window
-	 * @param parent
-	 * @param title
-	 * @param message
-	 * @param object
-	 */
-	public MessageDialog(Frame parent, String title, String message, 
-						 Object object) {
-		this(parent, parent, title, message, Label.CENTER, object, true);
-	}
-	/*
-	 * Builds message dialog specific panel. Called when the doLayout
-	 * method in the superclass is invoked.
-	 */
-	protected void makePanel(GridBagLayout grid) {
-		GridBagConstraints cns = new GridBagConstraints();
+	this.message_panel = new MessagePanel(message, alignment, false);
+	this.layoutComponents();
+    }
 
-		cns.gridwidth = GridBagConstraints.REMAINDER;
-		cns.fill = GridBagConstraints.BOTH;
-		cns.weightx = 1.0;
-		cns.weighty = 1.0;
-		message_panel.doLayout();
-		message_panel.setSize(message_panel.getPreferredSize());
-		addCmp(message_panel, grid, cns);
-	}
-	/**
-	 * Sets the message
-	 */
-	public void setMessage(String msg) {
-		message_panel.setMessage(msg);
-		message_panel.doLayout();
-		doLayout();
-		setSize(getPreferredSize());
-	}
+    /*
+     * Constructs a message dialog window
+     * 
+     * @param parent
+     * 
+     * @param title
+     * 
+     * @param message
+     */
+    public MessageDialog(Frame parent, String title, String message) {
+	this(parent, parent, title, message, Label.CENTER, null, true);
+    }
+
+    /*
+     * Constructs a message dialog window
+     * 
+     * @param parent
+     * 
+     * @param title
+     * 
+     * @param message
+     * 
+     * @param object
+     */
+    public MessageDialog(Frame parent, String title, String message,
+	    Object object) {
+	this(parent, parent, title, message, Label.CENTER, object, true);
+    }
+
+    /*
+     * Builds message dialog specific panel. Called when the doLayout method in
+     * the superclass is invoked.
+     */
+    @Override
+    protected void makePanel(GridBagLayout grid) {
+	GridBagConstraints cns = new GridBagConstraints();
+
+	cns.gridwidth = GridBagConstraints.REMAINDER;
+	cns.fill = GridBagConstraints.BOTH;
+	cns.weightx = 1.0;
+	cns.weighty = 1.0;
+	this.message_panel.doLayout();
+	this.message_panel.setSize(this.message_panel.getPreferredSize());
+	this.addCmp(this.message_panel, grid, cns);
+    }
+
+    /**
+     * Sets the message
+     */
+    public void setMessage(String msg) {
+	this.message_panel.setMessage(msg);
+	this.message_panel.doLayout();
+	this.doLayout();
+	this.setSize(this.getPreferredSize());
+    }
 }

@@ -16,16 +16,21 @@ package com.ibm.aglets;
 
 import java.net.URL;
 import java.security.cert.Certificate;
+
 import com.ibm.maf.ClassName;
 
 // import com.ibm.awb.misc.DigestTable;
 
 public interface ResourceManagerFactory {
 
-	void clearCache();
-	void clearCache(URL codebase, Certificate owner);
-	ResourceManager createResourceManager(URL codebase, Certificate owner, 
-										  ClassName[] table);
-	ResourceManager getCurrentResourceManager();
-	URL lookupCodeBaseFor(String name);
+    void clearCache();
+
+    void clearCache(URL codebase, Certificate owner);
+
+    ResourceManager createResourceManager(URL codebase, Certificate owner,
+	    ClassName[] table);
+
+    ResourceManager getCurrentResourceManager();
+
+    URL lookupCodeBaseFor(String name);
 }

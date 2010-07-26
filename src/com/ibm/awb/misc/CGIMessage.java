@@ -16,7 +16,7 @@ package com.ibm.awb.misc;
 
 public class CGIMessage extends com.ibm.aglet.message.Message {
 
-	public CGIMessage(String k) {
-		super(k);
-	}
+    public CGIMessage(String k) {
+	super(k);
+    }
 }

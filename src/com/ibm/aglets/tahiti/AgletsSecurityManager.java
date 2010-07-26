@@ -14,72 +14,78 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-
-import com.ibm.aglet.system.AgletRuntime;
-import com.ibm.aglets.*;
-import java.security.ProtectionDomain;
 import java.security.Permission;
-import java.security.Identity;
 import java.security.SecureClassLoader;
 import java.security.cert.Certificate;
 
+import com.ibm.aglet.system.AgletRuntime;
+import com.ibm.aglets.ResourceManager;
+
 public class AgletsSecurityManager extends SecurityManager {
 
-	public void checkPermission(Permission p) {
-		if (AgletRuntime.getAgletRuntime().isSecure()) {
-			super.checkPermission(p);
-		} 
+    @Override
+    public void checkPermission(Permission p) {
+	if (AgletRuntime.getAgletRuntime().isSecure()) {
+	    super.checkPermission(p);
 	}
-	public boolean checkTopLevelWindow(Object window) {
-		boolean b = super.checkTopLevelWindow(window);
-		ResourceManager rm = ResourceManagerImpl.getResourceManagerContext();
+    }
 
-		if (rm != null) {
-			rm.addResource(window);
-		} else {
+    @Override
+    public boolean checkTopLevelWindow(Object window) {
+	ResourceManager rm = ResourceManagerImpl.getResourceManagerContext();
 
-			// System.out.println("Warning: ResourceManager not found");
-		} 
+	if (rm != null) {
+	    rm.addResource(window);
+	} else {
 
-		// return ProtectionDomain.isInAppDomain();
-		return true;	// ???(HT)
+	    // System.out.println("Warning: ResourceManager not found");
 	}
-	/**
-	 * Gets the certificate of the owner of the current thread.
-	 * @return Certificate of the owner of the current thread, null if it's unknown.
-	 */
-	public Certificate getCurrentCertificate() {
-		ClassLoader loader = getCurrentNonSecureClassLoader();
 
-		if (loader != null && loader instanceof AgletClassLoader) {
-			return ((AgletClassLoader)loader).getOwnerCertificate();
-		} 
-		return null;
+	// return ProtectionDomain.isInAppDomain();
+	return true; // ???(HT)
+    }
+
+    /**
+     * Gets the certificate of the owner of the current thread.
+     * 
+     * @return Certificate of the owner of the current thread, null if it's
+     *         unknown.
+     */
+    public Certificate getCurrentCertificate() {
+	ClassLoader loader = this.getCurrentNonSecureClassLoader();
+
+	if ((loader != null) && (loader instanceof AgletClassLoader)) {
+	    return ((AgletClassLoader) loader).getOwnerCertificate();
 	}
-	/**
-	 * Gets the current non secure class loader.
-	 * @return java.lang.ClassLoader
-	 */
-	public ClassLoader getCurrentNonSecureClassLoader() {
-		Class c[] = getClassContext();
+	return null;
+    }
 
-		for (int i = 1; i < c.length; i++) {
-			ClassLoader loader = c[i].getClassLoader();
+    /**
+     * Gets the current non secure class loader.
+     * 
+     * @return java.lang.ClassLoader
+     */
+    public ClassLoader getCurrentNonSecureClassLoader() {
+	Class c[] = this.getClassContext();
 
-			if (!(loader instanceof SecureClassLoader) && loader != null) {
-				return loader;
-			} 
-		} 
-		return null;
+	for (int i = 1; i < c.length; i++) {
+	    ClassLoader loader = c[i].getClassLoader();
+
+	    if (!(loader instanceof SecureClassLoader) && (loader != null)) {
+		return loader;
+	    }
 	}
-	public ThreadGroup getThreadGroup() {
-		ResourceManagerImpl rm = 
-			ResourceManagerImpl.getResourceManagerContext();
+	return null;
+    }
 
-		if (rm == null) {
-			return Thread.currentThread().getThreadGroup();
-		} else {
-			return rm.getThreadGroup();
-		} 
+    @Override
+    public ThreadGroup getThreadGroup() {
+	ResourceManagerImpl rm = ResourceManagerImpl.getResourceManagerContext();
+
+	if (rm == null) {
+	    return Thread.currentThread().getThreadGroup();
+	} else {
+	    return rm.getThreadGroup();
 	}
+    }
 }

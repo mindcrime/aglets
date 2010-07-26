@@ -16,144 +16,141 @@ package com.ibm.aglets.tahiti;
 
 import java.awt.Button;
 import java.awt.Color;
-import java.awt.Event;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Frame;
-import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Label;
 import java.awt.Panel;
 import java.awt.TextArea;
-import java.awt.Component;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowAdapter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * <tt> LogWindow </tt>
  * 
- * @version     1.10    97/03/21
- * @author      Danny B. Lange
- * @author	Mitsuru Oshima
+ * @version 1.10 97/03/21
+ * @author Danny B. Lange
+ * @author Mitsuru Oshima
  */
 
 final class LogWindow extends Frame implements ActionListener {
 
-	/*
-	 * The text area in which log messages are shown.
-	 */
-	private TextArea _logList = new TextArea();
+    /*
+     * The text area in which log messages are shown.
+     */
+    private TextArea _logList = new TextArea();
 
-	/*
-	 * Layouts all components
-	 */
-	GridBagLayout grid = new GridBagLayout();
+    /*
+     * Layouts all components
+     */
+    GridBagLayout grid = new GridBagLayout();
 
-	private int lastPos = 0;	// for the performance reason.
+    private int lastPos = 0; // for the performance reason.
 
-	// @see java.awt.TextArea#appendText
-	static final int MAX_LEN = 400 * 40;
+    // @see java.awt.TextArea#appendText
+    static final int MAX_LEN = 400 * 40;
 
-	/*
-	 * Constructs a log window.
-	 */
-	LogWindow() {
-		super("Log Information");
-		Util.setBackground(this);
-		Util.setFixedFont(_logList);
+    /*
+     * Constructs a log window.
+     */
+    LogWindow() {
+	super("Log Information");
+	Util.setBackground(this);
+	Util.setFixedFont(this._logList);
 
-		// setBackground( DefaultResource.getBackground() );
-		// _logList.setFont( DefaultResource.getFixedFont() );
-		_logList.setBackground(Color.white);
-		_logList.setEditable(false);
+	// setBackground( DefaultResource.getBackground() );
+	// _logList.setFont( DefaultResource.getFixedFont() );
+	this._logList.setBackground(Color.white);
+	this._logList.setEditable(false);
 
-		GridBagConstraints cns = new GridBagConstraints();
+	GridBagConstraints cns = new GridBagConstraints();
 
-		setLayout(grid);
+	this.setLayout(this.grid);
 
-		cns.weightx = 1.0;
-		cns.gridwidth = GridBagConstraints.REMAINDER;
-		cns.fill = GridBagConstraints.HORIZONTAL;
-		cns.insets = new Insets(5, 5, 5, 5);
+	cns.weightx = 1.0;
+	cns.gridwidth = GridBagConstraints.REMAINDER;
+	cns.fill = GridBagConstraints.HORIZONTAL;
+	cns.insets = new Insets(5, 5, 5, 5);
 
-		cns.weighty = 1.0;
-		cns.fill = GridBagConstraints.BOTH;
-		addCmp(_logList, cns);
+	cns.weighty = 1.0;
+	cns.fill = GridBagConstraints.BOTH;
+	this.addCmp(this._logList, cns);
 
-		cns.weighty = 0.0;
-		cns.fill = GridBagConstraints.HORIZONTAL;
-		addCmp(makeButtonPanel(), cns);
+	cns.weighty = 0.0;
+	cns.fill = GridBagConstraints.HORIZONTAL;
+	this.addCmp(this.makeButtonPanel(), cns);
 
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent ev) {
-				setVisible(false);
-			} 
-		});
+	this.addWindowListener(new WindowAdapter() {
+	    @Override
+	    public void windowClosing(WindowEvent ev) {
+		LogWindow.this.setVisible(false);
+	    }
+	});
+    }
+
+    public void actionPerformed(ActionEvent ev) {
+	String cmd = ev.getActionCommand();
+
+	if ("close".equals(cmd)) {
+	    this.setVisible(false);
+	} else if ("clear".equals(cmd)) {
+	    this.clearLog();
 	}
-	
-	public void actionPerformed(ActionEvent ev) {
-		String cmd = ev.getActionCommand();
+    }
 
-		if ("close".equals(cmd)) {
-			setVisible(false);
-		} else if ("clear".equals(cmd)) {
-			clearLog();
-		} 
+    private void addCmp(Component cmp, GridBagConstraints cns) {
+	this.grid.setConstraints(cmp, cns);
+	this.add(cmp);
+    }
+
+    public void appendText(String line) {
+	line = line + '\n';
+	this._logList.insert(line, this.lastPos);
+	this.lastPos += line.length();
+	if (this.lastPos > MAX_LEN) {
+	    int m = this.lastPos / 2;
+
+	    String str = this._logList.getText();
+
+	    for (int i = m; i < this.lastPos; i++) {
+		if (str.charAt(m) == '\n') {
+		    break;
+		}
+	    }
+	    this._logList.replaceRange("", 0, m);
+	    this.lastPos = this._logList.getText().length();
 	}
-	private void addCmp(Component cmp, GridBagConstraints cns) {
-		grid.setConstraints(cmp, cns);
-		add(cmp);
+    }
+
+    /*
+     * Clears logs shown in the console.
+     */
+    public void clearLog() {
+	synchronized (this._logList) {
+	    this.lastPos = 0;
+	    this._logList.setText("");
 	}
-	public void appendText(String line) {
-		line = line + '\n';
-		_logList.insert(line, lastPos);
-		lastPos += line.length();
-		if (lastPos > MAX_LEN) {
-			int m = lastPos / 2;
+    }
 
-			String str = _logList.getText();
+    private Panel makeButtonPanel() {
+	Panel buttonPanel = new Panel();
 
-			for (int i = m; i < lastPos; i++) {
-				if (str.charAt(m) == '\n') {
-					break;
-				} 
-			} 
-			_logList.replaceRange("", 0, m);
-			lastPos = _logList.getText().length();
-		} 
-	}
-	/*
-	 * Clears logs shown in the console.
-	 */
-	public void clearLog() {
-		synchronized (_logList) {
-			lastPos = 0;
-			_logList.setText("");
-		} 
-	}
-	/*
-	 * Closes log window
-	 */
-	private void closeLog() {
-		setVisible(false);
-	}
-	private Panel makeButtonPanel() {
-		Panel buttonPanel = new Panel();
+	buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+	Button c = new Button("Close");
 
-		Button c = new Button("Close");
+	c.setActionCommand("close");
+	c.addActionListener(this);
+	buttonPanel.add(c);
 
-		c.setActionCommand("close");
-		c.addActionListener(this);
-		buttonPanel.add(c);
-
-		c = new Button("Clear Log");
-		c.setActionCommand("clear");
-		c.addActionListener(this);
-		buttonPanel.add(c);
-		return buttonPanel;
-	}
+	c = new Button("Clear Log");
+	c.setActionCommand("clear");
+	c.addActionListener(this);
+	buttonPanel.add(c);
+	return buttonPanel;
+    }
 }

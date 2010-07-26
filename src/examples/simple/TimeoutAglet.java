@@ -15,28 +15,29 @@ package examples.simple;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
+import com.ibm.aglet.Aglet;
 
 /**
  * TimeoutAglet
  * 
- * After 60 seconds, this aglet will disappeare.
- * For the loadtesting of AgletServer.
+ * After 60 seconds, this aglet will disappeare. For the loadtesting of
+ * AgletServer.
  * 
- * @version     1.00
- * @author	Yoshiaki Mima
+ * @version 1.00
+ * @author Yoshiaki Mima
  */
 public class TimeoutAglet extends Aglet {
 
-	public void run() {
-		try {
-			for (int i = 60; i > 0; i--) {
-				Thread.sleep(1000);		// 1 second
-				setText(i + " more seconds.");
-			} 
-			dispose();
-		} catch (Exception e) {
-			System.out.println(e);
-		} 
+    @Override
+    public void run() {
+	try {
+	    for (int i = 60; i > 0; i--) {
+		Thread.sleep(1000); // 1 second
+		this.setText(i + " more seconds.");
+	    }
+	    this.dispose();
+	} catch (Exception e) {
+	    System.out.println(e);
 	}
+    }
 }

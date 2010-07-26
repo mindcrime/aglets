@@ -24,21 +24,24 @@ package com.ibm.aglet.event;
  */
 
 /**
- * The adapter which receives persistency events. This class is provided
- * as convenience for easily creating listerns by extending this class
- * and overriding only the methods of interest.
+ * The adapter which receives persistency events. This class is provided as
+ * convenience for easily creating listerns by extending this class and
+ * overriding only the methods of interest.
  * 
- * @version     1.00    $Date: 2009/07/28 07:04:53 $
- * @author      Misturu Oshima
+ * @version 1.00 $Date: 2009/07/28 07:04:53 $
+ * @author Misturu Oshima
  */
 public class PersistencyAdapter implements PersistencyListener {
 
-	/**
-	 * Invoked just after the aglet was activated.
-	 */
-	public void onActivation(PersistencyEvent event) {}
-	/**
-	 * Invoked when an aglet is attempted to deactivate.
-	 */
-	public void onDeactivating(PersistencyEvent event) {}
+    /**
+     * Invoked just after the aglet was activated.
+     */
+    public void onActivation(PersistencyEvent event) {
+    }
+
+    /**
+     * Invoked when an aglet is attempted to deactivate.
+     */
+    public void onDeactivating(PersistencyEvent event) {
+    }
 }

@@ -1,19 +1,19 @@
 package examples.logger;
 
-import org.aglets.log.*;
+import org.aglets.log.AgletsLogger;
 
 import com.ibm.aglet.Aglet;
 
-
 public class LoggingAgent extends Aglet {
 
-    public void run(){
+    @Override
+    public void run() {
 	System.out.println("Hi, I'm a loggin aglet...");
 	System.out.println("Let me get a logger ");
 	AgletsLogger myLogger = this.getLogger(true);
-	
+
 	System.out.println("Ok, my logger is (reinitiliazed): " + myLogger);
-	if( myLogger != null ){
+	if (myLogger != null) {
 	    myLogger.info("Here's an info message");
 	    myLogger.warn("Here's a warn message");
 	    myLogger.error("Here's an error message");

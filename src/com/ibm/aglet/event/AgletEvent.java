@@ -23,31 +23,31 @@ package com.ibm.aglet.event;
  * IBM WILL NOT BE LIABLE FOR ANY THIRD PARTY CLAIMS AGAINST YOU.
  */
 
-import com.ibm.aglet.AgletProxy;
 
 /**
  * The top level event of all aglet events.
  * 
- * @version     1.70    $Date: 2009/07/28 07:04:53 $
- * @author	Mitsuru Oshima
+ * @version 1.70 $Date: 2009/07/28 07:04:53 $
+ * @author Mitsuru Oshima
  */
 abstract public class AgletEvent extends java.util.EventObject {
-	/**
-	 * Event id
-	 */
-	protected int id;
+    /**
+     * Event id
+     */
+    protected int id;
 
-	/**
-	 * Constructs an AgletEvent with source and id.
-	 */
-	public AgletEvent(Object source, int id) {
-		super(source);
-		this.id = id;
-	}
-	/**
-	 * Gets the id of this event
-	 */
-	public int getID() {
-		return id;
-	}
+    /**
+     * Constructs an AgletEvent with source and id.
+     */
+    public AgletEvent(Object source, int id) {
+	super(source);
+	this.id = id;
+    }
+
+    /**
+     * Gets the id of this event
+     */
+    public int getID() {
+	return this.id;
+    }
 }

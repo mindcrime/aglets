@@ -14,21 +14,27 @@ package com.ibm.maf.atp;
  * deposited with the U.S. Copyright Office.
  */
 
-import java.io.OutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 interface AtpResponse {
 
-	public OutputStream getOutputStream() throws IOException;
-	public int getStatusCode();
-	public void sendError(int i) throws IOException;
-	public void sendResponse() throws IOException;
-	public void setContentType(String string);
-	// public void setContentLanguage(String lang);
-	// public void setContentEncoding(String lang);
-	// public void setAgentName(Name name);
-	// public void setAgentProfile(AgentProfile profile);
+    public OutputStream getOutputStream() throws IOException;
 
-	public void setStatusCode(int i);
-	public void setStatusCode(int i, String msg);
+    public int getStatusCode();
+
+    public void sendError(int i) throws IOException;
+
+    public void sendResponse() throws IOException;
+
+    public void setContentType(String string);
+
+    // public void setContentLanguage(String lang);
+    // public void setContentEncoding(String lang);
+    // public void setAgentName(Name name);
+    // public void setAgentProfile(AgentProfile profile);
+
+    public void setStatusCode(int i);
+
+    public void setStatusCode(int i, String msg);
 }

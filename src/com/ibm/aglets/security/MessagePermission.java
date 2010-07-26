@@ -18,15 +18,17 @@ import java.security.Permission;
 
 public class MessagePermission extends PlainMessagePermission {
 
-	// should be implemented?
-	// ==== public PermissionCollection newPermissionCollection();
-	public MessagePermission(String name, String actions) {
-		super(name, actions);
+    // should be implemented?
+    // ==== public PermissionCollection newPermissionCollection();
+    public MessagePermission(String name, String actions) {
+	super(name, actions);
+    }
+
+    @Override
+    public boolean implies(Permission p) {
+	if (!(p instanceof MessagePermission)) {
+	    return false;
 	}
-	public boolean implies(Permission p) {
-		if (!(p instanceof MessagePermission)) {
-			return false;
-		} 
-		return super.implies(p);
-	}
+	return super.implies(p);
+    }
 }

@@ -15,66 +15,68 @@ package examples.simplemasterslave;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
-import com.ibm.aglet.event.*;
-import com.ibm.aglet.message.Message;
-import com.ibm.aglet.util.*;
-import com.ibm.agletx.patterns.*;
+import java.net.URL;
+import java.util.Vector;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.net.*;
-import java.io.*;
-import java.util.*;
+import com.ibm.aglet.Aglet;
+import com.ibm.aglet.message.Message;
+import com.ibm.agletx.patterns.Slave;
 
 public class SimpleMaster extends Aglet {
-	Vector urllist = null;
-	String SlaveClassName = "examples.simplemasterslave.SimpleSlave";
+    Vector urllist = null;
+    String SlaveClassName = "examples.simplemasterslave.SimpleSlave";
 
-	private void addURL(URL url) {
-		urllist.addElement(url);
-	}
-	private void createGUI() {
-		CommandWindow cm = new CommandWindow(getProxy());
+    private void addURL(URL url) {
+	this.urllist.addElement(url);
+    }
 
-		cm.pack();
-		cm.setSize(cm.getPreferredSize());
-		cm.setVisible(true);
-	}
-	private void createSlave() {
-		try {
-			Slave.create(getCodeBase(), SlaveClassName, getAgletContext(), 
-						 this, getURLList(), new String());
+    private void createGUI() {
+	CommandWindow cm = new CommandWindow(this.getProxy());
 
-		} catch (Exception e) {
-			System.out.println("Error:" + e.getMessage());
-		} 
+	cm.pack();
+	cm.setSize(cm.getPreferredSize());
+	cm.setVisible(true);
+    }
+
+    private void createSlave() {
+	try {
+	    Slave.create(this.getCodeBase(), this.SlaveClassName, this.getAgletContext(), this, this.getURLList(), new String());
+
+	} catch (Exception e) {
+	    System.out.println("Error:" + e.getMessage());
 	}
-	private Vector getURLList() {
-		return urllist;
+    }
+
+    private Vector getURLList() {
+	return this.urllist;
+    }
+
+    @Override
+    public boolean handleMessage(Message msg) {
+	if (msg.sameKind("go")) {
+	    this.createSlave();
+	    return true;
+	} else if (msg.sameKind("add")) {
+	    this.addURL((URL) msg.getArg());
+	    return true;
+	} else if (msg.sameKind("remove")) {
+	    this.removeURL(((Integer) msg.getArg()).intValue());
+	    return true;
+	} else if (msg.sameKind("getlist")) {
+	    msg.sendReply(this.getURLList());
+	    return true;
+	} else {
+	    return false;
 	}
-	public boolean handleMessage(Message msg) {
-		if (msg.sameKind("go")) {
-			createSlave();
-			return true;
-		} else if (msg.sameKind("add")) {
-			addURL((URL)msg.getArg());
-			return true;
-		} else if (msg.sameKind("remove")) {
-			removeURL(((Integer)msg.getArg()).intValue());
-			return true;
-		} else if (msg.sameKind("getlist")) {
-			msg.sendReply(getURLList());
-			return true;
-		} else {
-			return false;
-		}
-	}
-	public void onCreation(Object o) {
-		urllist = new Vector();
-		createGUI();
-	}
-	private void removeURL(int i) {
-		urllist.removeElementAt(i);
-	}
+    }
+
+    @Override
+    public void onCreation(Object o) {
+	this.urllist = new Vector();
+	this.createGUI();
+    }
+
+    private void removeURL(int i) {
+	this.urllist.removeElementAt(i);
+    }
 }

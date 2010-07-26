@@ -14,11 +14,12 @@ package com.ibm.aglets;
  * deposited with the U.S. Copyright Office.
  */
 
-import java.io.OutputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public interface PersistentEntry {
-	InputStream getInputStream() throws IOException;
-	OutputStream getOutputStream() throws IOException;
+    InputStream getInputStream() throws IOException;
+
+    OutputStream getOutputStream() throws IOException;
 }

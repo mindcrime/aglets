@@ -14,104 +14,109 @@ package com.ibm.awb.launcher;
  * deposited with the U.S. Copyright Office.
  */
 
-import java.io.*;
-import java.util.*;
 import java.awt.Frame;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 import com.ibm.awb.misc.FileUtils;
 
 public class Agletsd extends Thread {
-	static final String SCRIPT_NAME = "agletsrv.ini";
-	static String FS;
-	static String PS;
-	static String ROOT;
-	static String HOME;
-	static String JAVA_HOME;
-	private InputStream in;
+    static final String SCRIPT_NAME = "agletsrv.ini";
+    static String FS;
+    static String PS;
+    static String ROOT;
+    static String HOME;
+    static String JAVA_HOME;
+    private InputStream in;
 
-	public static Frame console = null;
+    public static Frame console = null;
 
-	protected Agletsd(InputStream is) {
-		in = is;
+    protected Agletsd(InputStream is) {
+	this.in = is;
+    }
+
+    public static void main(String[] args) throws IOException {
+
+	// Get system properties
+	Properties system_props = System.getProperties();
+
+	FS = system_props.getProperty("file.separator");
+	PS = system_props.getProperty("path.separator");
+	ROOT = system_props.getProperty("install.root");
+	HOME = FileUtils.getUserHome();
+	JAVA_HOME = system_props.getProperty("java.home");
+
+	boolean win32 = false;
+	File f = new File(ROOT + FS + SCRIPT_NAME);
+
+	if (f.exists()) {
+	    win32 = true;
 	}
-	public static void main(String[] args) throws IOException {
 
-		// Get system properties
-		Properties system_props = System.getProperties();
+	String aglets_home = ROOT;
+	String aglets_class_path = aglets_home + FS + "public";
+	String aglets_export_path = aglets_home + FS + "public";
+	String program_name = "agletsd";
 
-		FS = system_props.getProperty("file.separator");
-		PS = system_props.getProperty("path.separator");
-		ROOT = system_props.getProperty("install.root");
-		HOME = FileUtils.getUserHome();
-		JAVA_HOME = system_props.getProperty("java.home");
+	// set properties if necessary
+	// if (system_props.get("aglets.home") == null) {
+	system_props.put("aglets.home", aglets_home);
 
-		boolean win32 = false;
-		File f = new File(ROOT + FS + SCRIPT_NAME);
+	// }
+	// if (system_props.get("aglets.export.path") == null) {
+	system_props.put("aglets.export.path", aglets_export_path);
 
-		if (f.exists()) {
-			win32 = true;
-		} 
+	// }
+	// if (system_props.get("aglets.class.path") == null) {
+	system_props.put("aglets.class.path", aglets_class_path);
 
-		String aglets_home = ROOT;
-		String aglets_class_path = aglets_home + FS + "public";
-		String aglets_export_path = aglets_home + FS + "public";
-		String program_name = "agletsd";
+	// }
+	system_props.put("program-name", program_name);
 
-		// set properties if necessary
-		// if (system_props.get("aglets.home") == null) {
-		system_props.put("aglets.home", aglets_home);
+	File policy_file = new File(HOME + FS + ".aglets" + FS + "security"
+		+ FS + "aglets.policy");
 
-		// }
-		// if (system_props.get("aglets.export.path") == null) {
-		system_props.put("aglets.export.path", aglets_export_path);
+	// if (policy_file.exists() && policy_file.canRead()) {
+	system_props.put("java.policy", policy_file.getAbsolutePath());
 
-		// }
-		// if (system_props.get("aglets.class.path") == null) {
-		system_props.put("aglets.class.path", aglets_class_path);
+	// }
 
-		// }
-		system_props.put("program-name", program_name);
+	boolean openconsole = win32;
 
-		File policy_file = new File(HOME + FS + ".aglets" + FS + "security" 
-									+ FS + "aglets.policy");
-
-		// if (policy_file.exists() && policy_file.canRead()) {
-		system_props.put("java.policy", policy_file.getAbsolutePath());
-
-		// }
-
-		boolean openconsole = win32;
-
-		for (int i = 0; i < args.length; i++) {
-			if ("-noconsole".equalsIgnoreCase(args[i]) 
-					|| "-nogui".equalsIgnoreCase(args[i]) 
-					|| "-daemon".equalsIgnoreCase(args[i]) 
-					|| "-commandline".equalsIgnoreCase(args[i])) {
-				openconsole = false;
-			} 
-		} 
-
-		if (openconsole == true) {
-			console = new Console();
-			console.pack();
-			console.show();
-		} 
-
-		try {
-			com.ibm.aglets.tahiti.Main.main(args);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} 
+	for (String arg : args) {
+	    if ("-noconsole".equalsIgnoreCase(arg)
+		    || "-nogui".equalsIgnoreCase(arg)
+		    || "-daemon".equalsIgnoreCase(arg)
+		    || "-commandline".equalsIgnoreCase(arg)) {
+		openconsole = false;
+	    }
 	}
-	public void run() {
-		int c;
 
-		try {
-			while ((c = in.read()) >= 0) {
-				System.out.write(c);
-			}
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		} 
+	if (openconsole == true) {
+	    console = new Console();
+	    console.pack();
+	    console.show();
 	}
+
+	try {
+	    com.ibm.aglets.tahiti.Main.main(args);
+	} catch (Exception ex) {
+	    ex.printStackTrace();
+	}
+    }
+
+    @Override
+    public void run() {
+	int c;
+
+	try {
+	    while ((c = this.in.read()) >= 0) {
+		System.out.write(c);
+	    }
+	} catch (IOException ex) {
+	    ex.printStackTrace();
+	}
+    }
 }

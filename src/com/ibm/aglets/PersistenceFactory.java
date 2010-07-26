@@ -16,5 +16,5 @@ package com.ibm.aglets;
 
 public interface PersistenceFactory {
 
-	Persistence createPersistenceFor(com.ibm.aglet.AgletContext cxt);
+    Persistence createPersistenceFor(com.ibm.aglet.AgletContext cxt);
 }

@@ -24,51 +24,74 @@ package com.ibm.aglet.system;
  */
 
 /**
- * The adapter which receives aglet context events. This class is provided
- * as convenience for easily creating listerns by extending this class
- * and overriding only the methods of interest.
+ * The adapter which receives aglet context events. This class is provided as
+ * convenience for easily creating listerns by extending this class and
+ * overriding only the methods of interest.
  * 
- * @version     1.00    $Date: 2009/07/28 07:04:54 $
- * @author      Misturu Oshima
+ * @version 1.00 $Date: 2009/07/28 07:04:54 $
+ * @author Misturu Oshima
  */
 public class ContextAdapter implements ContextListener {
-	public void agletActivated(ContextEvent ev) {
-		agletAdded(ev);
-	}
-	/**
+    public void agletActivated(ContextEvent ev) {
+	this.agletAdded(ev);
+    }
+
+    /**
 	 */
-	public void agletAdded(ContextEvent ev) {}
-	public void agletArrived(ContextEvent ev) {
-		agletAdded(ev);
-	}
-	public void agletCloned(ContextEvent ev) {
-		agletAdded(ev);
-	}
-	public void agletCreated(ContextEvent ev) {
-		agletAdded(ev);
-	}
-	public void agletDeactivated(ContextEvent ev) {
-		agletRemoved(ev);
-	}
-	public void agletDispatched(ContextEvent ev) {
-		agletRemoved(ev);
-	}
-	public void agletDisposed(ContextEvent ev) {
-		agletRemoved(ev);
-	}
-	public void agletRemoved(ContextEvent ev) {}
-	public void agletResumed(ContextEvent ev) {
-		agletAdded(ev);
-	}
-	public void agletReverted(ContextEvent ev) {
-		agletRemoved(ev);
-	}
-	public void agletStateChanged(ContextEvent ev) {}
-	public void agletSuspended(ContextEvent ev) {
-		agletRemoved(ev);
-	}
-	public void contextShutdown(ContextEvent ev) {}
-	public void contextStarted(ContextEvent ev) {}
-	public void showDocument(ContextEvent ev) {}
-	public void showMessage(ContextEvent ev) {}
+    public void agletAdded(ContextEvent ev) {
+    }
+
+    public void agletArrived(ContextEvent ev) {
+	this.agletAdded(ev);
+    }
+
+    public void agletCloned(ContextEvent ev) {
+	this.agletAdded(ev);
+    }
+
+    public void agletCreated(ContextEvent ev) {
+	this.agletAdded(ev);
+    }
+
+    public void agletDeactivated(ContextEvent ev) {
+	this.agletRemoved(ev);
+    }
+
+    public void agletDispatched(ContextEvent ev) {
+	this.agletRemoved(ev);
+    }
+
+    public void agletDisposed(ContextEvent ev) {
+	this.agletRemoved(ev);
+    }
+
+    public void agletRemoved(ContextEvent ev) {
+    }
+
+    public void agletResumed(ContextEvent ev) {
+	this.agletAdded(ev);
+    }
+
+    public void agletReverted(ContextEvent ev) {
+	this.agletRemoved(ev);
+    }
+
+    public void agletStateChanged(ContextEvent ev) {
+    }
+
+    public void agletSuspended(ContextEvent ev) {
+	this.agletRemoved(ev);
+    }
+
+    public void contextShutdown(ContextEvent ev) {
+    }
+
+    public void contextStarted(ContextEvent ev) {
+    }
+
+    public void showDocument(ContextEvent ev) {
+    }
+
+    public void showMessage(ContextEvent ev) {
+    }
 }

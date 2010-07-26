@@ -22,29 +22,31 @@ package com.ibm.maf;
  */
 
 public final class AgentStatus implements java.io.Serializable {
-	public static final int _Running = 0, _Suspended = 1, _Terminated = 2;
-	public static final AgentStatus Running = new AgentStatus(_Running);
-	public static final AgentStatus Suspended = new AgentStatus(_Suspended);
-	public static final AgentStatus Terminated = new AgentStatus(_Terminated);
-	private int _value;
+    public static final int _Running = 0, _Suspended = 1, _Terminated = 2;
+    public static final AgentStatus Running = new AgentStatus(_Running);
+    public static final AgentStatus Suspended = new AgentStatus(_Suspended);
+    public static final AgentStatus Terminated = new AgentStatus(_Terminated);
+    private int _value;
 
-	private AgentStatus(int _value) {
-		this._value = _value;
+    private AgentStatus(int _value) {
+	this._value = _value;
+    }
+
+    public static final AgentStatus from_int(int i)
+	    throws IllegalArgumentException {
+	switch (i) {
+	case _Running:
+	    return Running;
+	case _Suspended:
+	    return Suspended;
+	case _Terminated:
+	    return Terminated;
+	default:
+	    throw new IllegalArgumentException();
 	}
-	public static final AgentStatus from_int(int i) 
-			throws IllegalArgumentException {
-		switch (i) {
-		case _Running:
-			return Running;
-		case _Suspended:
-			return Suspended;
-		case _Terminated:
-			return Terminated;
-		default:
-			throw new IllegalArgumentException();
-		}
-	}
-	public int value() {
-		return _value;
-	}
+    }
+
+    public int value() {
+	return this._value;
+    }
 }

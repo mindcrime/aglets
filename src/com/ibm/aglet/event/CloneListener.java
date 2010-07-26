@@ -26,24 +26,25 @@ package com.ibm.aglet.event;
 /**
  * The listener interface for receiving clone events on an aglet.
  * 
- * @version     1.00    $Date: 2009/07/28 07:04:53 $
- * @author      Mitsuru Oshima
+ * @version 1.00 $Date: 2009/07/28 07:04:53 $
+ * @author Mitsuru Oshima
  */
-public interface CloneListener extends java.util.EventListener, 
-									   java.io.Serializable {
+public interface CloneListener extends java.util.EventListener,
+	java.io.Serializable {
 
-	/**
-	 * Invoked after an aglet was cloned. This is delivered to the
-	 * cloned aglet.
-	 */
-	public void onClone(CloneEvent event);
-	/**
-	 * Invoked after an aglet was cloned. This is delivered to the
-	 * original aglet.
-	 */
-	public void onCloned(CloneEvent event);
-	/**
-	 * Invoked when an aglet is attempted to clone
-	 */
-	public void onCloning(CloneEvent event);
+    /**
+     * Invoked after an aglet was cloned. This is delivered to the cloned aglet.
+     */
+    public void onClone(CloneEvent event);
+
+    /**
+     * Invoked after an aglet was cloned. This is delivered to the original
+     * aglet.
+     */
+    public void onCloned(CloneEvent event);
+
+    /**
+     * Invoked when an aglet is attempted to clone
+     */
+    public void onCloning(CloneEvent event);
 }

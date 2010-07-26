@@ -6,26 +6,30 @@ package com.ibm.aglets.thread;
 import junit.framework.TestCase;
 
 import com.ibm.aglet.message.Message;
-import com.ibm.aglets.*;
+import com.ibm.aglets.MessageImpl;
+import com.ibm.aglets.MessageManagerImpl;
 
 /**
  * A test for the aglet thread classes.
+ * 
  * @author Luca Ferrari - cat4hire@users.sourceforge.net
- *
- * 24/ago/07
+ * 
+ *         24/ago/07
  */
 public class TestAgletThread extends TestCase {
-    
+
     AgletThread thread = null;
     MessageImpl message = null;
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
 	super.setUp();
 	this.thread = new AgletThread(new ThreadGroup("TestGroup"));
-	this.message = new MessageImpl(new Message(),null,Message.ONEWAY, System.currentTimeMillis());
+	this.message = new MessageImpl(new Message(), null, Message.ONEWAY, System.currentTimeMillis());
     }
 
     /**
@@ -36,7 +40,9 @@ public class TestAgletThread extends TestCase {
     }
 
     /**
-     * Test method for {@link com.ibm.aglets.thread.AgletThread#AgletThread(java.lang.ThreadGroup)}.
+     * Test method for
+     * {@link com.ibm.aglets.thread.AgletThread#AgletThread(java.lang.ThreadGroup)}
+     * .
      */
     public void testAgletThreadThreadGroup() {
 	ThreadGroup tg = new ThreadGroup("Test_Thread_Group");
@@ -45,36 +51,41 @@ public class TestAgletThread extends TestCase {
     }
 
     /**
-     * Test method for {@link com.ibm.aglets.thread.AgletThread#AgletThread(java.lang.ThreadGroup, com.ibm.aglet.message.MessageManager)}.
+     * Test method for
+     * {@link com.ibm.aglets.thread.AgletThread#AgletThread(java.lang.ThreadGroup, com.ibm.aglet.message.MessageManager)}
+     * .
      */
     public void testAgletThreadThreadGroupMessageManager() {
 	ThreadGroup tg = new ThreadGroup("Test_Thread_Group");
 	MessageManagerImpl mm = new MessageManagerImpl(null);
-	AgletThread t1 = new AgletThread(tg,mm);
+	AgletThread t1 = new AgletThread(tg, mm);
 	assertEquals(tg, t1.getThreadGroup());
 	assertEquals(mm, t1.getMessageManager());
 
     }
 
     /**
-     * Test method for {@link com.ibm.aglets.thread.AgletThread#getCurrentMessage()}.
+     * Test method for
+     * {@link com.ibm.aglets.thread.AgletThread#getCurrentMessage()}.
      */
     public void testGetCurrentMessage() {
-	this.thread.handleMessage(message);
-	assertEquals(message, this.thread.getCurrentMessage());
-	
+	this.thread.handleMessage(this.message);
+	assertEquals(this.message, AgletThread.getCurrentMessage());
+
     }
 
     /**
-     * Test method for {@link com.ibm.aglets.thread.AgletThread#handleMessage(com.ibm.aglets.MessageImpl)}.
+     * Test method for
+     * {@link com.ibm.aglets.thread.AgletThread#handleMessage(com.ibm.aglets.MessageImpl)}
+     * .
      */
     public void testHandleMessage() {
 	fail("Not yet implemented");
     }
 
-
     /**
-     * Test method for {@link com.ibm.aglets.thread.AgletThread#setReentrant(boolean)}.
+     * Test method for
+     * {@link com.ibm.aglets.thread.AgletThread#setReentrant(boolean)}.
      */
     public void testSetReentrant() {
 	this.thread.setReentrant(true);

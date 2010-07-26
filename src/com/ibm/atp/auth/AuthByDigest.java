@@ -14,135 +14,172 @@ package com.ibm.atp.auth;
  * deposited with the U.S. Copyright Office.
  */
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * The <tt>AuthByDigest</tt> class is the class for challenge-response
  * authentication by message digest.
  * 
- * @version     1.00    $Date: 2009/07/28 07:04:53 $
- * @author      ONO Kouichi
+ * @version 1.00 $Date: 2009/07/28 07:04:53 $
+ * @author ONO Kouichi
  */
 public class AuthByDigest extends Auth {
-	/**
-	 * The secret shared by each other
-	 */
-	private SharedSecret _secret = null;
+    /**
+     * The secret shared by each other
+     */
+    private SharedSecret _secret = null;
 
-	/**
-	 * Default constructor creates a default message digest function.
-	 */
-	protected AuthByDigest() {
-		super();
-	}
-	/**
-	 * Constructor creates a specified message digest function.
-	 * @param secret secret shared by each other
-	 */
-	public AuthByDigest(SharedSecret secret) {
-		this();
-		setSecret(secret);
-	}
-	/**
-	 * Constructor creates a specified message digest function.
-	 * @param name the name of message digest function algorithm
-	 */
-	protected AuthByDigest(String name) {
-		super(name);
-	}
-	/**
-	 * Constructor creates a specified message digest function.
-	 * @param name the name of message digest function algorithm
-	 * @param secret secret shared by each other
-	 */
-	public AuthByDigest(String name, SharedSecret secret) {
-		this(name);
-		setSecret(secret);
-	}
-	/**
-	 * Calculate response value for authentication.
-	 * @param turn of individual
-	 * @param challenge a challenge
-	 * @return response value for authentication
-	 * @exception AuthenticationException byte sequence to be hased is invalid
-	 */
-	public final byte[] calculateResponse(int turn, Challenge challenge) 
-			throws AuthenticationException {
-		return hash(turn, challenge);
-	}
-	/**
-	 * Gets the secret shared by each other.
-	 * @return secret shared by each other
-	 */
-	public SharedSecret getSecret() {
-		return _secret;
-	}
-	/**
-	 * Calculate hashed value for authentication.
-	 * @param turn of individual
-	 * @param challenge a challenge
-	 * @return hashed value for authentication
-	 * @exception AuthenticationException byte sequence to be hased is invalid
-	 */
-	protected final byte[] hash(int turn, Challenge challenge) 
-			throws AuthenticationException {
-		resetDigest();
+    /**
+     * Default constructor creates a default message digest function.
+     */
+    protected AuthByDigest() {
+	super();
+    }
 
-		if (challenge == null) {
-			throw new AuthenticationException("Challenge is null.");
-		} 
-		addBytes(challenge.challenge());
+    /**
+     * Constructor creates a specified message digest function.
+     * 
+     * @param secret
+     *            secret shared by each other
+     */
+    public AuthByDigest(SharedSecret secret) {
+	this();
+	this.setSecret(secret);
+    }
 
-		final String turnPad = getTurnPad(turn);
+    /**
+     * Constructor creates a specified message digest function.
+     * 
+     * @param name
+     *            the name of message digest function algorithm
+     */
+    protected AuthByDigest(String name) {
+	super(name);
+    }
 
-		if (turnPad == null || turnPad.equals("")) {
-			throw new AuthenticationException("TurnPad is null.");
-		} 
-		addBytes(turnPad.getBytes());
+    /**
+     * Constructor creates a specified message digest function.
+     * 
+     * @param name
+     *            the name of message digest function algorithm
+     * @param secret
+     *            secret shared by each other
+     */
+    public AuthByDigest(String name, SharedSecret secret) {
+	this(name);
+	this.setSecret(secret);
+    }
 
-		SharedSecret secret = getSecret();
+    /**
+     * Calculate response value for authentication.
+     * 
+     * @param turn
+     *            of individual
+     * @param challenge
+     *            a challenge
+     * @return response value for authentication
+     * @exception AuthenticationException
+     *                byte sequence to be hased is invalid
+     */
+    @Override
+    public final byte[] calculateResponse(int turn, Challenge challenge)
+	    throws AuthenticationException {
+	return this.hash(turn, challenge);
+    }
 
-		if (secret == null) {
-			throw new AuthenticationException("Shared secret is null.");
-		} 
-		addBytes(secret.secret());
+    /**
+     * Gets the secret shared by each other.
+     * 
+     * @return secret shared by each other
+     */
+    public SharedSecret getSecret() {
+	return this._secret;
+    }
 
-		return getDigestValue();
+    /**
+     * Calculate hashed value for authentication.
+     * 
+     * @param turn
+     *            of individual
+     * @param challenge
+     *            a challenge
+     * @return hashed value for authentication
+     * @exception AuthenticationException
+     *                byte sequence to be hased is invalid
+     */
+    @Override
+    protected final byte[] hash(int turn, Challenge challenge)
+	    throws AuthenticationException {
+	this.resetDigest();
+
+	if (challenge == null) {
+	    throw new AuthenticationException("Challenge is null.");
 	}
-	/**
-	 * Sets the secret shared by each other.
-	 * @param secret secret shared by each other
-	 */
-	protected void setSecret(SharedSecret secret) {
-		_secret = secret;
-	}
-	/**
-	 * Verify response value for authentication.
-	 * @param turn of individual
-	 * @param challenge a challenge
-	 * @param response response value for authentication
-	 * @exception AuthenticationException byte sequence for response is invalid
-	 */
-	public boolean verify(int turn, Challenge challenge, 
-						  byte[] response) throws AuthenticationException {
-		ByteSequence seq = new ByteSequence(calculateResponse(turn, 
-				challenge));
+	this.addBytes(challenge.challenge());
 
-		return seq.equals(response);
-	}
-	/**
-	 * Verify response value for authentication.
-	 * @param turn of individual
-	 * @param challenge a challenge
-	 * @param response response value for authentication
-	 * @exception AuthenticationException byte sequence for response is invalid
-	 */
-	public boolean verify(int turn, Challenge challenge, ByteSequence response) 
-			throws AuthenticationException {
-		ByteSequence seq = new ByteSequence(calculateResponse(turn, 
-				challenge));
+	final String turnPad = this.getTurnPad(turn);
 
-		return seq.equals(response);
+	if ((turnPad == null) || turnPad.equals("")) {
+	    throw new AuthenticationException("TurnPad is null.");
 	}
+	this.addBytes(turnPad.getBytes());
+
+	SharedSecret secret = this.getSecret();
+
+	if (secret == null) {
+	    throw new AuthenticationException("Shared secret is null.");
+	}
+	this.addBytes(secret.secret());
+
+	return this.getDigestValue();
+    }
+
+    /**
+     * Sets the secret shared by each other.
+     * 
+     * @param secret
+     *            secret shared by each other
+     */
+    protected void setSecret(SharedSecret secret) {
+	this._secret = secret;
+    }
+
+    /**
+     * Verify response value for authentication.
+     * 
+     * @param turn
+     *            of individual
+     * @param challenge
+     *            a challenge
+     * @param response
+     *            response value for authentication
+     * @exception AuthenticationException
+     *                byte sequence for response is invalid
+     */
+    @Override
+    public boolean verify(int turn, Challenge challenge, byte[] response)
+	    throws AuthenticationException {
+	ByteSequence seq = new ByteSequence(this.calculateResponse(turn, challenge));
+
+	return seq.equals(response);
+    }
+
+    /**
+     * Verify response value for authentication.
+     * 
+     * @param turn
+     *            of individual
+     * @param challenge
+     *            a challenge
+     * @param response
+     *            response value for authentication
+     * @exception AuthenticationException
+     *                byte sequence for response is invalid
+     */
+    @Override
+    public boolean verify(int turn, Challenge challenge, ByteSequence response)
+	    throws AuthenticationException {
+	ByteSequence seq = new ByteSequence(this.calculateResponse(turn, challenge));
+
+	return seq.equals(response);
+    }
 }

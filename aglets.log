@@ -1,0 +1,113 @@
+INFO - Classpath is specified as /sviluppo/java/eclipseWorkspace/AgletsGIT/lib:/sviluppo/java/eclipseWorkspace/AgletsGIT/classes:/sviluppo/java/jars/log4j-1.2.15.jar:/sviluppo/java/eclipseWorkspace/AgletsGIT/public
+INFO - Real classpath = /sviluppo/java/eclipseWorkspace/AgletsGIT/lib:/sviluppo/java/eclipseWorkspace/AgletsGIT/classes:/sviluppo/java/jars/log4j-1.2.15.jar
+INFO - Logging system initialized!
+INFO - Classpath is specified as /sviluppo/java/eclipseWorkspace/AgletsGIT/lib:/sviluppo/java/eclipseWorkspace/AgletsGIT/classes:/sviluppo/java/jars/log4j-1.2.15.jar:/sviluppo/java/eclipseWorkspace/AgletsGIT/public
+INFO - Real classpath = /sviluppo/java/eclipseWorkspace/AgletsGIT/lib:/sviluppo/java/eclipseWorkspace/AgletsGIT/classes:/sviluppo/java/jars/log4j-1.2.15.jar
+INFO - Logging system initialized!
+INFO - Reading security policy file: /usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/security/java.policy
+INFO - Reading security policy file: /home/luca/.aglets/security/aglets.policy
+INFO - Loading shared secrets from file /home/luca/.aglets/security/secrets.dat
+INFO - No shared secret file.
+INFO - No secrets.
+ERROR - Cannot authenticate the user luca
+INFO - Authenticated user luca
+INFO - Authenticated user luca
+INFO - USE SECURE RANDOM SEED.
+INFO - AUTHENTICATION MODE OFF.
+INFO - Classpath is specified as /sviluppo/java/eclipseWorkspace/AgletsGIT/lib:/sviluppo/java/eclipseWorkspace/AgletsGIT/classes:/sviluppo/java/jars/log4j-1.2.15.jar:/sviluppo/java/eclipseWorkspace/AgletsGIT/public
+INFO - Real classpath = /sviluppo/java/eclipseWorkspace/AgletsGIT/lib:/sviluppo/java/eclipseWorkspace/AgletsGIT/classes:/sviluppo/java/jars/log4j-1.2.15.jar
+INFO - Logging system initialized!
+INFO - Reading security policy file: /usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/security/java.policy
+INFO - Reading security policy file: /home/luca/.aglets/security/aglets.policy
+INFO - Loading shared secrets from file /home/luca/.aglets/security/secrets.dat
+INFO - No shared secret file.
+INFO - No secrets.
+INFO - Classpath is specified as /sviluppo/java/eclipseWorkspace/AgletsGIT/lib:/sviluppo/java/eclipseWorkspace/AgletsGIT/classes:/sviluppo/java/jars/log4j-1.2.15.jar:/sviluppo/java/eclipseWorkspace/AgletsGIT/public
+INFO - Real classpath = /sviluppo/java/eclipseWorkspace/AgletsGIT/lib:/sviluppo/java/eclipseWorkspace/AgletsGIT/classes:/sviluppo/java/jars/log4j-1.2.15.jar
+INFO - Logging system initialized!
+INFO - Reading security policy file: /usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/security/java.policy
+INFO - Reading security policy file: /home/luca/.aglets/security/aglets.policy
+INFO - Loading shared secrets from file /home/luca/.aglets/security/secrets.dat
+INFO - No shared secret file.
+INFO - No secrets.
+INFO - Authenticated user luca
+INFO - Authenticated user luca
+INFO - USE SECURE RANDOM SEED.
+INFO - AUTHENTICATION MODE OFF.
+INFO - AgletThreadPool starting with 10 min threads
+INFO - AgletThreadPool ready
+INFO - Reading security policy file: /usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/security/java.policy
+INFO - Reading security policy file: /home/luca/.java.policy
+INFO - Loading shared secrets from file /home/luca/.aglets/security/secrets.dat
+INFO - No shared secret file.
+INFO - No secrets.
+ERROR - Exception caught while trying to build a resource bundle
+java.util.MissingResourceException: Can't find bundle for base name tahiti, locale en_US
+	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
+	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
+	at java.util.ResourceBundle.getBundle(ResourceBundle.java:777)
+	at org.aglets.util.AgletsTranslator.<init>(AgletsTranslator.java:63)
+	at org.aglets.util.AgletsTranslator.getInstance(AgletsTranslator.java:153)
+	at com.ibm.aglets.tahiti.TahitiWindow.<init>(TahitiWindow.java:96)
+	at com.ibm.aglets.tahiti.TahitiWindow.<init>(TahitiWindow.java:133)
+	at com.ibm.aglets.tahiti.LoginDialog.<init>(LoginDialog.java:61)
+	at com.ibm.aglets.tahiti.TahitiUserManager.login(TahitiUserManager.java:25)
+	at com.ibm.aglets.tahiti.Main.login(Main.java:196)
+	at com.ibm.aglets.tahiti.Main.main(Main.java:212)
+INFO - Reading security policy file: /usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/security/java.policy
+INFO - Reading security policy file: /home/luca/.java.policy
+INFO - Loading shared secrets from file /home/luca/.aglets/security/secrets.dat
+INFO - No shared secret file.
+INFO - No secrets.
+ERROR - Exception caught while trying to build a resource bundle
+java.util.MissingResourceException: Can't find bundle for base name tahiti, locale en_US
+	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
+	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
+	at java.util.ResourceBundle.getBundle(ResourceBundle.java:777)
+	at org.aglets.util.AgletsTranslator.<init>(AgletsTranslator.java:63)
+	at org.aglets.util.AgletsTranslator.getInstance(AgletsTranslator.java:153)
+	at com.ibm.aglets.tahiti.TahitiWindow.<init>(TahitiWindow.java:96)
+	at com.ibm.aglets.tahiti.TahitiWindow.<init>(TahitiWindow.java:133)
+	at com.ibm.aglets.tahiti.LoginDialog.<init>(LoginDialog.java:61)
+	at com.ibm.aglets.tahiti.TahitiUserManager.login(TahitiUserManager.java:25)
+	at com.ibm.aglets.tahiti.Main.login(Main.java:196)
+	at com.ibm.aglets.tahiti.Main.main(Main.java:212)
+INFO - Reading security policy file: /usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/security/java.policy
+INFO - Reading security policy file: /home/luca/.java.policy
+INFO - Loading shared secrets from file /home/luca/.aglets/security/secrets.dat
+INFO - No shared secret file.
+INFO - No secrets.
+ERROR - Exception caught while trying to build a resource bundle
+java.util.MissingResourceException: Can't find bundle for base name tahiti, locale en_US
+	at java.util.ResourceBundle.throwMissingResourceException(ResourceBundle.java:1427)
+	at java.util.ResourceBundle.getBundleImpl(ResourceBundle.java:1250)
+	at java.util.ResourceBundle.getBundle(ResourceBundle.java:705)
+	at org.aglets.util.AgletsTranslator.<init>(AgletsTranslator.java:67)
+	at org.aglets.util.AgletsTranslator.getInstance(AgletsTranslator.java:158)
+	at com.ibm.aglets.tahiti.TahitiWindow.<init>(TahitiWindow.java:96)
+	at com.ibm.aglets.tahiti.TahitiWindow.<init>(TahitiWindow.java:133)
+	at com.ibm.aglets.tahiti.LoginDialog.<init>(LoginDialog.java:61)
+	at com.ibm.aglets.tahiti.TahitiUserManager.login(TahitiUserManager.java:25)
+	at com.ibm.aglets.tahiti.Main.login(Main.java:196)
+	at com.ibm.aglets.tahiti.Main.main(Main.java:212)
+INFO - Reading security policy file: /usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/security/java.policy
+INFO - Reading security policy file: /home/luca/.java.policy
+INFO - Loading shared secrets from file /home/luca/.aglets/security/secrets.dat
+INFO - No shared secret file.
+INFO - No secrets.
+INFO - Reading security policy file: /usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/security/java.policy
+INFO - Reading security policy file: /home/luca/.java.policy
+INFO - Loading shared secrets from file /home/luca/.aglets/security/secrets.dat
+INFO - No shared secret file.
+INFO - No secrets.
+INFO - Authenticated user luca
+INFO - Authenticated user luca
+INFO - USE UNSECURE PSEUDO RANDOM SEED.
+INFO - AUTHENTICATION MODE OFF.
+INFO - AgletThreadPool starting with 10 min threads
+INFO - AgletThreadPool ready
+INFO - Shutting down the Tahiti server
+INFO - shutting down.
+INFO - [terminating aglets.]
+INFO - saving properties into [file:/home/luca/.aglets/users/luca/aglets.properties ]
+INFO - saving properties into [file:/home/luca/.aglets/users/luca/tahiti.properties ]

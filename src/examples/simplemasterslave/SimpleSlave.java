@@ -15,11 +15,16 @@ package examples.simplemasterslave;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
-import com.ibm.agletx.patterns.*;
+import com.ibm.aglet.AgletException;
+import com.ibm.agletx.patterns.Slave;
 
 public class SimpleSlave extends Slave {
 
-	protected void doJob() throws AgletException {}
-	protected void initializeJob() {}
+    @Override
+    protected void doJob() throws AgletException {
+    }
+
+    @Override
+    protected void initializeJob() {
+    }
 }

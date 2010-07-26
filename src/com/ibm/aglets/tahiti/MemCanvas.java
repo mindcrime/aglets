@@ -14,34 +14,30 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-import com.ibm.aglet.InvalidAgletException;
-import com.ibm.aglet.AgletException;
-import com.ibm.aglets.*;
-
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.Label;
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.WindowEvent;
 
 class MemCanvas extends java.awt.Canvas {
-	public Dimension getMinimumSize() {
-		return new Dimension(100, 20);
-	}
-	public Dimension getPreferredSize() {
-		return getMinimumSize();
-	}
-	public void paint(java.awt.Graphics g) {
-		java.awt.Rectangle rect = getBounds();
-		Runtime r = Runtime.getRuntime();
-		long total = r.totalMemory();
-		long freeMemory = r.freeMemory();
-		int usedWidth = (rect.width - (int)(rect.width * freeMemory / total));
+    @Override
+    public Dimension getMinimumSize() {
+	return new Dimension(100, 20);
+    }
 
-		g.setColor(java.awt.Color.red);
-		g.fillRect(0, 0, usedWidth, rect.height);
-		g.setColor(java.awt.Color.blue);
-		g.fillRect(usedWidth + 1, 0, rect.width, rect.height);
-	}
+    @Override
+    public Dimension getPreferredSize() {
+	return this.getMinimumSize();
+    }
+
+    @Override
+    public void paint(java.awt.Graphics g) {
+	java.awt.Rectangle rect = this.getBounds();
+	Runtime r = Runtime.getRuntime();
+	long total = r.totalMemory();
+	long freeMemory = r.freeMemory();
+	int usedWidth = (rect.width - (int) (rect.width * freeMemory / total));
+
+	g.setColor(java.awt.Color.red);
+	g.fillRect(0, 0, usedWidth, rect.height);
+	g.setColor(java.awt.Color.blue);
+	g.fillRect(usedWidth + 1, 0, rect.width, rect.height);
+    }
 }

@@ -14,8 +14,7 @@ package com.ibm.agletx.patterns;
  * deposited with the U.S. Copyright Office.
  */
 
-import java.net.*;
-import java.io.IOException;
+import java.net.URL;
 
 /*
  * @version     1.20    $Date: 2009/07/28 07:04:53 $
@@ -24,11 +23,11 @@ import java.io.IOException;
 
 class SlaveError implements java.io.Serializable {
 
-	public String host = null;
-	public String text = null;
+    public String host = null;
+    public String text = null;
 
-	public SlaveError(URL host, Throwable ex) {
-		this.host = host.toString();
-		text = ex.getClass().getName() + "::" + ex.getMessage();
-	}
+    public SlaveError(URL host, Throwable ex) {
+	this.host = host.toString();
+	this.text = ex.getClass().getName() + "::" + ex.getMessage();
+    }
 }

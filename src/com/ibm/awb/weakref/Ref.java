@@ -14,15 +14,22 @@ package com.ibm.awb.weakref;
  * deposited with the U.S. Copyright Office.
  */
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public interface Ref {
 
-	public Ref getRef(VirtualRef vref);
-	public String getRefClassName();
-	public void referenced();
-	public void setRef(VirtualRef vref, ObjectInputStream s) 
-			throws IOException, ClassNotFoundException;
-	public void unreferenced();
-	public void writeInfo(ObjectOutputStream s) throws IOException;
+    public Ref getRef(VirtualRef vref);
+
+    public String getRefClassName();
+
+    public void referenced();
+
+    public void setRef(VirtualRef vref, ObjectInputStream s)
+	    throws IOException, ClassNotFoundException;
+
+    public void unreferenced();
+
+    public void writeInfo(ObjectOutputStream s) throws IOException;
 }

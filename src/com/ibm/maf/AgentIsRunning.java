@@ -23,8 +23,8 @@ package com.ibm.maf;
 
 public final class AgentIsRunning extends MAFException {
 
-	// constructor
-	public AgentIsRunning() {
-		super();
-	}
+    // constructor
+    public AgentIsRunning() {
+	super();
+    }
 }

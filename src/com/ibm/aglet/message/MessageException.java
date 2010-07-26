@@ -23,70 +23,79 @@ package com.ibm.aglet.message;
  * IBM WILL NOT BE LIABLE FOR ANY THIRD PARTY CLAIMS AGAINST YOU.
  */
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 import com.ibm.aglet.AgletException;
 
 /**
  * Signals that the exception occured while processsing the message.
  * 
- * @version     1.10    $Date: 2009/07/28 07:04:53 $
- * @author	Mitsuru Oshima
+ * @version 1.10 $Date: 2009/07/28 07:04:53 $
+ * @author Mitsuru Oshima
  */
 
 public class MessageException extends AgletException {
-	private Throwable _exception;
+    private Throwable _exception;
 
-	/*
-	 * Constructs a MessageException
-	 */
-	public MessageException(Throwable ex) {
-		_exception = ex;
-	}
-	/*
-	 * Constructs a MessageException with the detailed message.
-	 * @param s the detailed message
-	 */
-	public MessageException(Throwable ex, String s) {
-		super(s);
-		_exception = ex;
-	}
-	/**
-	 * Gets the message occured
-	 */
-	public Throwable getException() {
-		return _exception;
-	}
-	private void readObject(ObjectInputStream s) 
-			throws IOException, ClassNotFoundException {
-		Object ex = s.readObject();
+    /*
+     * Constructs a MessageException
+     */
+    public MessageException(Throwable ex) {
+	this._exception = ex;
+    }
 
-		if (ex instanceof String) {
-			try {
-				_exception = 
-					(Throwable)Class.forName((String)ex).newInstance();
-			} catch (Exception ee) {
-				ee.printStackTrace();
-			} 
-		} else if (ex instanceof Throwable) {
-			_exception = (Throwable)ex;
-		} else {
-			_exception = null;
-		} 
+    /*
+     * Constructs a MessageException with the detailed message.
+     * 
+     * @param s the detailed message
+     */
+    public MessageException(Throwable ex, String s) {
+	super(s);
+	this._exception = ex;
+    }
+
+    /**
+     * Gets the message occured
+     */
+    public Throwable getException() {
+	return this._exception;
+    }
+
+    private void readObject(ObjectInputStream s) throws IOException,
+	    ClassNotFoundException {
+	Object ex = s.readObject();
+
+	if (ex instanceof String) {
+	    try {
+		this._exception = (Throwable) Class.forName((String) ex).newInstance();
+	    } catch (Exception ee) {
+		ee.printStackTrace();
+	    }
+	} else if (ex instanceof Throwable) {
+	    this._exception = (Throwable) ex;
+	} else {
+	    this._exception = null;
 	}
-	public String toString() {
-		return super.toString() + " (" + _exception + ")";
-	}
-	/*
+    }
+
+    @Override
+    public String toString() {
+	return super.toString() + " (" + this._exception + ")";
+    }
+
+    /*
 	 * 
 	 */
-	private void writeObject(ObjectOutputStream s) throws IOException {
-		if (_exception instanceof Serializable) {
-			s.writeObject(_exception);
-		} else if (_exception != null) {
-			s.writeObject(_exception.getClass().getName());
-		} else {
-			s.writeObject(null);
-		} 
+    private void writeObject(ObjectOutputStream s) throws IOException {
+	if (this._exception instanceof Serializable) {
+	    s.writeObject(this._exception);
+	} else if (this._exception != null) {
+	    s.writeObject(this._exception.getClass().getName());
+	} else {
+	    s.writeObject(null);
 	}
+    }
 }

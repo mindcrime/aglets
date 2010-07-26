@@ -13,103 +13,104 @@ package com.ibm.maf.rmi;
  * divested of its trade secrets, irrespective of what has been
  * deposited with the U.S. Copyright Office.
  */
-import com.ibm.maf.NameInvalid;
-import com.ibm.maf.*;
-import java.util.*;
-import java.rmi.RemoteException;
-import java.rmi.*;
-import java.rmi.server.*;
-import java.rmi.registry.*;
+import com.ibm.maf.AgentProfile;
+import com.ibm.maf.AgentSystemInfo;
 
 public class LocationInfo implements java.io.Serializable {
-	private String _location;
-	private Object _info;
+    private String _location;
+    private Object _info;
 
-	public LocationInfo(String location, Object info) {
-		_location = location;
-		_info = info;
-	}
-	public AgentProfile getAgentProfile() {
-		return (AgentProfile)_info;
-	}
-	public AgentSystemInfo getAgentSystemInfo() {
-		return (AgentSystemInfo)_info;
-	}
-	public Object getInfo() {
-		return _info;
-	}
-	public String getLocation() {
-		return _location;
-	}
-	public boolean matchAgentProfile(AgentProfile p) {
-		if (p == null) {
-			return true;
-		} 
-		AgentProfile my = getAgentProfile();
+    public LocationInfo(String location, Object info) {
+	this._location = location;
+	this._info = info;
+    }
 
-		if ((p.language_id != 0) && (p.language_id != my.language_id)) {
-			return false;
-		} 
-		if ((p.agent_system_type != 0) 
-				&& (p.agent_system_type != my.agent_system_type)) {
-			return false;
-		} 
-		if ((p.agent_system_description != null) 
-				&&!(my.agent_system_description
-					.equals(p.agent_system_description))) {
-			return false;
-		} 
-		if ((p.major_version != 0) && (p.major_version != my.major_version)) {
-			return false;
-		} 
-		if ((p.minor_version != 0) && (p.minor_version != my.minor_version)) {
-			return false;
-		} 
-		if ((p.serialization != 0) && (p.serialization != my.serialization)) {
-			return false;
-		} 
-		if (p.properties != null) {
+    public AgentProfile getAgentProfile() {
+	return (AgentProfile) this._info;
+    }
 
-			// Not implemented yet.
-		} 
-		return true;
+    public AgentSystemInfo getAgentSystemInfo() {
+	return (AgentSystemInfo) this._info;
+    }
+
+    public Object getInfo() {
+	return this._info;
+    }
+
+    public String getLocation() {
+	return this._location;
+    }
+
+    public boolean matchAgentProfile(AgentProfile p) {
+	if (p == null) {
+	    return true;
 	}
-	public boolean matchAgentSystemInfo(AgentSystemInfo p) {
-		if (p == null) {
-			return true;
-		} 
-		AgentSystemInfo my = getAgentSystemInfo();
+	AgentProfile my = this.getAgentProfile();
 
-		if ((p.agent_system_name != null) 
-				&&!(p.agent_system_name.equals(my.agent_system_name))) {
-			return false;
-		} 
-		if ((p.agent_system_type != 0) 
-				&& (p.agent_system_type != my.agent_system_type)) {
-			return false;
-		} 
-		if (p.language_maps != null) {
-
-			// Not implemented yet
-		} 
-		if ((p.agent_system_description != null) 
-				&&!(p.agent_system_description
-					.equals(my.agent_system_description))) {
-			return false;
-		} 
-		if ((p.major_version != 0) && (p.major_version != my.major_version)) {
-			return false;
-		} 
-		if ((p.minor_version != 0) && (p.minor_version != my.minor_version)) {
-			return false;
-		} 
-		if (p.properties != null) {
-
-			// Not implemented yet.
-		} 
-		return true;
+	if ((p.language_id != 0) && (p.language_id != my.language_id)) {
+	    return false;
 	}
-	public String toString() {
-		return _location;
+	if ((p.agent_system_type != 0)
+		&& (p.agent_system_type != my.agent_system_type)) {
+	    return false;
 	}
+	if ((p.agent_system_description != null)
+		&& !(my.agent_system_description.equals(p.agent_system_description))) {
+	    return false;
+	}
+	if ((p.major_version != 0) && (p.major_version != my.major_version)) {
+	    return false;
+	}
+	if ((p.minor_version != 0) && (p.minor_version != my.minor_version)) {
+	    return false;
+	}
+	if ((p.serialization != 0) && (p.serialization != my.serialization)) {
+	    return false;
+	}
+	if (p.properties != null) {
+
+	    // Not implemented yet.
+	}
+	return true;
+    }
+
+    public boolean matchAgentSystemInfo(AgentSystemInfo p) {
+	if (p == null) {
+	    return true;
+	}
+	AgentSystemInfo my = this.getAgentSystemInfo();
+
+	if ((p.agent_system_name != null)
+		&& !(p.agent_system_name.equals(my.agent_system_name))) {
+	    return false;
+	}
+	if ((p.agent_system_type != 0)
+		&& (p.agent_system_type != my.agent_system_type)) {
+	    return false;
+	}
+	if (p.language_maps != null) {
+
+	    // Not implemented yet
+	}
+	if ((p.agent_system_description != null)
+		&& !(p.agent_system_description.equals(my.agent_system_description))) {
+	    return false;
+	}
+	if ((p.major_version != 0) && (p.major_version != my.major_version)) {
+	    return false;
+	}
+	if ((p.minor_version != 0) && (p.minor_version != my.minor_version)) {
+	    return false;
+	}
+	if (p.properties != null) {
+
+	    // Not implemented yet.
+	}
+	return true;
+    }
+
+    @Override
+    public String toString() {
+	return this._location;
+    }
 }

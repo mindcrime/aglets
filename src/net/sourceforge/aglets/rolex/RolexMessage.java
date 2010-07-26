@@ -13,13 +13,7 @@ package net.sourceforge.aglets.rolex;
  * @version 1.0
  */
 
-import com.ibm.aglet.Aglet;
-import com.ibm.aglet.AgletProxy;
-import com.ibm.aglet.InvalidAgletException;
-import com.ibm.aglet.MessageManager;
-import com.ibm.aglet.RequestRefusedException;
 import com.ibm.aglets.MessageImpl;
-
 
 public class RolexMessage extends MessageImpl {
 
@@ -31,39 +25,46 @@ public class RolexMessage extends MessageImpl {
 
     /**
      * Constructor.
-     * @param kind String
-     * @param arg Object
-     * @param type int
+     * 
+     * @param kind
+     *            String
+     * @param arg
+     *            Object
+     * @param type
+     *            int
      */
     public RolexMessage(String kind, Object arg, int type) {
-        super(arg);
-        this.kind = kind;
-        this.type = type;
+	super(arg);
+	this.kind = kind;
+	this.type = type;
     }
 
     /**
      * Returns type.
+     * 
      * @return int
      */
     public int getType() {
-        return type;
+	return this.type;
     }
 
     /**
-     * If type is ASSUMPTION or RELEASE returns true: the message is
-     * exclusive; it's not possible process this message at the same time of
-     * other messages.
+     * If type is ASSUMPTION or RELEASE returns true: the message is exclusive;
+     * it's not possible process this message at the same time of other
+     * messages.
+     * 
      * @return boolean
      */
     public boolean isExclusive() {
-        if (type==ASSUMPTION || type==RELEASE)
-            return true;
-        else
-            return false;
+	if ((this.type == ASSUMPTION) || (this.type == RELEASE))
+	    return true;
+	else
+	    return false;
     }
 
-    public Object clone(){
-    	return new RolexMessage(this.kind,this.arg, this.type);
+    @Override
+    public Object clone() {
+	return new RolexMessage(this.kind, this.arg, this.type);
     }
 
 }

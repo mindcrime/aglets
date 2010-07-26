@@ -14,38 +14,47 @@ package com.ibm.awb.launcher;
  * deposited with the U.S. Copyright Office.
  */
 
-import java.io.*;
-import java.net.*;
 import java.awt.TextArea;
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class LogWriter extends OutputStream {
-	private TextArea _log = null;
+    private TextArea _log = null;
 
-	public LogWriter(TextArea f) {
-		_log = f;
-	}
-	public void close() throws IOException {
+    public LogWriter(TextArea f) {
+	this._log = f;
+    }
 
-		// _log.dispose();
-	}
-	public void flush() throws IOException {}
-	public void write(byte[] b) throws IOException {
-		synchronized (this) {
-			_log.append(new String(b));
-		} 
-	}
-	public void write(byte[] b, int off, int len) throws IOException {
-		synchronized (this) {
-			_log.append(new String(b, off, len));
-		} 
-	}
-	public void write(int c) throws IOException {
-		synchronized (this) {
-			char[] b = {
-				(char)c
-			};
+    @Override
+    public void close() throws IOException {
 
-			_log.append(new String(b));
-		} 
+	// _log.dispose();
+    }
+
+    @Override
+    public void flush() throws IOException {
+    }
+
+    @Override
+    public void write(byte[] b) throws IOException {
+	synchronized (this) {
+	    this._log.append(new String(b));
 	}
+    }
+
+    @Override
+    public void write(byte[] b, int off, int len) throws IOException {
+	synchronized (this) {
+	    this._log.append(new String(b, off, len));
+	}
+    }
+
+    @Override
+    public void write(int c) throws IOException {
+	synchronized (this) {
+	    char[] b = { (char) c };
+
+	    this._log.append(new String(b));
+	}
+    }
 }

@@ -16,19 +16,20 @@ package com.ibm.aglets;
 
 public class AgletsSecurityException extends SecurityException {
 
-	/*
-	 * Constructs a AgletsSecurityException.
-	 */
-	public AgletsSecurityException() {
-		printStackTrace();
-	}
-	/*
-	 * Constructs a AgletsSecurityException with the specified detailed
-	 * message.
-	 * @param s the detailed message
-	 */
-	public AgletsSecurityException(String s) {
-		super(s);
-		printStackTrace();
-	}
+    /*
+     * Constructs a AgletsSecurityException.
+     */
+    public AgletsSecurityException() {
+	this.printStackTrace();
+    }
+
+    /*
+     * Constructs a AgletsSecurityException with the specified detailed message.
+     * 
+     * @param s the detailed message
+     */
+    public AgletsSecurityException(String s) {
+	super(s);
+	this.printStackTrace();
+    }
 }

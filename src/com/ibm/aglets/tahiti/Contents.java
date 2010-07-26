@@ -14,28 +14,18 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-import java.util.Vector;
-import java.util.Enumeration;
-import java.awt.List;
-import java.awt.Label;
-import java.awt.TextField;
-import java.awt.Panel;
-import java.awt.Frame;
-import java.awt.ItemSelectable;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-
-import java.awt.Button;
 
 interface Contents {
-	public void addElements(String[] elems);
-	public void addElements(String[] elems, int idx);
-	public void moveToLast(int idx);
-	public void moveToTop(int idx);
-	public void removeElements(int idx);
-	// public void removeAllElements();
-	public void replaceElements(String[] elems, int idx);
+    public void addElements(String[] elems);
+
+    public void addElements(String[] elems, int idx);
+
+    public void moveToLast(int idx);
+
+    public void moveToTop(int idx);
+
+    public void removeElements(int idx);
+
+    // public void removeAllElements();
+    public void replaceElements(String[] elems, int idx);
 }

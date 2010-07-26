@@ -28,8 +28,8 @@ import java.util.Vector;
 import com.ibm.aglet.AgletContext;
 
 /**
- * ReplySet is a container of the FutureReply objects by which the
- * each of FutureReply object can be retrieved as its reply become available.
+ * ReplySet is a container of the FutureReply objects by which the each of
+ * FutureReply object can be retrieved as its reply become available.
  * 
  * <pre>
  * ReplySet set = context.multicastMessage(new Message("multicast"));
@@ -46,149 +46,176 @@ import com.ibm.aglet.AgletContext;
  * @see Message
  * @see FutureReply
  * 
- * @version     1.20    $Date: 2009/07/28 07:04:53 $
- * @author	Mitsuru Oshima
+ * @version 1.20 $Date: 2009/07/28 07:04:53 $
+ * @author Mitsuru Oshima
  */
 
 public class ReplySet {
 
-	private Vector done = new Vector();
-	private Vector unavailable = new Vector();
+    private Vector done = new Vector();
+    private Vector unavailable = new Vector();
 
-	/**
-	 * Constructs a ReplySet object.
-	 */
-	public ReplySet() {}
-	/**
-	 * Adds the FutureReplyd object to this ReplySet.
-	 * @param reply the FutureReply to add.
-	 */
-	synchronized public void addFutureReply(FutureReply reply) {
-		unavailable.addElement(reply);
-		reply.addedTo(this);
-	}
-	/**
-	 * Checks if all FutureReply objects in this ReplySet have received
-	 * replies.
-	 * @return true if all replies of FutureReply objects are available
-	 */
-	public boolean areAllAvailable() {
-		return unavailable.size() == 0;
-	}
-	/**
-	 * Counts the number of available replies in this ReplySet.
-	 * @return the number of available replise
-	 */
-	public int countAvailable() {
-		return done.size();
-	}
-	/**
-	 * Counts the number of FutureReply objects which have no reply
-	 * available.
-	 * @return the number of FutureReply which have no reply available.
-	 */
-	public int countUnavailable() {
-		return unavailable.size();
-	}
-	/**
-	 * Is is not normally used by the aglet programmers.
-	 */
-	synchronized public void done(FutureReply reply) {
+    /**
+     * Constructs a ReplySet object.
+     */
+    public ReplySet() {
+    }
 
-		// 
-		// REMIND: This will be removed...
-		// 
-		if (unavailable.contains(reply) == false 
-				|| done.contains(reply) == true 
-				|| reply.isAvailable() == false) {
-			throw new RuntimeException("ReplySet: invalid reply");
-		} 
-		unavailable.removeElement(reply);
-		done.addElement(reply);
-		notifyAll();
-	}
-	/**
-	 * Gets the next FutureReply whose reply is available.
-	 * @return a FutureReply object whose reply is available.
-	 */
-	synchronized public FutureReply getNextFutureReply() {
-		waitForNextFutureReply();
-		FutureReply r = (FutureReply)done.firstElement();
+    /**
+     * Adds the FutureReplyd object to this ReplySet.
+     * 
+     * @param reply
+     *            the FutureReply to add.
+     */
+    synchronized public void addFutureReply(FutureReply reply) {
+	this.unavailable.addElement(reply);
+	reply.addedTo(this);
+    }
 
-		done.removeElementAt(0);
-		return r;
-	}
-	/**
-	 * Checks if there are more FutureReply objects in this ReplySet object.
-	 * @return true if there are FutureReply objects
-	 */
-	synchronized public boolean hasMoreFutureReplies() {
-		return unavailable.size() != 0 || done.size() != 0;
-	}
-	/**
-	 * Checks if there is any FutureReply object whose reply is
-	 * available in this ReplySet object.
-	 * @return true if there are FutureReply objects whose reply is available.
-	 */
-	public boolean isAnyAvailable() {
-		return done.size() != 0;
-	}
-	/**
-	 * Waits until the all replies are available.
-	 */
-	synchronized public void waitForAllReplies() {
-		while (unavailable.size() != 0) {
-			try {
-				wait();
-			} catch (InterruptedException ex) {}
-		} 
-	}
-	/**
-	 * Waits until the all replies are available
-	 * @param timeout   the maximum time to wait in milliseconds.
-	 */
-	synchronized public void waitForAllReplies(long timeout) {
-		if (timeout == 0) {
-			waitForAllReplies();
-		} else {
-			long until = System.currentTimeMillis() + timeout;
-			long reft;
+    /**
+     * Checks if all FutureReply objects in this ReplySet have received replies.
+     * 
+     * @return true if all replies of FutureReply objects are available
+     */
+    public boolean areAllAvailable() {
+	return this.unavailable.size() == 0;
+    }
 
-			while (unavailable.size() != 0 
-				   && (reft = (until - System.currentTimeMillis())) > 0) {
-				try {
-					wait(reft);
-				} catch (InterruptedException ex) {}
-			} 
-		} 
-	}
-	/**
-	 * Waits until the next reply is available.
-	 */
-	synchronized public void waitForNextFutureReply() {
-		while (done.size() == 0) {
-			try {
-				wait();
-			} catch (InterruptedException ex) {}
-		} 
-	}
-	/**
-	 * Waits until the next reply is available.
-	 * @param timeout   the maximum time to wait in milliseconds.
-	 */
-	synchronized public void waitForNextFutureReply(long timeout) {
-		if (timeout == 0) {
-			waitForNextFutureReply();
-		} else {
-			long until = System.currentTimeMillis() + timeout;
-			long reft;
+    /**
+     * Counts the number of available replies in this ReplySet.
+     * 
+     * @return the number of available replise
+     */
+    public int countAvailable() {
+	return this.done.size();
+    }
 
-			while (done.size() == 0 
-				   && (reft = (until - System.currentTimeMillis())) > 0) {
-				try {
-					wait(reft);
-				} catch (InterruptedException ex) {}
-			} 
-		} 
+    /**
+     * Counts the number of FutureReply objects which have no reply available.
+     * 
+     * @return the number of FutureReply which have no reply available.
+     */
+    public int countUnavailable() {
+	return this.unavailable.size();
+    }
+
+    /**
+     * Is is not normally used by the aglet programmers.
+     */
+    synchronized public void done(FutureReply reply) {
+
+	//
+	// REMIND: This will be removed...
+	//
+	if ((this.unavailable.contains(reply) == false)
+		|| (this.done.contains(reply) == true)
+		|| (reply.isAvailable() == false)) {
+	    throw new RuntimeException("ReplySet: invalid reply");
 	}
+	this.unavailable.removeElement(reply);
+	this.done.addElement(reply);
+	this.notifyAll();
+    }
+
+    /**
+     * Gets the next FutureReply whose reply is available.
+     * 
+     * @return a FutureReply object whose reply is available.
+     */
+    synchronized public FutureReply getNextFutureReply() {
+	this.waitForNextFutureReply();
+	FutureReply r = (FutureReply) this.done.firstElement();
+
+	this.done.removeElementAt(0);
+	return r;
+    }
+
+    /**
+     * Checks if there are more FutureReply objects in this ReplySet object.
+     * 
+     * @return true if there are FutureReply objects
+     */
+    synchronized public boolean hasMoreFutureReplies() {
+	return (this.unavailable.size() != 0) || (this.done.size() != 0);
+    }
+
+    /**
+     * Checks if there is any FutureReply object whose reply is available in
+     * this ReplySet object.
+     * 
+     * @return true if there are FutureReply objects whose reply is available.
+     */
+    public boolean isAnyAvailable() {
+	return this.done.size() != 0;
+    }
+
+    /**
+     * Waits until the all replies are available.
+     */
+    synchronized public void waitForAllReplies() {
+	while (this.unavailable.size() != 0) {
+	    try {
+		this.wait();
+	    } catch (InterruptedException ex) {
+	    }
+	}
+    }
+
+    /**
+     * Waits until the all replies are available
+     * 
+     * @param timeout
+     *            the maximum time to wait in milliseconds.
+     */
+    synchronized public void waitForAllReplies(long timeout) {
+	if (timeout == 0) {
+	    this.waitForAllReplies();
+	} else {
+	    long until = System.currentTimeMillis() + timeout;
+	    long reft;
+
+	    while ((this.unavailable.size() != 0)
+		    && ((reft = (until - System.currentTimeMillis())) > 0)) {
+		try {
+		    this.wait(reft);
+		} catch (InterruptedException ex) {
+		}
+	    }
+	}
+    }
+
+    /**
+     * Waits until the next reply is available.
+     */
+    synchronized public void waitForNextFutureReply() {
+	while (this.done.size() == 0) {
+	    try {
+		this.wait();
+	    } catch (InterruptedException ex) {
+	    }
+	}
+    }
+
+    /**
+     * Waits until the next reply is available.
+     * 
+     * @param timeout
+     *            the maximum time to wait in milliseconds.
+     */
+    synchronized public void waitForNextFutureReply(long timeout) {
+	if (timeout == 0) {
+	    this.waitForNextFutureReply();
+	} else {
+	    long until = System.currentTimeMillis() + timeout;
+	    long reft;
+
+	    while ((this.done.size() == 0)
+		    && ((reft = (until - System.currentTimeMillis())) > 0)) {
+		try {
+		    this.wait(reft);
+		} catch (InterruptedException ex) {
+		}
+	    }
+	}
+    }
 }

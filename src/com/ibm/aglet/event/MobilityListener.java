@@ -26,22 +26,24 @@ package com.ibm.aglet.event;
 /**
  * The listener interface for receiving mobility events on an aglet.
  * 
- * @version     1.00    $Date: 2009/07/28 07:04:53 $
- * @author      Mitsuru Oshima
+ * @version 1.00 $Date: 2009/07/28 07:04:53 $
+ * @author Mitsuru Oshima
  */
-public interface MobilityListener extends java.util.EventListener, 
-										  java.io.Serializable {
+public interface MobilityListener extends java.util.EventListener,
+	java.io.Serializable {
 
-	/**
-	 * Invoked just after the aglet arrived at the destination
-	 */
-	public void onArrival(MobilityEvent event);
-	/**
-	 * Invoked when the aglet is attempted to dispatch.
-	 */
-	public void onDispatching(MobilityEvent event);
-	/**
-	 * Invoked when the aglet is retracted.
-	 */
-	public void onReverting(MobilityEvent event);
+    /**
+     * Invoked just after the aglet arrived at the destination
+     */
+    public void onArrival(MobilityEvent event);
+
+    /**
+     * Invoked when the aglet is attempted to dispatch.
+     */
+    public void onDispatching(MobilityEvent event);
+
+    /**
+     * Invoked when the aglet is retracted.
+     */
+    public void onReverting(MobilityEvent event);
 }

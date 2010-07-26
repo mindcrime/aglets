@@ -14,101 +14,87 @@ package com.ibm.aglets;
  * deposited with the U.S. Copyright Office.
  */
 
-import com.ibm.maf.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
-import com.ibm.aglet.Aglet;
-import com.ibm.aglet.AgletInfo;
-import com.ibm.aglet.event.CloneListener;
-import com.ibm.aglet.event.MobilityListener;
-import com.ibm.aglet.event.PersistencyListener;
-
-// import com.ibm.awb.misc.DigestTable;
-import com.ibm.awb.misc.Archive;
 import com.ibm.maf.ClassName;
-
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Enumeration;
 
 /**
  * <tt> AgletWriter </tt>
  * 
- * Format
- * AGLET_MAGIC
- * STREAM_VERSION
- * IDENTITY
- * OTHER INFO
+ * Format AGLET_MAGIC STREAM_VERSION IDENTITY OTHER INFO
  * 
- * CLASS TABLE
- * MESSAGE MANAGER
- * AGLET
- * BYTECODE
+ * CLASS TABLE MESSAGE MANAGER AGLET BYTECODE
  * 
- * @version     1.20	$Date: 2009/07/28 07:04:53 $
- * @author	Mitsuru Oshima
- * @author	ONO Kouichi
+ * @version 1.20 $Date: 2009/07/28 07:04:53 $
+ * @author Mitsuru Oshima
+ * @author ONO Kouichi
  */
 final class AgletWriter {
-	ByteArrayOutputStream _baos = new ByteArrayOutputStream();
-	ObjectOutputStream _oout = null;
-	ClassName[] _table = null;
+    ByteArrayOutputStream _baos = new ByteArrayOutputStream();
+    ObjectOutputStream _oout = null;
+    ClassName[] _table = null;
 
-	AgletWriter() throws IOException {
-		_oout = new ObjectOutputStream(_baos);
-	}
-	/*
+    AgletWriter() throws IOException {
+	this._oout = new ObjectOutputStream(this._baos);
+    }
+
+    /*
 	 * 
 	 */
-	byte[] getBytes() {
-		return _baos.toByteArray();
-	}
-	/*
+    byte[] getBytes() {
+	return this._baos.toByteArray();
+    }
+
+    /*
 	 * 
 	 */
-	ClassName[] getClassNames() {
-		return _table;
-	}
-	void writeAglet(LocalAgletRef ref) throws IOException {
+    ClassName[] getClassNames() {
+	return this._table;
+    }
 
-		ByteArrayOutputStream tmp = new ByteArrayOutputStream();
-		AgletOutputStream aos = new AgletOutputStream(tmp);
+    void writeAglet(LocalAgletRef ref) throws IOException {
 
-		// 
-		// Message Manager
-		// 
-		aos.writeObject(ref.messageManager);
+	ByteArrayOutputStream tmp = new ByteArrayOutputStream();
+	AgletOutputStream aos = new AgletOutputStream(tmp);
 
-		// 
-		// Aglet
-		// 
-		aos.writeObject(ref.aglet);
-		aos.flush();
+	//
+	// Message Manager
+	//
+	aos.writeObject(ref.messageManager);
 
-		// 
-		// writes the table first
-		// 
-		_table = aos.getClassNames(ref.resourceManager);
-		_oout.writeObject(ref.resourceManager.getArchive(_table));
-		_oout.flush();
+	//
+	// Aglet
+	//
+	aos.writeObject(ref.aglet);
+	aos.flush();
 
-		tmp.writeTo(_baos);
-	}
-	void writeInfo(LocalAgletRef ref) throws IOException {
+	//
+	// writes the table first
+	//
+	this._table = aos.getClassNames(ref.resourceManager);
+	this._oout.writeObject(ref.resourceManager.getArchive(this._table));
+	this._oout.flush();
 
-		// 
-		// AgletInfo
-		// 
-		_oout.writeObject(ref.info);
+	tmp.writeTo(this._baos);
+    }
 
-		// 
-		// Protections
-		// 
-		_oout.writeObject(ref.protections);
+    void writeInfo(LocalAgletRef ref) throws IOException {
 
-		// 
-		// secure/unsecure
-		// 
-		_oout.writeBoolean(ref.getSecurity());
-	}
+	//
+	// AgletInfo
+	//
+	this._oout.writeObject(ref.info);
+
+	//
+	// Protections
+	//
+	this._oout.writeObject(ref.protections);
+
+	//
+	// secure/unsecure
+	//
+	this._oout.writeBoolean(ref.getSecurity());
+    }
 }

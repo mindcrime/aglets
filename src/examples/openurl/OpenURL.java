@@ -15,135 +15,138 @@ package examples.openurl;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
-import com.ibm.aglet.event.*;
+import java.awt.Frame;
+import java.net.URL;
+
+import com.ibm.aglet.Aglet;
+import com.ibm.aglet.AgletProxy;
 import com.ibm.aglet.message.Message;
-import com.ibm.aglet.util.*;
-import com.ibm.agletx.util.*;
-
-import java.lang.InterruptedException;
-import java.io.Externalizable;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.io.IOException;
-import java.net.*;
-import java.awt.*;
-
-import java.util.Enumeration;
+import com.ibm.agletx.util.SimpleItinerary;
 
 /**
- * <tt> OpenURL </tt> is an mobile aglet that goes to a remote host
- * to open the docuemnt specified by URL.
+ * <tt> OpenURL </tt> is an mobile aglet that goes to a remote host to open the
+ * docuemnt specified by URL.
  * 
- * @version     1.00	$Date: 2009/07/28 07:04:54 $
- * @author	Mitsuru Oshima
+ * @version 1.00 $Date: 2009/07/28 07:04:54 $
+ * @author Mitsuru Oshima
  */
 public class OpenURL extends Aglet {
 
-	/*
-	 * UI to interact with a User
-	 * this will be automatically disposed when the aglet is disposed
-	 */
-	transient Frame my_dialog = null;
+    /*
+     * UI to interact with a User this will be automatically disposed when the
+     * aglet is disposed
+     */
+    transient Frame my_dialog = null;
 
-	/*
+    /*
 	 * 
 	 */
-	String url = "http://w3.trl.ibm.com";
+    String url = "http://w3.trl.ibm.com";
 
-	/*
+    /*
 	 * 
 	 */
-	String home = null;
+    String home = null;
 
-	/*
-	 * Itinerary
-	 */
-	SimpleItinerary itinerary = null;
+    /*
+     * Itinerary
+     */
+    SimpleItinerary itinerary = null;
 
-	/*
+    /*
 	 * 
 	 */
-	public void atHome(Message msg) {
-		setText("I'm back.");
-		waitMessage(2 * 1000);
-		dispose();
-	}
-	/**
-	 * Creates the dialog window. This has the reference to the instance
-	 * of the Dialog to avoid opening multiple dialog windows.
-	 */
-	public void dialog(Message msg) {
-		if (my_dialog == null) {
-			my_dialog = new MyDialog(this);
-			my_dialog.pack();
-			my_dialog.setSize(my_dialog.getPreferredSize());
-		} 
-		my_dialog.show();
-	}
-	public void go(Message msg) {
-		try {
-			itinerary = new SimpleItinerary(this);
-			itinerary.go((String)msg.getArg("destination"), 
-						 new Message("openURL", msg.getArg("url")));
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			dispose();
-		} 
-	}
-	/**
-	 * Dispatch the aglet to the destination.
-	 * @param destination a url which specifies the destination
-	 * @exception when the aglet is in the invalid state
-	 */
-	public synchronized void goDestination(String dest) {
-		try {
-			AgletProxy p = (AgletProxy)clone();
-			Message m = new Message("go");
+    public void atHome(Message msg) {
+	this.setText("I'm back.");
+	this.waitMessage(2 * 1000);
+	this.dispose();
+    }
 
-			m.setArg("url", url);
-			m.setArg("destination", dest);
-			p.sendMessage(m);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} 
+    /**
+     * Creates the dialog window. This has the reference to the instance of the
+     * Dialog to avoid opening multiple dialog windows.
+     */
+    public void dialog(Message msg) {
+	if (this.my_dialog == null) {
+	    this.my_dialog = new MyDialog(this);
+	    this.my_dialog.pack();
+	    this.my_dialog.setSize(this.my_dialog.getPreferredSize());
 	}
-	/*
-	 * Handles the message
-	 * @param msg the message sent
-	 */
-	public boolean handleMessage(Message msg) {
-		if (msg.sameKind("go")) {
-			go(msg);
-		} 
-		if (msg.sameKind("atHome")) {
-			atHome(msg);
-		} else if (msg.sameKind("openURL")) {
-			openURL(msg);
-		} else if (msg.sameKind("dialog")) {
-			dialog(msg);
-		} else {
-			return false;
-		} 
-		return true;
+	this.my_dialog.show();
+    }
+
+    public void go(Message msg) {
+	try {
+	    this.itinerary = new SimpleItinerary(this);
+	    this.itinerary.go((String) msg.getArg("destination"), new Message("openURL", msg.getArg("url")));
+	} catch (Exception ex) {
+	    ex.printStackTrace();
+	    this.dispose();
 	}
-	/*
-	 * Initializes the aglet. Only called the very first time this
-	 * aglet is created.
-	 */
-	public void onCreation(Object init) {
-		dialog(null);
-		home = getAgletContext().getHostingURL().toString();
+    }
+
+    /**
+     * Dispatch the aglet to the destination.
+     * 
+     * @param destination
+     *            a url which specifies the destination
+     * @exception when
+     *                the aglet is in the invalid state
+     */
+    public synchronized void goDestination(String dest) {
+	try {
+	    AgletProxy p = (AgletProxy) this.clone();
+	    Message m = new Message("go");
+
+	    m.setArg("url", this.url);
+	    m.setArg("destination", dest);
+	    p.sendMessage(m);
+	} catch (Exception ex) {
+	    ex.printStackTrace();
 	}
-	/*
-	 * open URL
-	 */
-	public void openURL(Message msg) {
-		try {
-			getAgletContext().showDocument(new URL(url));
-			itinerary.go(home, "atHome");
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} 
+    }
+
+    /*
+     * Handles the message
+     * 
+     * @param msg the message sent
+     */
+    @Override
+    public boolean handleMessage(Message msg) {
+	if (msg.sameKind("go")) {
+	    this.go(msg);
 	}
+	if (msg.sameKind("atHome")) {
+	    this.atHome(msg);
+	} else if (msg.sameKind("openURL")) {
+	    this.openURL(msg);
+	} else if (msg.sameKind("dialog")) {
+	    this.dialog(msg);
+	} else {
+	    return false;
+	}
+	return true;
+    }
+
+    /*
+     * Initializes the aglet. Only called the very first time this aglet is
+     * created.
+     */
+    @Override
+    public void onCreation(Object init) {
+	this.dialog(null);
+	this.home = this.getAgletContext().getHostingURL().toString();
+    }
+
+    /*
+     * open URL
+     */
+    public void openURL(Message msg) {
+	try {
+	    this.getAgletContext().showDocument(new URL(this.url));
+	    this.itinerary.go(this.home, "atHome");
+	} catch (Exception ex) {
+	    ex.printStackTrace();
+	}
+    }
 }

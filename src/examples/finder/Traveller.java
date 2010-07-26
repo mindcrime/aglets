@@ -15,20 +15,23 @@ package examples.finder;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
+import com.ibm.aglet.Aglet;
+import com.ibm.aglet.AgletProxy;
 
 public class Traveller extends Aglet {
-	Register register = null;
+    Register register = null;
 
-	public void onCreation(Object o) {
+    @Override
+    public void onCreation(Object o) {
 
-		// get the default finder..
-		AgletProxy finder = 
-			(AgletProxy)getAgletContext().getProperty("finder");
+	// get the default finder..
+	AgletProxy finder = (AgletProxy) this.getAgletContext().getProperty("finder");
 
-		register = new Register(this, finder, "Traveller");
-	}
-	public void onDisposing() {
-		register.unregister();
-	}
+	this.register = new Register(this, finder, "Traveller");
+    }
+
+    @Override
+    public void onDisposing() {
+	this.register.unregister();
+    }
 }

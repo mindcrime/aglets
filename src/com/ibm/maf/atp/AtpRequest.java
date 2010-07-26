@@ -14,26 +14,37 @@ package com.ibm.maf.atp;
  * deposited with the U.S. Copyright Office.
  */
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import com.ibm.maf.AgentProfile;
 import com.ibm.maf.Name;
 
-import java.io.InputStream;
-import java.io.IOException;
-
 interface AtpRequest {
 
-	public Name getAgentName();
-	public String getAgentNameAsString();
-	public AgentProfile getAgentProfile();
-	public int getContentLength();
-	public String getFetchClassFile();
-	public InputStream getInputStream();
-	public int getMethod();
-	public String getPlaceName();
-	public String getRequestLine();
-	public String getRequestParameter(String key);
-	// public String getAgentLanguage();
+    public Name getAgentName();
 
-	public String getSender();
-	public void parseHeaders() throws IOException;
+    public String getAgentNameAsString();
+
+    public AgentProfile getAgentProfile();
+
+    public int getContentLength();
+
+    public String getFetchClassFile();
+
+    public InputStream getInputStream();
+
+    public int getMethod();
+
+    public String getPlaceName();
+
+    public String getRequestLine();
+
+    public String getRequestParameter(String key);
+
+    // public String getAgentLanguage();
+
+    public String getSender();
+
+    public void parseHeaders() throws IOException;
 }

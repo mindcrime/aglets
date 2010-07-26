@@ -1,11 +1,11 @@
 package com.ibm.awb.misc;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.security.MessageDigest;
-import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Hashtable;
 
 /*
  * @(#)Archive.java
@@ -23,139 +23,138 @@ import java.util.Enumeration;
 
 public class Archive implements java.io.Serializable {
 
-	static final public class Entry implements java.io.Serializable {
-		Entry(String n, long d, byte[] b) {
-			name = n;
-			digest = d;
-			data = b;
-		}
-		String name;
-		byte data[] = null;
-		long digest = 0;
-
-		public String name() {
-			return name;
-		} 
-
-		public long digest() {
-			if (digest == 0) {
-
-				// System.out.println("computing digest");
-				digest = _hashcode(digestGen.digest(data));
-			} 
-			return digest;
-		} 
-
-		public byte[] data() {
-			return data;
-		} 
-
-		static final long _hashcode(byte[] b) {
-			long h = 0;
-
-			for (int i = 0; i < b.length; i++) {
-				h += (h * 37) + (long)b[i];
-			} 
-			return h;
-		} 
+    static final public class Entry implements java.io.Serializable {
+	Entry(String n, long d, byte[] b) {
+	    this.name = n;
+	    this.digest = d;
+	    this.data = b;
 	}
-	;
 
-	Hashtable cache = new Hashtable();
+	String name;
+	byte data[] = null;
+	long digest = 0;
 
-	static protected MessageDigest digestGen;
-	static {
-		try {
-			digestGen = MessageDigest.getInstance("SHA");
-		} catch (java.security.NoSuchAlgorithmException ex) {
-			ex.printStackTrace();
-		} 
-	} 
-	public synchronized Entry[] entries() {
-		Entry[] r = new Entry[cache.size()];
-		Enumeration e = cache.elements();
-		int i = 0;
-
-		while (e.hasMoreElements()) {
-			r[i++] = (Entry)e.nextElement();
-		} 
-		return r;
-
-		/*
-		 * String r[] = new String[cache.size()];
-		 * return r;
-		 */
+	public String name() {
+	    return this.name;
 	}
-	public synchronized Entry getEntry(String name) {
-		return (Entry)cache.get(name);
-	}
-	public byte[] getResourceAsByteArray(String name) {
-		return getResourceInCache(name);
-	}
-	public InputStream getResourceAsStream(String name) {
-		byte[] b = getResourceInCache(name);
 
-		if (b != null) {
-			return new java.io.ByteArrayInputStream(b);
-		} 
-		return null;
+	public long digest() {
+	    if (this.digest == 0) {
+
+		// System.out.println("computing digest");
+		this.digest = _hashcode(digestGen.digest(this.data));
+	    }
+	    return this.digest;
 	}
+
+	public byte[] data() {
+	    return this.data;
+	}
+
+	static final long _hashcode(byte[] b) {
+	    long h = 0;
+
+	    for (byte element : b) {
+		h += (h * 37) + element;
+	    }
+	    return h;
+	}
+    };
+
+    Hashtable cache = new Hashtable();
+
+    static protected MessageDigest digestGen;
+    static {
+	try {
+	    digestGen = MessageDigest.getInstance("SHA");
+	} catch (java.security.NoSuchAlgorithmException ex) {
+	    ex.printStackTrace();
+	}
+    }
+
+    public synchronized Entry[] entries() {
+	Entry[] r = new Entry[this.cache.size()];
+	Enumeration e = this.cache.elements();
+	int i = 0;
+
+	while (e.hasMoreElements()) {
+	    r[i++] = (Entry) e.nextElement();
+	}
+	return r;
+
 	/*
-	 * synchronized public ClassName[] getClassNames() {
-	 * if (classtable == null) {
-	 * ClassName classtable[] = new ClassName[cache.size()];
-	 * Enumeration e = cache.elements();
-	 * int i=0;
-	 * while(e.hasMoreElements()) {
-	 * Entry en = (Entry)e.nextElement();
-	 * byte b[] = DigestTable.toByteArray(en.digest());
-	 * classtable[i] = new ClassName(en.name, b);
-	 * }
-	 * }
-	 * return classtable;
-	 * }
+	 * String r[] = new String[cache.size()]; return r;
 	 */
+    }
 
-	/* package */
-	protected byte[] getResourceInCache(String name) {
-		Entry e = getEntry(name);
+    public synchronized Entry getEntry(String name) {
+	return (Entry) this.cache.get(name);
+    }
 
-		if (e != null) {
-			return e.data;
-		} 
-		return null;
-	}
-	synchronized public void putResource(String name, byte[] res) {
-		cache.put(name, new Entry(name, 0, res));
-	}
-	synchronized public void putResource(String name, long d, byte[] res) {
-		cache.put(name, new Entry(name, d, res));
-	}
-	/*
-	 * private void writeObject(java.io.ObjectOutputStream s) throws IOException {
-	 * s.defaultWriteObject();
-	 * System.out.println("writeObject" + cache);
-	 * }
-	 */
-	private void readObject(ObjectInputStream s) 
-			throws IOException, ClassNotFoundException {
-		s.defaultReadObject();
-	}
-	synchronized public void removeResource(String name) {
-		cache.remove(name);
-	}
-	public String toString() {
-		Enumeration e = cache.elements();
-		StringBuffer buffer = new StringBuffer();
-		int i = 1;
+    public byte[] getResourceAsByteArray(String name) {
+	return this.getResourceInCache(name);
+    }
 
-		while (e.hasMoreElements()) {
-			Entry en = (Entry)e.nextElement();
+    public InputStream getResourceAsStream(String name) {
+	byte[] b = this.getResourceInCache(name);
 
-			buffer.append("[" + i + "] " + en.name + ", " + en.digest() 
-						  + '\n');
-			i++;
-		} 
-		return buffer.toString();
+	if (b != null) {
+	    return new java.io.ByteArrayInputStream(b);
 	}
+	return null;
+    }
+
+    /*
+     * synchronized public ClassName[] getClassNames() { if (classtable == null)
+     * { ClassName classtable[] = new ClassName[cache.size()]; Enumeration e =
+     * cache.elements(); int i=0; while(e.hasMoreElements()) { Entry en =
+     * (Entry)e.nextElement(); byte b[] = DigestTable.toByteArray(en.digest());
+     * classtable[i] = new ClassName(en.name, b); } } return classtable; }
+     */
+
+    /* package */
+    protected byte[] getResourceInCache(String name) {
+	Entry e = this.getEntry(name);
+
+	if (e != null) {
+	    return e.data;
+	}
+	return null;
+    }
+
+    synchronized public void putResource(String name, byte[] res) {
+	this.cache.put(name, new Entry(name, 0, res));
+    }
+
+    synchronized public void putResource(String name, long d, byte[] res) {
+	this.cache.put(name, new Entry(name, d, res));
+    }
+
+    /*
+     * private void writeObject(java.io.ObjectOutputStream s) throws IOException
+     * { s.defaultWriteObject(); System.out.println("writeObject" + cache); }
+     */
+    private void readObject(ObjectInputStream s) throws IOException,
+	    ClassNotFoundException {
+	s.defaultReadObject();
+    }
+
+    synchronized public void removeResource(String name) {
+	this.cache.remove(name);
+    }
+
+    @Override
+    public String toString() {
+	Enumeration e = this.cache.elements();
+	StringBuffer buffer = new StringBuffer();
+	int i = 1;
+
+	while (e.hasMoreElements()) {
+	    Entry en = (Entry) e.nextElement();
+
+	    buffer.append("[" + i + "] " + en.name + ", " + en.digest() + '\n');
+	    i++;
+	}
+	return buffer.toString();
+    }
 }

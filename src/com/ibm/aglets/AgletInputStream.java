@@ -14,78 +14,94 @@ package com.ibm.aglets;
  * deposited with the U.S. Copyright Office.
  */
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
+import java.io.StreamCorruptedException;
 
 /**
  * An instance of this class reads objects from an input stream which contains
  * class data with objects. The input stream contains objects, class data of
  * these objects and class data of all super classes of these classes. Data in
- * the input stream must be written by an instance of the AgletOutputStream.<p>
+ * the input stream must be written by an instance of the AgletOutputStream.
+ * <p>
  * 
  * This aglet input stream looks into the class loader cache of the AgletLoader
- * and gets a class loader corresponding to the URL of an origin of the
- * received class. If the class loader is not found in the cache, this stream
- * will creates a new class loader and put it into the cache. After getting the
- * class loader, this stream gets a class of the received object from the class
- * cache of the class loader. If the class is not found in the class cache, the
- * class loader will create the class.
+ * and gets a class loader corresponding to the URL of an origin of the received
+ * class. If the class loader is not found in the cache, this stream will
+ * creates a new class loader and put it into the cache. After getting the class
+ * loader, this stream gets a class of the received object from the class cache
+ * of the class loader. If the class is not found in the class cache, the class
+ * loader will create the class.
  * 
  * @see AgletOutputStream
  * @see AgletLoader
- * @version     1.00    96/06/28
- * @author      Gaku Yamamoto
- * @author	Mitsuru Oshima
+ * @version 1.00 96/06/28
+ * @author Gaku Yamamoto
+ * @author Mitsuru Oshima
  */
 
 final class AgletInputStream extends ObjectInputStream {
 
-	private ResourceManager rm = null;
+    private ResourceManager rm = null;
 
-	/**
-	 * Create a new instance of this class.
-	 * @param in an input stream containing objests and class data.
-	 * @exception IOException if can not read data from the input stream.
-	 * @exception StreamCorruptedException if data in the input stream is
-	 * invalid.
-	 */
-	public AgletInputStream(InputStream in, 
-							ResourceManager rm) throws IOException {
-		super(in);
-		this.rm = rm;
+    /**
+     * Create a new instance of this class.
+     * 
+     * @param in
+     *            an input stream containing objests and class data.
+     * @exception IOException
+     *                if can not read data from the input stream.
+     * @exception StreamCorruptedException
+     *                if data in the input stream is invalid.
+     */
+    public AgletInputStream(InputStream in, ResourceManager rm)
+	    throws IOException {
+	super(in);
+	this.rm = rm;
+    }
+
+    /*
+     * Verify and check whether the stream contains the aglet
+     */
+    @Override
+    protected void readStreamHeader() throws IOException,
+	    StreamCorruptedException {
+	int incoming_magic = this.readInt();
+
+	if (incoming_magic != AgletRuntime.AGLET_MAGIC) {
+	    throw new StreamCorruptedException("InputStream does not contain an aglet");
 	}
-	/*
-	 * Verify and check whether the stream contains the aglet
-	 */
-	protected void readStreamHeader() 
-			throws IOException, StreamCorruptedException {
-		int incoming_magic = readInt();
 
-		if (incoming_magic != AgletRuntime.AGLET_MAGIC) {
-			throw new StreamCorruptedException("InputStream does not contain an aglet");
-		} 
+	byte stream_version = this.readByte();
 
-		byte stream_version = readByte();
-
-		if (stream_version != AgletRuntime.AGLET_STREAM_VERSION) {
-			throw new StreamCorruptedException("Stream Version Mismatch: " 
-											   + stream_version);
-		} 
+	if (stream_version != AgletRuntime.AGLET_STREAM_VERSION) {
+	    throw new StreamCorruptedException("Stream Version Mismatch: "
+		    + stream_version);
 	}
-	/**
-	 * Resolve a class specified by classname. This method reads class data
-	 * from the input stream and resolves the class by using a class loader
-	 * corresponding to the origin of the class. If the class is common class,
-	 * the class will be resolved by super.resolveClass. This method reads
-	 * class data of all super classes of the class in the input stream and
-	 * put them into the class data cache of the class loader. These super
-	 * classes will be  resolved on demand.
-	 * @param classname class name.
-	 * @return the resolved class.
-	 * @exception IOException if can not read data from the input stream.
-	 * @exception ClassNotFoundException if can not resolve the class.
-	 */
-	public Class resolveClass(ObjectStreamClass classinfo) 
-			throws IOException, ClassNotFoundException {
-		return rm.loadClass(classinfo.getName());
-	}
+    }
+
+    /**
+     * Resolve a class specified by classname. This method reads class data from
+     * the input stream and resolves the class by using a class loader
+     * corresponding to the origin of the class. If the class is common class,
+     * the class will be resolved by super.resolveClass. This method reads class
+     * data of all super classes of the class in the input stream and put them
+     * into the class data cache of the class loader. These super classes will
+     * be resolved on demand.
+     * 
+     * @param classname
+     *            class name.
+     * @return the resolved class.
+     * @exception IOException
+     *                if can not read data from the input stream.
+     * @exception ClassNotFoundException
+     *                if can not resolve the class.
+     */
+    @Override
+    public Class resolveClass(ObjectStreamClass classinfo) throws IOException,
+	    ClassNotFoundException {
+	return this.rm.loadClass(classinfo.getName());
+    }
 }

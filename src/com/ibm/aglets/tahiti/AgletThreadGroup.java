@@ -14,47 +14,49 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-import java.net.URL;
-import com.ibm.aglet.InvalidAgletException;
-import com.ibm.aglets.LocalAgletRef;
 
 /**
  * An AgletThreadGroup contains are the running threads of a specific aglet.
  * 
- * @version     1.10	$Date: 2009/07/28 07:04:53 $
- * @author      Danny B. Lange
- * @author	Mitsuru Oshima
+ * @version 1.10 $Date: 2009/07/28 07:04:53 $
+ * @author Danny B. Lange
+ * @author Mitsuru Oshima
  */
 final class AgletThreadGroup extends ThreadGroup {
 
-	protected ResourceManagerImpl _rm;
+    protected ResourceManagerImpl _rm;
 
-	// 
-	private int maxThreadNumber = 10;
+    //
+    private int maxThreadNumber = 10;
 
-	// Constructs an aglet thread group for the specified aglet.
-	// 
-	public AgletThreadGroup(ThreadGroup parent, ResourceManagerImpl rm) {
-		super(parent, "AgletThreadGroup:" + rm.getName());
-		_rm = rm;
-		setMaxPriority(5);
-	}
-	public int getMaxThreadNumber() {
-		checkAccess();
-		return maxThreadNumber;
-	}
-	public void invalidate() {
-		_rm = null;
-	}
-	/*
+    // Constructs an aglet thread group for the specified aglet.
+    //
+    public AgletThreadGroup(ThreadGroup parent, ResourceManagerImpl rm) {
+	super(parent, "AgletThreadGroup:" + rm.getName());
+	this._rm = rm;
+	this.setMaxPriority(5);
+    }
+
+    public int getMaxThreadNumber() {
+	this.checkAccess();
+	return this.maxThreadNumber;
+    }
+
+    public void invalidate() {
+	this._rm = null;
+    }
+
+    /*
 	 * 
 	 */
-	public void setMaxThreadNumber(int i) {
-		checkAccess();
-		maxThreadNumber = i;
-	}
-	public String toString() {
-		return getClass().getName() + "[name=" + getName() + ",maxpri=" 
-			   + getMaxPriority() + "]";
-	}
+    public void setMaxThreadNumber(int i) {
+	this.checkAccess();
+	this.maxThreadNumber = i;
+    }
+
+    @Override
+    public String toString() {
+	return this.getClass().getName() + "[name=" + this.getName()
+		+ ",maxpri=" + this.getMaxPriority() + "]";
+    }
 }

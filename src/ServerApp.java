@@ -13,158 +13,164 @@
  * will not be liable for any third party claims against you.
  */
 
-import java.awt.Frame;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.io.File;
-import java.util.Properties;
-
-import com.ibm.maf.*;
-import com.ibm.aglet.*;
-import com.ibm.aglet.message.Message;
-import com.ibm.aglet.system.*;
-import com.ibm.aglets.MAFAgentSystem_AgletsImpl;
-import com.ibm.aglets.tahiti.Tahiti;
-
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import com.ibm.awb.misc.*;
+
+import com.ibm.aglet.AgletContext;
+import com.ibm.aglet.AgletProxy;
+import com.ibm.aglet.message.Message;
+import com.ibm.aglet.system.AgletRuntime;
+import com.ibm.aglet.system.ContextAdapter;
+import com.ibm.aglet.system.ContextEvent;
+import com.ibm.aglets.MAFAgentSystem_AgletsImpl;
+import com.ibm.aglets.tahiti.Tahiti;
+import com.ibm.awb.misc.Opt;
+import com.ibm.maf.MAFAgentSystem;
 
 /**
- * The ServerApp example illustrates how to embed the AgletsServer facility
- * into an application program.
+ * The ServerApp example illustrates how to embed the AgletsServer facility into
+ * an application program.
  * 
- * @version     1.00    $Date: 2009/07/28 07:04:53 $
- * @author      Mitsuru Oshima
+ * @version 1.00 $Date: 2009/07/28 07:04:53 $
+ * @author Mitsuru Oshima
  * @see com.ibm.aglet.system.AgletRuntime
  * @see com.ibm.aglets.Tahiti.Main
  */
 public class ServerApp extends ContextAdapter {
 
-	// additional options
-	final static Opt options[] = {
-		Opt.Entry("-protocol", "maf.protocol", null), 
-		Opt.Entry("-username", "username", null), 
-		Opt.Entry("-password", "password", null), 
-	};
+    // additional options
+    final static Opt options[] = {
+	    Opt.Entry("-protocol", "maf.protocol", null),
+	    Opt.Entry("-username", "username", null),
+	    Opt.Entry("-password", "password", null), };
 
-	public void agletActivated(ContextEvent ev) {
-		System.out.println("Aglet Activated : " + ev.getAgletProxy());
+    @Override
+    public void agletActivated(ContextEvent ev) {
+	System.out.println("Aglet Activated : " + ev.getAgletProxy());
+    }
+
+    @Override
+    public void agletArrived(ContextEvent ev) {
+	System.out.println("Aglet Arrived : " + ev.getAgletProxy());
+    }
+
+    @Override
+    public void agletCloned(ContextEvent ev) {
+	System.out.println("Aglet Cloned : " + ev.getAgletProxy());
+    }
+
+    @Override
+    public void agletCreated(ContextEvent ev) {
+	System.out.println("Aglet Created : " + ev.getAgletProxy());
+    }
+
+    @Override
+    public void agletDeactivated(ContextEvent ev) {
+	System.out.println("Aglet Deactivated : " + ev.getAgletProxy());
+    }
+
+    @Override
+    public void agletDispatched(ContextEvent ev) {
+	System.out.println("Aglet Dispatched : " + ev.getAgletProxy());
+    }
+
+    @Override
+    public void agletDisposed(ContextEvent ev) {
+	System.out.println("Aglet Disposed : " + ev.getAgletProxy());
+    }
+
+    @Override
+    public void agletReverted(ContextEvent ev) {
+	System.out.println("Aglet Reverted : " + ev.getAgletProxy());
+    }
+
+    public static void main(String args[]) throws java.lang.Exception {
+	Opt.setopt(options);
+	AgletRuntime runtime = AgletRuntime.init(args);
+
+	String[] r = (String[]) AccessController.doPrivileged(new PrivilegedAction() {
+	    public Object run() {
+		String[] results = new String[2];
+		String userName = System.getProperty("user.name");
+
+		results[0] = System.getProperty("username", userName);
+		results[1] = System.getProperty("password", "");
+		return results;
+	    }
+	});
+	String username = r[1];
+	String password = r[2];
+
+	Object obj = runtime.authenticateOwner(username, password);
+
+	if (obj == null) {
+	    System.err.println("Cannot authenticate the user \"" + username
+		    + "\"");
+	    throw new Exception("User authentication failed.");
 	}
-	public void agletArrived(ContextEvent ev) {
-		System.out.println("Aglet Arrived : " + ev.getAgletProxy());
-	}
-	public void agletCloned(ContextEvent ev) {
-		System.out.println("Aglet Cloned : " + ev.getAgletProxy());
-	}
-	public void agletCreated(ContextEvent ev) {
-		System.out.println("Aglet Created : " + ev.getAgletProxy());
-	}
-	public void agletDeactivated(ContextEvent ev) {
-		System.out.println("Aglet Deactivated : " + ev.getAgletProxy());
-	}
-	public void agletDispatched(ContextEvent ev) {
-		System.out.println("Aglet Dispatched : " + ev.getAgletProxy());
-	}
-	public void agletDisposed(ContextEvent ev) {
-		System.out.println("Aglet Disposed : " + ev.getAgletProxy());
-	}
-	public void agletReverted(ContextEvent ev) {
-		System.out.println("Aglet Reverted : " + ev.getAgletProxy());
-	}
-	public static void main(String args[]) throws java.lang.Exception {
-		Opt.setopt(options);
-		AgletRuntime runtime = AgletRuntime.init(args);
 
-		String[] r = 
-			(String[])AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
-				String[] results = new String[2];
-				String userName = System.getProperty("user.name");
+	/*
+	 * User authentication (optional) If this program requests user
+	 * identification from dialog box, we need the following call.
+	 */
 
-				results[0] = System.getProperty("username", userName);
-				results[1] = System.getProperty("password", "");
-				return results;
-			} 
-		});
-		String username = r[1];
-		String password = r[2];
+	/*
+	 * if (Main.login(runtime) == null) return;
+	 */
 
-		Object obj = runtime.authenticateOwner(username, password);
+	MAFAgentSystem maf_system = new MAFAgentSystem_AgletsImpl(runtime);
+	String protocol = "atp";
 
-		if (obj == null) {
-			System.err.println("Cannot authenticate the user \"" + username 
-							   + "\"");
-			throw new Exception("User authentication failed.");
-		} 
+	protocol = (String) AccessController.doPrivileged(new PrivilegedAction() {
+	    public Object run() {
+		return System.getProperty("maf.protocol", "atp");
+	    }
+	});
 
-		/*
-		 * User authentication (optional)
-		 * If this program requests user identification from dialog box,
-		 * we need the following call.
-		 */
+	MAFAgentSystem.initMAFAgentSystem(maf_system, protocol);
+	Tahiti.initializeGUI();
+	Tahiti.installFactories();
 
-		/*
-		 * if (Main.login(runtime) == null) return;
-		 */
+	/*
+	 * Create named contexts. To dispatch to this context, sender has to
+	 * secify the destination like, "atp://aglets.trl.ibm.com:434/test"
+	 * Defining multiple contexts is also possible.
+	 * 
+	 * Support of multiple context is experimental function. This feature
+	 * may drop in the future.
+	 */
 
-		MAFAgentSystem maf_system = new MAFAgentSystem_AgletsImpl(runtime);
-		String protocol = "atp";
+	// first context
+	AgletContext cxt = runtime.createAgletContext("test");
 
-		protocol = 
-			(String)AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
-				return System.getProperty("maf.protocol", "atp");
-			} 
-		});
+	cxt.addContextListener(new ServerApp());
 
-		MAFAgentSystem.initMAFAgentSystem(maf_system, protocol);
-		Tahiti.initializeGUI();
-		Tahiti.installFactories();
+	// second context
+	AgletContext cxt2 = runtime.createAgletContext("test2");
 
-		/*
-		 * Create named contexts. To dispatch to this context,
-		 * sender has to secify the destination like,
-		 * "atp://aglets.trl.ibm.com:434/test"
-		 * Defining multiple contexts is also possible.
-		 * 
-		 * Support of multiple context is experimental function.
-		 * This feature may drop in the future.
-		 */
+	cxt2.addContextListener(new ServerApp());
 
-		// first context
-		AgletContext cxt = runtime.createAgletContext("test");
+	Tahiti.installSecurity();
+	MAFAgentSystem.startMAFAgentSystem(maf_system, protocol);
 
-		cxt.addContextListener(new ServerApp());
+	// start contexts
+	cxt.start();
+	cxt2.start();
 
-		// second context
-		AgletContext cxt2 = runtime.createAgletContext("test2");
+	/*
+	 * From this point, you can use contexts. (creating, dispatching an
+	 * aglet, etc.) 1. Create HelloAglet in cxt, 2. And, dispatches it to
+	 * cxt2. See the source code for the detail of HelloAglet.
+	 */
+	AgletProxy p = cxt.createAglet(null, "examples.hello.HelloAglet", null);
 
-		cxt2.addContextListener(new ServerApp());
+	Message msg = new Message("startTrip", cxt2.getHostingURL().toString());
 
-		Tahiti.installSecurity();
-		MAFAgentSystem.startMAFAgentSystem(maf_system, protocol);
+	p.sendMessage(msg);
+    }
 
-		// start contexts
-		cxt.start();
-		cxt2.start();
-
-		/*
-		 * From this point, you can use contexts.
-		 * (creating, dispatching an aglet, etc.)
-		 * 1. Create HelloAglet in cxt,
-		 * 2. And, dispatches it to cxt2.
-		 * See the source code for the detail of HelloAglet.
-		 */
-		AgletProxy p = cxt.createAglet(null, "examples.hello.HelloAglet", 
-									   null);
-
-		Message msg = new Message("startTrip", 
-								  cxt2.getHostingURL().toString());
-
-		p.sendMessage(msg);
-	}
-	public void showMessage(ContextEvent ev) {
-		System.out.println("message : " + ev.getMessage());
-	}
+    @Override
+    public void showMessage(ContextEvent ev) {
+	System.out.println("message : " + ev.getMessage());
+    }
 }

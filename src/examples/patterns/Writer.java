@@ -15,78 +15,81 @@ package examples.patterns;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
-import com.ibm.aglet.message.Arguments;
-import com.ibm.aglet.message.Message;
-import com.ibm.aglet.util.*;
-import com.ibm.agletx.patterns.Slave;
-import java.net.*;
 import java.io.IOException;
 import java.util.Vector;
 
+import com.ibm.aglet.AgletException;
+import com.ibm.aglet.message.Arguments;
+import com.ibm.aglet.message.Message;
+import com.ibm.agletx.patterns.Slave;
+
 /**
- * Class Writer is used to display a message on a remote aglet server.
- * Given an URL (Agler Resource Locator) it will dispatch a slave (the
- * WriterSlave class) to popup a window with the message on the remote
- * terminal. Finally, the slave returns to its origin host.
+ * Class Writer is used to display a message on a remote aglet server. Given an
+ * URL (Agler Resource Locator) it will dispatch a slave (the WriterSlave class)
+ * to popup a window with the message on the remote terminal. Finally, the slave
+ * returns to its origin host.
  * 
  * @see WriterSlave
- * @version     1.00    96/12/28
- * @author      Yariv Aridor
+ * @version 1.00 96/12/28
+ * @author Yariv Aridor
  */
 
 public class Writer extends SampleAglet {
 
-	// -- callback function for the "go" bottom.
-	// 
-	protected void createSlave(Vector destinations, Object obj) {
-		Arguments args = new Arguments();
-		String username = "unknown";
+    // -- callback function for the "go" bottom.
+    //
+    @Override
+    protected void createSlave(Vector destinations, Object obj) {
+	Arguments args = new Arguments();
+	String username = "unknown";
 
-		args.setArg("msg", (String)obj);
-		args.setArg("user", username);
-		try {
-			Slave.create(null, "examples.patterns.WriterSlave", 
-						 getAgletContext(), this, destinations, args);
-		} catch (IOException ae) {
-			inError(ae.getMessage());
-		} catch (AgletException ae) {
-			inError(ae.getMessage());
-		} 
+	args.setArg("msg", obj);
+	args.setArg("user", username);
+	try {
+	    Slave.create(null, "examples.patterns.WriterSlave", this.getAgletContext(), this, destinations, args);
+	} catch (IOException ae) {
+	    this.inError(ae.getMessage());
+	} catch (AgletException ae) {
+	    this.inError(ae.getMessage());
 	}
-	public void createWindow() {
-		try {
-			_msw = new WriterWindow(this);
-			updateWindow();
-		} catch (Exception e) {
-			inError(e.getMessage());
-		} 
+    }
+
+    @Override
+    public void createWindow() {
+	try {
+	    this._msw = new WriterWindow(this);
+	    this.updateWindow();
+	} catch (Exception e) {
+	    this.inError(e.getMessage());
 	}
-	// -- Handler for messages
-	// 
-	public boolean handleMessage(Message msg) {
-		try {
-			if (msg.sameKind("result")) {
-				String arg = null;
+    }
 
-				if ((arg = (String)(msg.getArg())) != null) {
-					try {
-						setTheMessage(arg);
-						setTheMessage("Finished");
-					} catch (Exception e) {
+    // -- Handler for messages
+    //
+    @Override
+    public boolean handleMessage(Message msg) {
+	try {
+	    if (msg.sameKind("result")) {
+		String arg = null;
 
-						// not yet implemented
-					} 
-				} else {
-					setTheMessage("Finished, but no argument!");
-				}
-			} else {
-				super.handleMessage(msg);
-			}
-		} catch (Exception e) {
+		if ((arg = (String) (msg.getArg())) != null) {
+		    try {
+			this.setTheMessage(arg);
+			this.setTheMessage("Finished");
+		    } catch (Exception e) {
 
-			// -- not yet handled
-		} 
-		return false;
+			// not yet implemented
+		    }
+		} else {
+		    this.setTheMessage("Finished, but no argument!");
+		}
+	    } else {
+		super.handleMessage(msg);
+	    }
+	} catch (Exception e) {
+
+	    // -- not yet handled
 	}
+	return false;
+    }
 }

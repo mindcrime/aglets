@@ -1,8 +1,8 @@
 package com.ibm.awb.misc;
 
 import java.util.Enumeration;
-import java.util.Vector;
 import java.util.NoSuchElementException;
+import java.util.Vector;
 
 /*
  * @(#)StringList.java
@@ -19,26 +19,28 @@ import java.util.NoSuchElementException;
  */
 
 public class StringList implements Enumeration {
-	private Vector _list = new Vector();
-	private int _index = 0;
+    private Vector _list = new Vector();
+    private int _index = 0;
 
-	public final void addString(String str) {
-		_list.addElement(str);
-	}
-	public boolean hasMoreElements() {
-		return _index < _list.size();
-	}
-	public Object nextElement() {
-		if (!hasMoreElements()) {
-			throw new NoSuchElementException("no more elements.");
-		} 
-		Object obj = null;
+    public final void addString(String str) {
+	this._list.addElement(str);
+    }
 
-		try {
-			obj = _list.elementAt(_index);
-		} catch (Exception excpt) {
-			throw new NoSuchElementException(excpt.getMessage());
-		} 
-		return obj;
+    public boolean hasMoreElements() {
+	return this._index < this._list.size();
+    }
+
+    public Object nextElement() {
+	if (!this.hasMoreElements()) {
+	    throw new NoSuchElementException("no more elements.");
 	}
+	Object obj = null;
+
+	try {
+	    obj = this._list.elementAt(this._index);
+	} catch (Exception excpt) {
+	    throw new NoSuchElementException(excpt.getMessage());
+	}
+	return obj;
+    }
 }

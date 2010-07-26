@@ -17,25 +17,28 @@ package com.ibm.atp.auth;
 import java.net.ProtocolException;
 
 /**
- * The <tt>AuthenticationProtocolException</tt> class is
- * the authentication protocol exception class.
+ * The <tt>AuthenticationProtocolException</tt> class is the authentication
+ * protocol exception class.
  * 
- * @version     1.00    $Date: 2009/07/28 07:04:53 $
- * @author      ONO Kouichi
+ * @version 1.00 $Date: 2009/07/28 07:04:53 $
+ * @author ONO Kouichi
  */
 public class AuthenticationProtocolException extends ProtocolException {
-	/**
-	 * Default Constructor shows stack trace.
-	 */
-	public AuthenticationProtocolException() {
-		printStackTrace();
-	}
-	/**
-	 * Constructor shows stack trace with the specified detailed message.
-	 * @param msg the detailed message
-	 */
-	public AuthenticationProtocolException(String msg) {
-		super(msg);
-		printStackTrace();
-	}
+    /**
+     * Default Constructor shows stack trace.
+     */
+    public AuthenticationProtocolException() {
+	this.printStackTrace();
+    }
+
+    /**
+     * Constructor shows stack trace with the specified detailed message.
+     * 
+     * @param msg
+     *            the detailed message
+     */
+    public AuthenticationProtocolException(String msg) {
+	super(msg);
+	this.printStackTrace();
+    }
 }

@@ -14,11 +14,12 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-import com.ibm.aglet.AgletProxy;
+import java.util.Date;
+
 import com.ibm.aglet.AgletInfo;
+import com.ibm.aglet.AgletProxy;
 import com.ibm.aglet.InvalidAgletException;
 import com.ibm.awb.misc.Resource;
-import java.util.Date;
 
 /*
  * An object which is associated to a list item in the Tahiti main window.
@@ -27,236 +28,248 @@ import java.util.Date;
  */
 
 final public class TahitiItem {
-	final static int KEY_LASTUPDATE = 0;
-	final static int KEY_TIMESTAMP = 1;
-	final static int KEY_CLASSNAME = 2;
+    final static int KEY_LASTUPDATE = 0;
+    final static int KEY_TIMESTAMP = 1;
+    final static int KEY_CLASSNAME = 2;
 
-	static int _keyOrder = KEY_LASTUPDATE;
-	static boolean _isAscentOrder = true;
-	static boolean _isPrecise = true;
-	static boolean _needUpdate = false;		// true;
-	static boolean _fInit = false;
+    static int _keyOrder = KEY_LASTUPDATE;
+    static boolean _isAscentOrder = true;
+    static boolean _isPrecise = true;
+    static boolean _needUpdate = false; // true;
+    static boolean _fInit = false;
 
-	AgletProxy _proxy;
-	Date _date;
-	String _timestamp;
-	String _timestampSimple;
-	String _classname;
-	String _classnameSimple;
-	boolean _isValid = false;
+    AgletProxy _proxy;
+    Date _date;
+    String _timestamp;
+    String _timestampSimple;
+    String _classname;
+    String _classnameSimple;
+    boolean _isValid = false;
 
-	/*
-	 * Constractor
-	 */
-	public TahitiItem() {
-		_keyOrder = KEY_LASTUPDATE;
-		_needUpdate = true;
+    /*
+     * Constractor
+     */
+    public TahitiItem() {
+	_keyOrder = KEY_LASTUPDATE;
+	_needUpdate = true;
+    }
+
+    public TahitiItem(AgletProxy proxy) {
+	try {
+	    if (this._isValid = proxy.isValid()) {
+		this._proxy = proxy;
+		AgletInfo info = proxy.getAgletInfo();
+
+		this._date = new Date(info.getCreationTime());
+		this._classname = info.getAgletClassName();
+	    }
+	} catch (InvalidAgletException ex) {
+	} catch (RuntimeException ex) {
+	    ex.printStackTrace();
+	} finally {
 	}
-	public TahitiItem(AgletProxy proxy) {
-		try {
-			if (_isValid = proxy.isValid()) {
-				_proxy = proxy;
-				AgletInfo info = proxy.getAgletInfo();
+    }
 
-				_date = new Date(info.getCreationTime());
-				_classname = info.getAgletClassName();
-			} 
-		} catch (InvalidAgletException ex) {}
-		catch (RuntimeException ex) {
-			ex.printStackTrace();
-		} 
-		finally {}
-	}
-	boolean checkProxy(AgletProxy proxy) {
-		return (_proxy == proxy);
-	}
-	int compareTo(TahitiItem tahitiItem) {
-		int cmp = 0;
+    boolean checkProxy(AgletProxy proxy) {
+	return (this._proxy == proxy);
+    }
 
-		switch (_keyOrder) {
-		case KEY_LASTUPDATE:
-			cmp = -1;
-			break;
-		case KEY_TIMESTAMP:
-			if (_date.after(tahitiItem._date)) {
-				cmp = 1;
-			} else if (_date.before(tahitiItem._date)) {
-				cmp = -1;
-			} else {
-				cmp = _classname.compareTo(tahitiItem._classname);
-			} 
-			break;
-		case KEY_CLASSNAME:
-			cmp = _classname.compareTo(tahitiItem._classname);
-			if (cmp == 0) {
-				if (_date.after(tahitiItem._date)) {
-					cmp = 1;
-				} else if (_date.before(tahitiItem._date)) {
-					cmp = -1;
-				} else {
-					cmp = 0;
-				} 
-			} 
-			break;
-		default:
-			break;
+    int compareTo(TahitiItem tahitiItem) {
+	int cmp = 0;
+
+	switch (_keyOrder) {
+	case KEY_LASTUPDATE:
+	    cmp = -1;
+	    break;
+	case KEY_TIMESTAMP:
+	    if (this._date.after(tahitiItem._date)) {
+		cmp = 1;
+	    } else if (this._date.before(tahitiItem._date)) {
+		cmp = -1;
+	    } else {
+		cmp = this._classname.compareTo(tahitiItem._classname);
+	    }
+	    break;
+	case KEY_CLASSNAME:
+	    cmp = this._classname.compareTo(tahitiItem._classname);
+	    if (cmp == 0) {
+		if (this._date.after(tahitiItem._date)) {
+		    cmp = 1;
+		} else if (this._date.before(tahitiItem._date)) {
+		    cmp = -1;
+		} else {
+		    cmp = 0;
+		}
+	    }
+	    break;
+	default:
+	    break;
+	}
+
+	if (_isAscentOrder == false) {
+	    cmp = -cmp;
+	}
+
+	return cmp;
+    }
+
+    AgletProxy getAgletProxy() {
+	return this._proxy;
+    }
+
+    /*
+     * Instance methods
+     */
+    String getClassName() {
+	if (_isPrecise) {
+	    return this._classname;
+	} else {
+	    int len = 0;
+
+	    len = this._classname.length();
+	    if (len > 20) {
+
+		// replace last string "Aglet" with ".."
+		if (this._classname.endsWith("Aglet")) {
+		    this._classnameSimple = this._classname.substring(0, len - 5)
+			    + "..";
+		} else {
+		    this._classnameSimple = new String(this._classname);
 		}
 
-		if (_isAscentOrder == false) {
-			cmp = -cmp;
-		} 
-
-		return cmp;
-	}
-	AgletProxy getAgletProxy() {
-		return _proxy;
-	}
-	/*
-	 * Instance methods
-	 */
-	String getClassName() {
-		if (_isPrecise) {
-			return _classname;
+		// replace left part of classname with ".."
+		len = this._classnameSimple.length();
+		if (len > 20) {
+		    this._classnameSimple = ".."
+			    + this._classnameSimple.substring(len - 18, len);
 		} else {
-			int len = 0;
-
-			len = _classname.length();
-			if (len > 20) {
-
-				// replace last string "Aglet" with ".."
-				if (_classname.endsWith("Aglet")) {
-					_classnameSimple = _classname.substring(0, len - 5) 
-									   + "..";
-				} else {
-					_classnameSimple = new String(_classname);
-				} 
-
-				// replace left part of classname with ".."
-				len = _classnameSimple.length();
-				if (len > 20) {
-					_classnameSimple = ".." 
-									   + _classnameSimple.substring(len - 18, 
-									   len);
-				} else {
-					_classnameSimple = (_classnameSimple + "   ").substring(0, 
-							20);
-				} 
-			} else {
-				_classnameSimple = 
-					(_classname + "                    ").substring(0, 20);
-			} 
-			return _classnameSimple;
-		} 
-	}
-	static boolean getPrecision() {
-		return _isAscentOrder;
-	}
-	String getText() {
-		String text;
-
-		switch (_keyOrder) {
-		case KEY_LASTUPDATE:
-			text = getClassName() + " : " + getTimeStamp();
-			break;
-		case KEY_TIMESTAMP:
-			text = getTimeStamp() + " : " + getClassName();
-			break;
-		case KEY_CLASSNAME:
-			text = getClassName() + " : " + getTimeStamp();
-			break;
-		default:
-			text = getTimeStamp() + " : " + getClassName();
-			break;
+		    this._classnameSimple = (this._classnameSimple + "   ").substring(0, 20);
 		}
+	    } else {
+		this._classnameSimple = (this._classname + "                    ").substring(0, 20);
+	    }
+	    return this._classnameSimple;
+	}
+    }
 
-		return text;
-	}
-	String getTimeStamp() {
-		_timestamp = _date.toString();
-		if (_isPrecise) {
-			return _timestamp;
-		} else {
-			_timestampSimple = _timestamp.substring(11, 19);
+    static boolean getPrecision() {
+	return _isAscentOrder;
+    }
 
-			return _timestampSimple;
-		} 
-	}
-	/*
-	 * Class methods
-	 */
-	static void init() {
-		if (_fInit) {
-			return;
-		} 
-		_fInit = true;
+    String getText() {
+	String text;
 
-		Resource tahiti_res = Resource.getResourceFor("tahiti");
-		String key = tahiti_res.getString("tahiti.itemkey", "event order");
-		String order = tahiti_res.getString("tahiti.itemorder", "ascent");
-		String precision = tahiti_res.getString("tahiti.itemprecision", 
-												"complete");
+	switch (_keyOrder) {
+	case KEY_LASTUPDATE:
+	    text = this.getClassName() + " : " + this.getTimeStamp();
+	    break;
+	case KEY_TIMESTAMP:
+	    text = this.getTimeStamp() + " : " + this.getClassName();
+	    break;
+	case KEY_CLASSNAME:
+	    text = this.getClassName() + " : " + this.getTimeStamp();
+	    break;
+	default:
+	    text = this.getTimeStamp() + " : " + this.getClassName();
+	    break;
+	}
 
-		// tahiti items view control
-		if (key.equals("event order")) {
-			setKeyItem(TahitiItem.KEY_LASTUPDATE);
-		} else if (key.equals("creation time")) {
-			setKeyItem(TahitiItem.KEY_TIMESTAMP);
-		} else if (key.equals("class name")) {
-			setKeyItem(TahitiItem.KEY_CLASSNAME);
-		} 
-		;
+	return text;
+    }
 
-		if (order.equals("ascent")) {
-			setAscentOrder();
-		} else if (order.equals("descent")) {
-			setDescentOrder();
-		} 
-		;
+    String getTimeStamp() {
+	this._timestamp = this._date.toString();
+	if (_isPrecise) {
+	    return this._timestamp;
+	} else {
+	    this._timestampSimple = this._timestamp.substring(11, 19);
 
-		if (precision.equals("complete")) {
-			setPrecision(true);
-		} else if (precision.equals("compact")) {
-			setPrecision(false);
-		} 
-		;
+	    return this._timestampSimple;
+	}
+    }
 
-		// System.out.println("TahitiItem: key: " + key + " order: " + order + " precision: " + precision);
+    /*
+     * Class methods
+     */
+    static void init() {
+	if (_fInit) {
+	    return;
 	}
-	static boolean isAscentOrder() {
-		return _isAscentOrder;
-	}
-	static boolean isNeedUpdate() {
-		boolean retval = _needUpdate;
+	_fInit = true;
 
-		_needUpdate = false;
-		return retval;
+	Resource tahiti_res = Resource.getResourceFor("tahiti");
+	String key = tahiti_res.getString("tahiti.itemkey", "event order");
+	String order = tahiti_res.getString("tahiti.itemorder", "ascent");
+	String precision = tahiti_res.getString("tahiti.itemprecision", "complete");
+
+	// tahiti items view control
+	if (key.equals("event order")) {
+	    setKeyItem(TahitiItem.KEY_LASTUPDATE);
+	} else if (key.equals("creation time")) {
+	    setKeyItem(TahitiItem.KEY_TIMESTAMP);
+	} else if (key.equals("class name")) {
+	    setKeyItem(TahitiItem.KEY_CLASSNAME);
 	}
-	static void setAscentOrder() {
-		if (_isAscentOrder) {
-			return;
-		} 
-		_isAscentOrder = true;
-		_needUpdate = true;
+	;
+
+	if (order.equals("ascent")) {
+	    setAscentOrder();
+	} else if (order.equals("descent")) {
+	    setDescentOrder();
 	}
-	static void setDescentOrder() {
-		if (!_isAscentOrder) {
-			return;
-		} 
-		_isAscentOrder = false;
-		_needUpdate = true;
+	;
+
+	if (precision.equals("complete")) {
+	    setPrecision(true);
+	} else if (precision.equals("compact")) {
+	    setPrecision(false);
 	}
-	static void setKeyItem(int key) {
-		if (_keyOrder == key) {
-			return;
-		} 
-		_keyOrder = key;
-		_needUpdate = true;
+	;
+
+	// System.out.println("TahitiItem: key: " + key + " order: " + order +
+	// " precision: " + precision);
+    }
+
+    static boolean isAscentOrder() {
+	return _isAscentOrder;
+    }
+
+    static boolean isNeedUpdate() {
+	boolean retval = _needUpdate;
+
+	_needUpdate = false;
+	return retval;
+    }
+
+    static void setAscentOrder() {
+	if (_isAscentOrder) {
+	    return;
 	}
-	static void setPrecision(boolean precision) {
-		if (_isPrecise == precision) {
-			return;
-		} 
-		_isPrecise = precision;
-		_needUpdate = true;
+	_isAscentOrder = true;
+	_needUpdate = true;
+    }
+
+    static void setDescentOrder() {
+	if (!_isAscentOrder) {
+	    return;
 	}
+	_isAscentOrder = false;
+	_needUpdate = true;
+    }
+
+    static void setKeyItem(int key) {
+	if (_keyOrder == key) {
+	    return;
+	}
+	_keyOrder = key;
+	_needUpdate = true;
+    }
+
+    static void setPrecision(boolean precision) {
+	if (_isPrecise == precision) {
+	    return;
+	}
+	_isPrecise = precision;
+	_needUpdate = true;
+    }
 }

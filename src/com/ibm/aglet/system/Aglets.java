@@ -23,69 +23,71 @@ package com.ibm.aglet.system;
  * IBM WILL NOT BE LIABLE FOR ANY THIRD PARTY CLAIMS AGAINST YOU.
  */
 
-import com.ibm.aglet.*;
 import java.io.IOException;
 import java.net.URL;
 
+import com.ibm.aglet.AgletID;
+import com.ibm.aglet.AgletProxy;
+
 /**
- * Aglets class defines a set of convenient functions for a client which
- * has no AgletContext and daemon to receive incoming aglets.
+ * Aglets class defines a set of convenient functions for a client which has no
+ * AgletContext and daemon to receive incoming aglets.
  * 
  * <pre>
  * static public void main(String args[]) {
- *     String contextAddress = "atp://server.com:4434";
- *
+ *     String contextAddress = &quot;atp://server.com:4434&quot;;
+ * 
  *     // create from server's local path
- *     AgletProxy p1 = Aglets.createAglet(contextAddress, null,
- *                                        "test.Aglet", null);
+ *     AgletProxy p1 = Aglets.createAglet(contextAddress, null, &quot;test.Aglet&quot;, null);
  *     AgletID id = p1.getAgletID();
- *
+ * 
  *     // this returns a proxy equivalent to p1.
  *     AgletProxy p2 = Aglets.getAgletProxy(contextAddress, id);
- *
- *     p2.sendMessage(new Message("startTrip"));
+ * 
+ *     p2.sendMessage(new Message(&quot;startTrip&quot;));
  * }
  * </pre>
  * 
- * @version     1.10    $Date: 2009/07/28 07:04:54 $
- * @author      Mitsuru Oshima
+ * @version 1.10 $Date: 2009/07/28 07:04:54 $
+ * @author Mitsuru Oshima
  */
 abstract public class Aglets {
 
-	static {
-		try {
-			AgletRuntime.init(null);
-		} catch (Throwable t) {
+    static {
+	try {
+	    AgletRuntime.init(null);
+	} catch (Throwable t) {
 
-			// ignore
-		} 
-	} 
+	    // ignore
+	}
+    }
 
-	/**
-	 * Creates an aglet
-	 * 
-	 */
-	static public AgletProxy createAglet(String contextAddress, URL codebase, 
-										 String classname, 
-										 Object init) throws IOException {
-		return AgletRuntime.getAgletRuntime().createAglet(contextAddress, 
-				codebase, classname, init);
-	}
-	/**
-	 * Gets an enumeration of aglet proxies of all aglets residing
-	 * in the context specified by contextAddress.
-	 * @param contextAddress specify context URL with a string.
-	 */
-	static public AgletProxy[] getAgletProxies(String contextAddress) 
-			throws IOException {
-		return AgletRuntime.getAgletRuntime().getAgletProxies(contextAddress);
-	}
-	/**
-	 * Obtains a proxy reference to the remote aglet.
-	 */
-	static public AgletProxy getAgletProxy(String contextAddress, 
-										   AgletID id) throws IOException {
-		return AgletRuntime.getAgletRuntime().getAgletProxy(contextAddress, 
-				id);
-	}
+    /**
+     * Creates an aglet
+     * 
+     */
+    static public AgletProxy createAglet(String contextAddress, URL codebase,
+	    String classname, Object init) throws IOException {
+	return AgletRuntime.getAgletRuntime().createAglet(contextAddress, codebase, classname, init);
+    }
+
+    /**
+     * Gets an enumeration of aglet proxies of all aglets residing in the
+     * context specified by contextAddress.
+     * 
+     * @param contextAddress
+     *            specify context URL with a string.
+     */
+    static public AgletProxy[] getAgletProxies(String contextAddress)
+	    throws IOException {
+	return AgletRuntime.getAgletRuntime().getAgletProxies(contextAddress);
+    }
+
+    /**
+     * Obtains a proxy reference to the remote aglet.
+     */
+    static public AgletProxy getAgletProxy(String contextAddress, AgletID id)
+	    throws IOException {
+	return AgletRuntime.getAgletRuntime().getAgletProxy(contextAddress, id);
+    }
 }

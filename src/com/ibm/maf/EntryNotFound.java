@@ -23,11 +23,12 @@ package com.ibm.maf;
 
 public final class EntryNotFound extends MAFException {
 
-	// constructor
-	public EntryNotFound() {
-		super();
-	}
-	public EntryNotFound(String msg) {
-		super(msg);
-	}
+    // constructor
+    public EntryNotFound() {
+	super();
+    }
+
+    public EntryNotFound(String msg) {
+	super(msg);
+    }
 }

@@ -5,15 +5,12 @@
  */
 package com.ibm.aglets.tahiti.utils;
 
-import java.util.ResourceBundle;
-
-
 /**
- * A class that loads and keeps the Tahiti strings to use for menus, buttons, and so on.
+ * A class that loads and keeps the Tahiti strings to use for menus, buttons,
+ * and so on.
  */
 public class TahitiCommandStrings {
-    
-    
+
     public static final String CREATE_COMMAND = "create";
     public static final String CLONE_COMMAND = "clone";
     public static final String ACTIVATE_COMMAND = "activate";
@@ -54,5 +51,5 @@ public class TahitiCommandStrings {
     public static final String REBOOT_COMMAND = "reboot";
     public static final String IMPORT_COMMAND = "import";
     public static final String EXPORT_COMMAND = "export";
-    public static final String SLEEP_COMMAND  = "sleep";
+    public static final String SLEEP_COMMAND = "sleep";
 }

@@ -14,56 +14,61 @@ package com.ibm.awb.launcher;
  * deposited with the U.S. Copyright Office.
  */
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.net.*;
+import java.awt.BorderLayout;
+import java.awt.Button;
+import java.awt.Frame;
+import java.awt.Panel;
+import java.awt.TextArea;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Console extends Frame implements ActionListener {
-	private Button _clear_button = new Button("Clear");
-	private Button _close_button = new Button("Close");
-	private TextArea _log_text_area = new TextArea(15, 82);
-	private int _max_chars;
-	private int _cur_chars;
+    private Button _clear_button = new Button("Clear");
+    private Button _close_button = new Button("Close");
+    private TextArea _log_text_area = new TextArea(15, 82);
 
-	public Console() {
-		super("Aglets Daemon Console");
+    public Console() {
+	super("Aglets Daemon Console");
 
-		redirect();
+	this.redirect();
 
-		add("Center", _log_text_area);
-		Panel p = new Panel();
+	this.add("Center", this._log_text_area);
+	Panel p = new Panel();
 
-		p.setLayout(new BorderLayout());
-		p.add("West", _clear_button);
-		p.add("East", _close_button);
-		add("South", p);
-		pack();
+	p.setLayout(new BorderLayout());
+	p.add("West", this._clear_button);
+	p.add("East", this._close_button);
+	this.add("South", p);
+	this.pack();
 
-		_clear_button.addActionListener(this);
-		_close_button.addActionListener(this);
+	this._clear_button.addActionListener(this);
+	this._close_button.addActionListener(this);
 
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent ev) {
-				setVisible(false);
-			} 
-		});
+	this.addWindowListener(new WindowAdapter() {
+	    @Override
+	    public void windowClosing(WindowEvent ev) {
+		Console.this.setVisible(false);
+	    }
+	});
+    }
+
+    public void actionPerformed(ActionEvent ev) {
+	if (this._close_button.getActionCommand().equals(ev.getActionCommand())) {
+	    this.setVisible(false);
+	} else if (this._clear_button.getActionCommand().equals(ev.getActionCommand())) {
+
+	    // String str = _log_text_area.getText();
+	    this._log_text_area.setText("");
 	}
-	public void actionPerformed(ActionEvent ev) {
-		if (_close_button.getActionCommand().equals(ev.getActionCommand())) {
-			setVisible(false);
-		} else if (_clear_button.getActionCommand()
-		.equals(ev.getActionCommand())) {
+    }
 
-			// String str = _log_text_area.getText();
-			_log_text_area.setText("");
-		} 
-	}
-	public void redirect() {
-		LogWriter lw = new LogWriter(_log_text_area);
-		java.io.PrintStream ps = new java.io.PrintStream(lw);
+    public void redirect() {
+	LogWriter lw = new LogWriter(this._log_text_area);
+	java.io.PrintStream ps = new java.io.PrintStream(lw);
 
-		System.setOut(ps);
-		System.setErr(ps);
-	}
+	System.setOut(ps);
+	System.setErr(ps);
+    }
 }

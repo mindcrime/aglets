@@ -15,19 +15,20 @@ package examples.simple;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
+import com.ibm.aglet.Aglet;
 
 /**
  * DisplayAglet
  * 
  * Displays text in the message area on its aglet viewer.
  * 
- * @version     1.00
- * @author	Yoshiaki Mima
+ * @version 1.00
+ * @author Yoshiaki Mima
  */
 public class DisplayAglet extends Aglet {
 
-	public void run() {
-		setText("Hello, world! I am " + getClass().getName() + ".");
-	}
+    @Override
+    public void run() {
+	this.setText("Hello, world! I am " + this.getClass().getName() + ".");
+    }
 }

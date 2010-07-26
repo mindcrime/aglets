@@ -15,21 +15,20 @@ package examples.mdispatcher;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
-import com.ibm.aglet.event.*;
-import com.ibm.aglet.util.*;
+import java.awt.Button;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Panel;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
-import com.ibm.agletx.util.SimpleItinerary;
-
-import java.lang.InterruptedException;
-import java.io.Externalizable;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.io.IOException;
-import java.net.*;
-import java.awt.*;
-import java.util.Enumeration;
-import java.awt.event.*;
+import com.ibm.aglet.util.AddressChooser;
 
 /*
  * MyDialog class is the window to be opened when the dialog required.
@@ -37,98 +36,118 @@ import java.awt.event.*;
  */
 class MyDialog extends Frame implements ActionListener, WindowListener {
 
-	/*
-	 * The aglet a user interacts with.
-	 */
-	private HelloAglet aglet = null;
+    /*
+     * The aglet a user interacts with.
+     */
+    private HelloAglet aglet = null;
 
-	/*
-	 * UI Components
-	 */
-	private AddressChooser dest = new AddressChooser();
-	private TextField msg = new TextField(15);
-	private Button go = new Button("GO!");
-	private Button close = new Button("CLOSE");
+    /*
+     * UI Components
+     */
+    private AddressChooser dest = new AddressChooser();
+    private TextField msg = new TextField(15);
+    private Button go = new Button("GO!");
+    private Button close = new Button("CLOSE");
 
-	/*
-	 * Constructs the dialog window
-	 * @param aglet The aglet the user interacts with.
-	 */
-	MyDialog(HelloAglet aglet) {
-		this.aglet = aglet;
-		layoutComponents();
+    /*
+     * Constructs the dialog window
+     * 
+     * @param aglet The aglet the user interacts with.
+     */
+    MyDialog(HelloAglet aglet) {
+	this.aglet = aglet;
+	this.layoutComponents();
 
-		addWindowListener(this);
-		dest.addActionListener(this);
-		msg.addActionListener(this);
-		go.addActionListener(this);
-		close.addActionListener(this);
+	this.addWindowListener(this);
+	this.dest.addActionListener(this);
+	this.msg.addActionListener(this);
+	this.go.addActionListener(this);
+	this.close.addActionListener(this);
+    }
+
+    /**
+     * Handles the action event
+     * 
+     * @param ae
+     *            the event to be handled
+     */
+    public void actionPerformed(ActionEvent ae) {
+	if ("GO!".equals(ae.getActionCommand())) {
+	    this.aglet.message = this.msg.getText();
+	    this.aglet.goDestination(this.dest.getAddress());
+	} else if ("CLOSE".equals(ae.getActionCommand())) {
+	    this.setVisible(false);
 	}
-	/**
-	 * Handles the action event
-	 * @param ae the event to be handled
-	 */
-	public void actionPerformed(ActionEvent ae) {
-		if ("GO!".equals(ae.getActionCommand())) {
-			aglet.message = msg.getText();
-			aglet.goDestination(dest.getAddress());
-		} else if ("CLOSE".equals(ae.getActionCommand())) {
-			setVisible(false);
-		} 
-	}
-	/*
-	 * Layouts all components
-	 */
-	private void layoutComponents() {
-		msg.setText(aglet.message);
+    }
 
-		// Layouts components
-		GridBagLayout grid = new GridBagLayout();
-		GridBagConstraints cns = new GridBagConstraints();
+    /*
+     * Layouts all components
+     */
+    private void layoutComponents() {
+	this.msg.setText(this.aglet.message);
 
-		setLayout(grid);
+	// Layouts components
+	GridBagLayout grid = new GridBagLayout();
+	GridBagConstraints cns = new GridBagConstraints();
 
-		cns.weightx = 0.5;
-		cns.ipadx = cns.ipady = 5;
-		cns.fill = GridBagConstraints.HORIZONTAL;
-		cns.insets = new Insets(5, 5, 5, 5);
+	this.setLayout(grid);
 
-		cns.weightx = 1.0;
-		cns.gridwidth = GridBagConstraints.REMAINDER;
-		grid.setConstraints(dest, cns);
-		add(dest);
+	cns.weightx = 0.5;
+	cns.ipadx = cns.ipady = 5;
+	cns.fill = GridBagConstraints.HORIZONTAL;
+	cns.insets = new Insets(5, 5, 5, 5);
 
-		cns.gridwidth = GridBagConstraints.REMAINDER;
-		cns.fill = GridBagConstraints.BOTH;
-		cns.weightx = 1.0;
-		cns.weighty = 1.0;
-		cns.gridheight = 2;
-		grid.setConstraints(msg, cns);
-		add(msg);
+	cns.weightx = 1.0;
+	cns.gridwidth = GridBagConstraints.REMAINDER;
+	grid.setConstraints(this.dest, cns);
+	this.add(this.dest);
 
-		cns.weighty = 0.0;
-		cns.fill = GridBagConstraints.NONE;
-		cns.gridheight = 1;
+	cns.gridwidth = GridBagConstraints.REMAINDER;
+	cns.fill = GridBagConstraints.BOTH;
+	cns.weightx = 1.0;
+	cns.weighty = 1.0;
+	cns.gridheight = 2;
+	grid.setConstraints(this.msg, cns);
+	this.add(this.msg);
 
-		Panel p = new Panel();
+	cns.weighty = 0.0;
+	cns.fill = GridBagConstraints.NONE;
+	cns.gridheight = 1;
 
-		grid.setConstraints(p, cns);
-		add(p);
-		p.setLayout(new FlowLayout());
-		p.add(go);
-		p.add(close);
-	}
-	public void windowActivated(WindowEvent we) {}
-	public void windowClosed(WindowEvent we) {}
-	/**
-	 * Handles the window event
-	 * @param ae the event to be handled
-	 */
-	public void windowClosing(WindowEvent we) {
-		dispose();
-	}
-	public void windowDeactivated(WindowEvent we) {}
-	public void windowDeiconified(WindowEvent we) {}
-	public void windowIconified(WindowEvent we) {}
-	public void windowOpened(WindowEvent we) {}
+	Panel p = new Panel();
+
+	grid.setConstraints(p, cns);
+	this.add(p);
+	p.setLayout(new FlowLayout());
+	p.add(this.go);
+	p.add(this.close);
+    }
+
+    public void windowActivated(WindowEvent we) {
+    }
+
+    public void windowClosed(WindowEvent we) {
+    }
+
+    /**
+     * Handles the window event
+     * 
+     * @param ae
+     *            the event to be handled
+     */
+    public void windowClosing(WindowEvent we) {
+	this.dispose();
+    }
+
+    public void windowDeactivated(WindowEvent we) {
+    }
+
+    public void windowDeiconified(WindowEvent we) {
+    }
+
+    public void windowIconified(WindowEvent we) {
+    }
+
+    public void windowOpened(WindowEvent we) {
+    }
 }

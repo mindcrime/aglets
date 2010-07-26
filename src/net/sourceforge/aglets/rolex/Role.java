@@ -6,12 +6,11 @@
  */
 package net.sourceforge.aglets.rolex;
 
-
-
 /**
  * A marker for the RoleX role.
+ * 
  * @author Luca Ferrari - cat4hire@users.sourceforge.net
- *
+ * 
  */
 public interface Role {
 

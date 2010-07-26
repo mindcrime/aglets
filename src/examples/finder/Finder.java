@@ -15,37 +15,41 @@ package examples.finder;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
-import com.ibm.aglet.message.Message;
-
 import java.util.Hashtable;
+
+import com.ibm.aglet.Aglet;
+import com.ibm.aglet.AgletProxy;
+import com.ibm.aglet.message.Message;
 
 public class Finder extends Aglet {
 
-	// add this.
-	Hashtable _database = new Hashtable();
+    // add this.
+    Hashtable _database = new Hashtable();
 
-	public boolean handleMessage(Message msg) {
-		if (msg.sameKind("Lookup")) {
-			msg.sendReply(_database.get(msg.getArg()));
-		} else if (msg.sameKind("Register")) {
-			System.out.println("Registering .. " + msg.getArg("NAME"));
-			System.out.println(msg.getArg("PROXY"));
-			_database.put(msg.getArg("NAME"), msg.getArg("PROXY"));
+    @Override
+    public boolean handleMessage(Message msg) {
+	if (msg.sameKind("Lookup")) {
+	    msg.sendReply(this._database.get(msg.getArg()));
+	} else if (msg.sameKind("Register")) {
+	    System.out.println("Registering .. " + msg.getArg("NAME"));
+	    System.out.println(msg.getArg("PROXY"));
+	    this._database.put(msg.getArg("NAME"), msg.getArg("PROXY"));
 
-			// same
-		} else if (msg.sameKind("Unregister")) {
-			_database.remove(msg.getArg("NAME"));
-		} else {
-			return false;
-		}
-		return true;
+	    // same
+	} else if (msg.sameKind("Unregister")) {
+	    this._database.remove(msg.getArg("NAME"));
+	} else {
+	    return false;
 	}
-	public void onCreation(Object init) {
+	return true;
+    }
 
-		// register it as an default finder..
-		AgletProxy proxy = getAgletContext().getAgletProxy(getAgletID());
+    @Override
+    public void onCreation(Object init) {
 
-		getAgletContext().setProperty("finder", proxy);
-	}
+	// register it as an default finder..
+	AgletProxy proxy = this.getAgletContext().getAgletProxy(this.getAgletID());
+
+	this.getAgletContext().setProperty("finder", proxy);
+    }
 }

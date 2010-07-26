@@ -14,21 +14,27 @@ package com.ibm.maf.atp;
  * deposited with the U.S. Copyright Office.
  */
 
-import java.io.OutputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
- * @version     1.00	$Date :$
- * @author      Mitsuru Oshima
+ * @version 1.00 $Date :$
+ * @author Mitsuru Oshima
  */
 public interface Connection {
 
-	public void close() throws IOException;
-	public String getAuthenticatedSecurityDomain();
-	public InputStream getInputStream() throws IOException;
-	public String getMessage();
-	public OutputStream getOutputStream() throws IOException;
-	public boolean isEstablished();
-	public void sendRequest() throws IOException;
+    public void close() throws IOException;
+
+    public String getAuthenticatedSecurityDomain();
+
+    public InputStream getInputStream() throws IOException;
+
+    public String getMessage();
+
+    public OutputStream getOutputStream() throws IOException;
+
+    public boolean isEstablished();
+
+    public void sendRequest() throws IOException;
 }

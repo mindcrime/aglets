@@ -10,17 +10,18 @@ import com.ibm.aglet.AgletException;
 
 /**
  * A generic RoleX exception.
+ * 
  * @author Luca Ferrari - cat4hire@users.sourceforge.net
- *
+ * 
  */
 public class RolexException extends AgletException {
 
-	public RolexException() {
-		super();
-	}
+    public RolexException() {
+	super();
+    }
 
-	public RolexException(String s) {
-		super(s);
-	}
+    public RolexException(String s) {
+	super(s);
+    }
 
 }

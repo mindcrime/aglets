@@ -15,98 +15,102 @@ package examples.talk;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
-import com.ibm.aglet.message.Message;
-
-import java.io.Externalizable;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.io.IOException;
 import java.net.URL;
+
+import com.ibm.aglet.Aglet;
+import com.ibm.aglet.AgletContext;
+import com.ibm.aglet.AgletException;
+import com.ibm.aglet.AgletProxy;
+import com.ibm.aglet.InvalidAgletException;
+import com.ibm.aglet.message.Message;
 
 /**
  * 
- * @version     1.00    $Date: 2009/07/28 07:04:54 $
- * @author      Mitsuru Oshima
+ * @version 1.00 $Date: 2009/07/28 07:04:54 $
+ * @author Mitsuru Oshima
  * @see examples.talk.TalkSlave
  */
 public class TalkMaster extends Aglet {
 
-	transient AgletProxy remoteProxy = null;
+    transient AgletProxy remoteProxy = null;
 
-	String name = "Unknown";
+    String name = "Unknown";
 
-	TalkWindow window = null;
+    TalkWindow window = null;
 
-	public void dispatchSlave(String dest) {
-		try {
-			if (remoteProxy != null) {
-				remoteProxy.sendMessage(new Message("bye"));
-			} 
+    public void dispatchSlave(String dest) {
+	try {
+	    if (this.remoteProxy != null) {
+		this.remoteProxy.sendMessage(new Message("bye"));
+	    }
 
-			AgletContext context = getAgletContext();
+	    AgletContext context = this.getAgletContext();
 
-			AgletProxy proxy = context.createAglet(null, 
-												   "examples.talk.TalkSlave", 
-												   getProxy());
+	    AgletProxy proxy = context.createAglet(null, "examples.talk.TalkSlave", this.getProxy());
 
-			URL url = new URL(dest);
+	    URL url = new URL(dest);
 
-			remoteProxy = proxy.dispatch(url);
+	    this.remoteProxy = proxy.dispatch(url);
 
-		} catch (InvalidAgletException ex) {
-			ex.printStackTrace();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} 
+	} catch (InvalidAgletException ex) {
+	    ex.printStackTrace();
+	} catch (Exception ex) {
+	    ex.printStackTrace();
 	}
-	private String getProperty(String key) {
-		return System.getProperty(key, "Unknown");
+    }
+
+    private String getProperty(String key) {
+	return System.getProperty(key, "Unknown");
+    }
+
+    @Override
+    public boolean handleMessage(Message msg) {
+	if (msg.sameKind("dialog")) {
+	    this.window.show();
+	} else if (msg.sameKind("text")) {
+	    if (this.window.isVisible() == false) {
+		this.window.show();
+	    }
+	    this.window.appendText((String) msg.getArg());
+	    return true;
 	}
-	public boolean handleMessage(Message msg) {
-		if (msg.sameKind("dialog")) {
-			window.show();
-		} else if (msg.sameKind("text")) {
-			if (window.isVisible() == false) {
-				window.show();
-			} 
-			window.appendText((String)msg.getArg());
-			return true;
-		} 
-		return false;
+	return false;
+    }
+
+    @Override
+    public void onCreation(Object o) {
+	this.window = new TalkWindow(this);
+	this.window.pack();
+	this.window.show();
+	try {
+	    this.name = this.getProperty("user.name");
+	} catch (Exception ex) {
 	}
-	public void onCreation(Object o) {
-		window = new TalkWindow(this);
-		window.pack();
-		window.show();
-		try {
-			name = getProperty("user.name");
-		} catch (Exception ex) {}
+    }
+
+    @Override
+    public void onDisposing() {
+	if (this.window != null) {
+	    this.window.dispose();
+	    this.window = null;
 	}
-	public void onDisposing() {
-		if (window != null) {
-			window.dispose();
-			window = null;
-		} 
-		if (remoteProxy != null) {
-			try {
-				remoteProxy.sendMessage(new Message("bye"));
-			} catch (AgletException ex) {
-				ex.printStackTrace();
-			} 
-		} 
+	if (this.remoteProxy != null) {
+	    try {
+		this.remoteProxy.sendMessage(new Message("bye"));
+	    } catch (AgletException ex) {
+		ex.printStackTrace();
+	    }
 	}
-	private void print(String m) {
-		System.out.println("Sender: " + m);
+    }
+
+    void sendText(String text) {
+	try {
+	    if (this.remoteProxy != null) {
+		this.remoteProxy.sendMessage(new Message("text", this.name
+			+ " : " + text));
+	    }
+	} catch (Exception ex) {
+	    ex.printStackTrace();
 	}
-	void sendText(String text) {
-		try {
-			if (remoteProxy != null) {
-				remoteProxy.sendMessage(new Message("text", 
-													name + " : " + text));
-			} 
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} 
-	}
+    }
 }

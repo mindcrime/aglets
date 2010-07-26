@@ -26,22 +26,24 @@ package com.ibm.aglet;
 /**
  * Signals that the aglet could not be found.
  * 
- * @version     1.00    96/08/23
- * @author	Mitsuru Oshima
+ * @version 1.00 96/08/23
+ * @author Mitsuru Oshima
  */
 
 public class AgletNotFoundException extends AgletException {
 
-	/*
-	 * Constructs a AgletNotFoundException
-	 */
-	public AgletNotFoundException() {}
-	/*
-	 * Constructs a AgletNotFoundException with the specified detailed
-	 * message.
-	 * @param s the detailed message
-	 */
-	public AgletNotFoundException(String s) {
-		super(s);
-	}
+    /*
+     * Constructs a AgletNotFoundException
+     */
+    public AgletNotFoundException() {
+    }
+
+    /*
+     * Constructs a AgletNotFoundException with the specified detailed message.
+     * 
+     * @param s the detailed message
+     */
+    public AgletNotFoundException(String s) {
+	super(s);
+    }
 }

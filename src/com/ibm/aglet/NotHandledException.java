@@ -26,20 +26,24 @@ package com.ibm.aglet;
 /**
  * Signals that the message was not handled by an aglet
  * 
- * @version     1.10    $Date: 2009/07/28 07:04:53 $
- * @author	Mitsuru Oshima
+ * @version 1.10 $Date: 2009/07/28 07:04:53 $
+ * @author Mitsuru Oshima
  */
 public class NotHandledException extends AgletException {
 
-	/**
-	 * Constructs a NotHandledException
-	 */
-	public NotHandledException() {}
-	/**
-	 * Constructs a NotHandledException with the detailed message.
-	 * @param s the detailed message
-	 */
-	public NotHandledException(String s) {
-		super(s);
-	}
+    /**
+     * Constructs a NotHandledException
+     */
+    public NotHandledException() {
+    }
+
+    /**
+     * Constructs a NotHandledException with the detailed message.
+     * 
+     * @param s
+     *            the detailed message
+     */
+    public NotHandledException(String s) {
+	super(s);
+    }
 }

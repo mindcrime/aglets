@@ -26,22 +26,25 @@ package com.ibm.aglet;
 /**
  * Signals that the request sent was refused.
  * 
- * @version     1.10    $Date: 2009/07/28 07:04:53 $
- * @author	Mitsuru Oshima
+ * @version 1.10 $Date: 2009/07/28 07:04:53 $
+ * @author Mitsuru Oshima
  */
 
 public class RequestRefusedException extends AgletException {
 
-	/**
-	 * Constructs a RequestRefusedException
-	 */
-	public RequestRefusedException() {}
-	/**
-	 * Constructs a RequestRefusedException with the specified detailed
-	 * message.
-	 * @param s the detailed message
-	 */
-	public RequestRefusedException(String s) {
-		super(s);
-	}
+    /**
+     * Constructs a RequestRefusedException
+     */
+    public RequestRefusedException() {
+    }
+
+    /**
+     * Constructs a RequestRefusedException with the specified detailed message.
+     * 
+     * @param s
+     *            the detailed message
+     */
+    public RequestRefusedException(String s) {
+	super(s);
+    }
 }

@@ -18,15 +18,17 @@ import java.security.Permission;
 
 public class AgletPermission extends PlainAgletPermission {
 
-	// should be implemented?
-	// ==== public PermissionCollection newPermissionCollection();
-	public AgletPermission(String name, String actions) {
-		super(name, actions);
+    // should be implemented?
+    // ==== public PermissionCollection newPermissionCollection();
+    public AgletPermission(String name, String actions) {
+	super(name, actions);
+    }
+
+    @Override
+    public boolean implies(Permission p) {
+	if (!(p instanceof AgletPermission)) {
+	    return false;
 	}
-	public boolean implies(Permission p) {
-		if (!(p instanceof AgletPermission)) {
-			return false;
-		} 
-		return super.implies(p);
-	}
+	return super.implies(p);
+    }
 }

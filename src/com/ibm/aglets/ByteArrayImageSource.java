@@ -14,39 +14,43 @@ package com.ibm.aglets;
  * deposited with the U.S. Copyright Office.
  */
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
 import sun.awt.image.FileImageSource;
-import sun.awt.image.ImageDecoder;
 import sun.awt.image.GifImageDecoder;
+import sun.awt.image.ImageDecoder;
 import sun.awt.image.JPEGImageDecoder;
 import sun.awt.image.XbmImageDecoder;
 
 public class ByteArrayImageSource extends FileImageSource {
-	byte buf[];
-	String type;
+    byte buf[];
+    String type;
 
-	public ByteArrayImageSource(byte b[], String t) {
-		super(null);
-		buf = b;
-		type = t;
+    public ByteArrayImageSource(byte b[], String t) {
+	super(null);
+	this.buf = b;
+	this.type = t;
+    }
+
+    @Override
+    protected ImageDecoder getDecoder() {
+	InputStream inputStream = new ByteArrayInputStream(this.buf);
+
+	if (this.type != null) {
+	    if (this.type.equals("gif")) {
+		return new GifImageDecoder(this, inputStream);
+	    }
+	    if (this.type.equals("jpeg") || this.type.equals("jpg")
+		    || this.type.equals("jpe") || this.type.equals("jfif")) {
+		return new JPEGImageDecoder(this, inputStream);
+
+	    }
+	    if (this.type.equals("xbm")) {
+		return new XbmImageDecoder(this, inputStream);
+	    }
 	}
-	protected ImageDecoder getDecoder() {
-		InputStream inputStream = new ByteArrayInputStream(buf);
 
-		if (type != null) {
-			if (type.equals("gif")) {
-				return new GifImageDecoder(this, inputStream);
-			} 
-			if (type.equals("jpeg") || type.equals("jpg") 
-					|| type.equals("jpe") || type.equals("jfif")) {
-				return new JPEGImageDecoder(this, inputStream);
-
-			} 
-			if (type.equals("xbm")) {
-				return new XbmImageDecoder(this, inputStream);
-			} 
-		} 
-
-		return super.getDecoder(inputStream);
-	}
+	return super.getDecoder(inputStream);
+    }
 }

@@ -15,148 +15,158 @@ package examples.itinerary;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
-import com.ibm.aglet.util.*;
+import java.awt.BorderLayout;
+import java.awt.Button;
+import java.awt.Checkbox;
+import java.awt.Choice;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.List;
+import java.awt.Panel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+
+import com.ibm.aglet.util.AddressChooser;
 import com.ibm.agletx.util.SeqPlanItinerary;
-import java.util.Vector;
-import java.util.Enumeration;
-import java.awt.*;
-import java.awt.event.*;
-class CirculateFrame extends Frame implements WindowListener, ActionListener, 
-		ItemListener {
-	CirculateAglet aglet;
-	List list = new List(10, false);
-	AddressChooser address = new AddressChooser(15);
-	Choice choice = new Choice();
-	Checkbox check = new Checkbox("Repeat");
 
-	CirculateFrame(CirculateAglet a) {
-		aglet = a;
-		setLayout(new BorderLayout());
-		add("Center", list);
-		addWindowListener(this);
-		check.addItemListener(this);
+class CirculateFrame extends Frame implements WindowListener, ActionListener,
+	ItemListener {
+    CirculateAglet aglet;
+    List list = new List(10, false);
+    AddressChooser address = new AddressChooser(15);
+    Choice choice = new Choice();
+    Checkbox check = new Checkbox("Repeat");
 
-		Panel p = new Panel();
+    CirculateFrame(CirculateAglet a) {
+	this.aglet = a;
+	this.setLayout(new BorderLayout());
+	this.add("Center", this.list);
+	this.addWindowListener(this);
+	this.check.addItemListener(this);
 
-		p.setLayout(new FlowLayout());
-		p.add(address);
-		p.add(choice);
+	Panel p = new Panel();
 
-		Button ad = new Button("Add");
-		Button remove = new Button("Remove");
+	p.setLayout(new FlowLayout());
+	p.add(this.address);
+	p.add(this.choice);
 
-		ad.addActionListener(this);
-		remove.addActionListener(this);
-		p.add(ad);
-		p.add(remove);
-		add("North", p);
+	Button ad = new Button("Add");
+	Button remove = new Button("Remove");
 
-		p = new Panel();
-		p.setLayout(new FlowLayout());
-		p.add(check);
+	ad.addActionListener(this);
+	remove.addActionListener(this);
+	p.add(ad);
+	p.add(remove);
+	this.add("North", p);
 
-		Button once = new Button("Once More");
-		Button start = new Button("Start!");
+	p = new Panel();
+	p.setLayout(new FlowLayout());
+	p.add(this.check);
 
-		once.addActionListener(this);
-		start.addActionListener(this);
-		p.add(once);
-		p.add(start);
-		add("South", p);
+	Button once = new Button("Once More");
+	Button start = new Button("Start!");
 
+	once.addActionListener(this);
+	start.addActionListener(this);
+	p.add(once);
+	p.add(start);
+	this.add("South", p);
 
-		choice.addItem("getLocalInfo");
-		choice.addItem("getProxies");
-		choice.addItem("printResult");
+	this.choice.addItem("getLocalInfo");
+	this.choice.addItem("getProxies");
+	this.choice.addItem("printResult");
 
-		update();
+	this.update();
+    }
+
+    /**
+     * Handles the action event
+     * 
+     * @param ae
+     *            the event to be handled
+     */
+    public void actionPerformed(ActionEvent ae) {
+	if ("Once More".equals(ae.getActionCommand())) {
+	    this.aglet.oncemore();
+	} else if ("Start!".equals(ae.getActionCommand())) {
+	    this.aglet.start();
+	} else if ("Remove".equals(ae.getActionCommand())) {
+	    int i = this.list.getSelectedIndex();
+
+	    if (i >= 0) {
+		this.aglet.itinerary.removePlanAt(i);
+		this.list.remove(i);
+	    }
+	} else if ("Add".equals(ae.getActionCommand())) {
+	    this.aglet.itinerary.addPlan(this.address.getAddress(), this.choice.getSelectedItem());
+	    this.update();
 	}
-	/**
-	 * Handles the action event
-	 * @param ae the event to be handled
-	 */
-	public void actionPerformed(ActionEvent ae) {
-		if ("Once More".equals(ae.getActionCommand())) {
-			aglet.oncemore();
-		} else if ("Start!".equals(ae.getActionCommand())) {
-			aglet.start();
-		} else if ("Remove".equals(ae.getActionCommand())) {
-			int i = list.getSelectedIndex();
+    }
 
-			if (i >= 0) {
-				aglet.itinerary.removePlanAt(i);
-				list.remove(i);
-			} 
-		} else if ("Add".equals(ae.getActionCommand())) {
-			aglet.itinerary.addPlan(address.getAddress(), 
-									choice.getSelectedItem());
-			update();
-		} 
-	}
-	public void itemStateChanged(ItemEvent ie) {
-		aglet.itinerary.setRepeat(check.getState());
-	}
-	/*
-	 * public boolean handleEvent(java.awt.Event ev) {
-	 * if (ev.id == java.awt.Event.WINDOW_DESTROY) {
-	 * dispose();
-	 * return true;
-	 * }
-	 * return super.handleEvent(ev);
-	 * }
-	 * 
-	 * public boolean action(java.awt.Event ev, Object obj) {
-	 * if (ev.target instanceof java.awt.Button) {
-	 * Button b = (Button)ev.target;
-	 * String l = b.getLabel();
-	 * if ("Once More".equals(l)) {
-	 * aglet.oncemore();
-	 * } else if ("Start!".equals(l)) {
-	 * aglet.start();
-	 * } else if ("Remove".equals(l)) {
-	 * int i = list.getSelectedIndex();
-	 * if (i>=0) {
-	 * aglet.itinerary.removePlanAt(i);
-	 * list.delItem(i);
-	 * }
-	 * } else if ("Add".equals(l)){
-	 * aglet.itinerary.addPlan(address.getAddress(),
-	 * choice.getSelectedItem());
-	 * update();
-	 * }
-	 * return true;
-	 * } else if (ev.target instanceof java.awt.Checkbox) {
-	 * aglet.itinerary.setRepeat(check.getState());
-	 * }
-	 * return false;
-	 * }
-	 */
-	private void update() {
-		list.removeAll();
-		SeqPlanItinerary spi = aglet.itinerary;
-		int size = spi.size();
+    public void itemStateChanged(ItemEvent ie) {
+	this.aglet.itinerary.setRepeat(this.check.getState());
+    }
 
-		for (int i = 0; i < size; i++) {
-			String s = spi.getAddressAt(i) + " : " 
-					   + spi.getMessageAt(i).getKind();
+    /*
+     * public boolean handleEvent(java.awt.Event ev) { if (ev.id ==
+     * java.awt.Event.WINDOW_DESTROY) { dispose(); return true; } return
+     * super.handleEvent(ev); }
+     * 
+     * public boolean action(java.awt.Event ev, Object obj) { if (ev.target
+     * instanceof java.awt.Button) { Button b = (Button)ev.target; String l =
+     * b.getLabel(); if ("Once More".equals(l)) { aglet.oncemore(); } else if
+     * ("Start!".equals(l)) { aglet.start(); } else if ("Remove".equals(l)) {
+     * int i = list.getSelectedIndex(); if (i>=0) {
+     * aglet.itinerary.removePlanAt(i); list.delItem(i); } } else if
+     * ("Add".equals(l)){ aglet.itinerary.addPlan(address.getAddress(),
+     * choice.getSelectedItem()); update(); } return true; } else if (ev.target
+     * instanceof java.awt.Checkbox) {
+     * aglet.itinerary.setRepeat(check.getState()); } return false; }
+     */
+    private void update() {
+	this.list.removeAll();
+	SeqPlanItinerary spi = this.aglet.itinerary;
+	int size = spi.size();
 
-			list.add(s);
-		} 
-		check.setState(aglet.itinerary.isRepeat());
-	}
-	public void windowActivated(WindowEvent we) {}
-	public void windowClosed(WindowEvent we) {}
-	/**
-	 * Handles the window event
-	 * @param we the event to be handled
-	 */
+	for (int i = 0; i < size; i++) {
+	    String s = spi.getAddressAt(i) + " : "
+		    + spi.getMessageAt(i).getKind();
 
-	public void windowClosing(WindowEvent we) {
-		dispose();
+	    this.list.add(s);
 	}
-	public void windowDeactivated(WindowEvent we) {}
-	public void windowDeiconified(WindowEvent we) {}
-	public void windowIconified(WindowEvent we) {}
-	public void windowOpened(WindowEvent we) {}
+	this.check.setState(this.aglet.itinerary.isRepeat());
+    }
+
+    public void windowActivated(WindowEvent we) {
+    }
+
+    public void windowClosed(WindowEvent we) {
+    }
+
+    /**
+     * Handles the window event
+     * 
+     * @param we
+     *            the event to be handled
+     */
+
+    public void windowClosing(WindowEvent we) {
+	this.dispose();
+    }
+
+    public void windowDeactivated(WindowEvent we) {
+    }
+
+    public void windowDeiconified(WindowEvent we) {
+    }
+
+    public void windowIconified(WindowEvent we) {
+    }
+
+    public void windowOpened(WindowEvent we) {
+    }
 }

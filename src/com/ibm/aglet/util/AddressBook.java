@@ -23,263 +23,298 @@ package com.ibm.aglet.util;
  * IBM WILL NOT BE LIABLE FOR ANY THIRD PARTY CLAIMS AGAINST YOU.
  */
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.StringTokenizer;
+import java.awt.Button;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FontMetrics;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.List;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import com.ibm.awb.misc.Resource;
 
-public class AddressBook extends Window implements ActionListener, 
-		ItemListener, FocusListener {
+public class AddressBook extends Window implements ActionListener,
+	ItemListener, FocusListener {
 
-	transient List _list = new List(10, false);
-	transient AddressChooser _chooser = null;
+    transient List _list = new List(10, false);
+    transient AddressChooser _chooser = null;
 
-	private Button _add = new Button("Add to AddressBook");
-	private Button _delete = new Button("Delete");
-	private Button _target = null;
+    private Button _add = new Button("Add to AddressBook");
+    private Button _delete = new Button("Delete");
+    private Button _target = null;
 
-	private GridBagLayout _layout = new GridBagLayout();
+    private GridBagLayout _layout = new GridBagLayout();
 
-	private String _title = "AddressBook";
-	private Rectangle _title_bounds;
+    private String _title = "AddressBook";
+    private Rectangle _title_bounds;
 
-	int pad = 0;
-	int ascent = 0;
+    int pad = 0;
+    int ascent = 0;
 
-	MouseListener mlistener = new MouseAdapter() {
-		public void mouseEntered(MouseEvent e) {
-			if (getParent().isVisible() == false) {
-				setVisible(false);
-				_target = null;
-			} else {
-				adjust();
-			} 
-		} 
-	};
-
-	WindowListener wlistener = new WindowAdapter() {
-		public void windowClosing(WindowEvent ev) {
-			setVisible(false);
-		} 
-	};
-
-	/*
-	 * static public void main(String str[]) {
-	 * Frame f = new Frame();
-	 * 
-	 * AddressBook c = new AddressBook("Address Book");
-	 * c.setBackground(Color.lightGray);
-	 * c.list.addItem("itemA");
-	 * c.list.addItem("itemB");
-	 * c.list.addItem("itemC");
-	 * c.list.addItem("atp://moshima.trl.ibm.com/");
-	 * 
-	 * f.setLayout(new GridLayout(1,1));
-	 * f.add(c);
-	 * f.pack();
-	 * f.show();
-	 * }
-	 */
-	public AddressBook(Frame parent, AddressChooser chooser) {
-		super(parent);
-		_chooser = chooser;
-
-		setLayout(_layout);
-		GridBagConstraints cns = new GridBagConstraints();
-
-		cns.fill = GridBagConstraints.NONE;
-		cns.gridwidth = 1;
-		cns.weighty = 0.0;
-		cns.weightx = 0.0;
-		cns.anchor = GridBagConstraints.WEST;
-		addCmp(_add, cns);
-
-		cns.gridwidth = GridBagConstraints.REMAINDER;
-		cns.anchor = GridBagConstraints.EAST;
-		addCmp(_delete, cns);
-		_delete.setEnabled(_list.getSelectedItem() != null);
-
-		cns.gridwidth = GridBagConstraints.REMAINDER;
-		cns.weightx = 1.0;
-		cns.weighty = 1.0;
-		cns.fill = GridBagConstraints.BOTH;
-
-		addCmp(_list, cns);
-
-		_list.addActionListener(this);
-		_list.addItemListener(this);
-
-		_add.setActionCommand("add");
-		_add.addActionListener(this);
-
-		_delete.setActionCommand("delete");
-		_delete.addActionListener(this);
-
-		addWindowListener(wlistener);
-		addMouseListener(mlistener);
-		addFocusListener(this);
+    MouseListener mlistener = new MouseAdapter() {
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	    if (AddressBook.this.getParent().isVisible() == false) {
+		AddressBook.this.setVisible(false);
+		AddressBook.this._target = null;
+	    } else {
+		AddressBook.this.adjust();
+	    }
 	}
-	public void actionPerformed(ActionEvent ev) {
-		if ("add".equals(ev.getActionCommand())) {
-			if (_chooser != null) {
-				String newitem = _chooser.getAddress();
-				int count = _list.getItemCount();
+    };
 
-				for (int i = 0; i < count; i++) {
-					if (newitem.equals(_list.getItem(i))) {
-						return;
-					} 
-				} 
-				_list.add(newitem);
-				updateAddressBook();
-			} 
-		} else if ("delete".equals(ev.getActionCommand())) {
-			int x = _list.getSelectedIndex();
-
-			if (x >= 0) {
-				_list.remove(x);
-			} 
-			updateAddressBook();
-		} 
-		if (_list == ev.getSource()) {
-			setVisible(false);
-			_chooser.addressSelected(_list.getSelectedItem());
-		} 
+    WindowListener wlistener = new WindowAdapter() {
+	@Override
+	public void windowClosing(WindowEvent ev) {
+	    AddressBook.this.setVisible(false);
 	}
-	protected void addCmp(Component c, GridBagConstraints cns) {
-		_layout.setConstraints(c, cns);
-		add(c);
-	}
-	public void addNotify() {
-		super.addNotify();
-		if (_title != null) {
-			FontMetrics fm = getFontMetrics(getFont());
+    };
 
-			pad = fm.getHeight();
-			ascent = fm.getAscent() + fm.getLeading();
-			_title_bounds = new Rectangle(pad * 2, 0, fm.stringWidth(_title), 
-										  fm.getHeight());
-		} 
-		reLayout();
-	}
-	public void adjust() {
-		if (_target == null) {
-			return;
-		} 
-		Point loc = _target.getLocationOnScreen();
+    /*
+     * static public void main(String str[]) { Frame f = new Frame();
+     * 
+     * AddressBook c = new AddressBook("Address Book");
+     * c.setBackground(Color.lightGray); c.list.addItem("itemA");
+     * c.list.addItem("itemB"); c.list.addItem("itemC");
+     * c.list.addItem("atp://moshima.trl.ibm.com/");
+     * 
+     * f.setLayout(new GridLayout(1,1)); f.add(c); f.pack(); f.show(); }
+     */
+    public AddressBook(Frame parent, AddressChooser chooser) {
+	super(parent);
+	this._chooser = chooser;
 
-		loc.y += _target.getSize().height;
-		setLocation(loc.x, loc.y);
-	}
-	public void focusGained(FocusEvent ev) {
-		if (isVisible()) {
-			adjust();
-			toFront();
-		} 
-	}
-	public void focusLost(FocusEvent ev) {}
-	public void itemStateChanged(ItemEvent ev) {
-		String item = _list.getSelectedItem();
+	this.setLayout(this._layout);
+	GridBagConstraints cns = new GridBagConstraints();
 
-		if (item != null) {
-			_delete.setEnabled(true);
-			_chooser.setAddress(item);
-		} else {
-			_delete.setEnabled(false);
-			_chooser.setAddress("");
-		} 
-	}
-	public void paint(Graphics g) {
-		super.paint(g);
-		g.setColor(getBackground());
-		Dimension size = getSize();
+	cns.fill = GridBagConstraints.NONE;
+	cns.gridwidth = 1;
+	cns.weighty = 0.0;
+	cns.weightx = 0.0;
+	cns.anchor = GridBagConstraints.WEST;
+	this.addCmp(this._add, cns);
 
-		g.fillRect(0, 0, size.width, size.height);
+	cns.gridwidth = GridBagConstraints.REMAINDER;
+	cns.anchor = GridBagConstraints.EAST;
+	this.addCmp(this._delete, cns);
+	this._delete.setEnabled(this._list.getSelectedItem() != null);
 
-		g.draw3DRect(3, 3, size.width - 6, size.height - 6, false);
-		g.draw3DRect(4, 4, size.width - 8, size.height - 8, true);
-		if (_title != null) {
-			g.fillRect(_title_bounds.x, _title_bounds.y, _title_bounds.width, 
-					   _title_bounds.height);
-			g.setColor(Color.black);
-			g.drawString(_title, pad * 2, ascent);
-		} 
-	}
-	public void popup(Button c) {
-		_target = c;
-		_target.setLabel("Close");
+	cns.gridwidth = GridBagConstraints.REMAINDER;
+	cns.weightx = 1.0;
+	cns.weighty = 1.0;
+	cns.fill = GridBagConstraints.BOTH;
 
-		adjust();
+	this.addCmp(this._list, cns);
 
-		if (_list.getItemCount() > 0) {
-			_list.removeAll();
-		} 
+	this._list.addActionListener(this);
+	this._list.addItemListener(this);
 
-		Resource res = Resource.getResourceFor("aglets");
-		String address[] = res.getStringArray("aglets.addressbook", " ");
+	this._add.setActionCommand("add");
+	this._add.addActionListener(this);
 
-		for (int i = 0; i < address.length; i++) {
-			_list.add(address[i]);
-		} 
+	this._delete.setActionCommand("delete");
+	this._delete.addActionListener(this);
 
-		show();
-		toFront();
-	}
-	private void reLayout() {
-		Insets insets = new Insets(pad * 2, pad, pad, pad);
-		GridBagLayout newlayout = new GridBagLayout();
+	this.addWindowListener(this.wlistener);
+	this.addMouseListener(this.mlistener);
+	this.addFocusListener(this);
+    }
 
-		GridBagConstraints cns = null;
-
-		cns = _layout.getConstraints(_add);
-		cns.insets = insets;
-		newlayout.setConstraints(_add, cns);
-
-		cns = _layout.getConstraints(_delete);
-		cns.insets = insets;
-		newlayout.setConstraints(_delete, cns);
-
-		cns = _layout.getConstraints(_list);
-		cns.insets = new Insets(0, pad, pad, pad);
-		newlayout.setConstraints(_list, cns);
-
-		setLayout(newlayout);
-	}
-	public void setBounds(int x, int y, int width, int height) {
-		super.setBounds(x, y, width, height);
-		repaint();
-	}
-	public void setTitle(String title) {
-		_title = title;
-		if (_title != null) {
-			FontMetrics fm = getFontMetrics(getFont());
-
-			pad = fm.getHeight();
-			ascent = fm.getAscent() + fm.getLeading();
-		} 
-		reLayout();
-	}
-	public void setVisible(boolean v) {
-		if (_target != null) {
-			if (v) {
-				_target.setLabel("Close");
-			} else {
-				_target.setLabel("AddressBook");
-			} 
-		} 
-		super.setVisible(v);
-	}
-	private void updateAddressBook() {
-		Resource res = Resource.getResourceFor("aglets");
-
-		String all = "";
-		int count = _list.getItemCount();
+    public void actionPerformed(ActionEvent ev) {
+	if ("add".equals(ev.getActionCommand())) {
+	    if (this._chooser != null) {
+		String newitem = this._chooser.getAddress();
+		int count = this._list.getItemCount();
 
 		for (int i = 0; i < count; i++) {
-			all += _list.getItem(i) + " ";
-		} 
+		    if (newitem.equals(this._list.getItem(i))) {
+			return;
+		    }
+		}
+		this._list.add(newitem);
+		this.updateAddressBook();
+	    }
+	} else if ("delete".equals(ev.getActionCommand())) {
+	    int x = this._list.getSelectedIndex();
 
-		res.setResource("aglets.addressbook", all);
+	    if (x >= 0) {
+		this._list.remove(x);
+	    }
+	    this.updateAddressBook();
 	}
+	if (this._list == ev.getSource()) {
+	    this.setVisible(false);
+	    this._chooser.addressSelected(this._list.getSelectedItem());
+	}
+    }
+
+    protected void addCmp(Component c, GridBagConstraints cns) {
+	this._layout.setConstraints(c, cns);
+	this.add(c);
+    }
+
+    @Override
+    public void addNotify() {
+	super.addNotify();
+	if (this._title != null) {
+	    FontMetrics fm = this.getFontMetrics(this.getFont());
+
+	    this.pad = fm.getHeight();
+	    this.ascent = fm.getAscent() + fm.getLeading();
+	    this._title_bounds = new Rectangle(this.pad * 2, 0, fm.stringWidth(this._title), fm.getHeight());
+	}
+	this.reLayout();
+    }
+
+    public void adjust() {
+	if (this._target == null) {
+	    return;
+	}
+	Point loc = this._target.getLocationOnScreen();
+
+	loc.y += this._target.getSize().height;
+	this.setLocation(loc.x, loc.y);
+    }
+
+    public void focusGained(FocusEvent ev) {
+	if (this.isVisible()) {
+	    this.adjust();
+	    this.toFront();
+	}
+    }
+
+    public void focusLost(FocusEvent ev) {
+    }
+
+    public void itemStateChanged(ItemEvent ev) {
+	String item = this._list.getSelectedItem();
+
+	if (item != null) {
+	    this._delete.setEnabled(true);
+	    this._chooser.setAddress(item);
+	} else {
+	    this._delete.setEnabled(false);
+	    this._chooser.setAddress("");
+	}
+    }
+
+    @Override
+    public void paint(Graphics g) {
+	super.paint(g);
+	g.setColor(this.getBackground());
+	Dimension size = this.getSize();
+
+	g.fillRect(0, 0, size.width, size.height);
+
+	g.draw3DRect(3, 3, size.width - 6, size.height - 6, false);
+	g.draw3DRect(4, 4, size.width - 8, size.height - 8, true);
+	if (this._title != null) {
+	    g.fillRect(this._title_bounds.x, this._title_bounds.y, this._title_bounds.width, this._title_bounds.height);
+	    g.setColor(Color.black);
+	    g.drawString(this._title, this.pad * 2, this.ascent);
+	}
+    }
+
+    public void popup(Button c) {
+	this._target = c;
+	this._target.setLabel("Close");
+
+	this.adjust();
+
+	if (this._list.getItemCount() > 0) {
+	    this._list.removeAll();
+	}
+
+	Resource res = Resource.getResourceFor("aglets");
+	String address[] = res.getStringArray("aglets.addressbook", " ");
+
+	for (String addres : address) {
+	    this._list.add(addres);
+	}
+
+	this.show();
+	this.toFront();
+    }
+
+    private void reLayout() {
+	Insets insets = new Insets(this.pad * 2, this.pad, this.pad, this.pad);
+	GridBagLayout newlayout = new GridBagLayout();
+
+	GridBagConstraints cns = null;
+
+	cns = this._layout.getConstraints(this._add);
+	cns.insets = insets;
+	newlayout.setConstraints(this._add, cns);
+
+	cns = this._layout.getConstraints(this._delete);
+	cns.insets = insets;
+	newlayout.setConstraints(this._delete, cns);
+
+	cns = this._layout.getConstraints(this._list);
+	cns.insets = new Insets(0, this.pad, this.pad, this.pad);
+	newlayout.setConstraints(this._list, cns);
+
+	this.setLayout(newlayout);
+    }
+
+    @Override
+    public void setBounds(int x, int y, int width, int height) {
+	super.setBounds(x, y, width, height);
+	this.repaint();
+    }
+
+    public void setTitle(String title) {
+	this._title = title;
+	if (this._title != null) {
+	    FontMetrics fm = this.getFontMetrics(this.getFont());
+
+	    this.pad = fm.getHeight();
+	    this.ascent = fm.getAscent() + fm.getLeading();
+	}
+	this.reLayout();
+    }
+
+    @Override
+    public void setVisible(boolean v) {
+	if (this._target != null) {
+	    if (v) {
+		this._target.setLabel("Close");
+	    } else {
+		this._target.setLabel("AddressBook");
+	    }
+	}
+	super.setVisible(v);
+    }
+
+    private void updateAddressBook() {
+	Resource res = Resource.getResourceFor("aglets");
+
+	String all = "";
+	int count = this._list.getItemCount();
+
+	for (int i = 0; i < count; i++) {
+	    all += this._list.getItem(i) + " ";
+	}
+
+	res.setResource("aglets.addressbook", all);
+    }
 }

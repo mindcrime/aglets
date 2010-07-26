@@ -14,69 +14,63 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-import com.ibm.aglets.PersistentEntry;
-
 import java.io.File;
-import java.io.IOException;
-import java.util.Enumeration;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-
-import com.ibm.awb.misc.FileUtils;
-
+import java.util.Enumeration;
 
 class KeyEnumerator implements Enumeration {
-	int i = 0;
-	String filelist[] = null;
-	String spool_dir = null;
+    int i = 0;
+    String filelist[] = null;
+    String spool_dir = null;
 
-	KeyEnumerator(String dir) {
-		spool_dir = dir;
-		filelist = null;
-		try {
-			final String fSpoolDir = spool_dir;
+    KeyEnumerator(String dir) {
+	this.spool_dir = dir;
+	this.filelist = null;
+	try {
+	    final String fSpoolDir = this.spool_dir;
 
-			filelist = 
-				(String[])AccessController
-					.doPrivileged(new PrivilegedAction() {
-				public Object run() {
-					return new File(fSpoolDir).list();
-				} 
-			});
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} 
-
-		// to make sure that str point to a directory.
-		if (spool_dir.charAt(spool_dir.length() - 1) != File.separatorChar) {
-			spool_dir += File.separator;
-		} 
+	    this.filelist = (String[]) AccessController.doPrivileged(new PrivilegedAction() {
+		public Object run() {
+		    return new File(fSpoolDir).list();
+		}
+	    });
+	} catch (Exception ex) {
+	    ex.printStackTrace();
 	}
-	public boolean hasMoreElements() {
-		if (filelist == null) {
-			return false;
-		} 
-		try {
-			final KeyEnumerator fThis = this;
-			final String fSpoolDir = spool_dir;
-			final String[] fFilelist = filelist;
 
-			AccessController.doPrivileged(new PrivilegedAction() {
-				public Object run() {
-					while (fFilelist.length > fThis.i 
-						   && new File(fSpoolDir + fFilelist[i]).isFile() 
-							  == false) {
-						fThis.i++;
-					} 
-					return null;
-				} 
-			});
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} 
-		return filelist.length > i;
+	// to make sure that str point to a directory.
+	if (this.spool_dir.charAt(this.spool_dir.length() - 1) != File.separatorChar) {
+	    this.spool_dir += File.separator;
 	}
-	public Object nextElement() {
-		return ((filelist == null) ? null : filelist[i++]);
+    }
+
+    public boolean hasMoreElements() {
+	if (this.filelist == null) {
+	    return false;
 	}
+	try {
+	    final KeyEnumerator fThis = this;
+	    final String fSpoolDir = this.spool_dir;
+	    final String[] fFilelist = this.filelist;
+
+	    AccessController.doPrivileged(new PrivilegedAction() {
+		public Object run() {
+		    while ((fFilelist.length > fThis.i)
+			    && (new File(fSpoolDir
+				    + fFilelist[KeyEnumerator.this.i]).isFile() == false)) {
+			fThis.i++;
+		    }
+		    return null;
+		}
+	    });
+	} catch (Exception ex) {
+	    ex.printStackTrace();
+	}
+	return this.filelist.length > this.i;
+    }
+
+    public Object nextElement() {
+	return ((this.filelist == null) ? null : this.filelist[this.i++]);
+    }
 }

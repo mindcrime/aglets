@@ -23,11 +23,12 @@ package com.ibm.maf;
 
 public final class ClassUnknown extends MAFException {
 
-	// constructor
-	public ClassUnknown() {
-		super();
-	}
-	public ClassUnknown(String msg) {
-		super(msg);
-	}
+    // constructor
+    public ClassUnknown() {
+	super();
+    }
+
+    public ClassUnknown(String msg) {
+	super(msg);
+    }
 }

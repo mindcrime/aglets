@@ -24,25 +24,30 @@ package com.ibm.aglet.event;
  */
 
 /**
- * The adapter which receives mobility events. This class is provided
- * as convenience for easily creating listerns by extending this class
- * and overriding only the methods of interest.
+ * The adapter which receives mobility events. This class is provided as
+ * convenience for easily creating listerns by extending this class and
+ * overriding only the methods of interest.
  * 
- * @version     1.00    $Date: 2009/07/28 07:04:53 $
- * @author      Misturu Oshima
+ * @version 1.00 $Date: 2009/07/28 07:04:53 $
+ * @author Misturu Oshima
  */
 public class MobilityAdapter implements MobilityListener {
 
-	/**
-	 * Invoked when the aglet is retracted.
-	 */
-	public void onArrival(MobilityEvent event) {}
-	/**
-	 * Invoked when the aglet is attempted to dispatch.
-	 */
-	public void onDispatching(MobilityEvent event) {}
-	/**
-	 * Invoked just after the aglet arrived at the destination
-	 */
-	public void onReverting(MobilityEvent event) {}
+    /**
+     * Invoked when the aglet is retracted.
+     */
+    public void onArrival(MobilityEvent event) {
+    }
+
+    /**
+     * Invoked when the aglet is attempted to dispatch.
+     */
+    public void onDispatching(MobilityEvent event) {
+    }
+
+    /**
+     * Invoked just after the aglet arrived at the destination
+     */
+    public void onReverting(MobilityEvent event) {
+    }
 }

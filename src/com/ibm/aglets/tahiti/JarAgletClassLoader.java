@@ -14,78 +14,86 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-import java.io.*;
-import java.net.*;
-import java.security.Identity;
+import java.net.URL;
 import java.security.cert.Certificate;
+
+import com.ibm.awb.misc.Archive;
+import com.ibm.awb.misc.Archive.Entry;
+import com.ibm.awb.misc.JarArchive;
 import com.ibm.maf.ClassName;
-import com.ibm.awb.misc.*;
 
 class JarAgletClassLoader extends AgletClassLoader {
-	JarArchive _jar = null;
+    JarArchive _jar = null;
 
-	/*
-	 * synchronized public boolean match(DigestTable table) {
-	 * return _jar.getDigestTable().match(table, false);
-	 * }
-	 * 
-	 * synchronized public boolean matchAndImport(DigestTable table) {
-	 * return _digest_table.match(table, false);
-	 * }
-	 */
-	JarAgletClassLoader(String name, 
-						Certificate cert) throws java.io.IOException {
-		this(new URL(name), cert);
-	}
-	JarAgletClassLoader(URL codebase, 
-						Certificate cert) throws java.io.IOException {
-		super(checkAndTrim(codebase), cert);
-		_jar = new com.ibm.awb.misc.JarArchive(codebase.openStream());
+    /*
+     * synchronized public boolean match(DigestTable table) { return
+     * _jar.getDigestTable().match(table, false); }
+     * 
+     * synchronized public boolean matchAndImport(DigestTable table) { return
+     * _digest_table.match(table, false); }
+     */
+    JarAgletClassLoader(String name, Certificate cert)
+	    throws java.io.IOException {
+	this(new URL(name), cert);
+    }
 
-		// _digest_table = _jar.getDigestTable();
-		Archive.Entry ae[] = _jar.entries();
+    JarAgletClassLoader(URL codebase, Certificate cert)
+	    throws java.io.IOException {
+	super(checkAndTrim(codebase), cert);
+	this._jar = new com.ibm.awb.misc.JarArchive(codebase.openStream());
 
-		_digest_table = new DigestTable(ae.length);
-		for (int i = 0; i < ae.length; i++) {
-			_digest_table.setDigest(ae[i].name(), ae[i].digest());
-		} 
-	}
-	private static URL checkAndTrim(URL codeBase) throws java.io.IOException {
-		String f = codeBase.getFile();
+	// _digest_table = _jar.getDigestTable();
+	Archive.Entry ae[] = this._jar.entries();
 
-		if (f != null && f.toLowerCase().endsWith(".jar")) {
-			System.out.println(f);
-			f = f.substring(0, f.lastIndexOf('/') + 1);
-			System.out.println(f);
-			return new URL(codeBase, f);
-		} 
-		return codeBase;
+	this._digest_table = new DigestTable(ae.length);
+	for (Entry element : ae) {
+	    this._digest_table.setDigest(element.name(), element.digest());
 	}
-	public Archive getArchive(ClassName[] t) {
-		if (match(t)) {
-			return _jar;
-		} else {
-			return null;
-		} 
-	}
-	synchronized protected byte[] getResourceAsByteArray(String filename) {
-		return _jar.getResourceAsByteArray(filename);
-	}
-	/* overritten */
-	public void importArchive(Archive a) {
-		Archive.Entry ae[] = a.entries();
+    }
 
-		for (int i = 0; i < ae.length; i++) {
-			long digest = _digest_table.getDigest(ae[i].name());
+    private static URL checkAndTrim(URL codeBase) throws java.io.IOException {
+	String f = codeBase.getFile();
 
-			if (digest == 0) {
-				throw new RuntimeException("Cannot Add JarArchive!");
-			} 
-		} 
+	if ((f != null) && f.toLowerCase().endsWith(".jar")) {
+	    System.out.println(f);
+	    f = f.substring(0, f.lastIndexOf('/') + 1);
+	    System.out.println(f);
+	    return new URL(codeBase, f);
 	}
-	static boolean isJarFile(URL codebase) {
-		String f = codebase.getFile();
+	return codeBase;
+    }
 
-		return f != null && f.toLowerCase().endsWith(".jar");
+    @Override
+    public Archive getArchive(ClassName[] t) {
+	if (this.match(t)) {
+	    return this._jar;
+	} else {
+	    return null;
 	}
+    }
+
+    @Override
+    synchronized protected byte[] getResourceAsByteArray(String filename) {
+	return this._jar.getResourceAsByteArray(filename);
+    }
+
+    /* overritten */
+    @Override
+    public void importArchive(Archive a) {
+	Archive.Entry ae[] = a.entries();
+
+	for (Entry element : ae) {
+	    long digest = this._digest_table.getDigest(element.name());
+
+	    if (digest == 0) {
+		throw new RuntimeException("Cannot Add JarArchive!");
+	    }
+	}
+    }
+
+    static boolean isJarFile(URL codebase) {
+	String f = codebase.getFile();
+
+	return (f != null) && f.toLowerCase().endsWith(".jar");
+    }
 }

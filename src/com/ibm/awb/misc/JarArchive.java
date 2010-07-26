@@ -1,9 +1,13 @@
 package com.ibm.awb.misc;
 
-import java.io.*;
-import java.util.zip.*;
-import java.util.Enumeration;
-import java.security.MessageDigest;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /*
  * @(#)JarArchive.java
@@ -21,173 +25,171 @@ import java.security.MessageDigest;
 
 public class JarArchive extends Archive {
 
-	static private boolean verbose = false;
+    static private boolean verbose = false;
 
-	Manifest manifest = null;
-	byte[] contents = null;
-	boolean allowPut = false;
+    Manifest manifest = null;
+    byte[] contents = null;
+    boolean allowPut = false;
 
-	/*
-	 * private void updateDigest() {
-	 * synchronized(digestGen) {
-	 * digestGen.reset();
-	 * digestGen.update(contents);
-	 * digest = digestGen.digest();
-	 * }
-	 * }
-	 */
-	public JarArchive(InputStream in) throws java.io.IOException {
-		ByteArrayOutputStream bao = new ByteArrayOutputStream();
-		byte[] buff = new byte[512];
-		int i;
+    /*
+     * private void updateDigest() { synchronized(digestGen) {
+     * digestGen.reset(); digestGen.update(contents); digest =
+     * digestGen.digest(); } }
+     */
+    public JarArchive(InputStream in) throws java.io.IOException {
+	ByteArrayOutputStream bao = new ByteArrayOutputStream();
+	byte[] buff = new byte[512];
+	int i;
 
-		while ((i = in.read(buff, 0, 512)) >= 0) {
-			bao.write(buff, 0, i);
-		} 
-		contents = bao.toByteArray();
-		update();
+	while ((i = in.read(buff, 0, 512)) >= 0) {
+	    bao.write(buff, 0, i);
 	}
-	public JarArchive(String zipname) throws java.io.IOException {
-		this(new FileInputStream(zipname));
+	this.contents = bao.toByteArray();
+	this.update();
+    }
+
+    public JarArchive(String zipname) throws java.io.IOException {
+	this(new FileInputStream(zipname));
+    }
+
+    static private void debug(String msg) {
+	if (verbose) {
+	    System.out.println(msg);
 	}
-	static private void debug(String msg) {
-		if (verbose) {
-			System.out.println(msg);
-		} 
+    }
+
+    public Archive getArchiveFor(String classname) {
+	return null;
+    }
+
+    public Manifest getManifest() {
+	return this.manifest;
+    }
+
+    @Override
+    synchronized public byte[] getResourceAsByteArray(String name) {
+	byte[] b = this.getResourceInCache(name);
+
+	if (b == null) {
+	    b = this.putResourceFromJarArchive(name);
 	}
-	public Archive getArchiveFor(String classname) {
-		return null;
+	return b;
+    }
+
+    /*
+     * synchronized public DigestTable getDigestTable() { DigestTable table =
+     * new DigestTable( cache.size()); Enumeration e = cache.keys(); int i=0;
+     * while(e.hasMoreElements()) { String key = (String)e.nextElement();
+     * table.setData(key, getResourceInCache(key)); } return table; }
+     */
+
+    /*
+     * // once the lazy loading is implemented, this have to be implemented.
+     * synchronized public DigestTable getDigestTable() { return manifest ==
+     * null ? null : manifest.getDigestTable() }
+     */
+
+    /*
+     * synchronized public byte[] digest() { return digest; }
+     * 
+     * synchronized public void merge(Archive a) { throw new
+     * RuntimeException("Don't merge for now"); }
+     */
+
+    @Override
+    synchronized public InputStream getResourceAsStream(String name) {
+	byte[] b = this.getResourceInCache(name);
+
+	if (b == null) {
+	    b = this.putResourceFromJarArchive(name);
 	}
-	public Manifest getManifest() {
-		return manifest;
+	if (b != null) {
+	    return new ByteArrayInputStream(b);
 	}
-	synchronized public byte[] getResourceAsByteArray(String name) {
-		byte[] b = getResourceInCache(name);
+	return null;
+    }
 
-		if (b == null) {
-			b = putResourceFromJarArchive(name);
-		} 
-		return b;
+    //
+    public boolean isAglet(String classname) {
+	return (this.manifest != null) && this.manifest.isAglet(classname);
+    }
+
+    synchronized void putResoruce(String name, byte[] res) {
+	if (this.allowPut) {
+	    super.putResource(name, res);
 	}
-	/*
-	 * synchronized public DigestTable getDigestTable() {
-	 * DigestTable table = new DigestTable( cache.size());
-	 * Enumeration e = cache.keys();
-	 * int i=0;
-	 * while(e.hasMoreElements()) {
-	 * String key = (String)e.nextElement();
-	 * table.setData(key, getResourceInCache(key));
-	 * }
-	 * return table;
-	 * }
-	 */
+    }
 
-	/*
-	 * // once the lazy loading is implemented, this have to be implemented.
-	 * synchronized public DigestTable getDigestTable() {
-	 * return manifest == null ? null : manifest.getDigestTable()
-	 * }
-	 */
+    private byte[] putResourceFromJarArchive(String name) {
+	return null;
+    }
 
-	/*
-	 * synchronized public byte[] digest() {
-	 * return digest;
-	 * }
-	 * 
-	 * synchronized public void merge(Archive a) {
-	 * throw new RuntimeException("Don't merge for now");
-	 * }
-	 */
+    private void readFully(InputStream in, byte[] b) throws java.io.IOException {
+	int offset = 0;
 
-	synchronized public InputStream getResourceAsStream(String name) {
-		byte[] b = getResourceInCache(name);
-
-		if (b == null) {
-			b = putResourceFromJarArchive(name);
-		} 
-		if (b != null) {
-			return new ByteArrayInputStream(b);
-		} 
-		return null;
+	while (offset < b.length) {
+	    offset += in.read(b, offset, b.length - offset);
 	}
-	// 
-	public boolean isAglet(String classname) {
-		return manifest != null && manifest.isAglet(classname);
+    }
+
+    public void readObject(ObjectInputStream s) throws IOException,
+	    ClassNotFoundException {
+	s.defaultReadObject();
+
+	// updateDigest();
+    }
+
+    private void update() throws java.io.IOException {
+	this.allowPut = true;
+
+	// digest
+	// updateDigest();
+
+	// reading...
+	ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(this.contents));
+	ZipEntry ze = null;
+	java.io.ByteArrayOutputStream bao = null;
+	byte[] buff = null;
+	;
+
+	int i = 0;
+
+	while ((ze = zis.getNextEntry()) != null) {
+	    String n = ze.getName();
+
+	    debug("[" + (i++) + "] " + n);
+
+	    if (sun.tools.jar.Manifest.isManifestName(n)) {
+		this.manifest = new Manifest(zis);
+	    } else if (n.toUpperCase().startsWith("MANIFEST/")
+		    && n.toUpperCase().endsWith(".SF")) {
+
+		// signature
+	    } else {
+		byte b[];
+		long l = ze.getSize();
+
+		if (l < 0) {
+
+		    // unknown;
+		    int read;
+
+		    if (bao == null) {
+			buff = new byte[512];
+			bao = new java.io.ByteArrayOutputStream();
+		    }
+		    bao.reset();
+		    while ((read = zis.read(buff, 0, 512)) > 0) {
+			bao.write(buff, 0, read);
+		    }
+		    b = bao.toByteArray();
+		} else {
+		    b = new byte[(int) l];
+		    this.readFully(zis, b);
+		}
+		this.putResource(ze.getName(), b);
+	    }
 	}
-	synchronized void putResoruce(String name, byte[] res) {
-		if (allowPut) {
-			super.putResource(name, res);
-		} 
-	}
-	private byte[] putResourceFromJarArchive(String name) {
-		return null;
-	}
-	private void readFully(InputStream in, 
-						   byte[] b) throws java.io.IOException {
-		int offset = 0;
-
-		while (offset < b.length) {
-			offset += in.read(b, offset, b.length - offset);
-		} 
-	}
-	public void readObject(ObjectInputStream s) 
-			throws IOException, ClassNotFoundException {
-		s.defaultReadObject();
-
-		// updateDigest();
-	}
-	private void update() throws java.io.IOException {
-		allowPut = true;
-
-		// digest
-		// updateDigest();
-
-		// reading...
-		ZipInputStream zis = 
-			new ZipInputStream(new ByteArrayInputStream(contents));
-		ZipEntry ze = null;
-		java.io.ByteArrayOutputStream bao = null;
-		byte[] buff = null;
-		;
-
-		int i = 0;
-
-		while ((ze = zis.getNextEntry()) != null) {
-			String n = ze.getName();
-
-			debug("[" + (i++) + "] " + n);
-
-			if (sun.tools.jar.Manifest.isManifestName(n)) {
-				manifest = new Manifest(zis);
-			} else if (n.toUpperCase().startsWith("MANIFEST/") 
-					   && n.toUpperCase().endsWith(".SF")) {
-
-				// signature
-			} else {
-				byte b[];
-				long l = ze.getSize();
-
-				if (l < 0) {
-
-					// unknown;
-					int read;
-
-					if (bao == null) {
-						buff = new byte[512];
-						bao = new java.io.ByteArrayOutputStream();
-					} 
-					bao.reset();
-					while ((read = zis.read(buff, 0, 512)) > 0) {
-						bao.write(buff, 0, read);
-					} 
-					b = bao.toByteArray();
-				} else {
-					b = new byte[(int)l];
-					readFully(zis, b);
-				} 
-				putResource(ze.getName(), b);
-			} 
-		} 
-		allowPut = false;
-	}
+	this.allowPut = false;
+    }
 }

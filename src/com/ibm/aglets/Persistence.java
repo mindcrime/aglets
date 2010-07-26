@@ -17,13 +17,16 @@ package com.ibm.aglets;
 import java.util.Enumeration;
 
 public interface Persistence {
-	PersistentEntry createEntryWith(String key);
-	Enumeration entryKeys();
-	/*
-	 * OutputStream getOutputStream(String key) throws IOException;
-	 * InputStream getInputStream(String key) throws IOException;
-	 */
-	PersistentEntry getEntry(String key);
-	// Enumeration entries();
-	void removeEntry(String key);
+    PersistentEntry createEntryWith(String key);
+
+    Enumeration entryKeys();
+
+    /*
+     * OutputStream getOutputStream(String key) throws IOException; InputStream
+     * getInputStream(String key) throws IOException;
+     */
+    PersistentEntry getEntry(String key);
+
+    // Enumeration entries();
+    void removeEntry(String key);
 }

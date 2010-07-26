@@ -16,11 +16,12 @@ package com.ibm.maf;
 
 public final class NotHandled extends MAFExtendedException {
 
-	// constructor
-	public NotHandled() {
-		super();
-	}
-	public NotHandled(String msg) {
-		super(msg);
-	}
+    // constructor
+    public NotHandled() {
+	super();
+    }
+
+    public NotHandled(String msg) {
+	super(msg);
+    }
 }

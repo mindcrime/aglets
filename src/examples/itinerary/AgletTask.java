@@ -15,36 +15,33 @@ package examples.itinerary;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
-import com.ibm.aglet.system.*;
-import com.ibm.aglet.util.*;
-import com.ibm.agletx.util.*;
-import com.ibm.agletx.patterns.Meeting;
-import java.util.Vector;
 import java.util.Enumeration;
-import java.net.URL;
-import java.awt.*;
-import java.awt.event.*;
+
+import com.ibm.agletx.patterns.Meeting;
+import com.ibm.agletx.util.MeetingTask;
+import com.ibm.agletx.util.SeqItinerary;
 
 class AgletTask extends MeetingTask {
 
-	public AgletTask(Meeting meeting) {
-		super(meeting);
-	}
-	public void execute(SeqItinerary itin, Enumeration agletIDs) {
-		String list = "";
-		String id = "";
+    public AgletTask(Meeting meeting) {
+	super(meeting);
+    }
 
-		for (; agletIDs.hasMoreElements(); ) {
-			list += (AgletID)(agletIDs.nextElement()) + " ";
-		} 
-		try {
-			id = itin.getOwnerAglet().getAgletID().toString();
-		} catch (Exception ex) {
+    @Override
+    public void execute(SeqItinerary itin, Enumeration agletIDs) {
+	String list = "";
+	String id = "";
 
-			// 
-		} 
-		System.out.println(">>VisitingAglet: [" + id + "] I met with [" 
-						   + list + "]");
+	for (; agletIDs.hasMoreElements();) {
+	    list += (agletIDs.nextElement()) + " ";
 	}
+	try {
+	    id = itin.getOwnerAglet().getAgletID().toString();
+	} catch (Exception ex) {
+
+	    //
+	}
+	System.out.println(">>VisitingAglet: [" + id + "] I met with [" + list
+		+ "]");
+    }
 }

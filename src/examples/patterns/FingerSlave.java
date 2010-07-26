@@ -15,56 +15,55 @@ package examples.patterns;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
-import com.ibm.agletx.patterns.*;
-
 import java.util.Date;
-import java.util.Vector;
-import java.util.Enumeration;
+
+import com.ibm.aglet.AgletContext;
+import com.ibm.aglet.AgletException;
+import com.ibm.agletx.patterns.Slave;
 
 /**
- * FingerSlave is a aglet of Slave pattern that moves to a remote
- * site and backs to the original site with information.
+ * FingerSlave is a aglet of Slave pattern that moves to a remote site and backs
+ * to the original site with information.
  * 
  * @see Slave
- * @version     1.00    96/12/28
- * @author      Danny B. Lange
- * @author      Yariv Aridor
+ * @version 1.00 96/12/28
+ * @author Danny B. Lange
+ * @author Yariv Aridor
  * 
  */
 
 public class FingerSlave extends Slave {
 
-	protected void doJob() throws AgletException {
-		RESULT = getLocalInfo();
-	}
-	private Object getLocalInfo() throws AgletException {
-		AgletContext ac = getAgletContext();
-		String hostname;
+    @Override
+    protected void doJob() throws AgletException {
+	this.RESULT = this.getLocalInfo();
+    }
 
-		if (ac.getHostingURL() == null) {
-			hostname = "Unknown";
-		} else {
-			hostname = ac.getHostingURL().getHost().toString();
-		} 
+    private Object getLocalInfo() throws AgletException {
+	AgletContext ac = this.getAgletContext();
+	String hostname;
 
-		FingerInfo info = new FingerInfo(hostname, 
+	if (ac.getHostingURL() == null) {
+	    hostname = "Unknown";
+	} else {
+	    hostname = ac.getHostingURL().getHost().toString();
+	}
 
-		// PropertyPermission for the following properties
-		// should be specified in aglets.policy file.
-		getProperty("user.name"), getProperty("user.home"), 
-								  getProperty("user.dir"), 
-								  getProperty("os.arch"), 
-								  getProperty("os.name"), 
-								  getProperty("os.version"), 
-								  getProperty("java.version"), (new Date()));
+	FingerInfo info = new FingerInfo(hostname,
 
-		return info;
-	}
-	private String getProperty(String key) {
-		return System.getProperty(key, "Unknown");
-	}
-	protected void initializeJob() {
-		RESULT = null;
-	}
+	// PropertyPermission for the following properties
+	// should be specified in aglets.policy file.
+	this.getProperty("user.name"), this.getProperty("user.home"), this.getProperty("user.dir"), this.getProperty("os.arch"), this.getProperty("os.name"), this.getProperty("os.version"), this.getProperty("java.version"), (new Date()));
+
+	return info;
+    }
+
+    private String getProperty(String key) {
+	return System.getProperty(key, "Unknown");
+    }
+
+    @Override
+    protected void initializeJob() {
+	this.RESULT = null;
+    }
 }

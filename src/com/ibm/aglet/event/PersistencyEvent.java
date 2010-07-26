@@ -28,58 +28,61 @@ import com.ibm.aglet.AgletProxy;
 /**
  * The persistency event
  * 
- * @version     1.00    $Date: 2009/07/28 07:04:53 $
- * @author      Mitsuru Oshima
+ * @version 1.00 $Date: 2009/07/28 07:04:53 $
+ * @author Mitsuru Oshima
  */
 public class PersistencyEvent extends AgletEvent {
 
-	/**
-	 * Marks the first integer id for the range of persistency event ids.
-	 */
-	public static final int AGLET_PERSISTENCY_FIRST = 1300;
+    /**
+     * Marks the first integer id for the range of persistency event ids.
+     */
+    public static final int AGLET_PERSISTENCY_FIRST = 1300;
 
-	/**
-	 * Marks the last integer id for the range of persistency event ids.
-	 */
-	public static final int AGLET_PERSISTENCY_LAST = 1301;
+    /**
+     * Marks the last integer id for the range of persistency event ids.
+     */
+    public static final int AGLET_PERSISTENCY_LAST = 1301;
 
-	/**
-	 * The DEACTIVATING event type is delivered when the aglet is deactivated.
-	 */
-	public static final int DEACTIVATING = AGLET_PERSISTENCY_FIRST;
+    /**
+     * The DEACTIVATING event type is delivered when the aglet is deactivated.
+     */
+    public static final int DEACTIVATING = AGLET_PERSISTENCY_FIRST;
 
-	/**
-	 * The ACTIVATION event type is delivered when the aglet is activated.
-	 */
-	public static final int ACTIVATION = AGLET_PERSISTENCY_FIRST + 1;
+    /**
+     * The ACTIVATION event type is delivered when the aglet is activated.
+     */
+    public static final int ACTIVATION = AGLET_PERSISTENCY_FIRST + 1;
 
-	private static String name[] = {
-		"DEACTIVATING", "ACTIVATION", 
-	};
+    private static String name[] = { "DEACTIVATING", "ACTIVATION", };
 
-	private long duration;
+    private long duration;
 
-	/**
-	 * Constructs a PersistencyEvent with the specified id, aglet proxy and
-	 * duration.
-	 */
-	public PersistencyEvent(int id, AgletProxy aglet, long duration) {
-		super(aglet, id);
-		this.duration = duration;
-	}
-	/**
-	 * Returns the aglet proxy which is the source of the event.
-	 */
-	public AgletProxy getAgletProxy() {
-		return (AgletProxy)source;
-	}
-	/**
-	 * Gets the duration
-	 */
-	public long getDuration() {
-		return duration;
-	}
-	public String toString() {
-		return "PersistencyEvent[" + name[id - AGLET_PERSISTENCY_FIRST] + "]";
-	}
+    /**
+     * Constructs a PersistencyEvent with the specified id, aglet proxy and
+     * duration.
+     */
+    public PersistencyEvent(int id, AgletProxy aglet, long duration) {
+	super(aglet, id);
+	this.duration = duration;
+    }
+
+    /**
+     * Returns the aglet proxy which is the source of the event.
+     */
+    public AgletProxy getAgletProxy() {
+	return (AgletProxy) this.source;
+    }
+
+    /**
+     * Gets the duration
+     */
+    public long getDuration() {
+	return this.duration;
+    }
+
+    @Override
+    public String toString() {
+	return "PersistencyEvent[" + name[this.id - AGLET_PERSISTENCY_FIRST]
+		+ "]";
+    }
 }

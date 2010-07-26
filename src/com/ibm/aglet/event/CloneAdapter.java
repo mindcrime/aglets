@@ -24,27 +24,31 @@ package com.ibm.aglet.event;
  */
 
 /**
- * The adapter which receives clone events. This class is provided
- * as convenience for easily creating listerns by extending this class
- * and overriding only the methods of interest.
+ * The adapter which receives clone events. This class is provided as
+ * convenience for easily creating listerns by extending this class and
+ * overriding only the methods of interest.
  * 
- * @version     1.00    $Date: 2009/07/28 07:04:53 $
- * @author      Misturu Oshima
+ * @version 1.00 $Date: 2009/07/28 07:04:53 $
+ * @author Misturu Oshima
  */
 public class CloneAdapter implements CloneListener {
 
-	/**
-	 * Invoked after an aglet was cloned. This is delivered to the
-	 * cloned aglet.
-	 */
-	public void onClone(CloneEvent event) {}
-	/**
-	 * Invoked after an aglet was cloned. This is delivered to the
-	 * original aglet.
-	 */
-	public void onCloned(CloneEvent event) {}
-	/**
-	 * Invoked when an aglet is attempted to clone
-	 */
-	public void onCloning(CloneEvent event) {}
+    /**
+     * Invoked after an aglet was cloned. This is delivered to the cloned aglet.
+     */
+    public void onClone(CloneEvent event) {
+    }
+
+    /**
+     * Invoked after an aglet was cloned. This is delivered to the original
+     * aglet.
+     */
+    public void onCloned(CloneEvent event) {
+    }
+
+    /**
+     * Invoked when an aglet is attempted to clone
+     */
+    public void onCloning(CloneEvent event) {
+    }
 }

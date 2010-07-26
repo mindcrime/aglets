@@ -23,8 +23,8 @@ package com.ibm.maf;
 
 public final class FinderNotFound extends MAFException {
 
-	// constructor
-	public FinderNotFound() {
-		super();
-	}
+    // constructor
+    public FinderNotFound() {
+	super();
+    }
 }

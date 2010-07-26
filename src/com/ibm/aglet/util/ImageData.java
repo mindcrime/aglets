@@ -29,17 +29,18 @@ import java.io.OutputStream;
 /**
  * <tt>ImageData</tt> is a object to store the image.
  * 
- * @version     1.10    $Date: 2009/07/28 07:04:54 $
- * @author	Mitsuru Oshima
+ * @version 1.10 $Date: 2009/07/28 07:04:54 $
+ * @author Mitsuru Oshima
  */
 public interface ImageData {
 
-	/**
-	 * Gets source of the image
-	 */
-	public ImageProducer getImageProducer();
-	/**
-	 * Writes the image data to the given output stream
-	 */
-	public void writeTo(OutputStream out) throws java.io.IOException;
+    /**
+     * Gets source of the image
+     */
+    public ImageProducer getImageProducer();
+
+    /**
+     * Writes the image data to the given output stream
+     */
+    public void writeTo(OutputStream out) throws java.io.IOException;
 }

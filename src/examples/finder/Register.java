@@ -15,43 +15,49 @@ package examples.finder;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
-import com.ibm.aglet.event.*;
+import com.ibm.aglet.Aglet;
+import com.ibm.aglet.AgletProxy;
+import com.ibm.aglet.event.MobilityAdapter;
+import com.ibm.aglet.event.MobilityEvent;
 import com.ibm.aglet.message.Message;
 
 // now this is reusable!
 public class Register extends MobilityAdapter {
-	AgletProxy _finder;
-	Message _msg = new Message("Register");
+    AgletProxy _finder;
+    Message _msg = new Message("Register");
 
-	Register(Aglet a, AgletProxy finder, String name) {
-		a.addMobilityListener(this);
-		_msg.setArg("NAME", name);
-		_finder = finder;
-		AgletProxy proxy = a.getAgletContext().getAgletProxy(a.getAgletID());
+    Register(Aglet a, AgletProxy finder, String name) {
+	a.addMobilityListener(this);
+	this._msg.setArg("NAME", name);
+	this._finder = finder;
+	AgletProxy proxy = a.getAgletContext().getAgletProxy(a.getAgletID());
 
-		register(proxy);
-	}
-	public void onArrival(MobilityEvent me) {
-		System.out.println(me.getAgletProxy());
-		register(me.getAgletProxy());
-	}
-	public void register(AgletProxy proxy) {
-		_msg.setArg("PROXY", proxy);
-		try {
-			_finder.sendOnewayMessage(_msg);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} 
-	}
-	public void unregister() {
-		Message unreg = new Message("Unregister");
+	this.register(proxy);
+    }
 
-		unreg.setArg("NAME", _msg.getArg("NAME"));
-		try {
-			_finder.sendOnewayMessage(unreg);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} 
+    @Override
+    public void onArrival(MobilityEvent me) {
+	System.out.println(me.getAgletProxy());
+	this.register(me.getAgletProxy());
+    }
+
+    public void register(AgletProxy proxy) {
+	this._msg.setArg("PROXY", proxy);
+	try {
+	    this._finder.sendOnewayMessage(this._msg);
+	} catch (Exception ex) {
+	    ex.printStackTrace();
 	}
+    }
+
+    public void unregister() {
+	Message unreg = new Message("Unregister");
+
+	unreg.setArg("NAME", this._msg.getArg("NAME"));
+	try {
+	    this._finder.sendOnewayMessage(unreg);
+	} catch (Exception ex) {
+	    ex.printStackTrace();
+	}
+    }
 }

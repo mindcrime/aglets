@@ -15,92 +15,109 @@ package examples.patterns;
  * will not be liable for any third party claims against you.
  */
 
+import java.io.Serializable;
 import java.util.Date;
-import java.io.*;
 
 /**
  * The FingerInfo class defines the Finger Information.
  * 
  * @see Finger
- * @version     1.00    96/12/28
- * @author      Danny B. Lange
- * @author      Yariv Aridor
+ * @version 1.00 96/12/28
+ * @author Danny B. Lange
+ * @author Yariv Aridor
  */
 
 final class FingerInfo implements Serializable {
 
-	// Private variables
-	// 
+    // Private variables
+    //
 
-	private String _hostName;
-	private String _userName;
-	private String _homeDirectory;
-	private String _workingDirectory;
-	private String _architecture;
-	private String _osName;
-	private String _osVersion;
-	private String _javaVersion;
-	private Date _localTime;
+    private String _hostName;
+    private String _userName;
+    private String _homeDirectory;
+    private String _workingDirectory;
+    private String _architecture;
+    private String _osName;
+    private String _osVersion;
+    private String _javaVersion;
+    private Date _localTime;
 
-	// Public methods
-	// 
-	/**
-	 * A constructor.
-	 * @param kind specify norman notification, expiration, or error exception
-	 * @param notifier is URL for identifying the sender aglet.
-	 * @param number is used when Notifier stays at remote server to send
-	 * multiple instances of Notification. It is used for numbering the message.
-	 * @param message an argument Object; contents of the message.
-	 */
-	FingerInfo(String hostName, String userName, String homeDirectory, 
-			   String workingDirectory, String architecture, String osName, 
-			   String osVersion, String javaVersion, Date localTime) {
-		_hostName = hostName;
-		_userName = userName;
-		_homeDirectory = homeDirectory;
-		_workingDirectory = workingDirectory;
-		_architecture = architecture;
-		_osName = osName;
-		_osVersion = osVersion;
-		_javaVersion = javaVersion;
-		_localTime = localTime;
-	}
-	String getArchitecture() {
-		return _architecture;
-	}
-	String getHomeDirectory() {
-		return _homeDirectory;
-	}
-	String getHostName() {
-		return _hostName;
-	}
-	String getJavaVersion() {
-		return _javaVersion;
-	}
-	Date getLocalTime() {
-		return _localTime;
-	}
-	String getOsName() {
-		return _osName;
-	}
-	String getOsVersion() {
-		return _osVersion;
-	}
-	String getUserName() {
-		return _userName;
-	}
-	String getWorkingDirectory() {
-		return _workingDirectory;
-	}
-	String toTextBlock() {
-		String str = "Host Name: " + _hostName + "\n" + "User Name: " 
-					 + _userName + "\n" + "Home Directory: " + _homeDirectory 
-					 + "\n" + "Working Directory: " + _workingDirectory 
-					 + "\n" + "Machine Architecture: " + _architecture + "\n" 
-					 + "OS Name: " + _osName + "\n" + "OS Version: " 
-					 + _osVersion + "\n" + "Java Version: " + _javaVersion 
-					 + "\n" + "Local Time: " + _localTime.toString();
+    // Public methods
+    //
+    /**
+     * A constructor.
+     * 
+     * @param kind
+     *            specify norman notification, expiration, or error exception
+     * @param notifier
+     *            is URL for identifying the sender aglet.
+     * @param number
+     *            is used when Notifier stays at remote server to send multiple
+     *            instances of Notification. It is used for numbering the
+     *            message.
+     * @param message
+     *            an argument Object; contents of the message.
+     */
+    FingerInfo(String hostName, String userName, String homeDirectory,
+	    String workingDirectory, String architecture, String osName,
+	    String osVersion, String javaVersion, Date localTime) {
+	this._hostName = hostName;
+	this._userName = userName;
+	this._homeDirectory = homeDirectory;
+	this._workingDirectory = workingDirectory;
+	this._architecture = architecture;
+	this._osName = osName;
+	this._osVersion = osVersion;
+	this._javaVersion = javaVersion;
+	this._localTime = localTime;
+    }
 
-		return str;
-	}
+    String getArchitecture() {
+	return this._architecture;
+    }
+
+    String getHomeDirectory() {
+	return this._homeDirectory;
+    }
+
+    String getHostName() {
+	return this._hostName;
+    }
+
+    String getJavaVersion() {
+	return this._javaVersion;
+    }
+
+    Date getLocalTime() {
+	return this._localTime;
+    }
+
+    String getOsName() {
+	return this._osName;
+    }
+
+    String getOsVersion() {
+	return this._osVersion;
+    }
+
+    String getUserName() {
+	return this._userName;
+    }
+
+    String getWorkingDirectory() {
+	return this._workingDirectory;
+    }
+
+    String toTextBlock() {
+	String str = "Host Name: " + this._hostName + "\n" + "User Name: "
+		+ this._userName + "\n" + "Home Directory: "
+		+ this._homeDirectory + "\n" + "Working Directory: "
+		+ this._workingDirectory + "\n" + "Machine Architecture: "
+		+ this._architecture + "\n" + "OS Name: " + this._osName + "\n"
+		+ "OS Version: " + this._osVersion + "\n" + "Java Version: "
+		+ this._javaVersion + "\n" + "Local Time: "
+		+ this._localTime.toString();
+
+	return str;
+    }
 }

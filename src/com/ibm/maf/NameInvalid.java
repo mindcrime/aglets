@@ -23,8 +23,8 @@ package com.ibm.maf;
 
 public final class NameInvalid extends MAFException {
 
-	// constructor
-	public NameInvalid() {
-		super();
-	}
+    // constructor
+    public NameInvalid() {
+	super();
+    }
 }

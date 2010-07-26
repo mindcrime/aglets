@@ -28,58 +28,57 @@ import com.ibm.aglet.AgletProxy;
 /**
  * The clon event occurs when the cloning of an aglet is attempted.
  * 
- * @version     1.00    $Date: 2009/07/28 07:04:53 $
- * @author      Mitsuru Oshima
+ * @version 1.00 $Date: 2009/07/28 07:04:53 $
+ * @author Mitsuru Oshima
  */
 public class CloneEvent extends AgletEvent {
 
-	/**
-	 * Marks the first integer id for the range of clone event ids.
-	 */
-	public static final int AGLET_CLONE_FIRST = 1100;
+    /**
+     * Marks the first integer id for the range of clone event ids.
+     */
+    public static final int AGLET_CLONE_FIRST = 1100;
 
-	/**
-	 * Marks the last integer id for the range of clone event ids.
-	 */
-	public static final int AGLET_CLONE_LAST = 1102;
+    /**
+     * Marks the last integer id for the range of clone event ids.
+     */
+    public static final int AGLET_CLONE_LAST = 1102;
 
-	/**
-	 * The CLONING event type is delivered when the aglet is attempted to
-	 * clone.
-	 */
-	public static final int CLONING = AGLET_CLONE_FIRST;
+    /**
+     * The CLONING event type is delivered when the aglet is attempted to clone.
+     */
+    public static final int CLONING = AGLET_CLONE_FIRST;
 
-	/**
-	 * The CLONE event type is delivered when the clone of the aglet
-	 * is created. Note that this event is delivered only to
-	 * the cloned object but not to the original.
-	 */
-	public static final int CLONE = AGLET_CLONE_FIRST + 1;
+    /**
+     * The CLONE event type is delivered when the clone of the aglet is created.
+     * Note that this event is delivered only to the cloned object but not to
+     * the original.
+     */
+    public static final int CLONE = AGLET_CLONE_FIRST + 1;
 
-	/**
-	 * The CLONED event type is delivered after the cloning of the aglet
-	 * finished. Note that this event is delivered only to
-	 * the original aglet.
-	 */
-	public static final int CLONED = AGLET_CLONE_FIRST + 2;
+    /**
+     * The CLONED event type is delivered after the cloning of the aglet
+     * finished. Note that this event is delivered only to the original aglet.
+     */
+    public static final int CLONED = AGLET_CLONE_FIRST + 2;
 
-	private static String name[] = {
-		"CLONEING", "CLONE", "CLONED", 
-	};
+    private static String name[] = { "CLONEING", "CLONE", "CLONED", };
 
-	/**
-	 * Constructs the clone event object with the specified id and aglet
-	 */
-	public CloneEvent(int id, AgletProxy aglet) {
-		super(aglet, id);
-	}
-	/**
-	 * Returns the aglet proxy which is the source of the event.
-	 */
-	public AgletProxy getAgletProxy() {
-		return (AgletProxy)source;
-	}
-	public String toString() {
-		return "CloneEvent[" + name[id - AGLET_CLONE_FIRST] + "]";
-	}
+    /**
+     * Constructs the clone event object with the specified id and aglet
+     */
+    public CloneEvent(int id, AgletProxy aglet) {
+	super(aglet, id);
+    }
+
+    /**
+     * Returns the aglet proxy which is the source of the event.
+     */
+    public AgletProxy getAgletProxy() {
+	return (AgletProxy) this.source;
+    }
+
+    @Override
+    public String toString() {
+	return "CloneEvent[" + name[this.id - AGLET_CLONE_FIRST] + "]";
+    }
 }

@@ -14,30 +14,29 @@ package com.ibm.agletx.util;
  * deposited with the U.S. Copyright Office.
  */
 
-import com.ibm.aglet.*;
-import com.ibm.aglet.event.*;
+import com.ibm.aglet.AgletContext;
+import com.ibm.aglet.AgletID;
+import com.ibm.aglet.AgletProxy;
 import com.ibm.aglet.message.Message;
-
-import java.util.Vector;
-import java.util.Enumeration;
-import java.net.URL;
-import java.io.IOException;
 
 class MessengerTask extends Task {
 
-	private AgletID id = null;
+    private AgletID id = null;
 
-	public MessengerTask(AgletID id) {
-		this.id = id;
-	}
-	public void execute(SeqItinerary itin) throws Exception {
-		AgletContext ctx = itin.getOwnerAglet().getAglet().getAgletContext();
-		AgletProxy p = ctx.getAgletProxy(id);
-		Message msg = ((MessengerItinerary)itin).getMessage();
+    public MessengerTask(AgletID id) {
+	this.id = id;
+    }
 
-		p.sendAsyncMessage(msg);
-	}
-	public AgletID getAgletID() {
-		return id;
-	}
+    @Override
+    public void execute(SeqItinerary itin) throws Exception {
+	AgletContext ctx = itin.getOwnerAglet().getAglet().getAgletContext();
+	AgletProxy p = ctx.getAgletProxy(this.id);
+	Message msg = ((MessengerItinerary) itin).getMessage();
+
+	p.sendAsyncMessage(msg);
+    }
+
+    public AgletID getAgletID() {
+	return this.id;
+    }
 }

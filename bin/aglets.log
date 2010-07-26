@@ -1,0 +1,16 @@
+INFO - Classpath is specified as /sviluppo/java/eclipseWorkspace/AgletsGIT/lib:/sviluppo/java/eclipseWorkspace/AgletsGIT/classes:/sviluppo/java/jars/log4j-1.2.15.jar:/sviluppo/java/eclipseWorkspace/AgletsGIT/public
+INFO - Real classpath = /sviluppo/java/eclipseWorkspace/AgletsGIT/lib:/sviluppo/java/eclipseWorkspace/AgletsGIT/classes:/sviluppo/java/jars/log4j-1.2.15.jar
+INFO - Logging system initialized!
+INFO - Classpath is specified as /sviluppo/java/eclipseWorkspace/AgletsGIT/lib:/sviluppo/java/eclipseWorkspace/AgletsGIT/classes:/sviluppo/java/jars/log4j-1.2.15.jar:/sviluppo/java/eclipseWorkspace/AgletsGIT/public
+INFO - Real classpath = /sviluppo/java/eclipseWorkspace/AgletsGIT/lib:/sviluppo/java/eclipseWorkspace/AgletsGIT/classes:/sviluppo/java/jars/log4j-1.2.15.jar
+INFO - Logging system initialized!
+INFO - Reading security policy file: /usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/security/java.policy
+INFO - Reading security policy file: /home/luca/.aglets/security/aglets.policy
+INFO - Loading shared secrets from file /home/luca/.aglets/security/secrets.dat
+INFO - No shared secret file.
+INFO - No secrets.
+ERROR - Cannot authenticate the user luca
+INFO - Authenticated user luca
+INFO - Authenticated user luca
+INFO - USE SECURE RANDOM SEED.
+INFO - AUTHENTICATION MODE OFF.

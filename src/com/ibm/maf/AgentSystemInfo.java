@@ -23,30 +23,29 @@ package com.ibm.maf;
 
 public final class AgentSystemInfo implements java.io.Serializable {
 
-	// instance variables
-	public Name agent_system_name;
-	public short agent_system_type;
-	public LanguageMap[] language_maps;
-	public String agent_system_description;
-	public short major_version;
-	public short minor_version;
-	public Object[] properties;		// any
+    // instance variables
+    public Name agent_system_name;
+    public short agent_system_type;
+    public LanguageMap[] language_maps;
+    public String agent_system_description;
+    public short major_version;
+    public short minor_version;
+    public Object[] properties; // any
 
-	// constructors
-	public AgentSystemInfo() {}
-	public AgentSystemInfo(Name __agent_system_name, 
-						   short __agent_system_type, 
-						   LanguageMap[] __language_maps, 
-						   String __agent_system_description, 
-						   short __major_version, short __minor_version, 
-						   Object[] __properties) {
+    // constructors
+    public AgentSystemInfo() {
+    }
 
-		agent_system_name = __agent_system_name;
-		agent_system_type = __agent_system_type;
-		language_maps = __language_maps;
-		agent_system_description = __agent_system_description;
-		major_version = __major_version;
-		minor_version = __minor_version;
-		properties = __properties;
-	}
+    public AgentSystemInfo(Name __agent_system_name, short __agent_system_type,
+	    LanguageMap[] __language_maps, String __agent_system_description,
+	    short __major_version, short __minor_version, Object[] __properties) {
+
+	this.agent_system_name = __agent_system_name;
+	this.agent_system_type = __agent_system_type;
+	this.language_maps = __language_maps;
+	this.agent_system_description = __agent_system_description;
+	this.major_version = __major_version;
+	this.minor_version = __minor_version;
+	this.properties = __properties;
+    }
 }

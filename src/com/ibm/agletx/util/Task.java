@@ -19,11 +19,11 @@ import java.io.Serializable;
 /**
  * A class which defines a task to be performed during a sequential itinerary.
  * 
- * @version     1.20    $Date: 2009/07/28 07:04:53 $
- * @author      Yariv Aridor
+ * @version 1.20 $Date: 2009/07/28 07:04:53 $
+ * @author Yariv Aridor
  * @see SeqItinerary
  */
 
 public abstract class Task implements Serializable {
-	abstract public void execute(SeqItinerary itin) throws Exception;
+    abstract public void execute(SeqItinerary itin) throws Exception;
 }

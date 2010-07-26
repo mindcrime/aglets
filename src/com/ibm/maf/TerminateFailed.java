@@ -23,8 +23,8 @@ package com.ibm.maf;
 
 public final class TerminateFailed extends MAFException {
 
-	// constructor
-	public TerminateFailed() {
-		super();
-	}
+    // constructor
+    public TerminateFailed() {
+	super();
+    }
 }

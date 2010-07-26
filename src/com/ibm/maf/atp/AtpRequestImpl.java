@@ -14,226 +14,218 @@ package com.ibm.maf.atp;
  * deposited with the U.S. Copyright Office.
  */
 
-import com.ibm.atp.AtpConstants;
-
-import com.ibm.maf.AgentProfile;
-import com.ibm.maf.Name;
-import com.ibm.maf.MAFUtil;
-
-import com.ibm.awb.misc.Resource;
-
-import java.io.InputStream;
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.IOException;
-
+import java.io.InputStream;
 import java.net.URL;
-
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 
+import com.ibm.atp.AtpConstants;
+import com.ibm.maf.AgentProfile;
+import com.ibm.maf.MAFUtil;
+import com.ibm.maf.Name;
+
 /**
- * @version     1.10	$Date :$
- * @author	Mitsuru Oshima
+ * @version 1.10 $Date :$
+ * @author Mitsuru Oshima
  */
 public final class AtpRequestImpl implements AtpRequest {
-	final static String ATP_VERSION = "ATP/0.1";
+    final static String ATP_VERSION = "ATP/0.1";
 
-	private InputStream in;
-	private int method = 0;
-	private URL requestURI = null;
-	private String requestLine = null;
-	private Hashtable headers = new Hashtable();
+    private InputStream in;
+    private int method = 0;
+    private URL requestURI = null;
+    private String requestLine = null;
+    private Hashtable headers = new Hashtable();
 
-	static AgentProfile agent_profile = null;
+    static AgentProfile agent_profile = null;
 
-	static {
-		short one = (short)1;
+    static {
+	short one = (short) 1;
 
-		agent_profile = new AgentProfile(one,		// Java
-		one,										// Aglets
-		"Aglets", one, one, one, null);
-	} 
+	agent_profile = new AgentProfile(one, // Java
+	one, // Aglets
+	"Aglets", one, one, one, null);
+    }
 
-	public AtpRequestImpl(InputStream in) throws IOException {
-		this.in = in;
+    public AtpRequestImpl(InputStream in) throws IOException {
+	this.in = in;
+    }
+
+    public Name getAgentName() {
+	return MAFUtil.decodeName(MAFUtil.encodeString(this.getRequestParameter("agent-id")));
+    }
+
+    public String getAgentNameAsString() {
+	return this.getRequestParameter("agent-id");
+    }
+
+    /*
+     * public byte[] getContent() { try { int l =
+     * Integer.parseInt(getRequestParameter("content-length")); byte b[] = new
+     * byte[l]; DataInput din = new DataInputStream(getInputStream());
+     * din.readFully(b); return b; } catch (Exception ex) {
+     * ex.printStackTrace(); return null; } }
+     */
+    public AgentProfile getAgentProfile() {
+	return agent_profile;
+    }
+
+    public int getContentLength() {
+	try {
+	    return Integer.parseInt(this.getRequestParameter("content-length"));
+	} catch (Exception ex) {
+	    return -1;
 	}
-	public Name getAgentName() {
-		return MAFUtil
-			.decodeName(MAFUtil
-				.encodeString(getRequestParameter("agent-id")));
+    }
+
+    public String getFetchClassFile() {
+	return this.requestURI.toString();
+    }
+
+    public InputStream getInputStream() {
+	return this.in;
+    }
+
+    public int getMethod() {
+	return this.method;
+    }
+
+    public String getPlaceName() {
+	String name = this.requestURI.getFile();
+
+	if ((name == null) || (name.length() == 0)) {
+	    return "";
 	}
-	public String getAgentNameAsString() {
-		return getRequestParameter("agent-id");
+
+	// cut off "/servlet"
+	if (name.startsWith("/servlet")) {
+	    name = name.substring(9); // cut off "/servlet/"
+	    int i = name.indexOf('/', 1);
+
+	    if (i > 0) {
+		name = name.substring(i);
+	    } else {
+		return "";
+	    }
 	}
-	/*
-	 * public byte[] getContent() {
-	 * try {
-	 * int l = Integer.parseInt(getRequestParameter("content-length"));
-	 * byte b[] = new byte[l];
-	 * DataInput din = new DataInputStream(getInputStream());
-	 * din.readFully(b);
-	 * return b;
-	 * } catch (Exception ex) {
-	 * ex.printStackTrace();
-	 * return null;
-	 * }
-	 * }
-	 */
-	public AgentProfile getAgentProfile() {
-		return agent_profile;
+
+	// cut off "/aglets"
+	if (name.startsWith("/aglets")) {
+	    name = name.substring(7);
 	}
-	public int getContentLength() {
-		try {
-			return Integer.parseInt(getRequestParameter("content-length"));
-		} catch (Exception ex) {
-			return -1;
-		} 
+	int i = name.indexOf('/', 1);
+
+	if (i > 0) {
+	    name = name.substring(name.charAt(0) == '/' ? 1 : 0, i);
+	} else {
+	    name = name.substring(name.charAt(0) == '/' ? 1 : 0);
 	}
-	public String getFetchClassFile() {
-		return requestURI.toString();
+	if (name.equals("default") || name.equals("cxt")) { // legacy
+	    name = "";
 	}
-	public InputStream getInputStream() {
-		return in;
+	return name;
+    }
+
+    /*
+     * public URL getRequestURI() { return requestURI; }
+     */
+
+    public String getRequestLine() {
+	return this.requestLine;
+    }
+
+    /*
+     * public String getCodeBase() { return getRequestParameter("codebase"); }
+     */
+    public String getRequestParameter(String key) {
+	return this.getRequestParameter(key, null);
+    }
+
+    public String getRequestParameter(String key, String defValue) {
+	String r = (String) this.headers.get(key.toLowerCase());
+
+	return r == null ? defValue : r;
+    }
+
+    public String getSender() {
+	return this.getRequestParameter("from");
+    }
+
+    public void parseHeaders() throws IOException {
+	DataInput di = new DataInputStream(this.in);
+
+	this.requestLine = di.readLine();
+	this.headers.put("requestline", this.requestLine);
+	verboseOut("[requestLine : " + this.requestLine + ']');
+
+	StringTokenizer st = new StringTokenizer(this.requestLine, " ", false);
+
+	if (st.countTokens() != 3) {
+	    throw new IOException("Invalid Request :" + this.requestLine);
 	}
-	public int getMethod() {
-		return method;
+
+	String t = st.nextToken().trim();
+
+	this.headers.put("method", t);
+	if ("dispatch".equalsIgnoreCase(t)) {
+	    this.method = AtpConstants.DISPATCH;
+	} else if ("retract".equalsIgnoreCase(t)) {
+	    this.method = AtpConstants.RETRACT;
+
+	} else if ("fetch".equalsIgnoreCase(t)) {
+	    this.method = AtpConstants.FETCH;
+	} else if ("ping".equalsIgnoreCase(t)) {
+	    this.method = AtpConstants.PING;
+	} else if ("message".equalsIgnoreCase(t)) {
+	    this.method = AtpConstants.MESSAGE;
+	} else if ("reply".equalsIgnoreCase(t)) {
+	    this.method = AtpConstants.REPLY;
+	} else {
+	    throw new IOException("Invalid Request :" + this.requestLine);
 	}
-	public String getPlaceName() {
-		String name = requestURI.getFile();
 
-		if (name == null || name.length() == 0) {
-			return "";
-		} 
-
-		// cut off "/servlet"
-		if (name.startsWith("/servlet")) {
-			name = name.substring(9);		// cut off "/servlet/"
-			int i = name.indexOf('/', 1);
-
-			if (i > 0) {
-				name = name.substring(i);
-			} else {
-				return "";
-			} 
-		} 
-
-		// cut off "/aglets"
-		if (name.startsWith("/aglets")) {
-			name = name.substring(7);
-		} 
-		int i = name.indexOf('/', 1);
-
-		if (i > 0) {
-			name = name.substring(name.charAt(0) == '/' ? 1 : 0, i);
-		} else {
-			name = name.substring(name.charAt(0) == '/' ? 1 : 0);
-		} 
-		if (name.equals("default") || name.equals("cxt")) {		// legacy
-			name = "";
-		} 
-		return name;
+	t = st.nextToken().trim().replace('+', ' ');
+	this.headers.put("requesturi", t);
+	try {
+	    this.requestURI = new URL(t);
+	} catch (Exception ex) {
+	    this.requestURI = null;
 	}
-	/*
-	 * public URL getRequestURI() {
-	 * return requestURI;
-	 * }
-	 */
+	String version = st.nextToken();
 
-	public String getRequestLine() {
-		return requestLine;
+	this.headers.put("version", version);
+
+	if (ATP_VERSION.equalsIgnoreCase(version) == false) {
+	    throw new IOException("Invalid Protocol: " + this.requestLine);
 	}
-	/*
-	 * public String getCodeBase() {
-	 * return getRequestParameter("codebase");
-	 * }
-	 */
-	public String getRequestParameter(String key) {
-		return getRequestParameter(key, null);
+
+	String line;
+
+	while (true) {
+	    line = di.readLine().trim();
+
+	    // REMIND: debug code
+	    if (this.method == AtpConstants.ILLEGAL_REQUEST) {
+		verboseOut("|" + line);
+	    }
+	    if (line.length() == 0) {
+		break;
+	    }
+	    String key = line.substring(0, line.indexOf(':')).trim();
+	    String value = line.substring(line.indexOf(':') + 1).trim();
+
+	    this.headers.put(key.toLowerCase(), value);
 	}
-	public String getRequestParameter(String key, String defValue) {
-		String r = (String)headers.get(key.toLowerCase());
 
-		return r == null ? defValue : r;
-	}
-	public String getSender() {
-		return getRequestParameter("from");
-	}
-	public void parseHeaders() throws IOException {
-		DataInput di = new DataInputStream(in);
+	agent_profile.agent_system_type = MAFUtil.toAgentSystemType(this.getRequestParameter("agent-system", "aglets"));
+	agent_profile.language_id = MAFUtil.toLanguageID(this.getRequestParameter("agent-language", "java"));
 
-		requestLine = di.readLine();
-		headers.put("requestline", requestLine);
-		verboseOut("[requestLine : " + requestLine + ']');
+    }
 
-		StringTokenizer st = new StringTokenizer(requestLine, " ", false);
-
-		if (st.countTokens() != 3) {
-			throw new IOException("Invalid Request :" + requestLine);
-		} 
-
-		String t = st.nextToken().trim();
-
-		headers.put("method", t);
-		if ("dispatch".equalsIgnoreCase(t)) {
-			method = AtpConstants.DISPATCH;
-		} else if ("retract".equalsIgnoreCase(t)) {
-			method = AtpConstants.RETRACT;
-
-		} else if ("fetch".equalsIgnoreCase(t)) {
-			method = AtpConstants.FETCH;
-		} else if ("ping".equalsIgnoreCase(t)) {
-			method = AtpConstants.PING;
-		} else if ("message".equalsIgnoreCase(t)) {
-			method = AtpConstants.MESSAGE;
-		} else if ("reply".equalsIgnoreCase(t)) {
-			method = AtpConstants.REPLY;
-		} else {
-			throw new IOException("Invalid Request :" + requestLine);
-		} 
-
-		t = st.nextToken().trim().replace('+', ' ');
-		headers.put("requesturi", t);
-		try {
-			requestURI = new URL(t);
-		} catch (Exception ex) {
-			requestURI = null;
-		} 
-		String version = st.nextToken();
-
-		headers.put("version", version);
-
-		if (ATP_VERSION.equalsIgnoreCase(version) == false) {
-			throw new IOException("Invalid Protocol: " + requestLine);
-		} 
-
-		String line;
-
-		while (true) {
-			line = di.readLine().trim();
-
-			// REMIND: debug code
-			if (method == AtpConstants.ILLEGAL_REQUEST) {
-				verboseOut("|" + line);
-			} 
-			if (line.length() == 0) {
-				break;
-			} 
-			String key = line.substring(0, line.indexOf(':')).trim();
-			String value = line.substring(line.indexOf(':') + 1).trim();
-
-			headers.put(key.toLowerCase(), value);
-		} 
-
-		agent_profile.agent_system_type = 
-			MAFUtil.toAgentSystemType(getRequestParameter("agent-system", 
-				"aglets"));
-		agent_profile.language_id = 
-			MAFUtil.toLanguageID(getRequestParameter("agent-language", 
-				"java"));
-
-	}
-	private static void verboseOut(String msg) {
-		Daemon.verboseOut(msg);
-	}
+    private static void verboseOut(String msg) {
+	Daemon.verboseOut(msg);
+    }
 }

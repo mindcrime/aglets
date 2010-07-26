@@ -26,21 +26,25 @@ package com.ibm.aglet;
 /**
  * Signals that the server is not available
  * 
- * @version     1.10    $Date: 2009/07/28 07:04:53 $
- * @author	Mitsuru Oshima
+ * @version 1.10 $Date: 2009/07/28 07:04:53 $
+ * @author Mitsuru Oshima
  */
 
 public class ServerNotFoundException extends java.io.IOException {
 
-	/**
-	 * Constructs a ServerNotFoundException
-	 */
-	public ServerNotFoundException() {}
-	/**
-	 * Constructs a ServerNotFoundException with the detailed message.
-	 * @param s the detailed message
-	 */
-	public ServerNotFoundException(String s) {
-		super(s);
-	}
+    /**
+     * Constructs a ServerNotFoundException
+     */
+    public ServerNotFoundException() {
+    }
+
+    /**
+     * Constructs a ServerNotFoundException with the detailed message.
+     * 
+     * @param s
+     *            the detailed message
+     */
+    public ServerNotFoundException(String s) {
+	super(s);
+    }
 }

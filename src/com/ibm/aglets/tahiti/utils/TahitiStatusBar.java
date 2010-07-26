@@ -5,10 +5,12 @@
  */
 package com.ibm.aglets.tahiti.utils;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.*;
+
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.*;
+import javax.swing.SwingConstants;
 
 /**
  * A simple status bar to be shown at the bottom of the Tahiti window.
@@ -16,39 +18,42 @@ import javax.swing.*;
 public class TahitiStatusBar extends JPanel {
     /**
      * A label containing the current message.
-     *
+     * 
      */
     private JLabel message;
-    
-    
+
     /**
      * A memory panel to show the memory usage
      */
     private MemoryPanel memPanel;
-    
+
     /**
      * Build the status bar.
-     *@param text the initial text of the status bar
+     * 
+     * @param text
+     *            the initial text of the status bar
      */
-    public TahitiStatusBar(String text){
-        super();
-        this.setBackground(Color.BLACK);
-        this.message = new JLabel(text,JLabel.CENTER);
-        this.message.setForeground(Color.YELLOW);
-        this.message.setBackground(Color.BLACK);
-        this.memPanel = new MemoryPanel(200,200,true,false);
-        this.setLayout(new BorderLayout());
-        this.add("South",this.message);
-        this.add("Center",this.memPanel);
+    public TahitiStatusBar(String text) {
+	super();
+	this.setBackground(Color.BLACK);
+	this.message = new JLabel(text, SwingConstants.CENTER);
+	this.message.setForeground(Color.YELLOW);
+	this.message.setBackground(Color.BLACK);
+	this.memPanel = new MemoryPanel(200, 200, true, false);
+	this.setLayout(new BorderLayout());
+	this.add("South", this.message);
+	this.add("Center", this.memPanel);
     }
-    
+
     /**
      * Changes the text of the status bar.
-     * @param newText the new text to display
-     *
+     * 
+     * @param newText
+     *            the new text to display
+     * 
      */
-    public void setText(String newText){
-        this.message.setText(newText);
+    public void setText(String newText) {
+	this.message.setText(newText);
     }
 
 }

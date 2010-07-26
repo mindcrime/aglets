@@ -17,24 +17,25 @@ import java.net.MalformedURLException;
  */
 
 /**
- * The <tt>MalformendURIPatternException</tt> class shows
- * the specified URI pattern is malformed.
+ * The <tt>MalformendURIPatternException</tt> class shows the specified URI
+ * pattern is malformed.
  * 
- * @version     1.00    $Date: 2009/07/28 07:04:53 $
- * @author      ONO Kouichi
+ * @version 1.00 $Date: 2009/07/28 07:04:53 $
+ * @author ONO Kouichi
  */
 public class MalformedURIPatternException extends MalformedURLException {
-	static private boolean debug = false;
+    static private boolean debug = false;
 
-	public MalformedURIPatternException() {
-		if (debug) {
-			printStackTrace();
-		} 
+    public MalformedURIPatternException() {
+	if (debug) {
+	    this.printStackTrace();
 	}
-	public MalformedURIPatternException(String msg) {
-		super(msg);
-		if (debug) {
-			printStackTrace();
-		} 
+    }
+
+    public MalformedURIPatternException(String msg) {
+	super(msg);
+	if (debug) {
+	    this.printStackTrace();
 	}
+    }
 }

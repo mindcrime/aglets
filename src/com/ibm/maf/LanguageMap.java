@@ -23,14 +23,16 @@ package com.ibm.maf;
 
 public final class LanguageMap implements java.io.Serializable {
 
-	// instance variables
-	public short language_id;
-	public short[] serializations;
+    // instance variables
+    public short language_id;
+    public short[] serializations;
 
-	// constructors
-	public LanguageMap() {}
-	public LanguageMap(short __language_id, short[] __serializations) {
-		language_id = __language_id;
-		serializations = __serializations;
-	}
+    // constructors
+    public LanguageMap() {
+    }
+
+    public LanguageMap(short __language_id, short[] __serializations) {
+	this.language_id = __language_id;
+	this.serializations = __serializations;
+    }
 }

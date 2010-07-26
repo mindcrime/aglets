@@ -23,64 +23,78 @@ package com.ibm.aglet;
  * IBM WILL NOT BE LIABLE FOR ANY THIRD PARTY CLAIMS AGAINST YOU.
  */
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Serializable;
 
 /**
  * Signals that an aglet exception has occurred.
  * 
- * @version     1.10   $Date: 2009/07/28 07:04:53 $
- * @author      Danny B. Lange
+ * @version 1.10 $Date: 2009/07/28 07:04:53 $
+ * @author Danny B. Lange
  */
 public class AgletException extends Exception implements Serializable {
-	private boolean _original = true;
-	private String _stackTrace = null;
+    private boolean _original = true;
+    private String _stackTrace = null;
 
-	/**
-	 * Constructs an AgletException with no detail message.
-	 * A detail message is a string that describes this particular exception.
-	 */
-	public AgletException() {
-		super();
+    /**
+     * Constructs an AgletException with no detail message. A detail message is
+     * a string that describes this particular exception.
+     */
+    public AgletException() {
+	super();
+    }
+
+    /**
+     * Creates an exception with another exception as cause.
+     * 
+     * @param initialException
+     *            the cause of this exception
+     */
+    public AgletException(Exception initialException) {
+	super(initialException);
+    }
+
+    /**
+     * Constructs an AgletException with the specified detail message. A detail
+     * message is a string that describes this particular exception.
+     * 
+     * @param s
+     *            the detail message.
+     */
+    public AgletException(String s) {
+	super(s);
+    }
+
+    @Override
+    public void printStackTrace() {
+	if (this._original) {
+	    super.printStackTrace();
+	} else {
+	    System.err.println(this);
+	    System.err.println(this._stackTrace);
 	}
-	
-	/**
-	 * Creates an exception with another exception as cause.
-	 * @param initialException the cause of this exception
-	 */
-	public AgletException(Exception initialException){
-	    super(initialException);
-	}
-	
-	/**
-	 * Constructs an AgletException with the specified detail message.
-	 * A detail message is a string that describes this particular exception.
-	 * @param s the detail message.
-	 */
-	public AgletException(String s) {
-		super(s);
-	}
-	public void printStackTrace() {
-		if (_original) {
-			super.printStackTrace();
-		} else {
-			System.err.println(this);
-			System.err.println(_stackTrace);
-		} 
-	}
-	private void readObject(ObjectInputStream s) 
-			throws IOException, ClassNotFoundException {
-		_original = false;
-		_stackTrace = (String)s.readObject();
-	}
-	/**
+    }
+
+    private void readObject(ObjectInputStream s) throws IOException,
+	    ClassNotFoundException {
+	this._original = false;
+	this._stackTrace = (String) s.readObject();
+    }
+
+    /**
 	 * 
 	 */
-	private void writeObject(ObjectOutputStream s) throws IOException {
-		if (_original) {
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
+    private void writeObject(ObjectOutputStream s) throws IOException {
+	if (this._original) {
+	    ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-			printStackTrace(new PrintWriter(new OutputStreamWriter(out)));
-			s.writeObject(new String(out.toByteArray()));
-		} 
+	    this.printStackTrace(new PrintWriter(new OutputStreamWriter(out)));
+	    s.writeObject(new String(out.toByteArray()));
 	}
+    }
 }

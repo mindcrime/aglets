@@ -15,20 +15,19 @@ package examples.openurl;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
-import com.ibm.aglet.event.*;
-import com.ibm.aglet.util.*;
-import com.ibm.agletx.util.*;
-
-import java.lang.InterruptedException;
-import java.io.Externalizable;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
+import java.awt.Button;
+import java.awt.Event;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Panel;
+import java.awt.TextField;
 import java.io.IOException;
-import java.net.*;
-import java.awt.*;
+import java.net.URL;
 
-import java.util.Enumeration;
+import com.ibm.aglet.util.AddressChooser;
 
 /*
  * MyDialog class is the window to be opened when the dialog required.
@@ -36,103 +35,114 @@ import java.util.Enumeration;
  */
 class MyDialog extends Frame {
 
-	/*
-	 * The aglet a user interacts with.
-	 */
-	private OpenURL aglet = null;
+    /*
+     * The aglet a user interacts with.
+     */
+    private OpenURL aglet = null;
 
-	/*
-	 * UI Components
-	 */
-	private AddressChooser dest = new AddressChooser();
-	private TextField msg = new TextField(15);
-	private Button go = new Button("GO!");
-	private Button open = new Button("Open!");
-	private Button close = new Button("CLOSE");
+    /*
+     * UI Components
+     */
+    private AddressChooser dest = new AddressChooser();
+    private TextField msg = new TextField(15);
+    private Button go = new Button("GO!");
+    private Button open = new Button("Open!");
+    private Button close = new Button("CLOSE");
 
-	/*
-	 * Constructs the dialog window
-	 * @param aglet The aglet the user interacts with.
-	 */
-	MyDialog(OpenURL aglet) {
-		this.aglet = aglet;
-		layoutComponents();
+    /*
+     * Constructs the dialog window
+     * 
+     * @param aglet The aglet the user interacts with.
+     */
+    MyDialog(OpenURL aglet) {
+	this.aglet = aglet;
+	this.layoutComponents();
+    }
+
+    /**
+     * Handles the action
+     * 
+     * @param ev
+     *            the event to be handled
+     * @param arg
+     *            the extra argument
+     */
+    @Override
+    public boolean action(Event ev, Object obj) {
+	if (ev.target == this.open) {
+	    try {
+		this.aglet.getAgletContext().showDocument(new URL(this.msg.getText()));
+	    } catch (IOException ex) {
+		ex.printStackTrace();
+	    }
 	}
-	/**
-	 * Handles the action
-	 * @param ev the event to be handled
-	 * @param arg the extra argument
-	 */
-	public boolean action(Event ev, Object obj) {
-		if (ev.target == open) {
-			try {
-				aglet.getAgletContext().showDocument(new URL(msg.getText()));
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			} 
-		} 
-		if (ev.target == go) {
-			aglet.url = msg.getText();
-			aglet.goDestination(dest.getAddress());
-		} else if (ev.target == close) {
-			setVisible(false);
-		} else {
-			return false;
-		} 
-		return true;
+	if (ev.target == this.go) {
+	    this.aglet.url = this.msg.getText();
+	    this.aglet.goDestination(this.dest.getAddress());
+	} else if (ev.target == this.close) {
+	    this.setVisible(false);
+	} else {
+	    return false;
 	}
-	/**
-	 * Handles the events
-	 * @param ev the event to be handled
-	 */
-	public boolean handleEvent(Event ev) {
-		if (ev.id == Event.WINDOW_DESTROY) {
-			setVisible(false);
-			return true;
-		} 
-		return super.handleEvent(ev);
+	return true;
+    }
+
+    /**
+     * Handles the events
+     * 
+     * @param ev
+     *            the event to be handled
+     */
+    @Override
+    public boolean handleEvent(Event ev) {
+	if (ev.id == Event.WINDOW_DESTROY) {
+	    this.setVisible(false);
+	    return true;
 	}
-	/*
-	 * Layouts all components
-	 */
-	private void layoutComponents() {
-		msg.setText(aglet.url);
+	return super.handleEvent(ev);
+    }
 
-		// Layouts components
-		GridBagLayout grid = new GridBagLayout();
-		GridBagConstraints cns = new GridBagConstraints();
+    /*
+     * Layouts all components
+     */
+    private void layoutComponents() {
+	this.msg.setText(this.aglet.url);
 
-		setLayout(grid);
+	// Layouts components
+	GridBagLayout grid = new GridBagLayout();
+	GridBagConstraints cns = new GridBagConstraints();
 
-		cns.weightx = 0.5;
-		cns.ipadx = cns.ipady = 5;
-		cns.fill = GridBagConstraints.HORIZONTAL;
-		cns.insets = new Insets(5, 5, 5, 5);
+	this.setLayout(grid);
 
-		cns.weightx = 1.0;
-		cns.gridwidth = GridBagConstraints.REMAINDER;
-		grid.setConstraints(dest, cns);
-		add(dest);
+	cns.weightx = 0.5;
+	cns.ipadx = cns.ipady = 5;
+	cns.fill = GridBagConstraints.HORIZONTAL;
+	cns.insets = new Insets(5, 5, 5, 5);
 
-		cns.gridwidth = GridBagConstraints.REMAINDER;
-		cns.fill = GridBagConstraints.BOTH;
-		cns.weightx = 1.0;
-		cns.weighty = 1.0;
-		cns.gridheight = 2;
-		grid.setConstraints(msg, cns);
-		add(msg);
+	cns.weightx = 1.0;
+	cns.gridwidth = GridBagConstraints.REMAINDER;
+	grid.setConstraints(this.dest, cns);
+	this.add(this.dest);
 
-		cns.weighty = 0.0;
-		cns.fill = GridBagConstraints.NONE;
-		cns.gridheight = 1;
+	cns.gridwidth = GridBagConstraints.REMAINDER;
+	cns.fill = GridBagConstraints.BOTH;
+	cns.weightx = 1.0;
+	cns.weighty = 1.0;
+	cns.gridheight = 2;
+	grid.setConstraints(this.msg, cns);
+	this.add(this.msg);
 
-		Panel p = new Panel();
+	cns.weighty = 0.0;
+	cns.fill = GridBagConstraints.NONE;
+	cns.gridheight = 1;
 
-		grid.setConstraints(p, cns);
-		add(p);
-		p.setLayout(new FlowLayout());
-		p.add(go);
-		p.add(open);
-		p.add(close);
-	}
+	Panel p = new Panel();
+
+	grid.setConstraints(p, cns);
+	this.add(p);
+	p.setLayout(new FlowLayout());
+	p.add(this.go);
+	p.add(this.open);
+	p.add(this.close);
+    }
 }

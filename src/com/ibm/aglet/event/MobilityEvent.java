@@ -23,89 +23,94 @@ package com.ibm.aglet.event;
  * IBM WILL NOT BE LIABLE FOR ANY THIRD PARTY CLAIMS AGAINST YOU.
  */
 
+import java.net.URL;
+
 import com.ibm.aglet.AgletProxy;
 import com.ibm.aglet.Ticket;
-import java.net.URL;
 
 /**
  * The mobility event occurs when the aglet is about to move.
  * 
- * @version     1.00    $Date: 2009/07/28 07:04:53 $
- * @author      Mitsuru Oshima
+ * @version 1.00 $Date: 2009/07/28 07:04:53 $
+ * @author Mitsuru Oshima
  */
 public class MobilityEvent extends AgletEvent {
 
-	/**
-	 * Marks the first integer id for the range of mobility event ids.
-	 */
-	public static final int AGLET_MOBILITY_FIRST = 1200;
+    /**
+     * Marks the first integer id for the range of mobility event ids.
+     */
+    public static final int AGLET_MOBILITY_FIRST = 1200;
 
-	/**
-	 * Marks the last integer id for the range of mobility event ids.
-	 */
-	public static final int AGLET_MOBILITY_LAST = 1202;
+    /**
+     * Marks the last integer id for the range of mobility event ids.
+     */
+    public static final int AGLET_MOBILITY_LAST = 1202;
 
-	/**
-	 * The DISPATCHING event type is delivered just after the dispatch methods
-	 * is called.
-	 */
-	public static final int DISPATCHING = AGLET_MOBILITY_FIRST;
+    /**
+     * The DISPATCHING event type is delivered just after the dispatch methods
+     * is called.
+     */
+    public static final int DISPATCHING = AGLET_MOBILITY_FIRST;
 
-	/**
-	 * The REVERTING event type is delivered when the retaction is requested
-	 * from the remote site.
-	 */
-	public static final int REVERTING = AGLET_MOBILITY_FIRST + 1;
+    /**
+     * The REVERTING event type is delivered when the retaction is requested
+     * from the remote site.
+     */
+    public static final int REVERTING = AGLET_MOBILITY_FIRST + 1;
 
-	/**
-	 * The ARRIVAL event type is delivered when the aglet arrived at the
-	 * destination.
-	 */
-	public static final int ARRIVAL = AGLET_MOBILITY_FIRST + 2;
+    /**
+     * The ARRIVAL event type is delivered when the aglet arrived at the
+     * destination.
+     */
+    public static final int ARRIVAL = AGLET_MOBILITY_FIRST + 2;
 
-	private static String name[] = {
-		"DISPATCHING", "REVERTING", "ARRIVAL", 
-	};
+    private static String name[] = { "DISPATCHING", "REVERTING", "ARRIVAL", };
 
-	private Ticket ticket;
+    private Ticket ticket;
 
-	/**
-	 * Constructs a mobility event with specified id, target and ticket
-	 */
-	public MobilityEvent(int id, AgletProxy target, Ticket tick) {
-		super(target, id);
-		ticket = tick;
-	}
-	/**
-	 * Constructs a mobility event with specified id, target and location
-	 */
-	public MobilityEvent(int id, AgletProxy target, URL loc) {
-		super(target, id);
-		ticket = new Ticket(loc);
-	}
-	/**
-	 * Returns the aglet proxy which is the source of the event.
-	 */
-	public AgletProxy getAgletProxy() {
-		return (AgletProxy)source;
-	}
-	/**
-	 * Gets the location. This specifies:
-	 * The destination if the event is <tt> DISPATCHING </tt>.
-	 * The requester if the event is <tt> REVERTING </tt>.
-	 * The host it arrived if the event is <tt> ARRIVED </tt>. This returns
-	 * null for the REVERTING event at the present.
-	 */
-	public URL getLocation() {
-		return ticket.getDestination();
-	}
-	/**
-	 * Gets the ticket.
-	 */
-	public Ticket getTicket() {
-		return ticket;
-	}
-	public String toString() {
-		return "MobilityEvent[" + name[id - AGLET_MOBILITY_FIRST] + "]";
-	}
+    /**
+     * Constructs a mobility event with specified id, target and ticket
+     */
+    public MobilityEvent(int id, AgletProxy target, Ticket tick) {
+	super(target, id);
+	this.ticket = tick;
+    }
+
+    /**
+     * Constructs a mobility event with specified id, target and location
+     */
+    public MobilityEvent(int id, AgletProxy target, URL loc) {
+	super(target, id);
+	this.ticket = new Ticket(loc);
+    }
+
+    /**
+     * Returns the aglet proxy which is the source of the event.
+     */
+    public AgletProxy getAgletProxy() {
+	return (AgletProxy) this.source;
+    }
+
+    /**
+     * Gets the location. This specifies: The destination if the event is
+     * <tt> DISPATCHING </tt>. The requester if the event is
+     * <tt> REVERTING </tt>. The host it arrived if the event is
+     * <tt> ARRIVED </tt>. This returns null for the REVERTING event at the
+     * present.
+     */
+    public URL getLocation() {
+	return this.ticket.getDestination();
+    }
+
+    /**
+     * Gets the ticket.
+     */
+    public Ticket getTicket() {
+	return this.ticket;
+    }
+
+    @Override
+    public String toString() {
+	return "MobilityEvent[" + name[this.id - AGLET_MOBILITY_FIRST] + "]";
+    }
 }

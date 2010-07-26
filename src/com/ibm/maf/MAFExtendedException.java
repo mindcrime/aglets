@@ -23,11 +23,12 @@ package com.ibm.maf;
 
 public class MAFExtendedException extends MAFException {
 
-	// constructor
-	public MAFExtendedException() {
-		super();
-	}
-	public MAFExtendedException(String msg) {
-		super(msg);
-	}
+    // constructor
+    public MAFExtendedException() {
+	super();
+    }
+
+    public MAFExtendedException(String msg) {
+	super(msg);
+    }
 }

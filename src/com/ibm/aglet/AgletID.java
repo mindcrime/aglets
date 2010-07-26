@@ -24,99 +24,107 @@ package com.ibm.aglet;
  */
 
 /**
- * The <tt>AgletID</tt> class represents the unique identifier
- * given the aglet.
+ * The <tt>AgletID</tt> class represents the unique identifier given the aglet.
  * 
- * @version     1.10	$Date: 2009/07/28 07:04:53 $
- * @author      Danny B. Lange
- * @author      Mitsuru Oshima
+ * @version 1.10 $Date: 2009/07/28 07:04:53 $
+ * @author Danny B. Lange
+ * @author Mitsuru Oshima
  */
 
-public /* final */ class AgletID implements java.io.Serializable {
+public/* final */class AgletID implements java.io.Serializable {
 
-	static final long serialVersionUID = -2404000023094224993L;
+    static final long serialVersionUID = -2404000023094224993L;
 
-	/**
-	 * byte array containing id information used in the system.
-	 */
-	private byte[] id = null;
+    /**
+     * byte array containing id information used in the system.
+     */
+    private byte[] id = null;
 
-	private AgletID() {}
-	/**
-	 * Constructs an aglet identifier with given byte array.
-	 */
-	public AgletID(byte[] b) {
-		id = new byte[b.length];
-		System.arraycopy(b, 0, id, 0, b.length);
+    /**
+     * Constructs an aglet identifier with given byte array.
+     */
+    public AgletID(byte[] b) {
+	this.id = new byte[b.length];
+	System.arraycopy(b, 0, this.id, 0, b.length);
+    }
+
+    /**
+     * Constructs an aglet identifier with a given string.
+     */
+    public AgletID(String rep) {
+	int len = rep.length();
+	byte[] b = new byte[len / 2];
+
+	for (int i = 0, j = 0; j < len; i++, j++) {
+	    b[i] = (byte) (Character.digit(rep.charAt(j++), 16) << 4);
+	    b[i] += (byte) Character.digit(rep.charAt(j), 16);
 	}
-	/**
-	 * Constructs an aglet identifier with a given string.
-	 */
-	public AgletID(String rep) {
-		int len = rep.length();
-		byte[] b = new byte[len / 2];
+	this.id = b;
+    }
 
-		for (int i = 0, j = 0; j < len; i++, j++) {
-			b[i] = (byte)(Character.digit(rep.charAt(j++), 16) << 4);
-			b[i] += (byte)Character.digit(rep.charAt(j), 16);
-		} 
-		id = b;
+    /**
+     * Compares two aglet identifiers.
+     * 
+     * @param obj
+     *            the Aglet to be compared with.
+     * @return true if and only if the two Aglets are identical.
+     */
+    @Override
+    public boolean equals(Object obj) {
+	if (obj instanceof AgletID) {
+	    byte b[] = ((AgletID) obj).id;
+
+	    if (this.id.length == b.length) {
+		for (int i = 0; i < this.id.length; i++) {
+		    if (this.id[i] != b[i]) {
+			return false;
+		    }
+		}
+		return true;
+	    }
 	}
-	/**
-	 * Compares two aglet identifiers.
-	 * @param obj the Aglet to be compared with.
-	 * @return true if and only if the two Aglets are identical.
-	 */
-	public boolean equals(Object obj) {
-		if (obj instanceof AgletID) {
-			byte b[] = ((AgletID)obj).id;
+	return false;
+    }
 
-			if (id.length == b.length) {
-				for (int i = 0; i < id.length; i++) {
-					if (id[i] != b[i]) {
-						return false;
-					} 
-				} 
-				return true;
-			} 
-		} 
-		return false;
+    /**
+     * Returns an integer suitable for hash table indexing.
+     * 
+     * @return hash table indexing integer.
+     */
+    @Override
+    public int hashCode() {
+	int h = 0;
+
+	for (byte element : this.id) {
+	    h += (h * 37) + element;
 	}
-	/**
-	 * Returns an integer suitable for hash table indexing.
-	 * @return hash table indexing integer.
-	 */
-	public int hashCode() {
-		int h = 0;
+	return h;
+    }
 
-		for (int i = 0; i < id.length; i++) {
-			h += (h * 37) + (int)id[i];
-		} 
-		return h;
+    /**
+     * Returns byte array representation of the id. The copy of array is
+     * returned so that it cannot be altered.
+     */
+    public byte[] toByteArray() {
+	byte[] b = new byte[this.id.length];
+
+	System.arraycopy(this.id, 0, b, 0, this.id.length);
+	return b;
+    }
+
+    /**
+     * Returns a human readable form of the aglet identifier.
+     * 
+     * @return the Aglet identity in text form.
+     */
+    @Override
+    public String toString() {
+	StringBuffer buf = new StringBuffer();
+
+	for (byte b : this.id) {
+	    buf.append(Character.forDigit((b >>> 4) & 0xF, 16));
+	    buf.append(Character.forDigit(b & 0xF, 16));
 	}
-	/**
-	 * Returns byte array representation of the id. The copy of array
-	 * is returned so that it cannot be altered.
-	 */
-	public byte[] toByteArray() {
-		byte[] b = new byte[id.length];
-
-		System.arraycopy(id, 0, b, 0, id.length);
-		return b;
-	}
-	/**
-	 * Returns a human readable form of the aglet identifier.
-	 * @return the Aglet identity in text form.
-	 */
-	public String toString() {
-		StringBuffer buf = new StringBuffer();
-
-		for (int i = 0; i < id.length; i++) {
-			byte b = id[i];
-
-			buf.append(Character.forDigit((b >>> 4) & 0xF, 16));
-			buf.append(Character.forDigit(b & 0xF, 16));
-		} 
-		return buf.toString();
-	}
+	return buf.toString();
+    }
 }

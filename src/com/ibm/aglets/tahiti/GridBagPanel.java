@@ -14,68 +14,82 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Label;
+import java.awt.Panel;
 
 public class GridBagPanel extends Panel {
-	public static final int RELATIVE = GridBagConstraints.RELATIVE;
-	public static final int REMAINDER = GridBagConstraints.REMAINDER;
+    public static final int RELATIVE = GridBagConstraints.RELATIVE;
+    public static final int REMAINDER = GridBagConstraints.REMAINDER;
 
-	public static final int NONE = GridBagConstraints.NONE;
-	public static final int BOTH = GridBagConstraints.BOTH;
-	public static final int HORIZONTAL = GridBagConstraints.HORIZONTAL;
-	public static final int VERTICAL = GridBagConstraints.VERTICAL;
+    public static final int NONE = GridBagConstraints.NONE;
+    public static final int BOTH = GridBagConstraints.BOTH;
+    public static final int HORIZONTAL = GridBagConstraints.HORIZONTAL;
+    public static final int VERTICAL = GridBagConstraints.VERTICAL;
 
-	public static final int CENTER = GridBagConstraints.CENTER;
-	public static final int NORTH = GridBagConstraints.NORTH;
-	public static final int NORTHEAST = GridBagConstraints.NORTHEAST;
-	public static final int EAST = GridBagConstraints.EAST;
-	public static final int SOUTHEAST = GridBagConstraints.SOUTHEAST;
-	public static final int SOUTH = GridBagConstraints.SOUTH;
-	public static final int SOUTHWEST = GridBagConstraints.SOUTHWEST;
-	public static final int WEST = GridBagConstraints.WEST;
-	public static final int NORTHWEST = GridBagConstraints.NORTHWEST;
+    public static final int CENTER = GridBagConstraints.CENTER;
+    public static final int NORTH = GridBagConstraints.NORTH;
+    public static final int NORTHEAST = GridBagConstraints.NORTHEAST;
+    public static final int EAST = GridBagConstraints.EAST;
+    public static final int SOUTHEAST = GridBagConstraints.SOUTHEAST;
+    public static final int SOUTH = GridBagConstraints.SOUTH;
+    public static final int SOUTHWEST = GridBagConstraints.SOUTHWEST;
+    public static final int WEST = GridBagConstraints.WEST;
+    public static final int NORTHWEST = GridBagConstraints.NORTHWEST;
 
-	private GridBagLayout _grid = new GridBagLayout();
-	private GridBagConstraints _cns = new GridBagConstraints();
+    private GridBagLayout _grid = new GridBagLayout();
+    private GridBagConstraints _cns = new GridBagConstraints();
 
-	public GridBagPanel() {
-		setLayout(_grid);
-	}
-	public Component add(Component c) {
-		return add(c, _cns);
-	}
-	public Component add(Component c, int width) {
-		_cns.gridwidth = width;
-		return add(c);
-	}
-	public Component add(Component c, int width, double weightx) {
-		_cns.gridwidth = width;
-		_cns.weightx = weightx;
-		return add(c);
-	}
-	public Component add(Component c, int anchor, int fill) {
-		_cns.anchor = anchor;
-		_cns.fill = fill;
-		return add(c);
-	}
-	public Component add(Component c, int anchor, int fill, int width) {
-		_cns.gridwidth = width;
-		return add(c, anchor, fill);
-	}
-	protected Component add(Component c, GridBagConstraints cns) {
-		_grid.setConstraints(c, cns);
-		return super.add(c);
-	}
-	public void addLabeled(String label, Component c) {
-		_cns.gridwidth = 1;
-		_cns.weightx = 0.1;
-		add(new Label(label));
+    public GridBagPanel() {
+	this.setLayout(this._grid);
+    }
 
-		_cns.weightx = 1.0;
-		_cns.gridwidth = GridBagConstraints.REMAINDER;
-		add(c);
-	}
-	public void setConstraints(GridBagConstraints cns) {
-		_cns = cns;
-	}
+    @Override
+    public Component add(Component c) {
+	return this.add(c, this._cns);
+    }
+
+    @Override
+    public Component add(Component c, int width) {
+	this._cns.gridwidth = width;
+	return this.add(c);
+    }
+
+    public Component add(Component c, int width, double weightx) {
+	this._cns.gridwidth = width;
+	this._cns.weightx = weightx;
+	return this.add(c);
+    }
+
+    public Component add(Component c, int anchor, int fill) {
+	this._cns.anchor = anchor;
+	this._cns.fill = fill;
+	return this.add(c);
+    }
+
+    public Component add(Component c, int anchor, int fill, int width) {
+	this._cns.gridwidth = width;
+	return this.add(c, anchor, fill);
+    }
+
+    protected Component add(Component c, GridBagConstraints cns) {
+	this._grid.setConstraints(c, cns);
+	return super.add(c);
+    }
+
+    public void addLabeled(String label, Component c) {
+	this._cns.gridwidth = 1;
+	this._cns.weightx = 0.1;
+	this.add(new Label(label));
+
+	this._cns.weightx = 1.0;
+	this._cns.gridwidth = GridBagConstraints.REMAINDER;
+	this.add(c);
+    }
+
+    public void setConstraints(GridBagConstraints cns) {
+	this._cns = cns;
+    }
 }

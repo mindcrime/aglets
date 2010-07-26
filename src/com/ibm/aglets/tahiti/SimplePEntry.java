@@ -14,60 +14,59 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-import java.io.OutputStream;
-import java.io.InputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.File;
-import java.io.IOException;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.AccessController;
-import java.security.PrivilegedExceptionAction;
 import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 
 /**
- * @version     1.10	$Date: 2009/07/28 07:04:53 $
- * @author      Mitsuru Oshima
+ * @version 1.10 $Date: 2009/07/28 07:04:53 $
+ * @author Mitsuru Oshima
  */
 final class SimplePEntry implements com.ibm.aglets.PersistentEntry {
-	File file;
+    File file;
 
-	SimplePEntry(File f) {
-		file = f;
+    SimplePEntry(File f) {
+	this.file = f;
+    }
+
+    public InputStream getInputStream() throws FileNotFoundException {
+	try {
+	    final File f = this.file;
+
+	    return (InputStream) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		public Object run() throws FileNotFoundException {
+		    return new FileInputStream(f);
+		}
+	    });
+	} catch (PrivilegedActionException ex) {
+	    throw (FileNotFoundException) ex.getException();
 	}
-	public InputStream getInputStream() throws FileNotFoundException {
-		try {
-			final File f = file;
+    }
 
-			return (InputStream)AccessController
-				.doPrivileged(new PrivilegedExceptionAction() {
-				public Object run() throws FileNotFoundException {
-					return new FileInputStream(f);
-				} 
-			});
-		} catch (PrivilegedActionException ex) {
-			throw (FileNotFoundException)ex.getException();
-		} 
+    public OutputStream getOutputStream() throws IOException {
+	try {
+	    final File f = this.file;
+
+	    return (OutputStream) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		public Object run() throws IOException {
+		    if (!f.exists()) {
+			File dir = f.getCanonicalFile().getParentFile();
+
+			dir.mkdirs();
+			f.createNewFile();
+		    }
+		    return new FileOutputStream(f);
+		}
+	    });
+	} catch (PrivilegedActionException ex) {
+	    throw (IOException) ex.getException();
 	}
-	public OutputStream getOutputStream() throws IOException {
-		try {
-			final File f = file;
-
-			return (OutputStream)AccessController
-				.doPrivileged(new PrivilegedExceptionAction() {
-				public Object run() throws IOException {
-					if (!f.exists()) {
-						File dir = f.getCanonicalFile().getParentFile();
-
-						dir.mkdirs();
-						f.createNewFile();
-					} 
-					return new FileOutputStream(f);
-				} 
-			});
-		} catch (PrivilegedActionException ex) {
-			throw (IOException)ex.getException();
-		} 
-	}
+    }
 }

@@ -28,22 +28,24 @@ import java.security.Permission;
 import com.ibm.aglets.security.PlainMessagePermission;
 
 /**
- * The <tt>MessageProtection</tt> class represents the protection of
- * messages for aglet.
+ * The <tt>MessageProtection</tt> class represents the protection of messages
+ * for aglet.
  * 
- * @version     1.00	$Date: 2009/07/28 07:04:53 $
- * @author	ONO Kouichi
+ * @version 1.00 $Date: 2009/07/28 07:04:53 $
+ * @author ONO Kouichi
  */
 
-public final class MessageProtection extends PlainMessagePermission 
-	implements Protection {
-	public MessageProtection(String name, String actions) {
-		super(name, actions);
+public final class MessageProtection extends PlainMessagePermission implements
+	Protection {
+    public MessageProtection(String name, String actions) {
+	super(name, actions);
+    }
+
+    @Override
+    public boolean implies(Permission p) {
+	if (!(p instanceof MessageProtection)) {
+	    return false;
 	}
-	public boolean implies(Permission p) {
-		if (!(p instanceof MessageProtection)) {
-			return false;
-		} 
-		return super.implies(p);
-	}
+	return super.implies(p);
+    }
 }

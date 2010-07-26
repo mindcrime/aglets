@@ -23,8 +23,8 @@ package com.ibm.maf;
 
 public final class SuspendFailed extends MAFException {
 
-	// constructor
-	public SuspendFailed() {
-		super();
-	}
+    // constructor
+    public SuspendFailed() {
+	super();
+    }
 }

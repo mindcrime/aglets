@@ -18,20 +18,26 @@ import com.ibm.aglet.InvalidAgletException;
 import com.ibm.aglet.event.AgletEvent;
 
 final class EventMessage extends MessageImpl {
-	AgletEvent event;
+    AgletEvent event;
 
-	EventMessage(AgletEvent ev) {
-		super();
-		future = new FutureReplyImpl();
-		event = ev;
-	}
-	public final void handle(LocalAgletRef ref) throws InvalidAgletException {
-		ref.dispatchEvent(event);
-	}
-	boolean isDelegatable() {
-		return false;
-	}
-	public String toString() {
-		return "[EventMessage evet = " + event + ']';
-	}
+    EventMessage(AgletEvent ev) {
+	super();
+	this.future = new FutureReplyImpl();
+	this.event = ev;
+    }
+
+    @Override
+    public final void handle(LocalAgletRef ref) throws InvalidAgletException {
+	ref.dispatchEvent(this.event);
+    }
+
+    @Override
+    boolean isDelegatable() {
+	return false;
+    }
+
+    @Override
+    public String toString() {
+	return "[EventMessage evet = " + this.event + ']';
+    }
 }

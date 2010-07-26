@@ -14,51 +14,63 @@ package com.ibm.aglets;
  * deposited with the U.S. Copyright Office.
  */
 
-import sun.audio.*;
-import java.net.URL;
 import java.applet.AudioClip;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+
+import sun.audio.AudioData;
+import sun.audio.AudioDataStream;
+import sun.audio.AudioPlayer;
+import sun.audio.ContinuousAudioDataStream;
 
 public class AgletAudioClip implements AudioClip, java.io.Serializable {
 
-	static final long serialVersionUID = -694436981030784266L;
+    static final long serialVersionUID = -694436981030784266L;
 
-	URL url;
-	AudioData data;
-	transient InputStream stream;
+    URL url;
+    AudioData data;
+    transient InputStream stream;
 
-	public AgletAudioClip(URL u, AudioData d) {
-		url = u;
-		data = d;
+    public AgletAudioClip(URL u, AudioData d) {
+	this.url = u;
+	this.data = d;
+    }
+
+    @Override
+    public int hashCode() {
+	return this.url.hashCode();
+    }
+
+    public synchronized void loop() {
+	this.stop();
+	if (this.data != null) {
+	    this.stream = new ContinuousAudioDataStream(this.data);
+	    AudioPlayer.player.start(this.stream);
 	}
-	public int hashCode() {
-		return url.hashCode();
+    }
+
+    public synchronized void play() {
+	this.stop();
+	if (this.data != null) {
+	    this.stream = new AudioDataStream(this.data);
+	    AudioPlayer.player.start(this.stream);
 	}
-	public synchronized void loop() {
-		stop();
-		if (data != null) {
-			stream = new ContinuousAudioDataStream(data);
-			AudioPlayer.player.start(stream);
-		} 
+    }
+
+    public synchronized void stop() {
+	if (this.stream != null) {
+	    try {
+		AudioPlayer.player.stop(this.stream);
+		this.stream.close();
+	    } catch (IOException e) {
+	    }
 	}
-	public synchronized void play() {
-		stop();
-		if (data != null) {
-			stream = new AudioDataStream(data);
-			AudioPlayer.player.start(stream);
-		} 
-	}
-	public synchronized void stop() {
-		if (stream != null) {
-			try {
-				AudioPlayer.player.stop(stream);
-				stream.close();
-			} catch (IOException e) {}
-		} 
-		return;
-	}
-	public String toString() {
-		return getClass().toString() + "[" + url + "]";
-	}
+	return;
+    }
+
+    @Override
+    public String toString() {
+	return this.getClass().toString() + "[" + this.url + "]";
+    }
 }

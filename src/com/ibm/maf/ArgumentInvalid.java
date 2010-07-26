@@ -23,8 +23,8 @@ package com.ibm.maf;
 
 public final class ArgumentInvalid extends MAFException {
 
-	// constructor
-	public ArgumentInvalid() {
-		super();
-	}
+    // constructor
+    public ArgumentInvalid() {
+	super();
+    }
 }

@@ -15,119 +15,119 @@ package examples.protection;
  * will not be liable for any third party claims against you.
  */
 
-import java.awt.Panel;
-import java.awt.Label;
-import java.awt.TextField;
-import java.awt.Choice;
 import java.awt.Button;
 import java.awt.CardLayout;
+import java.awt.Choice;
 import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ActionListener;
+import java.awt.Label;
+import java.awt.Panel;
+import java.awt.TextField;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 /**
  * <tt>ActionPanel</tt> is a panel to execute action to an aglet.
  * 
- * @version     1.00    $Date: 2009/07/28 07:04:53 $
- * @author      ONO Kouichi
+ * @version 1.00 $Date: 2009/07/28 07:04:53 $
+ * @author ONO Kouichi
  */
 class ActionPanel extends Panel implements ItemListener, ActionListener {
-	private ProtectionAglet _aglet = null;
-	private Choice _command = new Choice();
-	private CardLayout _layout = new CardLayout();
-	private Panel _field = new Panel();
-	private TextField _destination = new TextField(20);
-	private TextField _duration = new TextField("0", 5);
-	private Button _doButton = new Button("Do");
-	private int _action = 0;
+    private ProtectionAglet _aglet = null;
+    private Choice _command = new Choice();
+    private CardLayout _layout = new CardLayout();
+    private Panel _field = new Panel();
+    private TextField _destination = new TextField(20);
+    private TextField _duration = new TextField("0", 5);
+    private Button _doButton = new Button("Do");
+    private int _action = 0;
 
-	ActionPanel(ProtectionAglet aglet) {
-		_aglet = aglet;
-		_field.setLayout(_layout);
-		for (int i = 0; i < ProtectionDialog.ACTIONS.length; i++) {
-			String label = ProtectionDialog.ACTIONS[i];
+    ActionPanel(ProtectionAglet aglet) {
+	this._aglet = aglet;
+	this._field.setLayout(this._layout);
+	for (String label : ProtectionDialog.ACTIONS) {
+	    this._command.addItem(label);
+	    Panel panel = new Panel();
 
-			_command.addItem(label);
-			Panel panel = new Panel();
-
-			panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-			_field.add(label, panel);
-			if ( ProtectionDialog.ACTIONS[i].equals( ProtectionDialog.ACTION_DISPATCH) ) {
-				panel.add(new Label("Destination"));
-				panel.add(_destination);
-			} else if ( ProtectionDialog.ACTIONS[i].equals( ProtectionDialog.ACTION_DEACTIVATE) ) {
-				panel.add(new Label("Duration"));
-				panel.add(_duration);
-				panel.add(new Label("[ms]"));
-			} 
-		} 
-		_command.addItemListener(this);
-		add(_command);
-		add(_field);
-		_doButton.addActionListener(this);
-		add(_doButton);
+	    panel.setLayout(new FlowLayout(FlowLayout.LEFT));
+	    this._field.add(label, panel);
+	    if (label.equals(ProtectionDialog.ACTION_DISPATCH)) {
+		panel.add(new Label("Destination"));
+		panel.add(this._destination);
+	    } else if (label.equals(ProtectionDialog.ACTION_DEACTIVATE)) {
+		panel.add(new Label("Duration"));
+		panel.add(this._duration);
+		panel.add(new Label("[ms]"));
+	    }
 	}
-	public void actionPerformed(ActionEvent ev) {
-		if (ev.getSource() == _doButton) {
-		    
-		    if( ProtectionDialog.ACTIONS[ this._action ].equals( ProtectionDialog.ACTION_DISPOSE) ){
-				_aglet.disposeTarget();
-		    } else if ( ProtectionDialog.ACTIONS[ this._action ].equals( ProtectionDialog.ACTION_CLONE) ){
-				_aglet.cloneTarget();
-		    } else if ( ProtectionDialog.ACTIONS[ this._action ].equals( ProtectionDialog.ACTION_DISPATCH) ){
-			
-				String destination = _destination.getText();
+	this._command.addItemListener(this);
+	this.add(this._command);
+	this.add(this._field);
+	this._doButton.addActionListener(this);
+	this.add(this._doButton);
+    }
 
-				_aglet.dispatchTarget(destination);
-		    }else if ( ProtectionDialog.ACTIONS[ this._action ].equals( ProtectionDialog.ACTION_RETRACT) ){
-			
-				_aglet.retractTarget();
-		    } else if ( ProtectionDialog.ACTIONS[ this._action ].equals( ProtectionDialog.ACTION_DEACTIVATE) ){
-			
-				long duration = 0;
+    public void actionPerformed(ActionEvent ev) {
+	if (ev.getSource() == this._doButton) {
 
-				try {
-					duration = Long.parseLong(_duration.getText());
-				} catch (NumberFormatException ex) {
-					System.err.println(ex.toString());
-					return;
-				} 
-				_aglet.deactivateTarget(duration);
-				
-		    }
-		} 
+	    if (ProtectionDialog.ACTIONS[this._action].equals(ProtectionDialog.ACTION_DISPOSE)) {
+		this._aglet.disposeTarget();
+	    } else if (ProtectionDialog.ACTIONS[this._action].equals(ProtectionDialog.ACTION_CLONE)) {
+		this._aglet.cloneTarget();
+	    } else if (ProtectionDialog.ACTIONS[this._action].equals(ProtectionDialog.ACTION_DISPATCH)) {
+
+		String destination = this._destination.getText();
+
+		this._aglet.dispatchTarget(destination);
+	    } else if (ProtectionDialog.ACTIONS[this._action].equals(ProtectionDialog.ACTION_RETRACT)) {
+
+		this._aglet.retractTarget();
+	    } else if (ProtectionDialog.ACTIONS[this._action].equals(ProtectionDialog.ACTION_DEACTIVATE)) {
+
+		long duration = 0;
+
+		try {
+		    duration = Long.parseLong(this._duration.getText());
+		} catch (NumberFormatException ex) {
+		    System.err.println(ex.toString());
+		    return;
+		}
+		this._aglet.deactivateTarget(duration);
+
+	    }
 	}
-	public void itemStateChanged(ItemEvent ev) {
-		String action = selectedAction(ev);
+    }
 
-		if (action == null) {
-			return;
-		} 
-		selectAction(action);
-		_layout.show(_field, action);
+    public void itemStateChanged(ItemEvent ev) {
+	String action = this.selectedAction(ev);
+
+	if (action == null) {
+	    return;
 	}
-	private void selectAction(String action) {
-		if (action == null) {
-			return;
-		} 
-		for (int i = 0; i < ProtectionDialog.ACTIONS.length; i++) {
-			if (action.equals(ProtectionDialog.ACTIONS[i])) {
-				_action = i;
-				return;
-			} 
-		} 
+	this.selectAction(action);
+	this._layout.show(this._field, action);
+    }
+
+    private void selectAction(String action) {
+	if (action == null) {
+	    return;
+	}
+	for (int i = 0; i < ProtectionDialog.ACTIONS.length; i++) {
+	    if (action.equals(ProtectionDialog.ACTIONS[i])) {
+		this._action = i;
 		return;
+	    }
 	}
-	private String selectedAction(ItemEvent ev) {
-		Object[] items = ev.getItemSelectable().getSelectedObjects();
+	return;
+    }
 
-		if (items == null) {
-			return null;
-		} 
-		return (String)items[0];
+    private String selectedAction(ItemEvent ev) {
+	Object[] items = ev.getItemSelectable().getSelectedObjects();
+
+	if (items == null) {
+	    return null;
 	}
+	return (String) items[0];
+    }
 }

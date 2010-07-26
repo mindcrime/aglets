@@ -23,11 +23,12 @@ package com.ibm.maf;
 
 public final class DeserializationFailed extends MAFException {
 
-	// constructor
-	public DeserializationFailed() {
-		super();
-	}
-	public DeserializationFailed(String msg) {
-		super(msg);
-	}
+    // constructor
+    public DeserializationFailed() {
+	super();
+    }
+
+    public DeserializationFailed(String msg) {
+	super(msg);
+    }
 }

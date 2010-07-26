@@ -15,85 +15,109 @@ package examples.watcher;
  * will not be liable for any third party claims against you.
  */
 
-import java.net.URL;
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Button;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.Panel;
+import java.awt.TextArea;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
-import com.ibm.aglet.*;
 import com.ibm.aglet.message.Message;
-import com.ibm.aglet.util.*;
+import com.ibm.aglet.util.AddressChooser;
 
 class WatcherFrame extends Frame implements WindowListener, ActionListener {
-	ProxyWatcher aglet;
-	TextArea text = new TextArea(10, 10);
-	AddressChooser address = new AddressChooser(15);
-	Button go = new Button("Go!");
-	Button start = new Button("Start");
-	Button stop = new Button("Stop");
-	Button sleep = new Button("Sleep");
-	Button move = new Button("Move");
-	Button terminate = new Button("Terminate");
+    ProxyWatcher aglet;
+    TextArea text = new TextArea(10, 10);
+    AddressChooser address = new AddressChooser(15);
+    Button go = new Button("Go!");
+    Button start = new Button("Start");
+    Button stop = new Button("Stop");
+    Button sleep = new Button("Sleep");
+    Button move = new Button("Move");
+    Button terminate = new Button("Terminate");
 
-	WatcherFrame(ProxyWatcher a) {
-		aglet = a;
-		setLayout(new BorderLayout());
-		add("North", address);
-		add("Center", text);
-		Panel p = new Panel();
+    WatcherFrame(ProxyWatcher a) {
+	this.aglet = a;
+	this.setLayout(new BorderLayout());
+	this.add("North", this.address);
+	this.add("Center", this.text);
+	Panel p = new Panel();
 
-		p.setLayout(new FlowLayout());
+	p.setLayout(new FlowLayout());
 
-		addWindowListener(this);
-		go.addActionListener(this);
-		start.addActionListener(this);
-		stop.addActionListener(this);
-		sleep.addActionListener(this);
-		move.addActionListener(this);
-		terminate.addActionListener(this);
+	this.addWindowListener(this);
+	this.go.addActionListener(this);
+	this.start.addActionListener(this);
+	this.stop.addActionListener(this);
+	this.sleep.addActionListener(this);
+	this.move.addActionListener(this);
+	this.terminate.addActionListener(this);
 
-		p.add(go);
-		p.add(start);
-		p.add(stop);
-		p.add(sleep);
-		p.add(move);
-		p.add(terminate);
-		add("South", p);
+	p.add(this.go);
+	p.add(this.start);
+	p.add(this.stop);
+	p.add(this.sleep);
+	p.add(this.move);
+	p.add(this.terminate);
+	this.add("South", p);
+    }
+
+    /**
+     * Handles the action event
+     * 
+     * @param ae
+     *            the event to be handled
+     */
+    public void actionPerformed(ActionEvent ae) {
+	if ("Go!".equals(ae.getActionCommand())) {
+	    this.aglet.go(this.address.getAddress());
+	} else if ("Start".equals(ae.getActionCommand())) {
+	    this.aglet.sendMessage(new Message("start"));
+	} else if ("Stop".equals(ae.getActionCommand())) {
+	    this.aglet.sendMessage(new Message("stop"));
+	} else if ("Sleep".equals(ae.getActionCommand())) {
+	    this.aglet.sendMessage(new Message("sleep"));
+	} else if ("Move".equals(ae.getActionCommand())) {
+	    this.aglet.move(this.address.getAddress());
+	} else if ("Terminate".equals(ae.getActionCommand())) {
+	    this.aglet.terminate();
 	}
-	/**
-	 * Handles the action event
-	 * @param ae the event to be handled
-	 */
-	public void actionPerformed(ActionEvent ae) {
-		if ("Go!".equals(ae.getActionCommand())) {
-			aglet.go(address.getAddress());
-		} else if ("Start".equals(ae.getActionCommand())) {
-			aglet.sendMessage(new Message("start"));
-		} else if ("Stop".equals(ae.getActionCommand())) {
-			aglet.sendMessage(new Message("stop"));
-		} else if ("Sleep".equals(ae.getActionCommand())) {
-			aglet.sendMessage(new Message("sleep"));
-		} else if ("Move".equals(ae.getActionCommand())) {
-			aglet.move(address.getAddress());
-		} else if ("Terminate".equals(ae.getActionCommand())) {
-			aglet.terminate();
-		} 
-	}
-	void update(String s) {
-		text.setText(s);
-	}
-	public void windowActivated(WindowEvent we) {}
-	public void windowClosed(WindowEvent we) {}
-	/**
-	 * Handles the window event
-	 * @param we the event to be handled
-	 */
+    }
 
-	public void windowClosing(WindowEvent we) {
-		dispose();
-	}
-	public void windowDeactivated(WindowEvent we) {}
-	public void windowDeiconified(WindowEvent we) {}
-	public void windowIconified(WindowEvent we) {}
-	public void windowOpened(WindowEvent we) {}
+    void update(String s) {
+	this.text.setText(s);
+    }
+
+    public void windowActivated(WindowEvent we) {
+    }
+
+    public void windowClosed(WindowEvent we) {
+    }
+
+    /**
+     * Handles the window event
+     * 
+     * @param we
+     *            the event to be handled
+     */
+
+    public void windowClosing(WindowEvent we) {
+	this.dispose();
+    }
+
+    public void windowDeactivated(WindowEvent we) {
+    }
+
+    public void windowDeiconified(WindowEvent we) {
+    }
+
+    public void windowIconified(WindowEvent we) {
+    }
+
+    public void windowOpened(WindowEvent we) {
+    }
 }

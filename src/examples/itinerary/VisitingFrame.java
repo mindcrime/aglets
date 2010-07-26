@@ -15,93 +15,115 @@ package examples.itinerary;
  * will not be liable for any third party claims against you.
  */
 
-import com.ibm.aglet.*;
-import com.ibm.aglet.system.*;
-import com.ibm.aglet.util.*;
-import com.ibm.agletx.util.*;
-import com.ibm.agletx.patterns.Meeting;
+import java.awt.BorderLayout;
+import java.awt.Button;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.List;
+import java.awt.Panel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.Vector;
-import java.util.Enumeration;
-import java.net.URL;
-import java.awt.*;
-import java.awt.event.*;
+
+import com.ibm.aglet.util.AddressChooser;
 
 class VisitingFrame extends Frame implements WindowListener, ActionListener {
-	VisitingAglet aglet;
-	List list = new List(10, false);
-	AddressChooser address = new AddressChooser(15);
+    VisitingAglet aglet;
+    List list = new List(10, false);
+    AddressChooser address = new AddressChooser(15);
 
-	VisitingFrame(VisitingAglet a) {
-		aglet = a;
+    VisitingFrame(VisitingAglet a) {
+	this.aglet = a;
 
-		addWindowListener(this);
+	this.addWindowListener(this);
 
-		setLayout(new BorderLayout());
-		add("Center", list);
+	this.setLayout(new BorderLayout());
+	this.add("Center", this.list);
 
-		Panel p = new Panel();
+	Panel p = new Panel();
 
-		p.setLayout(new FlowLayout());
-		p.add(address);
-		Button ad = new Button("Add");
-		Button remove = new Button("Remove");
+	p.setLayout(new FlowLayout());
+	p.add(this.address);
+	Button ad = new Button("Add");
+	Button remove = new Button("Remove");
 
-		ad.addActionListener(this);
-		remove.addActionListener(this);
-		p.add(ad);
-		p.add(remove);
-		add("North", p);
+	ad.addActionListener(this);
+	remove.addActionListener(this);
+	p.add(ad);
+	p.add(remove);
+	this.add("North", p);
 
-		p = new Panel();
-		p.setLayout(new FlowLayout());
-		Button start = new Button("Start!");
+	p = new Panel();
+	p.setLayout(new FlowLayout());
+	Button start = new Button("Start!");
 
-		start.addActionListener(this);
-		p.add(start);
-		add("South", p);
+	start.addActionListener(this);
+	p.add(start);
+	this.add("South", p);
 
-		update();
+	this.update();
+    }
+
+    /**
+     * Handles the action event
+     * 
+     * @param ae
+     *            the event to be handled
+     */
+    public void actionPerformed(ActionEvent ae) {
+	if ("Add".equals(ae.getActionCommand())) {
+	    this.aglet.addresses.addElement(this.address.getAddress());
+	    this.update();
+	} else if ("Remove".equals(ae.getActionCommand())) {
+	    int i = this.list.getSelectedIndex();
+
+	    if (i >= 0) {
+		this.aglet.addresses.removeElementAt(i);
+		this.list.remove(i);
+	    }
+	} else if ("Start!".equals(ae.getActionCommand())) {
+	    this.aglet.start();
 	}
-	/**
-	 * Handles the action event
-	 * @param ae the event to be handled
-	 */
-	public void actionPerformed(ActionEvent ae) {
-		if ("Add".equals(ae.getActionCommand())) {
-			aglet.addresses.addElement(address.getAddress());
-			update();
-		} else if ("Remove".equals(ae.getActionCommand())) {
-			int i = list.getSelectedIndex();
+    }
 
-			if (i >= 0) {
-				aglet.addresses.removeElementAt(i);
-				list.remove(i);
-			} 
-		} else if ("Start!".equals(ae.getActionCommand())) {
-			aglet.start();
-		} 
-	}
-	private void update() {
-		list.removeAll();
-		Vector addrs = aglet.addresses;
-		int size = addrs.size();
+    private void update() {
+	this.list.removeAll();
+	Vector addrs = this.aglet.addresses;
+	int size = addrs.size();
 
-		for (int i = 0; i < size; i++) {
-			list.add((String)addrs.elementAt(i));
-		} 
+	for (int i = 0; i < size; i++) {
+	    this.list.add((String) addrs.elementAt(i));
 	}
-	public void windowActivated(WindowEvent we) {}
-	public void windowClosed(WindowEvent we) {}
-	/**
-	 * Handles the window event
-	 * @param we the event to be handled
-	 */
+    }
 
-	public void windowClosing(WindowEvent we) {
-		dispose();
-	}
-	public void windowDeactivated(WindowEvent we) {}
-	public void windowDeiconified(WindowEvent we) {}
-	public void windowIconified(WindowEvent we) {}
-	public void windowOpened(WindowEvent we) {}
+    public void windowActivated(WindowEvent we) {
+    }
+
+    public void windowClosed(WindowEvent we) {
+    }
+
+    /**
+     * Handles the window event
+     * 
+     * @param we
+     *            the event to be handled
+     */
+
+    public void windowClosing(WindowEvent we) {
+	this.dispose();
+    }
+
+    public void windowDeactivated(WindowEvent we) {
+    }
+
+    public void windowDeiconified(WindowEvent we) {
+    }
+
+    public void windowIconified(WindowEvent we) {
+    }
+
+    public void windowOpened(WindowEvent we) {
+    }
 }

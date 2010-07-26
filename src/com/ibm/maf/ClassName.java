@@ -23,14 +23,16 @@ package com.ibm.maf;
 
 public final class ClassName implements java.io.Serializable {
 
-	// instance variables
-	public String name;
-	public byte[] descriminator;
+    // instance variables
+    public String name;
+    public byte[] descriminator;
 
-	// constructors
-	public ClassName() {}
-	public ClassName(String __name, byte[] __descriminator) {
-		name = __name;
-		descriminator = __descriminator;
-	}
+    // constructors
+    public ClassName() {
+    }
+
+    public ClassName(String __name, byte[] __descriminator) {
+	this.name = __name;
+	this.descriminator = __descriminator;
+    }
 }

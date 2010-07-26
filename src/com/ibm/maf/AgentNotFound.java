@@ -23,11 +23,12 @@ package com.ibm.maf;
 
 public final class AgentNotFound extends MAFException {
 
-	// constructor
-	public AgentNotFound() {
-		super();
-	}
-	public AgentNotFound(String msg) {
-		super(msg);
-	}
+    // constructor
+    public AgentNotFound() {
+	super();
+    }
+
+    public AgentNotFound(String msg) {
+	super(msg);
+    }
 }

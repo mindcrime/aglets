@@ -20,14 +20,14 @@ import java.awt.Frame;
 /**
  * Class PopUpMessageWindow is a popup window for error messages.
  * 
- * @version     1.00    96/07/22
- * @author      Yariv Aridor
+ * @version 1.00 96/07/22
+ * @author Yariv Aridor
  */
 
 class PopUpMessageWindow extends MessageDialog {
 
-	PopUpMessageWindow(Frame parent, String title, String message) {
-		super(parent, title, message);
-		setButtons(MessageDialog.OKAY);
-	}
+    PopUpMessageWindow(Frame parent, String title, String message) {
+	super(parent, title, message);
+	this.setButtons(GeneralDialog.OKAY);
+    }
 }

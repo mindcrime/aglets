@@ -26,18 +26,19 @@ package com.ibm.aglet.event;
 /**
  * The listener interface for receiving persistency events on an aglet.
  * 
- * @version     1.00    $Date: 2009/07/28 07:04:53 $
- * @author      Mitsuru Oshima
+ * @version 1.00 $Date: 2009/07/28 07:04:53 $
+ * @author Mitsuru Oshima
  */
-public interface PersistencyListener extends java.util.EventListener, 
-		java.io.Serializable {
+public interface PersistencyListener extends java.util.EventListener,
+	java.io.Serializable {
 
-	/**
-	 * Invoked just after the aglet was activated.
-	 */
-	public void onActivation(PersistencyEvent event);
-	/**
-	 * Invoked when an aglet is attempted to deactivate.
-	 */
-	public void onDeactivating(PersistencyEvent event);
+    /**
+     * Invoked just after the aglet was activated.
+     */
+    public void onActivation(PersistencyEvent event);
+
+    /**
+     * Invoked when an aglet is attempted to deactivate.
+     */
+    public void onDeactivating(PersistencyEvent event);
 }
