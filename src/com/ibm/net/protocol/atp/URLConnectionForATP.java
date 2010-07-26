@@ -21,6 +21,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Properties;
 
+import com.ibm.aglet.Aglet;
 import com.ibm.awb.misc.Resource;
 import com.ibm.maf.AgentProfile;
 import com.ibm.maf.MAFAgentSystem;
@@ -47,13 +48,14 @@ public class URLConnectionForATP extends URLConnection {
 
 	verbose = res.getBoolean("aglets.verbose", false);
 
-	short one = (short) 1;
+	short major = (short) Aglet.MAJOR_VERSION;
+	short minor = (short) Aglet.MINOR_VERSION;
 
-	agent_profile = new AgentProfile(one, // Java
-	one, // Aglets
-	"Aglets", one, // major,
-	one, // minor,
-	one, // serialization,
+	agent_profile = new AgentProfile(major, // Java
+	major, // Aglets
+	"Aglets", major, // major,
+	minor, // minor,
+	major, // serialization,
 	null);
     }
 

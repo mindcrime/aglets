@@ -31,7 +31,7 @@ final class MAF {
     }
 
     static AgentProfile toAgentProfile(AgletInfo info) {
-	AgentProfile p = new AgentProfile(MAFUtil.toLanguageID("Java"), MAFUtil.toAgentSystemType("Aglets"), "Aglets 1.1 beta", info.getAPIMajorVersion(), info.getAPIMinorVersion(), (short) 1, /* serialization */
+	AgentProfile p = new AgentProfile(MAFUtil.toLanguageID("Java"), MAFUtil.toAgentSystemType("Aglets"), "Aglets 2.5 alpha", info.getAPIMajorVersion(), info.getAPIMinorVersion(), (short) 1, /* serialization */
 	null);
 
 	// Object[] __properties);

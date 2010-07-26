@@ -61,7 +61,7 @@ public abstract class Aglet implements java.io.Serializable {
      * Current API version of the Aglet class.
      */
     public static final short MAJOR_VERSION = 2;
-    public static final short MINOR_VERSION = 1;
+    public static final short MINOR_VERSION = 5;
 
     /**
      * State of Aglet.

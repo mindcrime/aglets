@@ -83,7 +83,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 
     static {
 	// initializes the version of this run-time.
-	VERSION = new Version("Aglets Mobile Agent Platform", 2, 3, 0, false);
+	VERSION = new Version("Aglets Mobile Agent Platform", 2, 5, 0, false);
 
 	contents = new Object[][] {
 		{ "aglets.version", "[" + VERSION + "]" },
