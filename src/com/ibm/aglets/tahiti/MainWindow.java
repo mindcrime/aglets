@@ -493,8 +493,7 @@ public final class MainWindow extends TahitiWindow implements ItemListener,
 		dialog = AboutDialog.getInstance(this);
 	    else if (GUICommandStrings.DOC_COMMAND.equals(command)) {
 		// get the documentation root file
-		String docRoot = this.translator.translate(this.baseKey
-			+ "documentationFile");
+		String docRoot = this.translator.translate(this.baseKey	+ ".documentationFile");
 		this.showDocumentation(docRoot);
 		return;
 	    } else if (GUICommandStrings.WEB_COMMAND.equals(command)) {

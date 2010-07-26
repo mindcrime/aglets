@@ -1,5 +1,6 @@
 package com.ibm.aglets.tahiti;
 
+import java.io.File;
 import java.net.URL;
 
 import javax.swing.JEditorPane;
@@ -30,11 +31,12 @@ public class TahitiBrowser extends TahitiDialog implements Runnable {
 
 	super(mainWindow);
 	try {
-	    this.mainPage = new URL("file", "localhost", fileName);
+	    this.mainPage = new File(fileName).toURI().toURL();
 	} catch (Exception e) {
 	    JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 		    + ".URLError.title"), this.translator.translate(this.baseKey
 		    + ".URLError"), JOptionPane.ERROR_MESSAGE);
+	    logger.error("Cannot load Documentation file " + fileName);
 	}
     }
 
@@ -85,6 +87,7 @@ public class TahitiBrowser extends TahitiDialog implements Runnable {
 			JOptionPane.showMessageDialog(editorPanel, translator.translate(TahitiBrowser.this.baseKey
 				+ ".URLError.title"), translator.translate(TahitiBrowser.this.baseKey
 				+ ".URLError"), JOptionPane.ERROR_MESSAGE);
+			logger.error("Cannot load the page " + event.getURL() );
 
 		    }
 		}
