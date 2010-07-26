@@ -69,8 +69,7 @@ public class AboutDialog extends BaseAgletsDialog {
 	label = JComponentBuilder.createJLabel(this.baseKey + ".webPage");
 	southPanel.add(label, BorderLayout.NORTH);
 
-	this.creditArea = JComponentBuilder.createJTextArea(this.translator.translate(this.baseKey
-		+ ".creditsFile"));
+	this.creditArea = JComponentBuilder.createJTextArea(this.translator.translate(this.baseKey + ".creditsFile"));
 	this.creditArea.setEditable(false);
 	JTabbedPane tabbedPanel = new JTabbedPane();
 

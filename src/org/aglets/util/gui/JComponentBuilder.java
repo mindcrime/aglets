@@ -577,14 +577,16 @@ public class JComponentBuilder {
 
 		String line = null;
 		do {
+		    logger.debug("Reading a new line from file <" + file + ">");
 		    line = reader.readLine();
 		    text.append(line);
+		    text.append("\n");	// new line in order to report the same text structure as in the file
 		} while (line != null);
 
 	    } catch (IOException e) {
 		logger.error("Exception caught while loading file content to display in JTextArea "
 			+ fileName, e);
-		text.setText("");
+		text.setText(e.getMessage());
 	    }
 	}
 
