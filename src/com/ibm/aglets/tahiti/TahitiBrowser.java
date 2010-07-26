@@ -48,6 +48,7 @@ public class TahitiBrowser extends TahitiDialog implements Runnable {
      */
     public TahitiBrowser(TahitiWindow mainWindow, URL webPage) {
 	super(mainWindow);
+	this.setSize(200, 200);
 	this.mainPage = webPage;
     }
 
@@ -67,7 +68,6 @@ public class TahitiBrowser extends TahitiDialog implements Runnable {
 						     // content type
 	    editorPanel.setEditorKit(kit); // associate the editor panel and the
 					   // HTML editor
-
 	    editorPanel.setPage(this.mainPage); // show the file
 	    editorPanel.setEditable(false); // do not allow the content to be
 					    // changed by the user
