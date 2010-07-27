@@ -1,5 +1,0 @@
-LOGGING REFACTORING:
-I've introduced the class org.aglets.log.AgletsLogger that represents a generic logger to user aroung the code.
-It substitutes the previous logcategory and logger (no more supported from log4j). I've added in the cnf directory the
-configuration file for log4j, thus the logging can be driven by such file. I'm also changing all the code
-around thus it can use such new logger.
