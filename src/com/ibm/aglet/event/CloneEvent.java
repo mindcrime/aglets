@@ -33,42 +33,29 @@ import com.ibm.aglet.AgletProxy;
  */
 public class CloneEvent extends AgletEvent {
 
-    /**
-     * Marks the first integer id for the range of clone event ids.
-     */
-    public static final int AGLET_CLONE_FIRST = 1100;
+   
+    
 
-    /**
-     * Marks the last integer id for the range of clone event ids.
-     */
-    public static final int AGLET_CLONE_LAST = 1102;
-
-    /**
-     * The CLONING event type is delivered when the aglet is attempted to clone.
-     */
-    public static final int CLONING = AGLET_CLONE_FIRST;
-
-    /**
-     * The CLONE event type is delivered when the clone of the aglet is created.
-     * Note that this event is delivered only to the cloned object but not to
-     * the original.
-     */
-    public static final int CLONE = AGLET_CLONE_FIRST + 1;
-
-    /**
-     * The CLONED event type is delivered after the cloning of the aglet
-     * finished. Note that this event is delivered only to the original aglet.
-     */
-    public static final int CLONED = AGLET_CLONE_FIRST + 2;
-
-    private static String name[] = { "CLONEING", "CLONE", "CLONED", };
 
     /**
      * Constructs the clone event object with the specified id and aglet
      */
+    @Deprecated
     public CloneEvent(int id, AgletProxy aglet) {
 	super(aglet, id);
     }
+    
+    
+    /**
+     * Creates the event of the specified type.
+     * @param id
+     * @param proxy
+     * @param type
+     */
+    public CloneEvent( int id, AgletProxy proxy, EventType type ){
+	super( proxy, id, type );
+    }
+    
 
     /**
      * Returns the aglet proxy which is the source of the event.
@@ -79,6 +66,6 @@ public class CloneEvent extends AgletEvent {
 
     @Override
     public String toString() {
-	return "CloneEvent[" + name[this.id - AGLET_CLONE_FIRST] + "]";
+	return "CloneEvent[" + this.getEventType().toString() + "]";
     }
 }

@@ -38,6 +38,7 @@ import com.ibm.aglet.event.AgletEvent;
 import com.ibm.aglet.event.AgletEventListener;
 import com.ibm.aglet.event.CloneEvent;
 import com.ibm.aglet.event.CloneListener;
+import com.ibm.aglet.event.EventType;
 import com.ibm.aglet.event.MobilityEvent;
 import com.ibm.aglet.event.MobilityListener;
 import com.ibm.aglet.event.PersistencyEvent;
@@ -244,28 +245,28 @@ public abstract class Aglet implements java.io.Serializable {
     }
 
     /**
-     * Dispatches an event to this aglet
+     * Dispatches an event to this aglet. The event should be the notification
+     * of something related to mobility, persistency, cloning.
      * 
      * @param ev
      *            the aglet event
      */
     final public void dispatchEvent(AgletEvent ev) {
-	switch (ev.getID()) {
-	case CloneEvent.CLONING:
-	case CloneEvent.CLONE:
-	case CloneEvent.CLONED:
-	    this.processCloneEvent((CloneEvent) ev);
-	    break;
-	case MobilityEvent.DISPATCHING:
-	case MobilityEvent.REVERTING:
-	case MobilityEvent.ARRIVAL:
-	    this.processMobilityEvent((MobilityEvent) ev);
-	    break;
-	case PersistencyEvent.DEACTIVATING:
-	case PersistencyEvent.ACTIVATION:
-	    this.processPersistencyEvent((PersistencyEvent) ev);
-	    break;
-	}
+	// get the type of event
+	EventType type = ev.getEventType();
+	if( type == null )
+	    return;
+	
+	// check which kind of event is this
+	if( type.equals( EventType.CLONE) || type.equals( EventType.CLONED) || type.equals( EventType.CLONING ) )
+	    this.processCloneEvent( (CloneEvent) ev );
+	else if( type.equals( EventType.DISPATCHING ) || type.equals( EventType.REVERTING ) || type.equals( EventType.ARRIVAL ) )
+	    this.processMobilityEvent( (MobilityEvent) ev );
+	else if( type.equals( EventType.DEACTIVATING )  || type.equals( EventType.ACTIVATION ) )
+	    this.processPersistencyEvent( (PersistencyEvent) ev );
+	
+	
+	
     }
 
     /**
@@ -463,24 +464,26 @@ public abstract class Aglet implements java.io.Serializable {
     /**
      * Processes clone events occurring on this aglet by dispatching them to any
      * registered CloneListener objects.
+     * Converts the event into an aglet message (i.e., a method call).
      * 
      * @param ev
      *            the clone event
      */
-    protected void processCloneEvent(CloneEvent ev) {
-	if (this.cloneListener != null) {
-	    switch (ev.getID()) {
-	    case CloneEvent.CLONING:
-		this.cloneListener.onCloning(ev);
-		break;
-	    case CloneEvent.CLONE:
-		this.cloneListener.onClone(ev);
-		break;
-	    case CloneEvent.CLONED:
-		this.cloneListener.onCloned(ev);
-		break;
-	    }
-	}
+    protected final void processCloneEvent(CloneEvent ev) {
+	// check arguments
+	if( ev == null || ev.getEventType() == null || this.cloneListener == null )
+	    return;
+	
+	// get the type of the event
+	EventType type = ev.getEventType();
+	
+	if( type.equals( EventType.CLONING ) )
+	    this.cloneListener.onCloning(ev);
+	else if( type.equals( EventType.CLONE) )
+	    this.cloneListener.onClone(ev);
+	else if( type.equals(EventType.CLONED) )
+	    this.cloneListener.onCloned(ev);
+
     }
 
     /**
@@ -490,20 +493,21 @@ public abstract class Aglet implements java.io.Serializable {
      * @param ev
      *            the mobility event
      */
-    protected void processMobilityEvent(MobilityEvent ev) {
-	if (this.mobilityListener != null) {
-	    switch (ev.getID()) {
-	    case MobilityEvent.DISPATCHING:
-		this.mobilityListener.onDispatching(ev);
-		break;
-	    case MobilityEvent.REVERTING:
-		this.mobilityListener.onReverting(ev);
-		break;
-	    case MobilityEvent.ARRIVAL:
-		this.mobilityListener.onArrival(ev);
-		break;
-	    }
-	}
+    protected final void  processMobilityEvent(MobilityEvent ev) {
+	// check arguments
+	if( ev == null || ev.getEventType() == null || this.mobilityListener == null )
+	    return;
+	
+	// get the type of the event
+	EventType type = ev.getEventType();
+	
+	if( type.equals( EventType.DISPATCHING ) )
+	    this.mobilityListener.onDispatching(ev);
+	else if( type.equals( EventType.REVERTING ) )
+	    this.mobilityListener.onReverting(ev);
+	else if( type.equals( EventType.ARRIVAL ) )
+	    this.mobilityListener.onArrival(ev);
+
     }
 
     /**
@@ -513,17 +517,19 @@ public abstract class Aglet implements java.io.Serializable {
      * @param ev
      *            the persistency event
      */
-    protected void processPersistencyEvent(PersistencyEvent ev) {
-	if (this.persistencyListener != null) {
-	    switch (ev.getID()) {
-	    case PersistencyEvent.DEACTIVATING:
-		this.persistencyListener.onDeactivating(ev);
-		break;
-	    case PersistencyEvent.ACTIVATION:
-		this.persistencyListener.onActivation(ev);
-		break;
-	    }
-	}
+    protected final void processPersistencyEvent(PersistencyEvent ev) {
+	// check arguments
+	if( ev == null || ev.getEventType() == null || this.persistencyListener == null )
+	    return;
+	
+	// get the type of the event
+	EventType type = ev.getEventType();
+	
+	if( type.equals( EventType.DEACTIVATING ) )
+	    this.persistencyListener.onDeactivating(ev);
+	else if( type.equals( EventType.ACTIVATION) ) 
+	    this.persistencyListener.onActivation(ev);
+
     }
 
     /**

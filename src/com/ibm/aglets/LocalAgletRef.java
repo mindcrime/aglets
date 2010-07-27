@@ -45,6 +45,7 @@ import com.ibm.aglet.ServerNotFoundException;
 import com.ibm.aglet.Ticket;
 import com.ibm.aglet.event.AgletEvent;
 import com.ibm.aglet.event.CloneEvent;
+import com.ibm.aglet.event.EventType;
 import com.ibm.aglet.event.MobilityEvent;
 import com.ibm.aglet.event.PersistencyEvent;
 import com.ibm.aglet.message.FutureReply;
@@ -223,7 +224,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 		this.checkValidation();
 		this.checkActive();
 		try {
-		    this.dispatchEvent(new CloneEvent(CloneEvent.CLONING, this.proxy));
+		    this.dispatchEvent(new CloneEvent(AgletEvent.nextID(), this.proxy, EventType.CLONING));
 		} catch (SecurityException ex) {
 		    throw ex;
 		} catch (Exception ex) {
@@ -307,7 +308,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 		    this._context.log("Clone", "Failed to clone the aglet ["
 			    + this.info.getAgletClassName() + "]");
 		}
-		this.dispatchEvent(new CloneEvent(CloneEvent.CLONED, this.proxy));
+		this.dispatchEvent(new CloneEvent(AgletEvent.nextID(), this.proxy, EventType.CLONED));
 		this._context.endCreation();
 	    }
 	}
@@ -734,7 +735,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	    }
 
 	    try {
-		this.dispatchEvent(new PersistencyEvent(PersistencyEvent.DEACTIVATING, this.proxy, duaration));
+		this.dispatchEvent(new PersistencyEvent( this.proxy, duaration, EventType.DEACTIVATING));
 	    } catch (SecurityException ex) {
 		throw ex;
 	    } catch (Exception ex) {
@@ -805,7 +806,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	    this.aglet = null;
 	    try {
 		this._context.log("Deactivate", key);
-		this._context.postEvent(new ContextEvent(ContextEvent.DEACTIVATED, this._context, this.proxy), true);
+		this._context.postEvent(new ContextEvent(this._context, this.proxy, EventType.AGLET_DEACTIVATED), true);
 	    } finally {
 		this.resourceManager.disposeAllResources();
 		this.resourceManager.stopThreadGroup();
@@ -893,7 +894,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	    }
 
 	    try {
-		this.dispatchEvent(new MobilityEvent(MobilityEvent.DISPATCHING, this.proxy, ticket));
+		this.dispatchEvent(new MobilityEvent(this.proxy, ticket, EventType.DISPATCHING));
 	    } catch (SecurityException ex) {
 		throw ex;
 	    } catch (Exception ex) {
@@ -998,7 +999,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	    try {
 		this._context.log("Dispatch", this.info.getAgletClassName()
 			+ " to " + ticket.getDestination());
-		this._context.postEvent(new ContextEvent(ContextEvent.DISPATCHED, this._context, new_proxy, ticket.getDestination()), true);
+		this._context.postEvent(new ContextEvent(this._context, new_proxy, ticket.getDestination(), EventType.AGLET_DISPATCHED), true);
 	    } finally {
 		this.releaseResource();
 	    }
@@ -1083,7 +1084,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 
 	try {
 	    this._context.log("Dispose", this.info.getAgletClassName());
-	    this._context.postEvent(new ContextEvent(ContextEvent.DISPOSED, this._context, this.proxy), true);
+	    this._context.postEvent(new ContextEvent(this._context, this.proxy, EventType.AGLET_DISPOSED), true);
 	} finally {
 
 	    // Debug.check();
@@ -1295,7 +1296,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 
 	try {
 	    this._context.log("Dispose", this.info.getAgletClassName());
-	    this._context.postEvent(new ContextEvent(ContextEvent.DISPOSED, this._context, this.proxy), true);
+	    this._context.postEvent(new ContextEvent(this._context, this.proxy, EventType.AGLET_DISPOSED), true);
 	} finally {
 	    this.releaseResource();
 	}
@@ -1447,7 +1448,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 
 	    success = true;
 
-	    this._context.postEvent(new ContextEvent(ContextEvent.REVERTED, this, this.proxy, null), true);
+	    this._context.postEvent(new ContextEvent(this, this.proxy, null, EventType.AGLET_REVERTED), true);
 	    return agent;
 
 	} catch (SecurityException ex) {
@@ -1665,7 +1666,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
     protected void setText(String text) {
 	this.checkActive();
 	this._text = text;
-	this._context.postEvent(new ContextEvent(ContextEvent.STATE_CHANGED, this._context, this.proxy, text), true);
+	this._context.postEvent(new ContextEvent(this._context, this.proxy, text, EventType.AGLET_STATE_CHANGED), true);
     }
 
     /**
@@ -1736,10 +1737,10 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
     void startActivatedAglet() throws InvalidAgletException {
 	this._state = ACTIVE;
 
-	this.messageManager.postMessage(new EventMessage(new PersistencyEvent(PersistencyEvent.ACTIVATION, this.proxy, 0)));
+	this.messageManager.postMessage(new EventMessage(new PersistencyEvent( this.proxy, 0, EventType.ACTIVATION)));
 	this.messageManager.postMessage(new SystemMessage(SystemMessage.RUN, null));
 
-	this._context.postEvent(new ContextEvent(ContextEvent.ACTIVATED, this._context, this.proxy), true);
+	this._context.postEvent(new ContextEvent(this._context, this.proxy, EventType.AGLET_ACTIVATED), true);
 
 	this.resumeMessageManager();
     }
@@ -1759,10 +1760,10 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	    throws InvalidAgletException {
 	this.validate(cxt, ACTIVE);
 
-	this.messageManager.postMessage(new EventMessage(new MobilityEvent(MobilityEvent.ARRIVAL, this.proxy, this._context.getHostingURL())));
+	this.messageManager.postMessage(new EventMessage(new MobilityEvent(this.proxy, this._context.getHostingURL(), EventType.ARRIVAL)));
 	this.messageManager.postMessage(new SystemMessage(SystemMessage.RUN, null));
 
-	this._context.postEvent(new ContextEvent(ContextEvent.ARRIVED, cxt, this.proxy, sender), true);
+	this._context.postEvent(new ContextEvent( cxt, this.proxy, sender, EventType.AGLET_ARRIVED), true);
 
 	this.resumeMessageManager();
     }
@@ -1782,10 +1783,10 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	    throws InvalidAgletException {
 	this.validate(cxt, ACTIVE);
 
-	this.messageManager.postMessage(new EventMessage(new CloneEvent(CloneEvent.CLONE, this.proxy)));
+	this.messageManager.postMessage(new EventMessage(new CloneEvent(AgletEvent.nextID(), this.proxy, EventType.CLONE)));
 	this.messageManager.postMessage(new SystemMessage(SystemMessage.RUN, null));
 
-	this._context.postEvent(new ContextEvent(ContextEvent.CLONED, cxt, this.proxy, parent), true);
+	this._context.postEvent(new ContextEvent( cxt, this.proxy, parent, EventType.AGLET_CLONED), true);
 
 	this.resumeMessageManager();
     }
@@ -1809,7 +1810,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 
 	this.messageManager.postMessage(new SystemMessage(SystemMessage.CREATE, init));
 	this.messageManager.postMessage(new SystemMessage(SystemMessage.RUN, null));
-	this._context.postEvent(new ContextEvent(ContextEvent.CREATED, cxt, this.proxy), true);
+	this._context.postEvent(new ContextEvent( cxt, this.proxy, EventType.AGLET_CREATED), true);
 
 	this.startMessageManager();
     }
@@ -1837,7 +1838,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	// PersistencyEvent(PersistencyEvent.RESUME, proxy, 0)));
 	this.messageManager.postMessage(new SystemMessage(SystemMessage.RUN, null));
 
-	this._context.postEvent(new ContextEvent(ContextEvent.RESUMED, this._context, this.proxy), true);
+	this._context.postEvent(new ContextEvent( this._context, this.proxy, EventType.AGLET_RESUMED), true);
 
 	this.resumeMessageManager();
     }
@@ -1931,7 +1932,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 
 	    try {
 		this._context.log("Suspend", key);
-		this._context.postEvent(new ContextEvent(ContextEvent.SUSPENDED, this._context, this.proxy), true);
+		this._context.postEvent(new ContextEvent( this._context, this.proxy, EventType.AGLET_SUSPENDED), true);
 	    } finally {
 
 		// resourceManager.disposeAllResources();
@@ -1948,7 +1949,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	synchronized (this.lock) {
 	    this.checkValidation();
 	    try {
-		this.dispatchEvent(new MobilityEvent(MobilityEvent.REVERTING, this.proxy, ticket));
+		this.dispatchEvent(new MobilityEvent( this.proxy, ticket, EventType.REVERTING));
 	    } catch (SecurityException ex) {
 		throw ex;
 	    } catch (Exception ex) {

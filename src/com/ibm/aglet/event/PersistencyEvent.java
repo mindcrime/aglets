@@ -33,36 +33,18 @@ import com.ibm.aglet.AgletProxy;
  */
 public class PersistencyEvent extends AgletEvent {
 
-    /**
-     * Marks the first integer id for the range of persistency event ids.
-     */
-    public static final int AGLET_PERSISTENCY_FIRST = 1300;
 
     /**
-     * Marks the last integer id for the range of persistency event ids.
+     * The duration of the persistency.
      */
-    public static final int AGLET_PERSISTENCY_LAST = 1301;
-
-    /**
-     * The DEACTIVATING event type is delivered when the aglet is deactivated.
-     */
-    public static final int DEACTIVATING = AGLET_PERSISTENCY_FIRST;
-
-    /**
-     * The ACTIVATION event type is delivered when the aglet is activated.
-     */
-    public static final int ACTIVATION = AGLET_PERSISTENCY_FIRST + 1;
-
-    private static String name[] = { "DEACTIVATING", "ACTIVATION", };
-
     private long duration;
 
     /**
      * Constructs a PersistencyEvent with the specified id, aglet proxy and
      * duration.
      */
-    public PersistencyEvent(int id, AgletProxy aglet, long duration) {
-	super(aglet, id);
+    public PersistencyEvent(AgletProxy aglet, long duration, EventType type) {
+	super(aglet, AgletEvent.nextID(), type);
 	this.duration = duration;
     }
 
@@ -82,7 +64,6 @@ public class PersistencyEvent extends AgletEvent {
 
     @Override
     public String toString() {
-	return "PersistencyEvent[" + name[this.id - AGLET_PERSISTENCY_FIRST]
-		+ "]";
+	return "PersistencyEvent[" + this.getEventType().toString() + "]";
     }
 }

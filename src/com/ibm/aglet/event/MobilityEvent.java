@@ -36,51 +36,27 @@ import com.ibm.aglet.Ticket;
  */
 public class MobilityEvent extends AgletEvent {
 
+    
     /**
-     * Marks the first integer id for the range of mobility event ids.
+     * The ticket for the mobility.
      */
-    public static final int AGLET_MOBILITY_FIRST = 1200;
-
-    /**
-     * Marks the last integer id for the range of mobility event ids.
-     */
-    public static final int AGLET_MOBILITY_LAST = 1202;
-
-    /**
-     * The DISPATCHING event type is delivered just after the dispatch methods
-     * is called.
-     */
-    public static final int DISPATCHING = AGLET_MOBILITY_FIRST;
-
-    /**
-     * The REVERTING event type is delivered when the retaction is requested
-     * from the remote site.
-     */
-    public static final int REVERTING = AGLET_MOBILITY_FIRST + 1;
-
-    /**
-     * The ARRIVAL event type is delivered when the aglet arrived at the
-     * destination.
-     */
-    public static final int ARRIVAL = AGLET_MOBILITY_FIRST + 2;
-
-    private static String name[] = { "DISPATCHING", "REVERTING", "ARRIVAL", };
-
     private Ticket ticket;
 
     /**
-     * Constructs a mobility event with specified id, target and ticket
+     * Constructs a mobility event with the next available id, the specified proxy as target, the ticket and
+     * the even type.
      */
-    public MobilityEvent(int id, AgletProxy target, Ticket tick) {
-	super(target, id);
+    public MobilityEvent(AgletProxy target, Ticket tick, EventType type) {
+	super(target, AgletEvent.nextID(), type);
 	this.ticket = tick;
+	
     }
 
     /**
      * Constructs a mobility event with specified id, target and location
      */
-    public MobilityEvent(int id, AgletProxy target, URL loc) {
-	super(target, id);
+    public MobilityEvent(AgletProxy target, URL loc, EventType type) {
+	super(target, AgletEvent.nextID(), type);
 	this.ticket = new Ticket(loc);
     }
 
@@ -111,6 +87,6 @@ public class MobilityEvent extends AgletEvent {
 
     @Override
     public String toString() {
-	return "MobilityEvent[" + name[this.id - AGLET_MOBILITY_FIRST] + "]";
+	return "MobilityEvent[" + this.getEventType().toString() + "]";
     }
 }
