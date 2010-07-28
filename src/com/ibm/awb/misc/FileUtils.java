@@ -172,8 +172,9 @@ public class FileUtils {
     /**
      * Gets property filename for a user
      */
-    public final static String getPropertyFilenameForUser(String username,
-	    String propname) {
+    public final static String getPropertyFilenameForUser(
+							  String username,
+							  String propname) {
 	return getPropertyDirectoryForUser(username) + File.separator
 		+ propname + ".properties";
     }
@@ -320,8 +321,9 @@ public class FileUtils {
 	return strToPathList(path_list, PATH_SEPARATORS);
     }
 
-    public static final Enumeration strToPathList(String path_list,
-	    String separators) {
+    public static final Enumeration strToPathList(
+						  String path_list,
+						  String separators) {
 	if (path_list == null) {
 	    return null;
 	}

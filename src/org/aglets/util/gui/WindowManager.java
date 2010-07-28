@@ -7,13 +7,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
-import org.aglets.util.AgletsTranslator;
 
 import com.ibm.aglets.tahiti.MainWindow;
 import com.ibm.aglets.tahiti.TahitiWindow;
-import com.ibm.aglets.tahiti.utils.TahitiCommandStrings;
 
 /**
  * This class is used to manager window events (e.g., closing events) for a set
@@ -78,11 +74,12 @@ public class WindowManager extends WindowAdapter {
 			&& ((TahitiWindow) window).shouldExitOnClosing()) {
 
 		    TahitiWindow tWindow = (TahitiWindow) window;
-		    AgletsTranslator translator = tWindow.getTranslator();
-		    String baseKey = tWindow.getBaseKey();
+		    tWindow.getTranslator();
+		    tWindow.getBaseKey();
 
-		    // don't ask the user to confirm the exiting, since it will be done by the tahiti window itself
-		    
+		    // don't ask the user to confirm the exiting, since it will
+		    // be done by the tahiti window itself
+
 		    // send an exit event
 		    ActionEvent exit = new ActionEvent(this, 1, GUICommandStrings.EXIT_COMMAND);
 		    ((MainWindow) tWindow).actionPerformed(exit);

@@ -114,7 +114,8 @@ public class PolicyFileReader {
     }
 
     protected synchronized static PolicyDB getAllPolicyDB(
-	    String systemPolicyFilename, String userPolicyFilename) {
+							  String systemPolicyFilename,
+							  String userPolicyFilename) {
 	PolicyFileReader reader = new PolicyFileReader(systemPolicyFilename);
 
 	try {
@@ -136,7 +137,7 @@ public class PolicyFileReader {
     }
 
     protected synchronized PolicyPermission getPolicyPermission()
-	    throws PolicyFileParsingException {
+								 throws PolicyFileParsingException {
 	if (!this.isPolicyPermission()) {
 
 	    // # throw
@@ -338,16 +339,8 @@ public class PolicyFileReader {
 	return ttype == TT_EOF;
     }
 
-    private static boolean isEndOfLine(int ttype) {
-	return ttype == TT_EOL;
-    }
-
     private boolean isGrant() {
 	return this.isWord() && this.string().equals(WORD_GRANT);
-    }
-
-    private static boolean isNumber(int ttype) {
-	return ttype == TT_NUMBER;
     }
 
     private boolean isOwnedBy() {
@@ -442,7 +435,7 @@ public class PolicyFileReader {
     }
 
     protected synchronized void readPolicyDB()
-	    throws PolicyFileParsingException {
+					      throws PolicyFileParsingException {
 	this.nextToken();
 
 	// at least one grant clause is needed
@@ -466,7 +459,7 @@ public class PolicyFileReader {
     }
 
     protected synchronized void readPolicyFile(String filename)
-	    throws FileNotFoundException {
+							       throws FileNotFoundException {
 	logger.info("Reading security policy file: " + filename);
 	if (filename == null) {
 	    throw new FileNotFoundException("Policy filename is null.");
@@ -488,7 +481,7 @@ public class PolicyFileReader {
     }
 
     protected synchronized void readPolicyGrant()
-	    throws PolicyFileParsingException {
+						 throws PolicyFileParsingException {
 	if (!this.isGrant()) {
 	    throw this.getParsingException("The reserved word '" + WORD_GRANT
 		    + "' is expected, not '" + this.token() + "'.");

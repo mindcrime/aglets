@@ -218,8 +218,10 @@ abstract public class AgletsPermissionBase extends Permission implements Guard,
 	return select(label, flag, SEPARATOR);
     }
 
-    static final protected String select(String[] label, boolean[] flag,
-	    String separator) {
+    static final protected String select(
+					 String[] label,
+					 boolean[] flag,
+					 String separator) {
 	int num = 0;
 	int i = 0;
 

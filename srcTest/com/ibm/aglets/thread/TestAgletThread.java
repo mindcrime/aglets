@@ -26,6 +26,7 @@ public class TestAgletThread extends TestCase {
      * 
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     protected void setUp() throws Exception {
 	super.setUp();
 	this.thread = new AgletThread(new ThreadGroup("TestGroup"));

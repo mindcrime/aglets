@@ -92,8 +92,10 @@ class MultiEditListPanel extends GridBagPanel implements ActionListener {
 	}
     }
 
-    protected void addButton(String label, GridBagLayout layout,
-	    GridBagConstraints cnt) {
+    protected void addButton(
+			     String label,
+			     GridBagLayout layout,
+			     GridBagConstraints cnt) {
 	Button button = new Button(label);
 
 	layout.setConstraints(button, cnt);
@@ -106,8 +108,11 @@ class MultiEditListPanel extends GridBagPanel implements ActionListener {
 	this.addButtons(true, true, true, true);
     }
 
-    public void addButtons(boolean add, boolean remove, boolean top,
-	    boolean last) {
+    public void addButtons(
+			   boolean add,
+			   boolean remove,
+			   boolean top,
+			   boolean last) {
 	GridBagConstraints cnt = new GridBagConstraints();
 
 	cnt.gridx = GridBagConstraints.RELATIVE;

@@ -33,8 +33,11 @@ public class MessageFactory {
      *            the timestamp of the message
      * @return the message
      */
-    public static Message getMessage(Message msg, FutureReplyImpl future,
-	    int msg_type, long timestamp) {
+    public static Message getMessage(
+				     Message msg,
+				     FutureReplyImpl future,
+				     int msg_type,
+				     long timestamp) {
 	return new MessageImpl(msg, future, msg_type, timestamp);
     }
 }

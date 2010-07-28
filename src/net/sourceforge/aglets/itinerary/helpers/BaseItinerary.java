@@ -197,8 +197,9 @@ public class BaseItinerary implements SimpleItinerary {
      *            added.
      * @return true if the destination is inserted, false otherwise
      */
-    public boolean addNextDestination(String destinationURI,
-	    String previousDestinationURI) {
+    public boolean addNextDestination(
+				      String destinationURI,
+				      String previousDestinationURI) {
 	// check params
 	if ((destinationURI == null) || destinationURI.equals("")
 		|| (previousDestinationURI == null)

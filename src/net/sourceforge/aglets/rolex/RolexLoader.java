@@ -23,15 +23,15 @@ package net.sourceforge.aglets.rolex;
 public interface RolexLoader {
 
     public RolexAgent addRole(RolexAgent agent, Role role)
-	    throws RolexException;
+							  throws RolexException;
 
     public RolexAgent removeRole(RolexAgent agent, Role role)
-	    throws RolexException;
+							     throws RolexException;
 
     public RolexAgent addRole(RolexAgent agent, Class role)
-	    throws RolexException;
+							   throws RolexException;
 
     public RolexAgent removeRole(RolexAgent agent, Class role)
-	    throws RolexException;
+							      throws RolexException;
 
 }

@@ -38,7 +38,7 @@ public class Handler implements AgentSystemHandler {
     // static private int MAX_RETRY = 3;
 
     private static String getFullyQualifiedHostName()
-	    throws UnknownHostException {
+						     throws UnknownHostException {
 	Resource res = Resource.getResourceFor("atp");
 
 	if (res.getBoolean("atp.offline", false)) {
@@ -100,7 +100,7 @@ public class Handler implements AgentSystemHandler {
     }
 
     public MAFAgentSystem getMAFAgentSystem(Ticket ticket)
-	    throws UnknownHostException {
+							  throws UnknownHostException {
 	MAFAgentSystem local = Daemon.getLocalAgentSystem(ticket);
 
 	if (local != null) {
@@ -110,7 +110,7 @@ public class Handler implements AgentSystemHandler {
     }
 
     public MAFAgentSystem getMAFAgentSystem(String address)
-	    throws UnknownHostException {
+							   throws UnknownHostException {
 
 	int to = -1;
 
@@ -143,7 +143,7 @@ public class Handler implements AgentSystemHandler {
     }
 
     synchronized public void initMAFAgentSystem(MAFAgentSystem local)
-	    throws MAFExtendedException {
+								     throws MAFExtendedException {
 	try {
 	    if (initialized) {
 		return;
@@ -206,7 +206,7 @@ public class Handler implements AgentSystemHandler {
     }
 
     public void startMAFAgentSystem(MAFAgentSystem local)
-	    throws MAFExtendedException {
+							 throws MAFExtendedException {
 	try {
 	    Daemon daemon = new Daemon(local);
 	    AgletRuntime runtime = AgletRuntime.getAgletRuntime();

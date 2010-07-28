@@ -38,8 +38,9 @@ final class MAF {
 	return p;
     }
 
-    static Name toAgentSystemName(MAFAgentSystem_AgletsImpl sys,
-	    Certificate owner) {
+    static Name toAgentSystemName(
+				  MAFAgentSystem_AgletsImpl sys,
+				  Certificate owner) {
 	java.util.Random r = new java.util.Random();
 	byte[] ident_bytes = new byte[8];
 

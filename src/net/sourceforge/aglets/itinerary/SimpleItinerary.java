@@ -45,8 +45,9 @@ public interface SimpleItinerary extends Itinerary {
      *            the destination that must be previous the one added.
      * @return true if the destination is added, false otherwise.
      */
-    public boolean addNextDestination(String destinationURI,
-	    String previousDestinationURI);
+    public boolean addNextDestination(
+				      String destinationURI,
+				      String previousDestinationURI);
 
     /**
      * Adds the specified destination to the destination list <b>only if it is

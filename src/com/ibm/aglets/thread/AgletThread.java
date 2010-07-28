@@ -389,7 +389,7 @@ public final class AgletThread extends Thread {
      *            the messageManager to set
      */
     protected synchronized void setMessageManager(
-	    MessageManagerImpl messageManager) {
+						  MessageManagerImpl messageManager) {
 	try {
 	    // first of all check if the thread is alive and is already
 	    // processing

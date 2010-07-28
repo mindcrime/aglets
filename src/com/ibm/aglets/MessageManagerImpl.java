@@ -762,8 +762,9 @@ public final class MessageManagerImpl implements MessageManager,
      * state = in.readInt(); this.ref = ref; }
      */
 
-    private void readObject(java.io.ObjectInputStream s) throws IOException,
-	    ClassNotFoundException {
+    private void readObject(java.io.ObjectInputStream s)
+							throws IOException,
+							ClassNotFoundException {
 	s.defaultReadObject();
 
 	this.message_queue = new MessageQueue();

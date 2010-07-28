@@ -33,7 +33,6 @@ import com.ibm.aglet.AgletProxy;
  */
 public class PersistencyEvent extends AgletEvent {
 
-
     /**
      * The duration of the persistency.
      */

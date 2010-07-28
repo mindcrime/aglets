@@ -136,9 +136,11 @@ public class Resource {
      * 
      * @see getResourceFor
      */
-    synchronized static public Resource createResource(String name,
-	    String file, Properties defaults)
-	    throws java.net.MalformedURLException {
+    synchronized static public Resource createResource(
+						       String name,
+						       String file,
+						       Properties defaults)
+									   throws java.net.MalformedURLException {
 	URL url = file == null ? null : new URL(PROTOCOL_FILE, "", file);
 
 	return createResource(name, url, defaults);
@@ -149,8 +151,10 @@ public class Resource {
      * 
      * @see getResourceFor
      */
-    synchronized static private Resource createResource(String name, URL file,
-	    Properties defaults) {
+    synchronized static private Resource createResource(
+							String name,
+							URL file,
+							Properties defaults) {
 	if (resourceTable.contains(name)) {
 	    throw new SecurityException("cannot re-create existing resource");
 	}
@@ -166,8 +170,9 @@ public class Resource {
      * 
      * @see getResourceFor
      */
-    synchronized static public Resource createResource(String name,
-	    Properties defaults) {
+    synchronized static public Resource createResource(
+						       String name,
+						       Properties defaults) {
 	return createResource(name, (URL) null, defaults);
     }
 

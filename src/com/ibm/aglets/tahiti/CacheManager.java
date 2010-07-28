@@ -576,8 +576,11 @@ public class CacheManager {
 	this.putIntoCache(e);
     }
 
-    synchronized public void putData(String name, long version, byte[] data,
-	    boolean refCount) {
+    synchronized public void putData(
+				     String name,
+				     long version,
+				     byte[] data,
+				     boolean refCount) {
 	Entry e = new Entry(name, version, data);
 
 	this.putIntoCache(e);

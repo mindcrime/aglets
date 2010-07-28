@@ -236,8 +236,10 @@ public class JComponentBuilder {
      *            the action listener associated to this button (if there's one)
      * @return
      */
-    public static final JButton createJButton(String key, String actionCommand,
-	    ActionListener listener) {
+    public static final JButton createJButton(
+					      String key,
+					      String actionCommand,
+					      ActionListener listener) {
 	// check params
 	if (key == null)
 	    return null;
@@ -282,8 +284,10 @@ public class JComponentBuilder {
      *            the listener of this checkbox
      * @return the checkbox
      */
-    public static final JCheckBox createJCheckBox(String key, boolean selected,
-	    ItemListener listener) {
+    public static final JCheckBox createJCheckBox(
+						  String key,
+						  boolean selected,
+						  ItemListener listener) {
 	// check params
 	if (key == null)
 	    return null;
@@ -326,8 +330,10 @@ public class JComponentBuilder {
      *            the key for the tooltip or initial text or something else
      * @return the created textfield or null if the size is less or equal zero
      */
-    public static final JTextField createJTextField(int size,
-	    String initialText, String key) {
+    public static final JTextField createJTextField(
+						    int size,
+						    String initialText,
+						    String key) {
 	// check params
 	if (size <= 0)
 	    return null;
@@ -389,7 +395,9 @@ public class JComponentBuilder {
      * @return the panel with the two buttons
      */
     public static final OkCancelButtonPanel createOkCancelButtonPanel(
-	    String okKey, String cancelKey, ActionListener listener) {
+								      String okKey,
+								      String cancelKey,
+								      ActionListener listener) {
 	return new OkCancelButtonPanel(okKey, cancelKey, listener);
 	/*
 	 * JPanel buttonPanel = new JPanel(); buttonPanel.setLayout(new
@@ -471,8 +479,10 @@ public class JComponentBuilder {
      *            the listener to add to the menu entry
      * @return the menu entry
      */
-    public static JMenuItem createJMenuItem(String key, String actionCommand,
-	    ActionListener listener) {
+    public static JMenuItem createJMenuItem(
+					    String key,
+					    String actionCommand,
+					    ActionListener listener) {
 	// check params
 	if ((key == null) || (key.length() == 0))
 	    return null;
@@ -580,7 +590,8 @@ public class JComponentBuilder {
 		    logger.debug("Reading a new line from file <" + file + ">");
 		    line = reader.readLine();
 		    text.append(line);
-		    text.append("\n");	// new line in order to report the same text structure as in the file
+		    text.append("\n"); // new line in order to report the same
+				       // text structure as in the file
 		} while (line != null);
 
 	    } catch (IOException e) {

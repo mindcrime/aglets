@@ -145,8 +145,10 @@ abstract public class GeneralDialog extends Dialog {
      * 
      * @param cns a constraint object.
      */
-    protected void addCmp(Component c, GridBagLayout grid,
-	    GridBagConstraints cns) {
+    protected void addCmp(
+			  Component c,
+			  GridBagLayout grid,
+			  GridBagConstraints cns) {
 	grid.setConstraints(c, cns);
 	this.add(c);
     }
@@ -390,9 +392,7 @@ abstract public class GeneralDialog extends Dialog {
      */
     public void waitForDisplay() throws InterruptedException {
 
-	// It's seems there is no way to write thread safe code
-	// which runs on both JDK1.0.2 and 1.1...
-	Thread t = Thread.currentThread();
+	Thread.currentThread();
 
 	while (this.isVisible() == false) {
 	    Thread.yield();
@@ -409,9 +409,7 @@ abstract public class GeneralDialog extends Dialog {
      */
     public void waitForDisposal() throws InterruptedException {
 
-	// It's seems there is no way to write thread safe code
-	// which runs on both JDK1.0.2 and 1.1...
-	Thread t = Thread.currentThread();
+	Thread.currentThread();
 
 	while (this.isVisible()) {
 	    Thread.yield();

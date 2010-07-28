@@ -47,8 +47,9 @@ public abstract class FutureReply {
     /**
      * Gets the reply as a primitive boolean.
      */
-    public boolean getBooleanReply() throws MessageException,
-	    NotHandledException {
+    public boolean getBooleanReply()
+				    throws MessageException,
+				    NotHandledException {
 	return ((Boolean) this.getReply()).booleanValue();
     }
 
@@ -96,8 +97,9 @@ public abstract class FutureReply {
      * @exception NotHandledException
      *                if the message was not handled.
      */
-    abstract public Object getReply() throws MessageException,
-	    NotHandledException;
+    abstract public Object getReply()
+				     throws MessageException,
+				     NotHandledException;
 
     /**
      * Checks if the reply is available or not.

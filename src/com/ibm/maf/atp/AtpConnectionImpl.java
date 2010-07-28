@@ -382,7 +382,7 @@ public class AtpConnectionImpl extends URLConnection implements AtpConstants {
     }
 
     public static void parseHeaders(DataInputStream di, Hashtable headers)
-	    throws IOException {
+									  throws IOException {
 	String statusLine = di.readLine();
 	int statusCode = -1;
 

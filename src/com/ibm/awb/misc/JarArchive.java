@@ -132,8 +132,9 @@ public class JarArchive extends Archive {
 	}
     }
 
-    public void readObject(ObjectInputStream s) throws IOException,
-	    ClassNotFoundException {
+    public void readObject(ObjectInputStream s)
+					       throws IOException,
+					       ClassNotFoundException {
 	s.defaultReadObject();
 
 	// updateDigest();

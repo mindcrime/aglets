@@ -184,8 +184,10 @@ public class TahitiWindow extends JFrame implements ActionListener {
      *            the keylistener of this button
      * @return the button for further evaluation
      */
-    protected JButton addButton(String key, ActionListener listener,
-	    KeyListener keyListener) {
+    protected JButton addButton(
+				String key,
+				ActionListener listener,
+				KeyListener keyListener) {
 	JButton button = this.addButton(key, listener);
 
 	// add the key listener

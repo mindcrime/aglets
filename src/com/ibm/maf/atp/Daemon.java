@@ -127,8 +127,12 @@ final public class Daemon {
     /**
      * Write a access log
      */
-    static public void access(InetAddress host, long time, String requestLine,
-	    int statusCode, String misc) {
+    static public void access(
+			      InetAddress host,
+			      long time,
+			      String requestLine,
+			      int statusCode,
+			      String misc) {
 	DateFormat dfmt = DateFormat.getDateInstance();
 
 	access.println(host.getHostName() + " - - ["
@@ -139,8 +143,11 @@ final public class Daemon {
     /**
      * Write a error message into a log file
      */
-    static public void error(InetAddress host, long time, String err,
-	    String reason) {
+    static public void error(
+			     InetAddress host,
+			     long time,
+			     String err,
+			     String reason) {
 	DateFormat dfmt = DateFormat.getDateInstance();
 
 	error.println("[" + dfmt.format(new Date(time)) + "] " + err + " from "

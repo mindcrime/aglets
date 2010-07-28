@@ -57,8 +57,13 @@ public final class Messenger extends Aglet {
      * @exception AgletException
      *                if initialization fails.
      */
-    static public AgletProxy create(AgletContext context, URL dest, AgletID id,
-	    Message message) throws IOException, AgletException {
+    static public AgletProxy create(
+				    AgletContext context,
+				    URL dest,
+				    AgletID id,
+				    Message message)
+						    throws IOException,
+						    AgletException {
 	return create(context, null, dest, id, message);
     }
 
@@ -79,9 +84,14 @@ public final class Messenger extends Aglet {
      * @exception AgletException
      *                if initialization fails.
      */
-    static public AgletProxy create(AgletContext context, URL codebase,
-	    URL dest, AgletID id, Message message) throws IOException,
-	    AgletException {
+    static public AgletProxy create(
+				    AgletContext context,
+				    URL codebase,
+				    URL dest,
+				    AgletID id,
+				    Message message)
+						    throws IOException,
+						    AgletException {
 	Arguments args = new Arguments();
 
 	args.setArg("destination", dest);

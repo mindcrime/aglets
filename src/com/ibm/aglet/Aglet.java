@@ -151,7 +151,7 @@ public abstract class Aglet implements java.io.Serializable {
      *            the persistency listener
      */
     synchronized final public void addPersistencyListener(
-	    PersistencyListener listener) {
+							  PersistencyListener listener) {
 	if (this.persistencyListener == null) {
 	    this.persistencyListener = listener;
 	} else if (this.persistencyListener == listener) {
@@ -216,8 +216,9 @@ public abstract class Aglet implements java.io.Serializable {
      * @see MobilityListener#onDispatching
      * @see MobilityListener#onArrival
      */
-    public final void dispatch(Ticket ticket) throws IOException,
-	    RequestRefusedException {
+    public final void dispatch(Ticket ticket)
+					     throws IOException,
+					     RequestRefusedException {
 	this._stub.dispatch(ticket);
     }
 
@@ -239,8 +240,9 @@ public abstract class Aglet implements java.io.Serializable {
      * @see MobilityListener#onDispatching
      * @see MobilityListener#onArrival
      */
-    public final void dispatch(URL destination) throws IOException,
-	    RequestRefusedException {
+    public final void dispatch(URL destination)
+					       throws IOException,
+					       RequestRefusedException {
 	this._stub.dispatch(destination);
     }
 
@@ -254,19 +256,21 @@ public abstract class Aglet implements java.io.Serializable {
     final public void dispatchEvent(AgletEvent ev) {
 	// get the type of event
 	EventType type = ev.getEventType();
-	if( type == null )
+	if (type == null)
 	    return;
-	
+
 	// check which kind of event is this
-	if( type.equals( EventType.CLONE) || type.equals( EventType.CLONED) || type.equals( EventType.CLONING ) )
-	    this.processCloneEvent( (CloneEvent) ev );
-	else if( type.equals( EventType.DISPATCHING ) || type.equals( EventType.REVERTING ) || type.equals( EventType.ARRIVAL ) )
-	    this.processMobilityEvent( (MobilityEvent) ev );
-	else if( type.equals( EventType.DEACTIVATING )  || type.equals( EventType.ACTIVATION ) )
-	    this.processPersistencyEvent( (PersistencyEvent) ev );
-	
-	
-	
+	if (type.equals(EventType.CLONE) || type.equals(EventType.CLONED)
+		|| type.equals(EventType.CLONING))
+	    this.processCloneEvent((CloneEvent) ev);
+	else if (type.equals(EventType.DISPATCHING)
+		|| type.equals(EventType.REVERTING)
+		|| type.equals(EventType.ARRIVAL))
+	    this.processMobilityEvent((MobilityEvent) ev);
+	else if (type.equals(EventType.DEACTIVATING)
+		|| type.equals(EventType.ACTIVATION))
+	    this.processPersistencyEvent((PersistencyEvent) ev);
+
     }
 
     /**
@@ -463,25 +467,26 @@ public abstract class Aglet implements java.io.Serializable {
 
     /**
      * Processes clone events occurring on this aglet by dispatching them to any
-     * registered CloneListener objects.
-     * Converts the event into an aglet message (i.e., a method call).
+     * registered CloneListener objects. Converts the event into an aglet
+     * message (i.e., a method call).
      * 
      * @param ev
      *            the clone event
      */
     protected final void processCloneEvent(CloneEvent ev) {
 	// check arguments
-	if( ev == null || ev.getEventType() == null || this.cloneListener == null )
+	if ((ev == null) || (ev.getEventType() == null)
+		|| (this.cloneListener == null))
 	    return;
-	
+
 	// get the type of the event
 	EventType type = ev.getEventType();
-	
-	if( type.equals( EventType.CLONING ) )
+
+	if (type.equals(EventType.CLONING))
 	    this.cloneListener.onCloning(ev);
-	else if( type.equals( EventType.CLONE) )
+	else if (type.equals(EventType.CLONE))
 	    this.cloneListener.onClone(ev);
-	else if( type.equals(EventType.CLONED) )
+	else if (type.equals(EventType.CLONED))
 	    this.cloneListener.onCloned(ev);
 
     }
@@ -493,19 +498,20 @@ public abstract class Aglet implements java.io.Serializable {
      * @param ev
      *            the mobility event
      */
-    protected final void  processMobilityEvent(MobilityEvent ev) {
+    protected final void processMobilityEvent(MobilityEvent ev) {
 	// check arguments
-	if( ev == null || ev.getEventType() == null || this.mobilityListener == null )
+	if ((ev == null) || (ev.getEventType() == null)
+		|| (this.mobilityListener == null))
 	    return;
-	
+
 	// get the type of the event
 	EventType type = ev.getEventType();
-	
-	if( type.equals( EventType.DISPATCHING ) )
+
+	if (type.equals(EventType.DISPATCHING))
 	    this.mobilityListener.onDispatching(ev);
-	else if( type.equals( EventType.REVERTING ) )
+	else if (type.equals(EventType.REVERTING))
 	    this.mobilityListener.onReverting(ev);
-	else if( type.equals( EventType.ARRIVAL ) )
+	else if (type.equals(EventType.ARRIVAL))
 	    this.mobilityListener.onArrival(ev);
 
     }
@@ -519,15 +525,16 @@ public abstract class Aglet implements java.io.Serializable {
      */
     protected final void processPersistencyEvent(PersistencyEvent ev) {
 	// check arguments
-	if( ev == null || ev.getEventType() == null || this.persistencyListener == null )
+	if ((ev == null) || (ev.getEventType() == null)
+		|| (this.persistencyListener == null))
 	    return;
-	
+
 	// get the type of the event
 	EventType type = ev.getEventType();
-	
-	if( type.equals( EventType.DEACTIVATING ) )
+
+	if (type.equals(EventType.DEACTIVATING))
 	    this.persistencyListener.onDeactivating(ev);
-	else if( type.equals( EventType.ACTIVATION) ) 
+	else if (type.equals(EventType.ACTIVATION))
 	    this.persistencyListener.onActivation(ev);
 
     }
@@ -576,7 +583,7 @@ public abstract class Aglet implements java.io.Serializable {
      *            the persistency listener
      */
     synchronized final public void removePersistencyListener(
-	    PersistencyListener l) {
+							     PersistencyListener l) {
 	if (this.persistencyListener == l) {
 	    this.persistencyListener = null;
 	} else if (this.persistencyListener instanceof AgletEventListener) {
@@ -724,8 +731,9 @@ public abstract class Aglet implements java.io.Serializable {
      * @throws IllegalArgumentException
      *             if the duration is less then zero
      */
-    public final void suspend(long duration) throws AgletException,
-	    IllegalArgumentException {
+    public final void suspend(long duration)
+					    throws AgletException,
+					    IllegalArgumentException {
 	// check params
 	if (duration < 0)
 	    throw new IllegalArgumentException("Sleeping time cannot be negative! Please specify a positive millisecs value!");
@@ -747,8 +755,9 @@ public abstract class Aglet implements java.io.Serializable {
      * @throws IllegalArgumentException
      *             if the duration is less then zero
      */
-    public final void sleep(long duration) throws AgletException,
-	    IllegalArgumentException {
+    public final void sleep(long duration)
+					  throws AgletException,
+					  IllegalArgumentException {
 	this.suspend(duration);
     }
 

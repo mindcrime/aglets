@@ -79,14 +79,16 @@ public final class MAFAgentSystem_RMIImpl_Stub extends
 
     // implementation of create_agent(Name, AgentProfile, byte[], String,
     // Object[], ClassName[], String, MAFAgentSystem_RMI)
-    public com.ibm.maf.Name create_agent(com.ibm.maf.Name $param_Name_1,
-	    com.ibm.maf.AgentProfile $param_AgentProfile_2,
-	    byte[] $param_arrayOf_byte_3, java.lang.String $param_String_4,
-	    java.lang.Object[] $param_arrayOf_Object_5,
-	    com.ibm.maf.ClassName[] $param_arrayOf_ClassName_6,
-	    java.lang.String $param_String_7,
-	    com.ibm.maf.rmi.MAFAgentSystem_RMI $param_MAFAgentSystem_RMI_8)
-	    throws java.rmi.RemoteException {
+    public com.ibm.maf.Name create_agent(
+					 com.ibm.maf.Name $param_Name_1,
+					 com.ibm.maf.AgentProfile $param_AgentProfile_2,
+					 byte[] $param_arrayOf_byte_3,
+					 java.lang.String $param_String_4,
+					 java.lang.Object[] $param_arrayOf_Object_5,
+					 com.ibm.maf.ClassName[] $param_arrayOf_ClassName_6,
+					 java.lang.String $param_String_7,
+					 com.ibm.maf.rmi.MAFAgentSystem_RMI $param_MAFAgentSystem_RMI_8)
+													throws java.rmi.RemoteException {
 	try {
 	    Object $result = this.ref.invoke(this, $method_create_agent_0, new java.lang.Object[] {
 		    $param_Name_1, $param_AgentProfile_2,
@@ -106,10 +108,10 @@ public final class MAFAgentSystem_RMIImpl_Stub extends
 
     // implementation of fetch_class(ClassName[], String, AgentProfile)
     public byte[][] fetch_class(
-	    com.ibm.maf.ClassName[] $param_arrayOf_ClassName_1,
-	    java.lang.String $param_String_2,
-	    com.ibm.maf.AgentProfile $param_AgentProfile_3)
-	    throws java.rmi.RemoteException {
+				com.ibm.maf.ClassName[] $param_arrayOf_ClassName_1,
+				java.lang.String $param_String_2,
+				com.ibm.maf.AgentProfile $param_AgentProfile_3)
+									       throws java.rmi.RemoteException {
 	try {
 	    Object $result = this.ref.invoke(this, $method_fetch_class_1, new java.lang.Object[] {
 		    $param_arrayOf_ClassName_1, $param_String_2,
@@ -127,8 +129,8 @@ public final class MAFAgentSystem_RMIImpl_Stub extends
 
     // implementation of find_nearby_agent_system_of_profile(AgentProfile)
     public java.lang.String find_nearby_agent_system_of_profile(
-	    com.ibm.maf.AgentProfile $param_AgentProfile_1)
-	    throws java.rmi.RemoteException {
+								com.ibm.maf.AgentProfile $param_AgentProfile_1)
+													       throws java.rmi.RemoteException {
 	try {
 	    Object $result = this.ref.invoke(this, $method_find_nearby_agent_system_of_profile_2, new java.lang.Object[] { $param_AgentProfile_1 }, -8908075601947263529L);
 
@@ -144,7 +146,8 @@ public final class MAFAgentSystem_RMIImpl_Stub extends
 
     // implementation of get_agent_status(Name)
     public com.ibm.maf.AgentStatus get_agent_status(
-	    com.ibm.maf.Name $param_Name_1) throws java.rmi.RemoteException {
+						    com.ibm.maf.Name $param_Name_1)
+										   throws java.rmi.RemoteException {
 	try {
 	    Object $result = this.ref.invoke(this, $method_get_agent_status_4, new java.lang.Object[] { $param_Name_1 }, -2745466359323440760L);
 
@@ -160,7 +163,7 @@ public final class MAFAgentSystem_RMIImpl_Stub extends
 
     // implementation of get_agent_system_info()
     public com.ibm.maf.AgentSystemInfo get_agent_system_info()
-	    throws java.rmi.RemoteException {
+							      throws java.rmi.RemoteException {
 	try {
 	    Object $result = this.ref.invoke(this, $method_get_agent_system_info_5, null, 8459926394242155418L);
 
@@ -176,7 +179,7 @@ public final class MAFAgentSystem_RMIImpl_Stub extends
 
     // implementation of get_authinfo(Name)
     public com.ibm.maf.AuthInfo get_authinfo(com.ibm.maf.Name $param_Name_1)
-	    throws java.rmi.RemoteException {
+									    throws java.rmi.RemoteException {
 	try {
 	    Object $result = this.ref.invoke(this, $method_get_authinfo_6, new java.lang.Object[] { $param_Name_1 }, 1555346500431042527L);
 
@@ -192,7 +195,7 @@ public final class MAFAgentSystem_RMIImpl_Stub extends
 
     // implementation of get_MAFFinder()
     public com.ibm.maf.MAFFinder get_MAFFinder()
-	    throws java.rmi.RemoteException {
+						throws java.rmi.RemoteException {
 	try {
 	    Object $result = this.ref.invoke(this, $method_get_MAFFinder_3, null, 2335360634011898291L);
 
@@ -223,7 +226,8 @@ public final class MAFAgentSystem_RMIImpl_Stub extends
 
     // implementation of list_all_agents_of_authority(byte[])
     public com.ibm.maf.Name[] list_all_agents_of_authority(
-	    byte[] $param_arrayOf_byte_1) throws java.rmi.RemoteException {
+							   byte[] $param_arrayOf_byte_1)
+											throws java.rmi.RemoteException {
 	try {
 	    Object $result = this.ref.invoke(this, $method_list_all_agents_of_authority_8, new java.lang.Object[] { $param_arrayOf_byte_1 }, -6122543635398668412L);
 
@@ -254,13 +258,15 @@ public final class MAFAgentSystem_RMIImpl_Stub extends
 
     // implementation of receive_agent(Name, AgentProfile, byte[], String,
     // ClassName[], String, MAFAgentSystem_RMI)
-    public void receive_agent(com.ibm.maf.Name $param_Name_1,
-	    com.ibm.maf.AgentProfile $param_AgentProfile_2,
-	    byte[] $param_arrayOf_byte_3, java.lang.String $param_String_4,
-	    com.ibm.maf.ClassName[] $param_arrayOf_ClassName_5,
-	    java.lang.String $param_String_6,
-	    com.ibm.maf.rmi.MAFAgentSystem_RMI $param_MAFAgentSystem_RMI_7)
-	    throws java.rmi.RemoteException {
+    public void receive_agent(
+			      com.ibm.maf.Name $param_Name_1,
+			      com.ibm.maf.AgentProfile $param_AgentProfile_2,
+			      byte[] $param_arrayOf_byte_3,
+			      java.lang.String $param_String_4,
+			      com.ibm.maf.ClassName[] $param_arrayOf_ClassName_5,
+			      java.lang.String $param_String_6,
+			      com.ibm.maf.rmi.MAFAgentSystem_RMI $param_MAFAgentSystem_RMI_7)
+											     throws java.rmi.RemoteException {
 	try {
 	    this.ref.invoke(this, $method_receive_agent_10, new java.lang.Object[] {
 		    $param_Name_1, $param_AgentProfile_2,
@@ -278,10 +284,11 @@ public final class MAFAgentSystem_RMIImpl_Stub extends
 
     // implementation of receive_future_message(Name, byte[],
     // MAFAgentSystem_RMI)
-    public long receive_future_message(com.ibm.maf.Name $param_Name_1,
-	    byte[] $param_arrayOf_byte_2,
-	    com.ibm.maf.rmi.MAFAgentSystem_RMI $param_MAFAgentSystem_RMI_3)
-	    throws java.rmi.RemoteException {
+    public long receive_future_message(
+				       com.ibm.maf.Name $param_Name_1,
+				       byte[] $param_arrayOf_byte_2,
+				       com.ibm.maf.rmi.MAFAgentSystem_RMI $param_MAFAgentSystem_RMI_3)
+												      throws java.rmi.RemoteException {
 	try {
 	    Object $result = this.ref.invoke(this, $method_receive_future_message_11, new java.lang.Object[] {
 		    $param_Name_1, $param_arrayOf_byte_2,
@@ -298,8 +305,10 @@ public final class MAFAgentSystem_RMIImpl_Stub extends
     }
 
     // implementation of receive_future_reply(long, byte[])
-    public void receive_future_reply(long $param_long_1,
-	    byte[] $param_arrayOf_byte_2) throws java.rmi.RemoteException {
+    public void receive_future_reply(
+				     long $param_long_1,
+				     byte[] $param_arrayOf_byte_2)
+								  throws java.rmi.RemoteException {
 	try {
 	    this.ref.invoke(this, $method_receive_future_reply_12, new java.lang.Object[] {
 		    new java.lang.Long($param_long_1), $param_arrayOf_byte_2 }, 1543719985511141907L);
@@ -313,8 +322,10 @@ public final class MAFAgentSystem_RMIImpl_Stub extends
     }
 
     // implementation of receive_message(Name, byte[])
-    public byte[] receive_message(com.ibm.maf.Name $param_Name_1,
-	    byte[] $param_arrayOf_byte_2) throws java.rmi.RemoteException {
+    public byte[] receive_message(
+				  com.ibm.maf.Name $param_Name_1,
+				  byte[] $param_arrayOf_byte_2)
+							       throws java.rmi.RemoteException {
 	try {
 	    Object $result = this.ref.invoke(this, $method_receive_message_13, new java.lang.Object[] {
 		    $param_Name_1, $param_arrayOf_byte_2 }, 2425421018900539852L);
@@ -330,8 +341,10 @@ public final class MAFAgentSystem_RMIImpl_Stub extends
     }
 
     // implementation of receive_oneway_message(Name, byte[])
-    public void receive_oneway_message(com.ibm.maf.Name $param_Name_1,
-	    byte[] $param_arrayOf_byte_2) throws java.rmi.RemoteException {
+    public void receive_oneway_message(
+				       com.ibm.maf.Name $param_Name_1,
+				       byte[] $param_arrayOf_byte_2)
+								    throws java.rmi.RemoteException {
 	try {
 	    this.ref.invoke(this, $method_receive_oneway_message_14, new java.lang.Object[] {
 		    $param_Name_1, $param_arrayOf_byte_2 }, -4074734472655664697L);
@@ -346,7 +359,7 @@ public final class MAFAgentSystem_RMIImpl_Stub extends
 
     // implementation of resume_agent(Name)
     public void resume_agent(com.ibm.maf.Name $param_Name_1)
-	    throws java.rmi.RemoteException {
+							    throws java.rmi.RemoteException {
 	try {
 	    this.ref.invoke(this, $method_resume_agent_15, new java.lang.Object[] { $param_Name_1 }, -8848203470673221484L);
 	} catch (java.lang.RuntimeException e) {
@@ -360,7 +373,7 @@ public final class MAFAgentSystem_RMIImpl_Stub extends
 
     // implementation of retract_agent(Name)
     public byte[] retract_agent(com.ibm.maf.Name $param_Name_1)
-	    throws java.rmi.RemoteException {
+							       throws java.rmi.RemoteException {
 	try {
 	    Object $result = this.ref.invoke(this, $method_retract_agent_16, new java.lang.Object[] { $param_Name_1 }, 7414295117841577261L);
 
@@ -376,7 +389,7 @@ public final class MAFAgentSystem_RMIImpl_Stub extends
 
     // implementation of suspend_agent(Name)
     public void suspend_agent(com.ibm.maf.Name $param_Name_1)
-	    throws java.rmi.RemoteException {
+							     throws java.rmi.RemoteException {
 	try {
 	    this.ref.invoke(this, $method_suspend_agent_17, new java.lang.Object[] { $param_Name_1 }, -4343813813978331740L);
 	} catch (java.lang.RuntimeException e) {
@@ -390,7 +403,7 @@ public final class MAFAgentSystem_RMIImpl_Stub extends
 
     // implementation of terminate_agent(Name)
     public void terminate_agent(com.ibm.maf.Name $param_Name_1)
-	    throws java.rmi.RemoteException {
+							       throws java.rmi.RemoteException {
 	try {
 	    this.ref.invoke(this, $method_terminate_agent_18, new java.lang.Object[] { $param_Name_1 }, 3985167905387372512L);
 	} catch (java.lang.RuntimeException e) {

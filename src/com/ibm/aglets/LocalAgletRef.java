@@ -318,8 +318,11 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	 * 
 	 * 
 	 */
-    public void activate() throws IOException, InvalidAgletException,
-	    AgletNotFoundException, ShuttingDownException {
+    public void activate()
+			  throws IOException,
+			  InvalidAgletException,
+			  AgletNotFoundException,
+			  ShuttingDownException {
 
 	this._context.startCreation();
 
@@ -717,8 +720,10 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
     /*
 	 * 
 	 */
-    void deactivate(MessageImpl msg, long duaration) throws IOException,
-	    InvalidAgletException, RequestRefusedException {
+    void deactivate(MessageImpl msg, long duaration)
+						    throws IOException,
+						    InvalidAgletException,
+						    RequestRefusedException {
 
 	synchronized (this.lock) {
 	    this.checkValidation();
@@ -735,7 +740,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	    }
 
 	    try {
-		this.dispatchEvent(new PersistencyEvent( this.proxy, duaration, EventType.DEACTIVATING));
+		this.dispatchEvent(new PersistencyEvent(this.proxy, duaration, EventType.DEACTIVATING));
 	    } catch (SecurityException ex) {
 		throw ex;
 	    } catch (Exception ex) {
@@ -860,8 +865,9 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
     }
 
     // trip with Ticket
-    protected void dispatch(Ticket ticket) throws IOException,
-	    RequestRefusedException {
+    protected void dispatch(Ticket ticket)
+					  throws IOException,
+					  RequestRefusedException {
 	try {
 	    this.checkActive();
 
@@ -878,8 +884,10 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
     }
 
     // trip with Ticket
-    void dispatch(MessageImpl msg, Ticket ticket) throws IOException,
-	    RequestRefusedException, InvalidAgletException {
+    void dispatch(MessageImpl msg, Ticket ticket)
+						 throws IOException,
+						 RequestRefusedException,
+						 InvalidAgletException {
 	URL dest = ticket.getDestination();
 
 	synchronized (this.lock) {
@@ -1009,8 +1017,9 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
     /*
      * dispatches
      */
-    protected void dispatch(URL url) throws IOException,
-	    RequestRefusedException {
+    protected void dispatch(URL url)
+				    throws IOException,
+				    RequestRefusedException {
 	this.dispatch(new Ticket(url));
     }
 
@@ -1045,8 +1054,9 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	}
     }
 
-    void dispose(MessageImpl msg) throws InvalidAgletException,
-	    RequestRefusedException {
+    void dispose(MessageImpl msg)
+				 throws InvalidAgletException,
+				 RequestRefusedException {
 
 	//
 	// this is ad hoc
@@ -1345,8 +1355,10 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	}
     }
 
-    public void resume() throws AgletNotFoundException, InvalidAgletException,
-	    ShuttingDownException {
+    public void resume()
+			throws AgletNotFoundException,
+			InvalidAgletException,
+			ShuttingDownException {
 	this._context.startCreation();
 
 	synchronized (this.lock) {
@@ -1480,7 +1492,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
      * REMIND: The way to handle system messages have to be imporved.
      */
     public FutureReply sendFutureMessage(Message msg)
-	    throws InvalidAgletException {
+						     throws InvalidAgletException {
 
 	//
 	// Just for thread safety to avoid a message being posted
@@ -1494,7 +1506,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 
     /* protected */
     void sendFutureMessage(Message msg, FutureReplyImpl future)
-	    throws InvalidAgletException {
+							       throws InvalidAgletException {
 
 	//
 	// Just for thread safety to avoid a message being posted
@@ -1513,8 +1525,10 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
     /*
      * Sends a message in synchronous way.
      */
-    public Object sendMessage(Message msg) throws MessageException,
-	    InvalidAgletException, NotHandledException {
+    public Object sendMessage(Message msg)
+					  throws MessageException,
+					  InvalidAgletException,
+					  NotHandledException {
 
 	//
 	// Just for thread safety to avoid a message being posted
@@ -1648,7 +1662,8 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
     }
 
     public void setRef(VirtualRef vref, ObjectInputStream s)
-	    throws IOException, ClassNotFoundException {
+							    throws IOException,
+							    ClassNotFoundException {
 
 	// never called.
 	throw new RuntimeException("Should Not Called");
@@ -1737,7 +1752,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
     void startActivatedAglet() throws InvalidAgletException {
 	this._state = ACTIVE;
 
-	this.messageManager.postMessage(new EventMessage(new PersistencyEvent( this.proxy, 0, EventType.ACTIVATION)));
+	this.messageManager.postMessage(new EventMessage(new PersistencyEvent(this.proxy, 0, EventType.ACTIVATION)));
 	this.messageManager.postMessage(new SystemMessage(SystemMessage.RUN, null));
 
 	this._context.postEvent(new ContextEvent(this._context, this.proxy, EventType.AGLET_ACTIVATED), true);
@@ -1757,13 +1772,13 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
      * @see Aglet#onArrival
      */
     void startArrivedAglet(AgletContextImpl cxt, String sender)
-	    throws InvalidAgletException {
+							       throws InvalidAgletException {
 	this.validate(cxt, ACTIVE);
 
 	this.messageManager.postMessage(new EventMessage(new MobilityEvent(this.proxy, this._context.getHostingURL(), EventType.ARRIVAL)));
 	this.messageManager.postMessage(new SystemMessage(SystemMessage.RUN, null));
 
-	this._context.postEvent(new ContextEvent( cxt, this.proxy, sender, EventType.AGLET_ARRIVED), true);
+	this._context.postEvent(new ContextEvent(cxt, this.proxy, sender, EventType.AGLET_ARRIVED), true);
 
 	this.resumeMessageManager();
     }
@@ -1780,13 +1795,13 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
      * @see Aglet#onClone
      */
     void startClonedAglet(AgletContextImpl cxt, AgletProxyImpl parent)
-	    throws InvalidAgletException {
+								      throws InvalidAgletException {
 	this.validate(cxt, ACTIVE);
 
 	this.messageManager.postMessage(new EventMessage(new CloneEvent(AgletEvent.nextID(), this.proxy, EventType.CLONE)));
 	this.messageManager.postMessage(new SystemMessage(SystemMessage.RUN, null));
 
-	this._context.postEvent(new ContextEvent( cxt, this.proxy, parent, EventType.AGLET_CLONED), true);
+	this._context.postEvent(new ContextEvent(cxt, this.proxy, parent, EventType.AGLET_CLONED), true);
 
 	this.resumeMessageManager();
     }
@@ -1803,14 +1818,14 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
      * @see Aglet#onCreation
      */
     void startCreatedAglet(AgletContextImpl cxt, Object init)
-	    throws InvalidAgletException {
+							     throws InvalidAgletException {
 	this.validate(cxt, ACTIVE);
 
 	this.messageManager = new MessageManagerImpl(this);
 
 	this.messageManager.postMessage(new SystemMessage(SystemMessage.CREATE, init));
 	this.messageManager.postMessage(new SystemMessage(SystemMessage.RUN, null));
-	this._context.postEvent(new ContextEvent( cxt, this.proxy, EventType.AGLET_CREATED), true);
+	this._context.postEvent(new ContextEvent(cxt, this.proxy, EventType.AGLET_CREATED), true);
 
 	this.startMessageManager();
     }
@@ -1838,7 +1853,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	// PersistencyEvent(PersistencyEvent.RESUME, proxy, 0)));
 	this.messageManager.postMessage(new SystemMessage(SystemMessage.RUN, null));
 
-	this._context.postEvent(new ContextEvent( this._context, this.proxy, EventType.AGLET_RESUMED), true);
+	this._context.postEvent(new ContextEvent(this._context, this.proxy, EventType.AGLET_RESUMED), true);
 
 	this.resumeMessageManager();
     }
@@ -1894,8 +1909,9 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 
     }
 
-    void suspend(MessageImpl msg, long duaration) throws InvalidAgletException,
-	    RequestRefusedException {
+    void suspend(MessageImpl msg, long duaration)
+						 throws InvalidAgletException,
+						 RequestRefusedException {
 
 	synchronized (this.lock) {
 	    this.checkValidation();
@@ -1932,7 +1948,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 
 	    try {
 		this._context.log("Suspend", key);
-		this._context.postEvent(new ContextEvent( this._context, this.proxy, EventType.AGLET_SUSPENDED), true);
+		this._context.postEvent(new ContextEvent(this._context, this.proxy, EventType.AGLET_SUSPENDED), true);
 	    } finally {
 
 		// resourceManager.disposeAllResources();
@@ -1949,7 +1965,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	synchronized (this.lock) {
 	    this.checkValidation();
 	    try {
-		this.dispatchEvent(new MobilityEvent( this.proxy, ticket, EventType.REVERTING));
+		this.dispatchEvent(new MobilityEvent(this.proxy, ticket, EventType.REVERTING));
 	    } catch (SecurityException ex) {
 		throw ex;
 	    } catch (Exception ex) {
@@ -2105,7 +2121,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
      */
     /* synchronized */
     void validate(AgletContextImpl context, int state)
-	    throws InvalidAgletException {
+						      throws InvalidAgletException {
 	if (this.isValid()) {
 	    throw new IllegalAccessError("Aglet is already validated");
 	}
@@ -2117,8 +2133,10 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
 	addAgletRef(this._name, this);
     }
 
-    private void writeDeactivatedAglet(ObjectOutputStream out,
-	    DeactivationInfo dinfo) throws IOException {
+    private void writeDeactivatedAglet(
+				       ObjectOutputStream out,
+				       DeactivationInfo dinfo)
+							      throws IOException {
 	out.writeObject(dinfo);
 	out.writeObject(this.messageManager);
 

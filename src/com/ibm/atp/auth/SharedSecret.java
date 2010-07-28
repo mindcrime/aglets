@@ -246,7 +246,9 @@ final public class SharedSecret extends ByteSequence {
      * Creates a new shared secret.
      */
     public synchronized final static SharedSecret createNewSharedSecret(
-	    String domainName, String creatorKeyAlias, String creatorKeyPassword) {
+									String domainName,
+									String creatorKeyAlias,
+									String creatorKeyPassword) {
 	Certificate cert = com.ibm.aglets.AgletRuntime.getCertificate(creatorKeyAlias);
 
 	if (cert == null) {
@@ -342,7 +344,8 @@ final public class SharedSecret extends ByteSequence {
      *            filename of the shared secret file to be loaded
      */
     public synchronized static SharedSecret load(String filename)
-	    throws FileNotFoundException, IOException {
+								 throws FileNotFoundException,
+								 IOException {
 	FileReader freader = new FileReader(filename);
 	BufferedReader breader = new BufferedReader(freader);
 	Vector lines = new Vector();
@@ -396,7 +399,7 @@ final public class SharedSecret extends ByteSequence {
      *            the shared secret to be saved
      */
     public synchronized static void save(String filename, SharedSecret secret)
-	    throws IOException {
+									      throws IOException {
 	if (secret == null) {
 	    throw new IOException("Secret is null.");
 	}

@@ -38,7 +38,7 @@ public class MessengerAglet extends Aglet {
     Vector addresses = new Vector();
 
     public void createStationaryAglets(MessengerItinerary itin)
-	    throws Exception {
+							       throws Exception {
 	String addr = null;
 
 	for (int i = 0; i < this.addresses.size(); i++) {

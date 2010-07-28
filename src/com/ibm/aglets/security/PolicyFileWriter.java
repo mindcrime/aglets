@@ -50,7 +50,7 @@ public class PolicyFileWriter {
     }
 
     public synchronized static void writePolicyDB(String filename, PolicyDB db)
-	    throws IOException {
+									       throws IOException {
 	if (filename == null) {
 	    throw new IOException("Policy filename is null.");
 	}

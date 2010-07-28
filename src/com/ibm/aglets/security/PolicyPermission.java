@@ -55,20 +55,6 @@ public class PolicyPermission {
 
     private static final String CLASSNAME_AGLET_PROTECTION = "com.ibm.aglet.security.AgletProtection";
     private static final String CLASSNAME_MESSAGE_PROTECTION = "com.ibm.aglet.security.MessageProtection";
-    private static final String CLASSNAME_PERMISSION_TMP = "java.security.Permission";
-    private static final String CLASSNAME_BASIC_PERMISSION_TMP = "java.security.BasicPermission";
-    private static final String CLASSNAME_FILE_PERMISSION_TMP = "java.io.FilePermission";
-    private static final String CLASSNAME_SOCKET_PERMISSION_TMP = "java.net.SocketPermission";
-    private static final String CLASSNAME_AWT_PERMISSION_TMP = "java.awt.AWTPermission";
-    private static final String CLASSNAME_NET_PERMISSION_TMP = "java.net.NetPermission";
-    private static final String CLASSNAME_PROPERTY_PERMISSION_TMP = "java.util.PropertyPermission";
-    private static final String CLASSNAME_REFLECT_PERMISSION_TMP = "java.lang.reflect.ReflectPermission";
-    private static final String CLASSNAME_RUNTIME_PERMISSION_TMP = "java.lang.RuntimePermission";
-    private static final String CLASSNAME_SECURITY_PERMISSION_TMP = "java.security.SecurityPermission";
-    private static final String CLASSNAME_SERIALIZABLE_PERMISSION_TMP = "java.io.SerializablePermission";
-    private static final String CLASSNAME_UNRESOLVED_PERMISSION_TMP = "java.security.UnresolvedPermission";
-    private static final String CLASSNAME_ALL_PERMISSION_TMP = "java.security.AllPermission";
-
     private String _originalClassName = null;
     private String _className = null;
     private Class _class = null;
@@ -142,8 +128,9 @@ public class PolicyPermission {
 	return;
     }
 
-    public Permission create() throws PolicyFileParsingException,
-	    SecurityException {
+    public Permission create()
+			      throws PolicyFileParsingException,
+			      SecurityException {
 	if (this._class == null) {
 	    throw this.getParsingException("No permission class.");
 	}

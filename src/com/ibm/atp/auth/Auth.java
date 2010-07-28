@@ -108,7 +108,7 @@ public abstract class Auth extends Object {
      *                byte sequence for response is invalid
      */
     public abstract byte[] calculateResponse(int turn, Challenge challenge)
-	    throws AuthenticationException;
+									   throws AuthenticationException;
 
     /**
      * Returns the name of message digest function algorithm.
@@ -189,7 +189,7 @@ public abstract class Auth extends Object {
      *                byte sequence to be hased is invalid
      */
     protected abstract byte[] hash(int turn, Challenge challenge)
-	    throws AuthenticationException;
+								 throws AuthenticationException;
 
     /**
      * Resets message digest function.
@@ -247,8 +247,11 @@ public abstract class Auth extends Object {
      * @exception AuthenticationException
      *                byte sequence for response is invalid
      */
-    public abstract boolean verify(int turn, Challenge challenge,
-	    byte[] response) throws AuthenticationException;
+    public abstract boolean verify(
+				   int turn,
+				   Challenge challenge,
+				   byte[] response)
+						   throws AuthenticationException;
 
     /**
      * Verify response value for authentication.
@@ -262,6 +265,9 @@ public abstract class Auth extends Object {
      * @exception AuthenticationException
      *                byte sequence for response is invalid
      */
-    public abstract boolean verify(int turn, Challenge challenge,
-	    ByteSequence response) throws AuthenticationException;
+    public abstract boolean verify(
+				   int turn,
+				   Challenge challenge,
+				   ByteSequence response)
+							 throws AuthenticationException;
 }

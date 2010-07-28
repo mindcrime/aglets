@@ -50,8 +50,10 @@ public abstract class MeetingTask extends Task {
      * @exception Exception
      *                if failed to perform the task
      */
-    public abstract void execute(SeqItinerary itin,
-	    java.util.Enumeration participants) throws Exception;
+    public abstract void execute(
+				 SeqItinerary itin,
+				 java.util.Enumeration participants)
+								    throws Exception;
 
     public Meeting getMeeting() {
 	return this.meeting;

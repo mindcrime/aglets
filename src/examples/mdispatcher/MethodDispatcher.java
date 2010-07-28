@@ -132,8 +132,9 @@ public class MethodDispatcher implements Serializable {
 	}
     }
 
-    private void readObject(ObjectInputStream s) throws IOException,
-	    ClassNotFoundException {
+    private void readObject(ObjectInputStream s)
+						throws IOException,
+						ClassNotFoundException {
 	this.target = s.readObject();
 	this.makeTable();
     }

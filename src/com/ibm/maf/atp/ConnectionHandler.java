@@ -404,8 +404,10 @@ final class ConnectionHandler extends Thread implements AtpConstants {
     /**
      * Handles Dispatch Requests
      */
-    protected void handleDispatchRequest(AtpRequest request,
-	    AtpResponse response) throws IOException {
+    protected void handleDispatchRequest(
+					 AtpRequest request,
+					 AtpResponse response)
+							      throws IOException {
 	response.setContentType("application/x-aglets");
 	boolean sent = false;
 
@@ -478,7 +480,7 @@ final class ConnectionHandler extends Thread implements AtpConstants {
      * @param response
      */
     protected void handleFetchRequest(AtpRequest request, AtpResponse response)
-	    throws IOException {
+									       throws IOException {
 	response.setContentType("application/x-aglets");
 	boolean sent = false;
 
@@ -550,7 +552,7 @@ final class ConnectionHandler extends Thread implements AtpConstants {
     // - }
 
     protected void handleMessageRequest(AtpRequest request, AtpResponse response)
-	    throws IOException {
+										 throws IOException {
 
 	response.setContentType("application/x-aglets");
 	boolean sent = false;
@@ -668,7 +670,7 @@ final class ConnectionHandler extends Thread implements AtpConstants {
      * Handle ATP Requests
      */
     void handleRequest(AtpRequest request, AtpResponse response)
-	    throws IOException {
+								throws IOException {
 	switch (request.getMethod()) {
 	case DISPATCH:
 	    this.handleDispatchRequest(request, response);
@@ -717,7 +719,7 @@ final class ConnectionHandler extends Thread implements AtpConstants {
      * @param response
      */
     protected void handleRetractRequest(AtpRequest request, AtpResponse response)
-	    throws IOException {
+										 throws IOException {
 	response.setContentType("application/x-aglets");
 	boolean sent = false;
 

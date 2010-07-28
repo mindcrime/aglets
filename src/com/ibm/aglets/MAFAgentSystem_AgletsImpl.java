@@ -164,7 +164,7 @@ public class MAFAgentSystem_AgletsImpl extends MAFAgentSystem {
 	 * 
 	 */
     private void checkProfile(AgentProfile agent_profile)
-	    throws MAFExtendedException {
+							 throws MAFExtendedException {
 	if (this._agent_system_info.agent_system_type == agent_profile.agent_system_type) {
 	    for (LanguageMap element : map) {
 		if (element.language_id == agent_profile.language_id) {
@@ -180,11 +180,19 @@ public class MAFAgentSystem_AgletsImpl extends MAFAgentSystem {
     }
 
     @Override
-    public Name create_agent(Name agent_name, AgentProfile agent_profile,
-	    byte[] agent, String place_name, Object[] arguments,
-	    ClassName[] class_names, String code_base,
-	    MAFAgentSystem class_provider) throws ClassUnknown,
-	    ArgumentInvalid, DeserializationFailed, MAFExtendedException {
+    public Name create_agent(
+			     Name agent_name,
+			     AgentProfile agent_profile,
+			     byte[] agent,
+			     String place_name,
+			     Object[] arguments,
+			     ClassName[] class_names,
+			     String code_base,
+			     MAFAgentSystem class_provider)
+							   throws ClassUnknown,
+							   ArgumentInvalid,
+							   DeserializationFailed,
+							   MAFExtendedException {
 
 	this.checkProfile(agent_profile);
 
@@ -217,9 +225,12 @@ public class MAFAgentSystem_AgletsImpl extends MAFAgentSystem {
     }
 
     @Override
-    public byte[][] fetch_class(ClassName[] class_name_list, String code_base,
-	    AgentProfile agent_profile) throws ClassUnknown,
-	    MAFExtendedException {
+    public byte[][] fetch_class(
+				ClassName[] class_name_list,
+				String code_base,
+				AgentProfile agent_profile)
+							   throws ClassUnknown,
+							   MAFExtendedException {
 
 	this.checkProfile(agent_profile);
 
@@ -251,7 +262,7 @@ public class MAFAgentSystem_AgletsImpl extends MAFAgentSystem {
 
     @Override
     public String find_nearby_agent_system_of_profile(AgentProfile profile)
-	    throws EntryNotFound {
+									   throws EntryNotFound {
 	try {
 	    this.checkProfile(profile);
 	} catch (MAFExtendedException ex) {
@@ -335,7 +346,7 @@ public class MAFAgentSystem_AgletsImpl extends MAFAgentSystem {
     }
 
     private LocalAgletRef getLocalAgletRef(Name agent_name)
-	    throws AgentNotFound {
+							   throws AgentNotFound {
 	LocalAgletRef ref = LocalAgletRef.getAgletRef(agent_name);
 
 	if (ref == null) {
@@ -433,10 +444,17 @@ public class MAFAgentSystem_AgletsImpl extends MAFAgentSystem {
     }
 
     @Override
-    public void receive_agent(Name agent_name, AgentProfile agent_profile,
-	    byte[] agent, String place_name, ClassName[] class_names,
-	    String code_base, MAFAgentSystem sender) throws ClassUnknown,
-	    DeserializationFailed, MAFExtendedException {
+    public void receive_agent(
+			      Name agent_name,
+			      AgentProfile agent_profile,
+			      byte[] agent,
+			      String place_name,
+			      ClassName[] class_names,
+			      String code_base,
+			      MAFAgentSystem sender)
+						    throws ClassUnknown,
+						    DeserializationFailed,
+						    MAFExtendedException {
 
 	this.checkProfile(agent_profile);
 
@@ -472,9 +490,14 @@ public class MAFAgentSystem_AgletsImpl extends MAFAgentSystem {
     }
 
     @Override
-    public long receive_future_message(Name agent_name, byte[] raw_msg,
-	    MAFAgentSystem message_sender) throws AgentNotFound, ClassUnknown,
-	    DeserializationFailed, MAFExtendedException {
+    public long receive_future_message(
+				       Name agent_name,
+				       byte[] raw_msg,
+				       MAFAgentSystem message_sender)
+								     throws AgentNotFound,
+								     ClassUnknown,
+								     DeserializationFailed,
+								     MAFExtendedException {
 	LocalAgletRef ref = this.getLocalAgletRef(agent_name);
 	long return_id = System.currentTimeMillis();
 
@@ -504,8 +527,10 @@ public class MAFAgentSystem_AgletsImpl extends MAFAgentSystem {
 
     @Override
     public void receive_future_reply(long return_id, byte[] reply)
-	    throws EntryNotFound, ClassUnknown, DeserializationFailed,
-	    MAFExtendedException {
+								  throws EntryNotFound,
+								  ClassUnknown,
+								  DeserializationFailed,
+								  MAFExtendedException {
 	Long l = new Long(return_id);
 
 	ResourceManager rm = MessageBroker.getResourceManager(l);
@@ -551,8 +576,12 @@ public class MAFAgentSystem_AgletsImpl extends MAFAgentSystem {
 
     @Override
     public byte[] receive_message(Name agent_name, byte[] raw_msg)
-	    throws AgentNotFound, NotHandled, MessageEx, ClassUnknown,
-	    DeserializationFailed, MAFExtendedException {
+								  throws AgentNotFound,
+								  NotHandled,
+								  MessageEx,
+								  ClassUnknown,
+								  DeserializationFailed,
+								  MAFExtendedException {
 	logger.debug("receive_message()++");
 	try {
 
@@ -622,8 +651,10 @@ public class MAFAgentSystem_AgletsImpl extends MAFAgentSystem {
 
     @Override
     public void receive_oneway_message(Name agent_name, byte[] raw_msg)
-	    throws AgentNotFound, ClassUnknown, DeserializationFailed,
-	    MAFExtendedException {
+								       throws AgentNotFound,
+								       ClassUnknown,
+								       DeserializationFailed,
+								       MAFExtendedException {
 
 	LocalAgletRef ref = this.getLocalAgletRef(agent_name);
 
@@ -652,14 +683,17 @@ public class MAFAgentSystem_AgletsImpl extends MAFAgentSystem {
     }
 
     @Override
-    public void resume_agent(Name agent_name) throws AgentNotFound,
-	    ResumeFailed, AgentIsRunning {
+    public void resume_agent(Name agent_name)
+					     throws AgentNotFound,
+					     ResumeFailed,
+					     AgentIsRunning {
 	return;
     }
 
     @Override
-    public byte[] retract_agent(Name agent_name) throws AgentNotFound,
-	    MAFExtendedException {
+    public byte[] retract_agent(Name agent_name)
+						throws AgentNotFound,
+						MAFExtendedException {
 
 	LocalAgletRef ref = this.getLocalAgletRef(agent_name);
 
@@ -680,14 +714,17 @@ public class MAFAgentSystem_AgletsImpl extends MAFAgentSystem {
     }
 
     @Override
-    public void suspend_agent(Name agent_name) throws AgentNotFound,
-	    SuspendFailed, AgentIsSuspended {
+    public void suspend_agent(Name agent_name)
+					      throws AgentNotFound,
+					      SuspendFailed,
+					      AgentIsSuspended {
 	return;
     }
 
     @Override
-    public void terminate_agent(Name agent_name) throws AgentNotFound,
-	    TerminateFailed {
+    public void terminate_agent(Name agent_name)
+						throws AgentNotFound,
+						TerminateFailed {
 	return;
     }
 

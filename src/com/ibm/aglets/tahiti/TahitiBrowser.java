@@ -36,7 +36,7 @@ public class TahitiBrowser extends TahitiDialog implements Runnable {
 	    JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 		    + ".URLError.title"), this.translator.translate(this.baseKey
 		    + ".URLError"), JOptionPane.ERROR_MESSAGE);
-	    logger.error("Cannot load Documentation file " + fileName);
+	    this.logger.error("Cannot load Documentation file " + fileName);
 	}
     }
 
@@ -87,7 +87,8 @@ public class TahitiBrowser extends TahitiDialog implements Runnable {
 			JOptionPane.showMessageDialog(editorPanel, translator.translate(TahitiBrowser.this.baseKey
 				+ ".URLError.title"), translator.translate(TahitiBrowser.this.baseKey
 				+ ".URLError"), JOptionPane.ERROR_MESSAGE);
-			logger.error("Cannot load the page " + event.getURL() );
+			TahitiBrowser.this.logger.error("Cannot load the page "
+				+ event.getURL());
 
 		    }
 		}

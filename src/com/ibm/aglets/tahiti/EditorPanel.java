@@ -68,29 +68,6 @@ class EditorPanel extends Panel {
 	return q + str.trim() + q;
     }
 
-    private static final String strip(String str, char c) {
-	if (str == null) {
-	    return null;
-	}
-
-	final int len = str.length();
-
-	if (len < 1) {
-	    return null;
-	}
-
-	int beginIndex = 0;
-	int endIndex = len;
-
-	if (str.charAt(beginIndex) == c) {
-	    beginIndex++;
-	}
-	if (str.charAt(endIndex - 1) == c) {
-	    endIndex--;
-	}
-	return str.substring(beginIndex, endIndex);
-    }
-
     protected final String toText() {
 	return toText(this._args);
     }
@@ -128,8 +105,10 @@ class EditorPanel extends Panel {
 	return toVector(text, CHAR_STRING_QUOTE, CHAR_SEPARATOR);
     }
 
-    protected static final Vector toVector(String text, char cQuote,
-	    char cSeparator) {
+    protected static final Vector toVector(
+					   String text,
+					   char cQuote,
+					   char cSeparator) {
 	Vector args = new Vector();
 	final String str = text.trim();
 	int idx = 0;

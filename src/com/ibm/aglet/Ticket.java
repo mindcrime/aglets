@@ -342,7 +342,7 @@ public class Ticket implements Serializable {
      * @see QoC
      */
     private void set(String address, QoC qoc, String scheme, int portNo)
-	    throws MalformedURLException {
+									throws MalformedURLException {
 	this.setDestination(address, scheme, portNo);
 	this.setQoC(qoc);
     }
@@ -405,7 +405,7 @@ public class Ticket implements Serializable {
      * @exception MalformedURLException
      */
     public void setDestination(String address, String scheme, int portNo)
-	    throws MalformedURLException {
+									 throws MalformedURLException {
 	String protocol = ATP;
 
 	if (scheme.equalsIgnoreCase(ATP)) {

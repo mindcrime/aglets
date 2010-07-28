@@ -14,7 +14,6 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-
 interface Contents {
     public void addElements(String[] elems);
 

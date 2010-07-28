@@ -95,8 +95,9 @@ public interface AgletProxy {
      * @exception IllegalArgumentException
      *                if the minutes parameter is negative.
      */
-    abstract public void deactivate(long duration) throws IOException,
-	    InvalidAgletException;
+    abstract public void deactivate(long duration)
+						  throws IOException,
+						  InvalidAgletException;
 
     /**
      * Delegates a message to the aglet. The message needs to be a message
@@ -111,7 +112,7 @@ public interface AgletProxy {
      * @see Aglet#handleMessage
      */
     abstract public void delegateMessage(Message msg)
-	    throws InvalidAgletException;
+						     throws InvalidAgletException;
 
     /**
      * Dispatches the aglet to the location specified by the ticket as the
@@ -131,8 +132,9 @@ public interface AgletProxy {
      * @exception InvalidAgletException
      *                if the aglet is not valid.
      */
-    abstract public AgletProxy dispatch(Ticket ticket) throws IOException,
-	    AgletException;
+    abstract public AgletProxy dispatch(Ticket ticket)
+						      throws IOException,
+						      AgletException;
 
     /**
      * Dispatches the aglet to the location specified by the argument address.
@@ -151,8 +153,9 @@ public interface AgletProxy {
      * @exception InvalidAgletException
      *                if the aglet is not valid.
      */
-    abstract public AgletProxy dispatch(URL address) throws IOException,
-	    AgletException;
+    abstract public AgletProxy dispatch(URL address)
+						    throws IOException,
+						    AgletException;
 
     /**
      * Dispatches the aglet to the location specified by the argument address.
@@ -280,7 +283,7 @@ public interface AgletProxy {
      *                if the aglet is not valid any longer.
      */
     abstract public FutureReply sendAsyncMessage(Message msg)
-	    throws InvalidAgletException;
+							     throws InvalidAgletException;
 
     /**
      * Sends a future message to the aglet. The invocation will
@@ -292,7 +295,7 @@ public interface AgletProxy {
      *                if the aglet is not valid any longer.
      */
     abstract public FutureReply sendFutureMessage(Message msg)
-	    throws InvalidAgletException;
+							      throws InvalidAgletException;
 
     /**
      * Sends a message in synchronous way. This waits for finishing the message
@@ -309,7 +312,9 @@ public interface AgletProxy {
      *                a exception which the handleMessage method raised.
      */
     abstract public Object sendMessage(Message msg)
-	    throws InvalidAgletException, NotHandledException, MessageException;
+						   throws InvalidAgletException,
+						   NotHandledException,
+						   MessageException;
 
     /**
      * Sends a oneway message to the aglet. No acknowledgement will be sent back
@@ -321,7 +326,7 @@ public interface AgletProxy {
      *                if the aglet is not valid any longer.
      */
     abstract public void sendOnewayMessage(Message msg)
-	    throws InvalidAgletException;
+						       throws InvalidAgletException;
 
     /**
      * <b>This is an experimental feature.</b>

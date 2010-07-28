@@ -273,7 +273,7 @@ final class SecurityConfigDialog extends TahitiDialog implements
      * @return the instance of the dialog
      */
     protected static synchronized SecurityConfigDialog getInstance(
-	    MainWindow parent) {
+								   MainWindow parent) {
 	if (mySelf == null) {
 	    mySelf = new SecurityConfigDialog(parent);
 	}

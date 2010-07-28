@@ -50,7 +50,7 @@ import com.ibm.aglet.message.Message;
  *     try {
  * 	itinerary.go(&quot;test&quot;);
  *     } catch (SecurityException ex) { // a RuntimeException
- *     // failed to the aglet specific problems.
+ * 	// failed to the aglet specific problems.
  *     } catch (IOException ex) {
  * 	// failed due to communication problems.
  *     }

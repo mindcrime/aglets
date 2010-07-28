@@ -145,7 +145,7 @@ public class AuthBySignature extends Auth {
      */
     @Override
     public final byte[] calculateResponse(int turn, Challenge challenge)
-	    throws AuthenticationException {
+									throws AuthenticationException {
 	return this.sign(turn, challenge);
     }
 
@@ -189,7 +189,7 @@ public class AuthBySignature extends Auth {
      */
     @Override
     protected final byte[] hash(int turn, Challenge challenge)
-	    throws AuthenticationException {
+							      throws AuthenticationException {
 	this.resetDigest();
 
 	if (challenge == null) {
@@ -255,7 +255,7 @@ public class AuthBySignature extends Auth {
      *                byte sequence for response is invalid
      */
     protected final byte[] sign(int turn, Challenge challenge)
-	    throws AuthenticationException {
+							      throws AuthenticationException {
 	byte[] signature = null;
 
 	try {
@@ -293,7 +293,7 @@ public class AuthBySignature extends Auth {
      */
     @Override
     public final boolean verify(int turn, Challenge challenge, byte[] signature)
-	    throws AuthenticationException {
+										throws AuthenticationException {
 	boolean verifies = true;
 
 	try {
@@ -330,8 +330,11 @@ public class AuthBySignature extends Auth {
      *                byte sequence for response is invalid
      */
     @Override
-    public final boolean verify(int turn, Challenge challenge,
-	    ByteSequence signature) throws AuthenticationException {
+    public final boolean verify(
+				int turn,
+				Challenge challenge,
+				ByteSequence signature)
+						       throws AuthenticationException {
 	if (signature == null) {
 	    return false;
 	}

@@ -201,8 +201,9 @@ final public class AgletInfo implements java.io.Serializable, Cloneable {
      * { return null; } }
      */
 
-    private void readObject(ObjectInputStream s) throws IOException,
-	    ClassNotFoundException {
+    private void readObject(ObjectInputStream s)
+						throws IOException,
+						ClassNotFoundException {
 	s.defaultReadObject();
 	this.authorityCert = com.ibm.aglets.AgletRuntime.getCertificate(this.authorityCertEncoded);
 	if (this.api_major_version != Aglet.MAJOR_VERSION) {

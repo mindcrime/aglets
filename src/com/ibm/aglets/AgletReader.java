@@ -43,8 +43,9 @@ final class AgletReader {
 	this._ois = new ObjectInputStream(this._is);
     }
 
-    void readAglet(LocalAgletRef ref) throws IOException,
-	    ClassNotFoundException {
+    void readAglet(LocalAgletRef ref)
+				     throws IOException,
+				     ClassNotFoundException {
 	ref.resourceManager.setResourceManagerContext();
 
 	Archive a = (Archive) this._ois.readObject();

@@ -129,10 +129,18 @@ public abstract class Notifier extends Aglet {
      * @exception AgletException
      *                if the creation fails.
      */
-    static public AgletProxy create(URL url, String source,
-	    AgletContext context, Aglet master, URL destination,
-	    double interval, double duration, boolean stay, Object argument)
-	    throws IOException, AgletException {
+    static public AgletProxy create(
+				    URL url,
+				    String source,
+				    AgletContext context,
+				    Aglet master,
+				    URL destination,
+				    double interval,
+				    double duration,
+				    boolean stay,
+				    Object argument)
+						    throws IOException,
+						    AgletException {
 	Arguments args = new Arguments();
 
 	args.setArg("destination", destination.toString());
@@ -292,8 +300,9 @@ public abstract class Notifier extends Aglet {
 
     // -- Notifies the master.
     //
-    private void sendRemoteMessage(int type, Object data) throws IOException,
-	    AgletException {
+    private void sendRemoteMessage(int type, Object data)
+							 throws IOException,
+							 AgletException {
 	Arguments args = new Arguments();
 
 	args.setArg("message", data);

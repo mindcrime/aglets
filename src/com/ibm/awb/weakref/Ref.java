@@ -27,7 +27,8 @@ public interface Ref {
     public void referenced();
 
     public void setRef(VirtualRef vref, ObjectInputStream s)
-	    throws IOException, ClassNotFoundException;
+							    throws IOException,
+							    ClassNotFoundException;
 
     public void unreferenced();
 

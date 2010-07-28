@@ -300,6 +300,6 @@ public abstract class SampleWindow extends Frame {
     // -- inherited from a context of a specific aglet.
     //
     public static void setWindowProperties(Frame f, Aglet aglet)
-	    throws AgletException {
+								throws AgletException {
     }
 }

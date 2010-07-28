@@ -35,8 +35,9 @@ public abstract class WeakRef implements Ref {
     /*
      * Find a reference in a table.
      */
-    abstract protected Ref findRef(ObjectInputStream s) throws IOException,
-	    ClassNotFoundException;
+    abstract protected Ref findRef(ObjectInputStream s)
+						       throws IOException,
+						       ClassNotFoundException;
 
     /* package */
     /* synchronized */
@@ -72,7 +73,8 @@ public abstract class WeakRef implements Ref {
      */
     /* package */
     public final void setRef(VirtualRef vref, ObjectInputStream s)
-	    throws IOException, ClassNotFoundException {
+								  throws IOException,
+								  ClassNotFoundException {
 
 	// this reference must be already updated.
 	Ref ref = this.findRef(s);

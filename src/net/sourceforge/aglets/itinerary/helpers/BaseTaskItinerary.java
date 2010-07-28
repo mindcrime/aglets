@@ -131,8 +131,9 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      *            the task to add for the above destination.
      * @return true if the task is added, false otherwise.
      */
-    protected final boolean addTaskToDestination(String destinationURI,
-	    Task toExecute) {
+    protected final boolean addTaskToDestination(
+						 String destinationURI,
+						 Task toExecute) {
 	// check params
 	if ((destinationURI == null) || destinationURI.equals("")
 		|| (toExecute == null)) {
@@ -176,8 +177,9 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      *            the task to remove.
      * @return true if the task has been removed, false otherwise.
      */
-    protected boolean removeTaskFromDestination(String destinationURI,
-	    Task toExecute) {
+    protected boolean removeTaskFromDestination(
+						String destinationURI,
+						Task toExecute) {
 	// check params
 	if ((destinationURI == null) || destinationURI.equals("")
 		|| (this.taskList.containsKey(destinationURI) == false)
@@ -335,8 +337,9 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      *            the task to remove
      * @return true if the task has been removed, false otherwise.
      */
-    public boolean removeTaskForDestination(String destinationURI,
-	    Task toExecute) {
+    public boolean removeTaskForDestination(
+					    String destinationURI,
+					    Task toExecute) {
 	// check params
 	if ((destinationURI == null) || destinationURI.equals("")
 		|| (toExecute == null))

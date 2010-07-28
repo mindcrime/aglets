@@ -60,7 +60,7 @@ final class MessageOutputStream extends ObjectOutputStream {
     }
 
     static byte[] toByteArray(ResourceManager rm, Object obj)
-	    throws IOException {
+							     throws IOException {
 	ByteArrayOutputStream out = new ByteArrayOutputStream();
 	MessageOutputStream mos = new MessageOutputStream(out, rm);
 

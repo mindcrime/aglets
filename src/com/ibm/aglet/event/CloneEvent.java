@@ -33,10 +33,6 @@ import com.ibm.aglet.AgletProxy;
  */
 public class CloneEvent extends AgletEvent {
 
-   
-    
-
-
     /**
      * Constructs the clone event object with the specified id and aglet
      */
@@ -44,18 +40,17 @@ public class CloneEvent extends AgletEvent {
     public CloneEvent(int id, AgletProxy aglet) {
 	super(aglet, id);
     }
-    
-    
+
     /**
      * Creates the event of the specified type.
+     * 
      * @param id
      * @param proxy
      * @param type
      */
-    public CloneEvent( int id, AgletProxy proxy, EventType type ){
-	super( proxy, id, type );
+    public CloneEvent(int id, AgletProxy proxy, EventType type) {
+	super(proxy, id, type);
     }
-    
 
     /**
      * Returns the aglet proxy which is the source of the event.

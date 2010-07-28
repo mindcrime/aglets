@@ -103,8 +103,9 @@ public abstract class AgletRuntime {
      *            password of the user
      * @return the owner's certificate when authentication of the user succeeds
      */
-    abstract public Certificate authenticateOwner(String username,
-	    String password);
+    abstract public Certificate authenticateOwner(
+						  String username,
+						  String password);
 
     /**
      * Creates an aglet remotely within the specified context.
@@ -120,8 +121,11 @@ public abstract class AgletRuntime {
      * @see Aglet#onCreation
      * @see AgletContext#createAglet
      */
-    abstract protected AgletProxy createAglet(String contextAddress,
-	    URL codebase, String name, Object init) throws IOException;
+    abstract protected AgletProxy createAglet(
+					      String contextAddress,
+					      URL codebase,
+					      String name,
+					      Object init) throws IOException;
 
     /**
      * Creates an DefaultAgletContext object given by the Framework
@@ -157,7 +161,7 @@ public abstract class AgletRuntime {
      *            specify context URL with a string.
      */
     abstract protected AgletProxy[] getAgletProxies(String contextAddress)
-	    throws IOException;
+									  throws IOException;
 
     /**
      * Obtains the remote proxy for the aglet specified by the context and id.
@@ -167,8 +171,9 @@ public abstract class AgletRuntime {
      * @param id
      *            target aglet identifyer.
      */
-    abstract protected AgletProxy getAgletProxy(String contextAddress,
-	    AgletID id) throws IOException;
+    abstract protected AgletProxy getAgletProxy(
+						String contextAddress,
+						AgletID id) throws IOException;
 
     /**
      * Gets the AgletRuntime object associated with the current Java
@@ -284,8 +289,9 @@ public abstract class AgletRuntime {
      * @param loader
      *            a classloader used to load a class of the implementation.
      */
-    synchronized static public AgletRuntime init(String args[],
-	    ClassLoader loader) {
+    synchronized static public AgletRuntime init(
+						 String args[],
+						 ClassLoader loader) {
 	if (runtime != null) {
 	    throw new IllegalAccessError("Already Initialized");
 	}
@@ -356,7 +362,7 @@ public abstract class AgletRuntime {
      *            the aglet proxy object to kill.
      */
     abstract public void killAglet(AgletProxy proxy)
-	    throws InvalidAgletException;
+						    throws InvalidAgletException;
 
     /**
      * Removes the specified aglet context from the runtime environment. It is

@@ -162,7 +162,7 @@ final class ServerPrefsDialog extends TahitiDialog implements ActionListener,
     }
 
     private String getAliasEntry(String ali_name, String ali_path)
-	    throws NullPointerException {
+								  throws NullPointerException {
 	if ((ali_name.length() == 0) || (ali_path.length() == 0)) {
 	    throw new NullPointerException();
 	}

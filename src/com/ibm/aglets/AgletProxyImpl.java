@@ -85,8 +85,9 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
      * @exception AgletEception
      *                if can not deactivate the aglet.
      */
-    public void deactivate(long duration) throws IOException,
-	    InvalidAgletException {
+    public void deactivate(long duration)
+					 throws IOException,
+					 InvalidAgletException {
 	Message msg = new SystemMessage(Message.DEACTIVATE, new Long(duration), SystemMessage.DEACTIVATE_REQUEST);
 
 	try {
@@ -115,8 +116,9 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
     }
 
     // trip with Ticket
-    public AgletProxy dispatch(Ticket ticket) throws IOException,
-	    AgletException {
+    public AgletProxy dispatch(Ticket ticket)
+					     throws IOException,
+					     AgletException {
 	Message msg = new SystemMessage(Message.DISPATCH, ticket, SystemMessage.DISPATCH_REQUEST);
 
 	try {
@@ -308,7 +310,7 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
      *            the message to send
      */
     synchronized public FutureReply sendAsyncMessage(Message msg)
-	    throws InvalidAgletException {
+								 throws InvalidAgletException {
 	return this.getAgletRef().sendFutureMessage(msg);
     }
 
@@ -319,7 +321,7 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
      *            the message to send
      */
     synchronized public FutureReply sendFutureMessage(Message msg)
-	    throws InvalidAgletException {
+								  throws InvalidAgletException {
 	return this.getAgletRef().sendFutureMessage(msg);
     }
 
@@ -329,8 +331,10 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
      * @param msg
      *            the message to send
      */
-    public Object sendMessage(Message msg) throws MessageException,
-	    InvalidAgletException, NotHandledException {
+    public Object sendMessage(Message msg)
+					  throws MessageException,
+					  InvalidAgletException,
+					  NotHandledException {
 	return this.getAgletRef().sendMessage(msg);
     }
 
@@ -341,7 +345,7 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
      *            the message to send
      */
     synchronized public void sendOnewayMessage(Message msg)
-	    throws InvalidAgletException {
+							   throws InvalidAgletException {
 	this.getAgletRef().sendOnewayMessage(msg);
     }
 

@@ -543,7 +543,7 @@ public class PolicyImpl extends Policy {
     }
 
     private void makeAgletsPolicyFile(FileWriter writer, String[] lines)
-	    throws IOException {
+									throws IOException {
 	BufferedWriter buff = new BufferedWriter(writer);
 	int i;
 
@@ -554,7 +554,7 @@ public class PolicyImpl extends Policy {
     }
 
     private void makeDefaultAgletsPolicyFile(FileWriter writer)
-	    throws IOException {
+							       throws IOException {
 	this.makeAgletsPolicyFile(writer, defaultAgletsPolicy);
     }
 

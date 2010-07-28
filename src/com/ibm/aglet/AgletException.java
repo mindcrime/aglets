@@ -80,8 +80,9 @@ public class AgletException extends Exception implements Serializable {
 	}
     }
 
-    private void readObject(ObjectInputStream s) throws IOException,
-	    ClassNotFoundException {
+    private void readObject(ObjectInputStream s)
+						throws IOException,
+						ClassNotFoundException {
 	this._original = false;
 	this._stackTrace = (String) s.readObject();
     }

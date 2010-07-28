@@ -62,7 +62,7 @@ public abstract class SampleAglet extends Aglet implements MobilityListener,
     // -- Return the proxy of a specific aglet
     //
     static public AgletProxy getAgletProxyInContext(Aglet m, AgletID id)
-	    throws AgletException {
+									throws AgletException {
 	return m.getAgletContext().getAgletProxy(id);
     }
 

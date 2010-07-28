@@ -57,7 +57,7 @@ public class LogFileOutputStream extends OutputStream {
     }
 
     private RandomAccessFile changeFile(RandomAccessFile file, String filename)
-	    throws Exception {
+									       throws Exception {
 	String dstName = filename + ".arc";
 
 	file.close();
@@ -152,7 +152,7 @@ public class LogFileOutputStream extends OutputStream {
      */
     @Override
     public synchronized void write(byte[] b, int off, int len)
-	    throws IOException {
+							      throws IOException {
 	long pointer = this._file.getFilePointer();
 
 	if (pointer > this._maxFileSize) {

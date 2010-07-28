@@ -173,8 +173,10 @@ final class ResourceManagerFactory implements
      * @exception IOException
      *                Description of Exception
      */
-    private static String lookupCodeBaseFrom(final String name,
-	    String[] pathList) throws IOException {
+    private static String lookupCodeBaseFrom(
+					     final String name,
+					     String[] pathList)
+							       throws IOException {
 	final String[] pl = pathList;
 	final String classFileName = name.replace('.', File.separatorChar)
 		+ ".class";
@@ -215,7 +217,7 @@ final class ResourceManagerFactory implements
      *                Description of Exception
      */
     private static String lookupCodeBaseInManifest(String name)
-	    throws IOException {
+							       throws IOException {
 
 	logger.debug("lookupCodeBaseInManifest() : [" + name + "]");
 	Enumeration e = _manifests.keys();
@@ -352,8 +354,10 @@ final class ResourceManagerFactory implements
      *            Description of Parameter
      * @return Description of the Returned Value
      */
-    public synchronized ResourceManager createResourceManager(URL codebase,
-	    Certificate owner, ClassName[] t) {
+    public synchronized ResourceManager createResourceManager(
+							      URL codebase,
+							      Certificate owner,
+							      ClassName[] t) {
 	AgletClassLoader loader = this.getClassLoaderInCache(codebase, owner, t);
 	logger.info("Creating ResourceManager.");
 	if (loader == null) {
@@ -430,8 +434,10 @@ final class ResourceManagerFactory implements
      *            Description of Parameter
      * @return The classLoaderInCache value
      */
-    private AgletClassLoader getClassLoaderInCache(URL codebase,
-	    Certificate owner, ClassName[] table) {
+    private AgletClassLoader getClassLoaderInCache(
+						   URL codebase,
+						   Certificate owner,
+						   ClassName[] table) {
 
 	Certificate[] owners;
 

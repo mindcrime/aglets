@@ -14,7 +14,6 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-
 /**
  * An AgletThreadGroup contains are the running threads of a specific aglet.
  * 

@@ -23,7 +23,6 @@ package com.ibm.aglet.event;
  * IBM WILL NOT BE LIABLE FOR ANY THIRD PARTY CLAIMS AGAINST YOU.
  */
 
-
 /**
  * The top level event of all aglet events.
  * 
@@ -35,27 +34,25 @@ abstract public class AgletEvent extends java.util.EventObject {
      * Event id
      */
     private int id;
-    
-    
+
     /**
      * A sequence to take count of the events.
      */
     private static int idSequence = 0;
-    
+
     /**
      * Provides the next id available for an event.
+     * 
      * @return the next id available
      */
-    public static final synchronized int nextID(){
+    public static final synchronized int nextID() {
 	return ++idSequence;
     }
-    
-    
+
     /**
      * The event type, if the event is of a known type.
      */
     private EventType eventType = null;
-    
 
     /**
      * Constructs an AgletEvent with source and id.
@@ -64,27 +61,29 @@ abstract public class AgletEvent extends java.util.EventObject {
 	super(source);
 	this.id = id;
     }
-    
+
     /**
      * Builds an event of a specified type.
-     * @param source the object that is sending the event
-     * @param id the id of the event
-     * @param type the type of the event, in the case it is a well known event
+     * 
+     * @param source
+     *            the object that is sending the event
+     * @param id
+     *            the id of the event
+     * @param type
+     *            the type of the event, in the case it is a well known event
      */
-    public AgletEvent(Object source, int id, EventType type ){
-	this( source, id );
+    public AgletEvent(Object source, int id, EventType type) {
+	this(source, id);
 	this.eventType = type;
     }
-    
 
-    
-    
     /**
      * Gets back the eventType.
+     * 
      * @return the eventType
      */
     public synchronized final EventType getEventType() {
-        return this.eventType;
+	return this.eventType;
     }
 
     /**

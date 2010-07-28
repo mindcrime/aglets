@@ -163,7 +163,7 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
      * Delegates a message
      */
     synchronized public void delegateMessage(Message msg)
-	    throws InvalidAgletException {
+							 throws InvalidAgletException {
 	MessageBroker.delegateMessage(this._ticket, this._name, msg);
     }
 
@@ -181,8 +181,9 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
      * Class Method
      */
     @Override
-    protected Ref findRef(ObjectInputStream s) throws IOException,
-	    ClassNotFoundException {
+    protected Ref findRef(ObjectInputStream s)
+					      throws IOException,
+					      ClassNotFoundException {
 	Name t_name = (Name) s.readObject();
 	String address = (String) s.readObject();
 
@@ -304,7 +305,7 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
      *            the message to send
      */
     synchronized public FutureReply sendFutureMessage(Message msg)
-	    throws InvalidAgletException {
+								  throws InvalidAgletException {
 	return MessageBroker.sendFutureMessage(this._ticket, this._name, msg);
     }
 
@@ -314,8 +315,10 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
      * @param msg
      *            the message to send
      */
-    public Object sendMessage(Message msg) throws MessageException,
-	    InvalidAgletException, NotHandledException {
+    public Object sendMessage(Message msg)
+					  throws MessageException,
+					  InvalidAgletException,
+					  NotHandledException {
 	return MessageBroker.sendMessage(this._ticket, this._name, msg);
     }
 
@@ -326,7 +329,7 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
      *            the message to send
      */
     synchronized public void sendOnewayMessage(Message msg)
-	    throws InvalidAgletException {
+							   throws InvalidAgletException {
 	MessageBroker.sendOnewayMessage(this._ticket, this._name, msg);
     }
 

@@ -61,11 +61,19 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
     }
 
     @Override
-    public Name create_agent(Name agent_name, AgentProfile agent_profile,
-	    byte[] agent, String place_name, Object[] arguments,
-	    ClassName[] class_names, String code_base,
-	    MAFAgentSystem class_provider) throws ClassUnknown,
-	    ArgumentInvalid, DeserializationFailed, MAFExtendedException
+    public Name create_agent(
+			     Name agent_name,
+			     AgentProfile agent_profile,
+			     byte[] agent,
+			     String place_name,
+			     Object[] arguments,
+			     ClassName[] class_names,
+			     String code_base,
+			     MAFAgentSystem class_provider)
+							   throws ClassUnknown,
+							   ArgumentInvalid,
+							   DeserializationFailed,
+							   MAFExtendedException
 
     /* RequestRefused */
     {
@@ -121,9 +129,12 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
     }
 
     @Override
-    public byte[][] fetch_class(ClassName[] class_name_list, String code_base,
-	    AgentProfile agent_profile) throws ClassUnknown,
-	    MAFExtendedException
+    public byte[][] fetch_class(
+				ClassName[] class_name_list,
+				String code_base,
+				AgentProfile agent_profile)
+							   throws ClassUnknown,
+							   MAFExtendedException
 
     /* , RequestRefused */
     {
@@ -168,7 +179,8 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
     }
 
     static synchronized MAFAgentSystem find_maf_agentsystem(
-	    MAFAgentSystem_RMI __rmi, String address) {
+							    MAFAgentSystem_RMI __rmi,
+							    String address) {
 	if (__rmi == null) {
 	    return null;
 	}
@@ -183,7 +195,7 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 
     @Override
     public String find_nearby_agent_system_of_profile(AgentProfile profile)
-	    throws EntryNotFound {
+									   throws EntryNotFound {
 	try {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 	    final AgentProfile fProfile = profile;
@@ -374,7 +386,7 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
     }
 
     static public MAFAgentSystem_RMI getMAFAgentSystem_RMI(String address)
-	    throws java.io.IOException {
+									  throws java.io.IOException {
 	return to_rmi_agentsystem(MAFAgentSystem.getMAFAgentSystem(address));
     }
 
@@ -505,10 +517,17 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
     }
 
     @Override
-    public void receive_agent(Name agent_name, AgentProfile agent_profile,
-	    byte[] agent, String place_name, ClassName[] class_names,
-	    String code_base, MAFAgentSystem class_sender) throws ClassUnknown,
-	    DeserializationFailed, MAFExtendedException
+    public void receive_agent(
+			      Name agent_name,
+			      AgentProfile agent_profile,
+			      byte[] agent,
+			      String place_name,
+			      ClassName[] class_names,
+			      String code_base,
+			      MAFAgentSystem class_sender)
+							  throws ClassUnknown,
+							  DeserializationFailed,
+							  MAFExtendedException
 
     /* RequestRefused */
     {
@@ -562,9 +581,12 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
     }
 
     @Override
-    public long receive_future_message(Name agent_name, byte[] msg,
-	    MAFAgentSystem message_sender) throws AgentNotFound,
-	    MAFExtendedException {
+    public long receive_future_message(
+				       Name agent_name,
+				       byte[] msg,
+				       MAFAgentSystem message_sender)
+								     throws AgentNotFound,
+								     MAFExtendedException {
 	try {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 	    final Name fAgentName = agent_name;
@@ -613,7 +635,8 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 
     @Override
     public void receive_future_reply(long return_id, byte[] reply)
-	    throws EntryNotFound, MAFExtendedException {
+								  throws EntryNotFound,
+								  MAFExtendedException {
 	try {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 	    final long fReturnID = return_id;
@@ -656,7 +679,10 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 
     @Override
     public byte[] receive_message(Name agent_name, byte[] msg)
-	    throws AgentNotFound, NotHandled, MessageEx, MAFExtendedException {
+							      throws AgentNotFound,
+							      NotHandled,
+							      MessageEx,
+							      MAFExtendedException {
 	try {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 	    final Name fAgentName = agent_name;
@@ -702,7 +728,8 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 
     @Override
     public void receive_oneway_message(Name agent_name, byte[] msg)
-	    throws AgentNotFound, MAFExtendedException {
+								   throws AgentNotFound,
+								   MAFExtendedException {
 	try {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 	    final Name fAgentName = agent_name;
@@ -744,8 +771,10 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
     }
 
     @Override
-    public void resume_agent(Name agent_name) throws AgentNotFound,
-	    ResumeFailed, AgentIsRunning {
+    public void resume_agent(Name agent_name)
+					     throws AgentNotFound,
+					     ResumeFailed,
+					     AgentIsRunning {
 	try {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 	    final Name fAgentName = agent_name;
@@ -788,8 +817,9 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
     }
 
     @Override
-    public byte[] retract_agent(Name agent_name) throws AgentNotFound,
-	    MAFExtendedException {
+    public byte[] retract_agent(Name agent_name)
+						throws AgentNotFound,
+						MAFExtendedException {
 	try {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 	    final Name fAgentName = agent_name;
@@ -834,8 +864,10 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
     }
 
     @Override
-    public void suspend_agent(Name agent_name) throws AgentNotFound,
-	    SuspendFailed, AgentIsSuspended {
+    public void suspend_agent(Name agent_name)
+					      throws AgentNotFound,
+					      SuspendFailed,
+					      AgentIsSuspended {
 	try {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 	    final Name fAgentName = agent_name;
@@ -878,8 +910,9 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
     }
 
     @Override
-    public void terminate_agent(Name agent_name) throws AgentNotFound,
-	    TerminateFailed {
+    public void terminate_agent(Name agent_name)
+						throws AgentNotFound,
+						TerminateFailed {
 	try {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 	    final Name fAgentName = agent_name;

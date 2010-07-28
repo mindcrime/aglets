@@ -39,9 +39,6 @@ import com.ibm.aglet.event.EventType;
  */
 public class ContextEvent extends AgletEvent {
 
-
-
-    
     /**
      * AgletProxy proxy
      */
@@ -52,12 +49,10 @@ public class ContextEvent extends AgletEvent {
      */
     public Object arg = null;
 
-   
-
     /**
      * Constructs an ContextEvent with the specified type.
      */
-    public ContextEvent( Object context, AgletProxy target, EventType type) {
+    public ContextEvent(Object context, AgletProxy target, EventType type) {
 	super(context, AgletEvent.nextID(), type);
 	this.agletproxy = target;
     }
@@ -65,8 +60,9 @@ public class ContextEvent extends AgletEvent {
     /**
      * Constructs an ContextEvent with the specified type.
      */
-    public ContextEvent(Object context, AgletProxy target, Object arg, EventType type) {
-	this( context, target, type );
+    public ContextEvent(Object context, AgletProxy target, Object arg,
+	    EventType type) {
+	this(context, target, type);
 	this.agletproxy = target;
 	this.arg = arg;
     }
@@ -90,7 +86,7 @@ public class ContextEvent extends AgletEvent {
      * Gets the document URL.
      */
     public final URL getDocumentURL() {
-	if ( EventType.SHOW_DOCUMENT.equals( this.getEventType()) ) {
+	if (EventType.SHOW_DOCUMENT.equals(this.getEventType())) {
 	    return (URL) this.arg;
 	} else {
 	    throw new IllegalAccessError("Event is not SHOW_DOCUMENT");
@@ -101,20 +97,20 @@ public class ContextEvent extends AgletEvent {
      * Gets the message to show
      */
     public final String getMessage() {
-	if (EventType.AGLET_MESSAGE.equals( this.getEventType() ) ) {
+	if (EventType.AGLET_MESSAGE.equals(this.getEventType())) {
 	    return (String) this.arg;
 	} else {
 	    throw new IllegalAccessError("Event is not MESSAGE!");
 	}
     }
 
-
     /**
      * Provides the text for a state change.
+     * 
      * @return
      */
     public final String getText() {
-	if ( EventType.AGLET_STATE_CHANGED.equals( this.getEventType() )) {
+	if (EventType.AGLET_STATE_CHANGED.equals(this.getEventType())) {
 	    return (String) this.arg;
 	} else {
 	    throw new IllegalAccessError("Event is not STATE_CHANGED");
@@ -123,6 +119,6 @@ public class ContextEvent extends AgletEvent {
 
     @Override
     public String toString() {
-	return "ContextEvent[" +  this.getEventType() + "]";
+	return "ContextEvent[" + this.getEventType() + "]";
     }
 }

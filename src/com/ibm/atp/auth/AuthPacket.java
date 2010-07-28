@@ -735,7 +735,7 @@ public class AuthPacket extends Object {
      *            data input stream for packet
      */
     public synchronized void readFrom(String topLine, DataInput di)
-	    throws IOException {
+								   throws IOException {
 
 	// top line
 	this.parseTopLine(topLine);
@@ -752,7 +752,7 @@ public class AuthPacket extends Object {
      * @exception java.lang.IllegalArgumentException
      */
     private final void setAuthManner(int manner)
-	    throws IllegalArgumentException {
+						throws IllegalArgumentException {
 	switch (manner) {
 	case AtpConstants.NO_AUTHENTICATION_MANNER:
 	case AtpConstants.AUTHENTICATION_MANNER_DIGEST:
@@ -773,7 +773,7 @@ public class AuthPacket extends Object {
      * @exception java.lang.IllegalArgumentException
      */
     private final void setAuthManner(String manner)
-	    throws IllegalArgumentException {
+						   throws IllegalArgumentException {
 	try {
 	    this.setAuthManner(toAuthManner(manner));
 	} catch (IllegalArgumentException excpt) {

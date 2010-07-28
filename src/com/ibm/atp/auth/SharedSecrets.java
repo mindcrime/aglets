@@ -107,7 +107,7 @@ final public class SharedSecrets {
      * Converts lines into shared secrets.
      */
     protected final static SharedSecrets convertLinesToSharedSecrets(
-	    Enumeration lines) {
+								     Enumeration lines) {
 	if (lines == null) {
 	    return null;
 	}
@@ -177,7 +177,7 @@ final public class SharedSecrets {
      * @return created shared secrets NOT NEEDED????(HT)
      */
     protected synchronized static SharedSecrets createSharedSecretsFile(
-	    String filename) {
+									String filename) {
 
 	// shall back up ?
 	// SharedSecret secret = SharedSecret.createSampleSharedSecret();

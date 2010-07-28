@@ -163,8 +163,9 @@ public class MemoryPanel extends JPanel implements ActionListener {
      *            the max value
      * @return the string that describes the memory usage
      */
-    protected String getCurrentMemoryStringDescription(long currentValue,
-	    long maxValue) {
+    protected String getCurrentMemoryStringDescription(
+						       long currentValue,
+						       long maxValue) {
 	return String.format(this.memoryString, new Object[] { currentValue,
 		maxValue, (float) ((float) currentValue / (float) maxValue) });
     }
@@ -178,8 +179,9 @@ public class MemoryPanel extends JPanel implements ActionListener {
      *            the max number of available threads
      * @return the string with the description
      */
-    protected String getCurrentThreadStringDescription(long currentValue,
-	    long maxValue) {
+    protected String getCurrentThreadStringDescription(
+						       long currentValue,
+						       long maxValue) {
 	return String.format(this.threadString, new Object[] { currentValue,
 		maxValue });
     }

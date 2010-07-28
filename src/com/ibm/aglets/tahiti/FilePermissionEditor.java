@@ -14,7 +14,6 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-
 class FilePermissionEditor extends GeneralPermissionEditor {
 
     // possible actions are "read", "write", "execute" and "delete"

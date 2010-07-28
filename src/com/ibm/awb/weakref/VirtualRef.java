@@ -45,7 +45,8 @@ public class VirtualRef implements java.io.Serializable {
 	}
 
 	public void setRef(VirtualRef vref, ObjectInputStream s)
-		throws IOException, ClassNotFoundException {
+								throws IOException,
+								ClassNotFoundException {
 	}
     }
 
@@ -88,8 +89,9 @@ public class VirtualRef implements java.io.Serializable {
 	return this._ref.getRef(this);
     }
 
-    private void readObject(ObjectInputStream s) throws IOException,
-	    ClassNotFoundException {
+    private void readObject(ObjectInputStream s)
+						throws IOException,
+						ClassNotFoundException {
 	String name = (String) s.readObject();
 	Ref tmp = (Ref) cache.get(name);
 

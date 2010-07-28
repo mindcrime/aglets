@@ -239,7 +239,7 @@ final public class AgletContextImpl implements AgletContext {
      * Adds an aglet to the current context.
      */
     void addAgletProxy(AgletID aid, AgletProxyImpl proxy)
-	    throws InvalidAgletException {
+							 throws InvalidAgletException {
 
 	// proxy.checkValidation();
 	// REMIND: critical session
@@ -313,8 +313,10 @@ final public class AgletContextImpl implements AgletContext {
      *                if failed to instantiate the Aglet.
      */
     public AgletProxy createAglet(URL url, String classname, Object init)
-	    throws IOException, AgletException, ClassNotFoundException,
-	    InstantiationException {
+									 throws IOException,
+									 AgletException,
+									 ClassNotFoundException,
+									 InstantiationException {
 	Certificate owner = AgletRuntime.getCurrentCertificate();
 
 	return this.createAglet(url, classname, owner, init);
@@ -333,9 +335,15 @@ final public class AgletContextImpl implements AgletContext {
      * @exception InstantiationException
      *                if failed to instantiate the Aglet.
      */
-    private AgletProxy createAglet(URL url, String classname,
-	    Certificate owner, Object init) throws IOException, AgletException,
-	    ClassNotFoundException, InstantiationException {
+    private AgletProxy createAglet(
+				   URL url,
+				   String classname,
+				   Certificate owner,
+				   Object init)
+					       throws IOException,
+					       AgletException,
+					       ClassNotFoundException,
+					       InstantiationException {
 
 	// System.out.println("createAglet("+url+","+classname+","+owner.getName()+","+init+")");
 	this.startCreation();
@@ -422,8 +430,10 @@ final public class AgletContextImpl implements AgletContext {
     /**
 	 * 
 	 */
-    synchronized ResourceManager createResourceManager(URL codebase,
-	    Certificate owner, ClassName[] table) {
+    synchronized ResourceManager createResourceManager(
+						       URL codebase,
+						       Certificate owner,
+						       ClassName[] table) {
 	return this._rm_factory.createResourceManager(codebase, owner, table);
     }
 
@@ -709,8 +719,9 @@ final public class AgletContextImpl implements AgletContext {
 	return this._secure;
     }
 
-    Object handleMessage(Message msg) throws NotHandledException,
-	    MessageException {
+    Object handleMessage(Message msg)
+				     throws NotHandledException,
+				     MessageException {
 	if (msg.sameKind("createAglet")) {
 	    Object codebase = msg.getArg("codebase");
 	    Object classname = msg.getArg("classname");
@@ -749,8 +760,7 @@ final public class AgletContextImpl implements AgletContext {
      * Prints a message
      */
     void log(String kind, String msg) {
-	this.postEvent(new ContextEvent( this, null, kind
-		+ " : " + msg, EventType.AGLET_MESSAGE), false);
+	this.postEvent(new ContextEvent(this, null, kind + " : " + msg, EventType.AGLET_MESSAGE), false);
     }
 
     /**
@@ -767,7 +777,7 @@ final public class AgletContextImpl implements AgletContext {
      * force.
      */
     boolean noResponseAglet(AgletProxy proxy) {
-	this.postEvent(new ContextEvent( this, proxy, EventType.NO_REPONSE), true);
+	this.postEvent(new ContextEvent(this, proxy, EventType.NO_REPONSE), true);
 	return true;
     }
 
@@ -802,26 +812,27 @@ final public class AgletContextImpl implements AgletContext {
 
 		if (ref0 instanceof LocalAgletRef) {
 		    LocalAgletRef ref = (LocalAgletRef) p.getAgletRef();
-		    
+
 		    // get the event type
 		    EventType type = event.getEventType();
-		    
-		    if( EventType.AGLET_CREATED.equals(type) || EventType.AGLET_CLONED.equals(type) || EventType.AGLET_ARRIVED.equals(type) ) {
+
+		    if (EventType.AGLET_CREATED.equals(type)
+			    || EventType.AGLET_CLONED.equals(type)
+			    || EventType.AGLET_ARRIVED.equals(type)) {
 			try {
 			    finder.register_agent(ref.getName(), this._hostingURL.toString(), MAF.toAgentProfile(ref.info));
 			} catch (Exception ex) {
 			    ex.printStackTrace();
 			}
-		    }
-		    else if ( EventType.AGLET_DISPOSED.equals(type) || EventType.AGLET_REVERTED.equals(type) ){
-			
+		    } else if (EventType.AGLET_DISPOSED.equals(type)
+			    || EventType.AGLET_REVERTED.equals(type)) {
+
 			try {
 			    finder.unregister_agent(ref.getName());
 			} catch (Exception ex) {
 			    ex.printStackTrace();
 			}
-		    }
-		    else if( EventType.AGLET_DISPATCHED.equals(type) ){
+		    } else if (EventType.AGLET_DISPATCHED.equals(type)) {
 			try {
 			    finder.register_agent(ref.getName(), event.arg.toString(), MAF.toAgentProfile(ref.info));
 			} catch (Exception ex) {
@@ -840,37 +851,35 @@ final public class AgletContextImpl implements AgletContext {
 	    return;
 	}
 
-	
 	// get the event type
 	EventType type = event.getEventType();
-	
-	if( EventType.CONTEXT_STARTED.equals(type) )
-	    this.listeners.contextStarted(event);
-	else if( EventType.CONTEXT_SHUTDOWN.equals(type) )
-	    this.listeners.contextShutdown(event);
-	else if( EventType.AGLET_CREATED.equals(type) )
-	    this.listeners.agletCreated(event);
-	else if( EventType.AGLET_CLONED.equals(type) )
-	    this.listeners.agletCloned(event);
-	else if( EventType.AGLET_DISPOSED.equals(type))
-	    this.listeners.agletDisposed(event);
-	else if( EventType.AGLET_DISPATCHED.equals(type))
-	    this.listeners.agletDispatched(event);
-	else if( EventType.AGLET_REVERTED.equals(type))
-	    this.listeners.agletReverted(event);
-	else if( EventType.AGLET_ARRIVED.equals(type))
-	    this.listeners.agletArrived(event);
-	else if( EventType.AGLET_DEACTIVATED.equals(type))
-	    this.listeners.agletDeactivated(event);
-	else if( EventType.AGLET_ACTIVATED.equals(type))
-	    this.listeners.agletActivated(event);
-	else if( EventType.AGLET_STATE_CHANGED.equals(type))
-	    this.listeners.agletStateChanged(event);
-	else if( EventType.SHOW_DOCUMENT.equals(type))
-	    this.listeners.showDocument(event);
-	else if( EventType.AGLET_MESSAGE.equals(type))
-	    this.listeners.showMessage(event);
 
+	if (EventType.CONTEXT_STARTED.equals(type))
+	    this.listeners.contextStarted(event);
+	else if (EventType.CONTEXT_SHUTDOWN.equals(type))
+	    this.listeners.contextShutdown(event);
+	else if (EventType.AGLET_CREATED.equals(type))
+	    this.listeners.agletCreated(event);
+	else if (EventType.AGLET_CLONED.equals(type))
+	    this.listeners.agletCloned(event);
+	else if (EventType.AGLET_DISPOSED.equals(type))
+	    this.listeners.agletDisposed(event);
+	else if (EventType.AGLET_DISPATCHED.equals(type))
+	    this.listeners.agletDispatched(event);
+	else if (EventType.AGLET_REVERTED.equals(type))
+	    this.listeners.agletReverted(event);
+	else if (EventType.AGLET_ARRIVED.equals(type))
+	    this.listeners.agletArrived(event);
+	else if (EventType.AGLET_DEACTIVATED.equals(type))
+	    this.listeners.agletDeactivated(event);
+	else if (EventType.AGLET_ACTIVATED.equals(type))
+	    this.listeners.agletActivated(event);
+	else if (EventType.AGLET_STATE_CHANGED.equals(type))
+	    this.listeners.agletStateChanged(event);
+	else if (EventType.SHOW_DOCUMENT.equals(type))
+	    this.listeners.showDocument(event);
+	else if (EventType.AGLET_MESSAGE.equals(type))
+	    this.listeners.showMessage(event);
 
     }
 
@@ -882,9 +891,14 @@ final public class AgletContextImpl implements AgletContext {
      * @exception AgletException
      *                if it is not received.
      */
-    public void receiveAglet(Name agent_name, ClassName[] classnames,
-	    String codebase, byte[] agent, String sender)
-	    throws AgletException, ClassNotFoundException {
+    public void receiveAglet(
+			     Name agent_name,
+			     ClassName[] classnames,
+			     String codebase,
+			     byte[] agent,
+			     String sender)
+					   throws AgletException,
+					   ClassNotFoundException {
 
 	this.startCreation();
 	try {
@@ -920,7 +934,7 @@ final public class AgletContextImpl implements AgletContext {
 	    String msg = "Receive : " + ref.info.getAgletClassName() + " from "
 		    + sender;
 
-	    this.postEvent(new ContextEvent( this, null, msg, EventType.AGLET_MESSAGE), false);
+	    this.postEvent(new ContextEvent(this, null, msg, EventType.AGLET_MESSAGE), false);
 
 	} catch (java.io.NotSerializableException ex) {
 	    ex.printStackTrace();
@@ -987,7 +1001,8 @@ final public class AgletContextImpl implements AgletContext {
     }
 
     public AgletProxy retractAglet(Ticket ticket, AgletID aid)
-	    throws IOException, AgletException {
+							      throws IOException,
+							      AgletException {
 
 	String destination = ticket.getDestination().toString();
 
@@ -1092,8 +1107,9 @@ final public class AgletContextImpl implements AgletContext {
      * @exception AgletException
      *                when the method failed to retract the aglet.
      */
-    public AgletProxy retractAglet(URL url, AgletID aid) throws IOException,
-	    AgletException {
+    public AgletProxy retractAglet(URL url, AgletID aid)
+							throws IOException,
+							AgletException {
 	return this.retractAglet(new Ticket(url), aid);
     }
 
@@ -1363,7 +1379,7 @@ final public class AgletContextImpl implements AgletContext {
 	// REMIND: here, context can start receiving aglets...
 	// currently not....
 	//
-	this.postEvent(new ContextEvent( this, null, EventType.CONTEXT_STARTED), true);
+	this.postEvent(new ContextEvent(this, null, EventType.CONTEXT_STARTED), true);
 
 	//
 	// Timer

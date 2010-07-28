@@ -90,9 +90,15 @@ public abstract class Slave extends Aglet {
      * @exception AgletException
      *                if initialization fails.
      */
-    static public AgletProxy create(URL url, String name, AgletContext context,
-	    Aglet master, Vector itinerary, Object argument)
-	    throws IOException, AgletException {
+    static public AgletProxy create(
+				    URL url,
+				    String name,
+				    AgletContext context,
+				    Aglet master,
+				    Vector itinerary,
+				    Object argument)
+						    throws IOException,
+						    AgletException {
 	Arguments args = new Arguments();
 
 	args.setArg("master", master.getAgletID());
@@ -122,7 +128,7 @@ public abstract class Slave extends Aglet {
     }
 
     private AgletProxy getMasterProxy(AgletID master, Aglet aglet)
-	    throws AgletException {
+								  throws AgletException {
 	return this.getAgletContext().getAgletProxy(master);
     }
 

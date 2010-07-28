@@ -36,20 +36,19 @@ import com.ibm.aglet.Ticket;
  */
 public class MobilityEvent extends AgletEvent {
 
-    
     /**
      * The ticket for the mobility.
      */
     private Ticket ticket;
 
     /**
-     * Constructs a mobility event with the next available id, the specified proxy as target, the ticket and
-     * the even type.
+     * Constructs a mobility event with the next available id, the specified
+     * proxy as target, the ticket and the even type.
      */
     public MobilityEvent(AgletProxy target, Ticket tick, EventType type) {
 	super(target, AgletEvent.nextID(), type);
 	this.ticket = tick;
-	
+
     }
 
     /**

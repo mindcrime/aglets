@@ -120,8 +120,10 @@ public class DeliveryMessageThread extends Thread {
      *            message must wait until deliverMessage is called on this
      *            thread.
      */
-    public final synchronized void deliverMessage(AgletProxy p, Message m,
-	    boolean deliverNow) {
+    public final synchronized void deliverMessage(
+						  AgletProxy p,
+						  Message m,
+						  boolean deliverNow) {
 	this.message = m;
 	this.proxy = p;
 	if (deliverNow)

@@ -113,7 +113,7 @@ public final class Meeting implements java.io.Serializable {
     }
 
     private void checkColleaguesArePresent(AgletContext ctx, Vector c)
-	    throws AgletException {
+								      throws AgletException {
 	boolean found = false;
 
 	if (c == null) {
@@ -188,8 +188,11 @@ public final class Meeting implements java.io.Serializable {
 	}
     }
 
-    private synchronized static Vector ready0(AgletID aid, AgletContext ctx,
-	    String id, Aglet ag) throws AgletException {
+    private synchronized static Vector ready0(
+					      AgletID aid,
+					      AgletContext ctx,
+					      String id,
+					      Aglet ag) throws AgletException {
 
 	ReplySet rs = ctx.multicastMessage(new Message(id, aid));
 

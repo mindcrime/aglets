@@ -14,7 +14,6 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-
 class NetPermissionEditor extends GeneralPermissionEditor {
 
     // currently action should be null

@@ -48,8 +48,8 @@ public class URLConnectionForATP extends URLConnection {
 
 	verbose = res.getBoolean("aglets.verbose", false);
 
-	short major = (short) Aglet.MAJOR_VERSION;
-	short minor = (short) Aglet.MINOR_VERSION;
+	short major = Aglet.MAJOR_VERSION;
+	short minor = Aglet.MINOR_VERSION;
 
 	agent_profile = new AgentProfile(major, // Java
 	major, // Aglets

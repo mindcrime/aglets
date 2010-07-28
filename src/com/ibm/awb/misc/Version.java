@@ -1,6 +1,5 @@
 package com.ibm.awb.misc;
 
-
 /*
  * @(#)Version.java
  * 

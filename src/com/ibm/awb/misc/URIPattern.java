@@ -182,8 +182,11 @@ public class URIPattern {
 	return false;
     }
 
-    public boolean equals(String protocol, String host, PortPattern ppat,
-	    String file) {
+    public boolean equals(
+			  String protocol,
+			  String host,
+			  PortPattern ppat,
+			  String file) {
 	if ((protocol == null) || (this._protocol == null)) {
 	    return false;
 	}
@@ -308,8 +311,10 @@ public class URIPattern {
 	return isMatchFile(pattern, path, File.separator);
     }
 
-    final static boolean isMatchFile(String pattern, String path,
-	    String separator) {
+    final static boolean isMatchFile(
+				     String pattern,
+				     String path,
+				     String separator) {
 	if ((pattern == null) || (path == null) || (separator == null)) {
 	    return false;
 	}

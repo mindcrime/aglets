@@ -64,10 +64,16 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
 	}
     }
 
-    public Name create_agent(Name agent_name, AgentProfile agent_profile,
-	    byte[] agent, String place_name, Object[] arguments,
-	    ClassName[] class_names, String code_base,
-	    MAFAgentSystem_RMI rmi_class_provider) throws RemoteException {
+    public Name create_agent(
+			     Name agent_name,
+			     AgentProfile agent_profile,
+			     byte[] agent,
+			     String place_name,
+			     Object[] arguments,
+			     ClassName[] class_names,
+			     String code_base,
+			     MAFAgentSystem_RMI rmi_class_provider)
+								   throws RemoteException {
 	try {
 	    MAFAgentSystem class_provider = to_maf_agentsystem(rmi_class_provider);
 
@@ -83,8 +89,11 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
 	}
     }
 
-    public byte[][] fetch_class(ClassName[] class_name_list, String code_base,
-	    AgentProfile agent_profile) throws RemoteException {
+    public byte[][] fetch_class(
+				ClassName[] class_name_list,
+				String code_base,
+				AgentProfile agent_profile)
+							   throws RemoteException {
 	try {
 	    return this.maf.fetch_class(class_name_list, code_base, agent_profile);
 	} catch (ClassUnknown ex) {
@@ -95,7 +104,7 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
     }
 
     public String find_nearby_agent_system_of_profile(AgentProfile profile)
-	    throws RemoteException {
+									   throws RemoteException {
 	try {
 	    return this.maf.find_nearby_agent_system_of_profile(profile);
 	} catch (EntryNotFound ex) {
@@ -143,7 +152,7 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
     }
 
     public Name[] list_all_agents_of_authority(byte[] authority)
-	    throws RemoteException {
+								throws RemoteException {
 	return this.maf.list_all_agents_of_authority(authority);
     }
 
@@ -151,10 +160,15 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
 	return this.maf.list_all_places();
     }
 
-    public void receive_agent(Name agent_name, AgentProfile agent_profile,
-	    byte[] agent, String place_name, ClassName[] class_names,
-	    String code_base, MAFAgentSystem_RMI rmi_class_sender)
-	    throws RemoteException {
+    public void receive_agent(
+			      Name agent_name,
+			      AgentProfile agent_profile,
+			      byte[] agent,
+			      String place_name,
+			      ClassName[] class_names,
+			      String code_base,
+			      MAFAgentSystem_RMI rmi_class_sender)
+								  throws RemoteException {
 	try {
 	    MAFAgentSystem class_sender = to_maf_agentsystem(rmi_class_sender);
 
@@ -168,8 +182,11 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
 	}
     }
 
-    public long receive_future_message(Name agent_name, byte[] msg,
-	    MAFAgentSystem_RMI message_sender) throws RemoteException {
+    public long receive_future_message(
+				       Name agent_name,
+				       byte[] msg,
+				       MAFAgentSystem_RMI message_sender)
+									 throws RemoteException {
 	try {
 	    MAFAgentSystem maf_message_sender = to_maf_agentsystem(message_sender);
 
@@ -188,7 +205,7 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
     }
 
     public void receive_future_reply(long return_id, byte[] reply)
-	    throws RemoteException {
+								  throws RemoteException {
 	try {
 	    this.maf.receive_future_reply(return_id, reply);
 	} catch (EntryNotFound ex) {
@@ -208,7 +225,7 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
      * Messaging
      */
     public byte[] receive_message(Name agent_name, byte[] msg)
-	    throws RemoteException {
+							      throws RemoteException {
 	try {
 	    return this.maf.receive_message(agent_name, msg);
 	} catch (AgentNotFound ex) {
@@ -229,7 +246,7 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
     }
 
     public void receive_oneway_message(Name agent_name, byte[] msg)
-	    throws RemoteException {
+								   throws RemoteException {
 	try {
 	    this.maf.receive_oneway_message(agent_name, msg);
 	} catch (AgentNotFound ex) {

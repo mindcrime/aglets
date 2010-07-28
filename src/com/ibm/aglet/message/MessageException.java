@@ -64,8 +64,9 @@ public class MessageException extends AgletException {
 	return this._exception;
     }
 
-    private void readObject(ObjectInputStream s) throws IOException,
-	    ClassNotFoundException {
+    private void readObject(ObjectInputStream s)
+						throws IOException,
+						ClassNotFoundException {
 	Object ex = s.readObject();
 
 	if (ex instanceof String) {

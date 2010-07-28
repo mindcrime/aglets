@@ -316,7 +316,7 @@ public class PolicyGrant {
     }
 
     public void setCodeBase(String codeBase)
-	    throws MalformedURIPatternException {
+					    throws MalformedURIPatternException {
 	this._codeBase = new URIPattern(codeBase);
     }
 

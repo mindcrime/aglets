@@ -115,11 +115,19 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
     }
 
     @Override
-    public Name create_agent(Name agent_name, AgentProfile agent_profile,
-	    byte[] agent, String place_name, Object[] arguments,
-	    ClassName[] class_names, String code_base,
-	    MAFAgentSystem class_provider) throws ClassUnknown,
-	    ArgumentInvalid, DeserializationFailed, MAFExtendedException {
+    public Name create_agent(
+			     Name agent_name,
+			     AgentProfile agent_profile,
+			     byte[] agent,
+			     String place_name,
+			     Object[] arguments,
+			     ClassName[] class_names,
+			     String code_base,
+			     MAFAgentSystem class_provider)
+							   throws ClassUnknown,
+							   ArgumentInvalid,
+							   DeserializationFailed,
+							   MAFExtendedException {
 
 	/*
 	 * Message msg = new Message("createAglet"); msg.setArg("codebase",
@@ -136,9 +144,12 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
     }
 
     @Override
-    public byte[][] fetch_class(ClassName[] class_name_list, String code_base,
-	    AgentProfile agent_profile) throws ClassUnknown,
-	    MAFExtendedException {
+    public byte[][] fetch_class(
+				ClassName[] class_name_list,
+				String code_base,
+				AgentProfile agent_profile)
+							   throws ClassUnknown,
+							   MAFExtendedException {
 	if ((class_name_list != null) && (class_name_list.length != 1)) {
 	    throw new MAFExtendedException("Multiple classes not supported");
 	}
@@ -204,7 +215,7 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
 
     @Override
     public String find_nearby_agent_system_of_profile(AgentProfile profile)
-	    throws EntryNotFound {
+									   throws EntryNotFound {
 	return null;
     }
 
@@ -249,10 +260,17 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
     }
 
     @Override
-    public void receive_agent(Name agent_name, AgentProfile agent_profile,
-	    byte[] agent, String place_name, ClassName[] class_names,
-	    String code_base, MAFAgentSystem class_sender) throws ClassUnknown,
-	    DeserializationFailed, MAFExtendedException {
+    public void receive_agent(
+			      Name agent_name,
+			      AgentProfile agent_profile,
+			      byte[] agent,
+			      String place_name,
+			      ClassName[] class_names,
+			      String code_base,
+			      MAFAgentSystem class_sender)
+							  throws ClassUnknown,
+							  DeserializationFailed,
+							  MAFExtendedException {
 	try {
 	    final Name fAgentName = agent_name;
 	    final AgentProfile fAgentProfile = agent_profile;
@@ -263,8 +281,10 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
 	    final MAFAgentSystem fClassSender = class_sender;
 
 	    AccessController.doPrivileged(new PrivilegedExceptionAction() {
-		public Object run() throws ClassUnknown, DeserializationFailed,
-			MAFExtendedException {
+		public Object run()
+				   throws ClassUnknown,
+				   DeserializationFailed,
+				   MAFExtendedException {
 		    MAFAgentSystem_ATPClient.this.receive_agent0(fAgentName, fAgentProfile, fAgent, fPlaceName, fClassNames, fCodeBase, fClassSender);
 		    return null;
 		}
@@ -284,10 +304,17 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
 	}
     }
 
-    private void receive_agent0(Name agent_name, AgentProfile agent_profile,
-	    byte[] agent, String place_name, ClassName[] class_names,
-	    String code_base, MAFAgentSystem class_sender) throws ClassUnknown,
-	    DeserializationFailed, MAFExtendedException {
+    private void receive_agent0(
+				Name agent_name,
+				AgentProfile agent_profile,
+				byte[] agent,
+				String place_name,
+				ClassName[] class_names,
+				String code_base,
+				MAFAgentSystem class_sender)
+							    throws ClassUnknown,
+							    DeserializationFailed,
+							    MAFExtendedException {
 	AtpConnectionImpl connection = null;
 
 	try {
@@ -369,9 +396,14 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
     }
 
     @Override
-    public long receive_future_message(Name agent_name, byte[] msg,
-	    MAFAgentSystem sender) throws AgentNotFound, ClassUnknown,
-	    DeserializationFailed, MAFExtendedException {
+    public long receive_future_message(
+				       Name agent_name,
+				       byte[] msg,
+				       MAFAgentSystem sender)
+							     throws AgentNotFound,
+							     ClassUnknown,
+							     DeserializationFailed,
+							     MAFExtendedException {
 	AtpConnectionImpl connection = this.send_message_internal(agent_name, msg, FUTURE, sender);
 	long l = System.currentTimeMillis();
 
@@ -381,8 +413,10 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
 
     @Override
     synchronized public void receive_future_reply(long return_id, byte[] reply)
-	    throws EntryNotFound, ClassUnknown, DeserializationFailed,
-	    MAFExtendedException {
+									       throws EntryNotFound,
+									       ClassUnknown,
+									       DeserializationFailed,
+									       MAFExtendedException {
 	Long id = new Long(return_id);
 
 	ConnectionHandler handler = (ConnectionHandler) this.handlers.get(id);
@@ -402,8 +436,12 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
      */
     @Override
     public byte[] receive_message(Name agent_name, byte[] msg)
-	    throws AgentNotFound, NotHandled, MessageEx, ClassUnknown,
-	    DeserializationFailed, MAFExtendedException {
+							      throws AgentNotFound,
+							      NotHandled,
+							      MessageEx,
+							      ClassUnknown,
+							      DeserializationFailed,
+							      MAFExtendedException {
 	AtpConnectionImpl connection = this.send_message_internal(agent_name, msg, SYNC, null);
 
 	try {
@@ -438,8 +476,10 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
 
     @Override
     public void receive_oneway_message(Name agent_name, byte[] msg)
-	    throws AgentNotFound, ClassUnknown, DeserializationFailed,
-	    MAFExtendedException {
+								   throws AgentNotFound,
+								   ClassUnknown,
+								   DeserializationFailed,
+								   MAFExtendedException {
 	try {
 	    this.send_message_internal(agent_name, msg, ONEWAY, null).close();
 	} catch (IOException ex) {
@@ -448,7 +488,7 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
     }
 
     byte[] receive_reply_internal(AtpConnectionImpl connection)
-	    throws IOException {
+							       throws IOException {
 	try {
 	    int length = connection.getContentLength();
 	    InputStream in = connection.getInputStream();
@@ -482,20 +522,24 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
 	}
     }
 
-    synchronized public void registerFutureReply(ConnectionHandler handler,
-	    long id) {
+    synchronized public void registerFutureReply(
+						 ConnectionHandler handler,
+						 long id) {
 	this.handlers.put(new Long(id), handler);
 	this.notify();
     }
 
     @Override
-    public void resume_agent(Name agent_name) throws AgentNotFound,
-	    ResumeFailed, AgentIsRunning {
+    public void resume_agent(Name agent_name)
+					     throws AgentNotFound,
+					     ResumeFailed,
+					     AgentIsRunning {
     }
 
     @Override
-    public byte[] retract_agent(Name agent_name) throws AgentNotFound,
-	    MAFExtendedException {
+    public byte[] retract_agent(Name agent_name)
+						throws AgentNotFound,
+						MAFExtendedException {
 	try {
 	    final Name fAgentName = agent_name;
 
@@ -518,8 +562,9 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
 	}
     }
 
-    private byte[] retract_agent0(Name agent_name) throws AgentNotFound,
-	    MAFExtendedException {
+    private byte[] retract_agent0(Name agent_name)
+						  throws AgentNotFound,
+						  MAFExtendedException {
 	AtpConnectionImpl connection = null;
 
 	try {
@@ -577,9 +622,13 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
     //
     // Utilities
     //
-    private AtpConnectionImpl send_message_internal(Name agent_name,
-	    byte[] msg, int type, MAFAgentSystem sender) throws AgentNotFound,
-	    MAFExtendedException {
+    private AtpConnectionImpl send_message_internal(
+						    Name agent_name,
+						    byte[] msg,
+						    int type,
+						    MAFAgentSystem sender)
+									  throws AgentNotFound,
+									  MAFExtendedException {
 	try {
 	    final Name fAgentName = agent_name;
 	    final byte[] fMsg = msg;
@@ -608,9 +657,13 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
     //
     // Utilities
     //
-    private AtpConnectionImpl send_message_internal0(Name agent_name,
-	    byte[] msg, int type, MAFAgentSystem sender) throws AgentNotFound,
-	    MAFExtendedException {
+    private AtpConnectionImpl send_message_internal0(
+						     Name agent_name,
+						     byte[] msg,
+						     int type,
+						     MAFAgentSystem sender)
+									   throws AgentNotFound,
+									   MAFExtendedException {
 	AtpConnectionImpl connection = null;
 
 	try {
@@ -650,12 +703,15 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
     }
 
     @Override
-    public void suspend_agent(Name agent_name) throws AgentNotFound,
-	    SuspendFailed, AgentIsSuspended {
+    public void suspend_agent(Name agent_name)
+					      throws AgentNotFound,
+					      SuspendFailed,
+					      AgentIsSuspended {
     }
 
     @Override
-    public void terminate_agent(Name agent_name) throws AgentNotFound,
-	    TerminateFailed {
+    public void terminate_agent(Name agent_name)
+						throws AgentNotFound,
+						TerminateFailed {
     }
 }

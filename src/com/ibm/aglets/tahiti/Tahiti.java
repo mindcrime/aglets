@@ -14,35 +14,21 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-import com.ibm.aglet.AgletException;
+import java.io.File;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.Enumeration;
+
+import org.aglets.log.AgletsLogger;
+
 import com.ibm.aglet.AgletContext;
 import com.ibm.aglet.AgletProxy;
 import com.ibm.aglet.system.ContextEvent;
 import com.ibm.aglet.system.ContextListener;
-
 import com.ibm.aglets.AgletRuntime;
 import com.ibm.aglets.AgletsSecurityException;
-
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-
-import com.ibm.awb.misc.Resource;
 import com.ibm.awb.misc.FileUtils;
-import org.aglets.log.*;
-
-// import com.ibm.aglets.agletbox.Polling;
-
-import java.security.Identity;
-
-import java.util.Properties;
-import java.util.Enumeration;
-import java.util.Hashtable;
-
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.File;
-
-import java.net.URL;
+import com.ibm.awb.misc.Resource;
 
 /**
  * Tahiti is the viewer for aglets
@@ -202,7 +188,7 @@ public final class Tahiti implements ContextListener {
 	Resource res = Resource.getResourceFor("tahiti");
 
 	res.save("Tahiti");
-	logger.debug("Tahiti exiting (reboot = " + this.reboot + ")");
+	this.logger.debug("Tahiti exiting (reboot = " + this.reboot + ")");
 	System.exit(this.reboot == true ? 0 : 1);
     }
 
@@ -211,66 +197,63 @@ public final class Tahiti implements ContextListener {
     }
 
     public static void init() {
-		com.ibm.aglet.system.AgletRuntime runtime = 
-			com.ibm.aglet.system.AgletRuntime.getAgletRuntime();
+	com.ibm.aglet.system.AgletRuntime runtime = com.ibm.aglet.system.AgletRuntime.getAgletRuntime();
 
-		if (runtime == null) {
-			return;
-		} 
-		String username = runtime.getOwnerName();
-
-		if (username == null) {
-			return;
-		} 
-		AccessController.doPrivileged(new PrivilegedAction() {
-		    public Object run() {
-			return System.getProperties();
-		    }
-		} );
-
-		try {
-			String propfile = FileUtils.getPropertyFilenameForUser(username, 
-					"tahiti");
-
-			Resource.createResource("tahiti", propfile, null);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} 
-		Resource res = Resource.getResourceFor("tahiti");
-
-		/*
-		 * Initializes the system properties with default values.
-		 */
-		res.setResource("tahiti.version", "Tahiti Aglets Server: 1.0b5");
-
-		/*
-		 * Set default resource values
-		 */
-		res.setDefaultResources(default_resources);
-
-		/* box */
-		Resource aglets_res = Resource.getResourceFor("aglets");
-
-		enableBox = aglets_res.getBoolean("aglets.enableBox", false);
-
-		/* browser */
-		aglets_res = Resource.getResourceFor("aglets");
-		String aglet_home = aglets_res.getString("aglets.home", ".");
-
-		if (aglet_home.charAt(aglet_home.length() - 1) 
-				!= File.separatorChar) {
-			aglet_home += File.separator;
-		} 
-		String cmd = "openurl";
-
-		if (File.separator.equals("\\")) {
-			cmd = "openurl.bat";
-		} 
-		res.setDefaultResource("tahiti.browser_command", 
-							   aglet_home + "bin" + File.separator + cmd);
-        
-        res.importOptionProperties("tahiti.window");
+	if (runtime == null) {
+	    return;
 	}
+	String username = runtime.getOwnerName();
+
+	if (username == null) {
+	    return;
+	}
+	AccessController.doPrivileged(new PrivilegedAction() {
+	    public Object run() {
+		return System.getProperties();
+	    }
+	});
+
+	try {
+	    String propfile = FileUtils.getPropertyFilenameForUser(username, "tahiti");
+
+	    Resource.createResource("tahiti", propfile, null);
+	} catch (Exception ex) {
+	    ex.printStackTrace();
+	}
+	Resource res = Resource.getResourceFor("tahiti");
+
+	/*
+	 * Initializes the system properties with default values.
+	 */
+	res.setResource("tahiti.version", "Tahiti Aglets Server: 1.0b5");
+
+	/*
+	 * Set default resource values
+	 */
+	res.setDefaultResources(default_resources);
+
+	/* box */
+	Resource aglets_res = Resource.getResourceFor("aglets");
+
+	enableBox = aglets_res.getBoolean("aglets.enableBox", false);
+
+	/* browser */
+	aglets_res = Resource.getResourceFor("aglets");
+	String aglet_home = aglets_res.getString("aglets.home", ".");
+
+	if (aglet_home.charAt(aglet_home.length() - 1) != File.separatorChar) {
+	    aglet_home += File.separator;
+	}
+	String cmd = "openurl";
+
+	if (File.separator.equals("\\")) {
+	    cmd = "openurl.bat";
+	}
+	res.setDefaultResource("tahiti.browser_command", aglet_home + "bin"
+		+ File.separator + cmd);
+
+	res.importOptionProperties("tahiti.window");
+    }
 
     public static void initializeGUI() {
 	try {

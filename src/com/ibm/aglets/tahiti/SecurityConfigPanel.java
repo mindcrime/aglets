@@ -32,12 +32,9 @@ class SecurityConfigPanel extends GridBagPanel implements ItemListener {
     private static final String LABEL_FILE_PERMISSION = "FileSystem";
     private static final String LABEL_SOCKET_PERMISSION = "Socket";
     private static final String LABEL_AWT_PERMISSION = "Window";
-    private static final String LABEL_NET_PERMISSION = "Network";
     private static final String LABEL_PROPERTY_PERMISSION = "Property";
-    private static final String LABEL_REFLECT_PERMISSION = "Reflect";
     private static final String LABEL_RUNTIME_PERMISSION = "Runtime";
     private static final String LABEL_SECURITY_PERMISSION = "Security";
-    private static final String LABEL_SERIALIZABLE_PERMISSION = "Serializable";
     private static final String LABEL_ALL_PERMISSION = "All";
 
     // for aglets
@@ -53,12 +50,9 @@ class SecurityConfigPanel extends GridBagPanel implements ItemListener {
     private static final String CLASSNAME_FILE_PERMISSION = "java.io.FilePermission";
     private static final String CLASSNAME_SOCKET_PERMISSION = "java.net.SocketPermission";
     private static final String CLASSNAME_AWT_PERMISSION = "java.awt.AWTPermission";
-    private static final String CLASSNAME_NET_PERMISSION = "java.net.NetPermission";
     private static final String CLASSNAME_PROPERTY_PERMISSION = "java.util.PropertyPermission";
-    private static final String CLASSNAME_REFLECT_PERMISSION = "java.lang.reflect.ReflectPermission";
     private static final String CLASSNAME_RUNTIME_PERMISSION = "java.lang.RuntimePermission";
     private static final String CLASSNAME_SECURITY_PERMISSION = "java.security.SecurityPermission";
-    private static final String CLASSNAME_SERIALIZABLE_PERMISSION = "java.io.SerializablePermission";
     private static final String CLASSNAME_ALL_PERMISSION = "java.security.AllPermission";
 
     // for aglets
@@ -253,8 +247,11 @@ class SecurityConfigPanel extends GridBagPanel implements ItemListener {
     /*
      * setup General Permission Panel
      */
-    void setupGeneralPermissionPanel(BorderPanel panel, List list,
-	    PermissionEditor editor, String className) {
+    void setupGeneralPermissionPanel(
+				     BorderPanel panel,
+				     List list,
+				     PermissionEditor editor,
+				     String className) {
 	GridBagConstraints cns = new GridBagConstraints();
 
 	cns.weightx = 1.0;

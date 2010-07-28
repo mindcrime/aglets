@@ -66,8 +66,9 @@ final class AgletInputStream extends ObjectInputStream {
      * Verify and check whether the stream contains the aglet
      */
     @Override
-    protected void readStreamHeader() throws IOException,
-	    StreamCorruptedException {
+    protected void readStreamHeader()
+				     throws IOException,
+				     StreamCorruptedException {
 	int incoming_magic = this.readInt();
 
 	if (incoming_magic != AgletRuntime.AGLET_MAGIC) {
@@ -100,8 +101,9 @@ final class AgletInputStream extends ObjectInputStream {
      *                if can not resolve the class.
      */
     @Override
-    public Class resolveClass(ObjectStreamClass classinfo) throws IOException,
-	    ClassNotFoundException {
+    public Class resolveClass(ObjectStreamClass classinfo)
+							  throws IOException,
+							  ClassNotFoundException {
 	return this.rm.loadClass(classinfo.getName());
     }
 }

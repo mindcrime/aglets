@@ -32,10 +32,6 @@ final public class DateString {
      */
     final private static String FORMAT_DATE = "yyyy.MM.dd HH:mm:ss.SSS z";
 
-    /**
-     * Gets a date format instance.
-     */
-    private static SimpleDateFormat _dateFormat = null;
     Date _date = null;
 
     /**

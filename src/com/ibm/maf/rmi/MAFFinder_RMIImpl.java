@@ -56,7 +56,8 @@ public class MAFFinder_RMIImpl extends java.rmi.server.UnicastRemoteObject
     }
 
     public String[] lookup_agent(Name agent_name, AgentProfile agent_profile)
-	    throws EntryNotFound, RemoteException {
+									     throws EntryNotFound,
+									     RemoteException {
 	VerbosePrintln("lookup_agent: " + agent_name.toString());
 	String result[];
 
@@ -89,9 +90,11 @@ public class MAFFinder_RMIImpl extends java.rmi.server.UnicastRemoteObject
 	return result;
     }
 
-    public String[] lookup_agent_system(Name agent_system_name,
-	    AgentSystemInfo agent_system_info) throws EntryNotFound,
-	    RemoteException {
+    public String[] lookup_agent_system(
+					Name agent_system_name,
+					AgentSystemInfo agent_system_info)
+									  throws EntryNotFound,
+									  RemoteException {
 	VerbosePrintln("lookup_agent_system: " + agent_system_name.toString());
 	String result[];
 
@@ -124,8 +127,9 @@ public class MAFFinder_RMIImpl extends java.rmi.server.UnicastRemoteObject
 	}
     }
 
-    public String[] lookup_place(String place_name) throws EntryNotFound,
-	    RemoteException {
+    public String[] lookup_place(String place_name)
+						   throws EntryNotFound,
+						   RemoteException {
 	VerbosePrintln("lookup_place: " + place_name);
 	String place = (String) this._places.get(place_name);
 
@@ -178,17 +182,24 @@ public class MAFFinder_RMIImpl extends java.rmi.server.UnicastRemoteObject
 	}
     }
 
-    public void register_agent(Name agent_name, String agent_location,
-	    AgentProfile agent_profile) throws NameInvalid, RemoteException {
+    public void register_agent(
+			       Name agent_name,
+			       String agent_location,
+			       AgentProfile agent_profile)
+							  throws NameInvalid,
+							  RemoteException {
 	VerbosePrintln("register_agent:");
 	VerbosePrintln(" name:\t" + agent_name.toString());
 	VerbosePrintln(" location:\t" + agent_location);
 	this._agents.put(agent_name, new LocationInfo(agent_location, agent_profile));
     }
 
-    public void register_agent_system(Name agent_system_name,
-	    String agent_system_location, AgentSystemInfo agent_system_info)
-	    throws NameInvalid, RemoteException {
+    public void register_agent_system(
+				      Name agent_system_name,
+				      String agent_system_location,
+				      AgentSystemInfo agent_system_info)
+									throws NameInvalid,
+									RemoteException {
 	VerbosePrintln("register_agent_system:");
 	VerbosePrintln(" name:\t" + agent_system_name.toString());
 	VerbosePrintln(" location:\t" + agent_system_location);
@@ -201,7 +212,8 @@ public class MAFFinder_RMIImpl extends java.rmi.server.UnicastRemoteObject
     }
 
     public void register_place(String place_name, String place_location)
-	    throws NameInvalid, RemoteException {
+									throws NameInvalid,
+									RemoteException {
 	VerbosePrintln("register_place:");
 	VerbosePrintln(" name:\t" + place_name);
 	VerbosePrintln(" location:\t" + place_location);
@@ -222,8 +234,9 @@ public class MAFFinder_RMIImpl extends java.rmi.server.UnicastRemoteObject
 	System.out.println("\tport: " + port);
     }
 
-    public void unregister_agent(Name agent_name) throws EntryNotFound,
-	    RemoteException {
+    public void unregister_agent(Name agent_name)
+						 throws EntryNotFound,
+						 RemoteException {
 	VerbosePrintln("unregister_agent:");
 	VerbosePrintln(" name:\t" + agent_name.toString());
 	Object o = this._agents.remove(agent_name);
@@ -234,7 +247,8 @@ public class MAFFinder_RMIImpl extends java.rmi.server.UnicastRemoteObject
     }
 
     public void unregister_agent_system(Name agent_system_name)
-	    throws EntryNotFound, RemoteException {
+							       throws EntryNotFound,
+							       RemoteException {
 	VerbosePrintln("unregister_agent_system:");
 	VerbosePrintln(" name:\t" + agent_system_name.toString());
 	Object o = this._agent_systems.remove(agent_system_name);
@@ -244,8 +258,9 @@ public class MAFFinder_RMIImpl extends java.rmi.server.UnicastRemoteObject
 	}
     }
 
-    public void unregister_place(String place_name) throws EntryNotFound,
-	    RemoteException {
+    public void unregister_place(String place_name)
+						   throws EntryNotFound,
+						   RemoteException {
 	VerbosePrintln("unregister_place:");
 	VerbosePrintln(" name:\t" + place_name);
 	Object o = this._places.remove(place_name);

@@ -294,8 +294,11 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
      */
 
     @Override
-    public AgletProxy createAglet(String contextName, URL codebase,
-	    String classname, Object init) throws IOException {
+    public AgletProxy createAglet(
+				  String contextName,
+				  URL codebase,
+				  String classname,
+				  Object init) throws IOException {
 	try {
 	    Ticket ticket = new Ticket(contextName);
 
@@ -405,7 +408,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
      */
     @Override
     public AgletProxy getAgletProxy(String contextName, AgletID aid)
-	    throws IOException {
+								    throws IOException {
 	Ticket ticket = new Ticket(contextName);
 
 	return new AgletProxyImpl(RemoteAgletRef.getAgletRef(ticket, MAFUtil.toName(aid, null)));
@@ -590,6 +593,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
      * 
      * @return name of the user who owns the runtime
      */
+    @Override
     public String getOwnerName() {
 	return this._ownerAlias;
     }
@@ -601,8 +605,9 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
      * @param passwd
      *            byte[]
      */
-    public static java.security.PrivateKey getPrivateKey(Certificate cert,
-	    char[] passwd) {
+    public static java.security.PrivateKey getPrivateKey(
+							 Certificate cert,
+							 char[] passwd) {
 	try {
 	    return (java.security.PrivateKey) _keyStore.getKey(getCertificateAlias(cert), passwd);
 	} catch (Exception ex) {
@@ -625,6 +630,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
      * @exception SecurityException
      *                if PropertyPermission for the key is not given.
      */
+    @Override
     public String getProperty(String prop, String key) {
 	return this.getProperty(prop, key, null);
     }
@@ -645,6 +651,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
      * @exception SecurityException
      *                if PropertyPermission for the key is not given.
      */
+    @Override
     public String getProperty(String prop, String key, String def) {
 	try {
 	    SecurityManager security = System.getSecurityManager();
@@ -717,10 +724,12 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 	}
     }
 
+    @Override
     public String getServerAddress() {
 	return MAFAgentSystem.getLocalMAFAgentSystem().getAddress();
     }
 
+    @Override
     synchronized protected void initialize(String args[]) {
 	if (initialized) {
 	    throw new IllegalAccessError("AgletRuntime already initialized");
@@ -783,8 +792,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 
 	Policy.setPolicy(policyImpl);
 
-	// Anyway, load shared secrets file (or create it if it doesn't exist)
-	SharedSecrets secrets = SharedSecrets.getSharedSecrets();
+	SharedSecrets.getSharedSecrets();
 
 	// Mark that initialization is done.
 	initialized = true;
@@ -804,6 +812,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
     /**
      * Kill the specified aglet.
      */
+    @Override
     public void killAglet(AgletProxy proxy) throws InvalidAgletException {
 	LocalAgletRef ref = LocalAgletRef.getAgletRef(MAFUtil.toName(proxy.getAgletID(), null));
 
@@ -826,6 +835,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 	}
     }
 
+    @Override
     public void removeAgletContext(AgletContext cxt) {
 	synchronized (contexts) {
 	    String name = cxt.getName();
@@ -848,6 +858,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
      * @exception SecurityException
      *                if permissions for the key are not given.
      */
+    @Override
     public void setAgletsProperty(String key, String value) {
 	this.setProperty("aglets", key, value);
     }
@@ -856,7 +867,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
      * Set a default ResourceManagerFactory
      */
     static public void setDefaultResourceManagerFactory(
-	    ResourceManagerFactory factory) {
+							ResourceManagerFactory factory) {
 	check();
 
 	defaultResourceManagerFactory = factory;
@@ -885,6 +896,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
      * @exception SecurityException
      *                if permissions for the key are not given.
      */
+    @Override
     public void setProperty(String prop, String key, String value) {
 	this.checkPermission(new PropertyPermission(key, "write"));
 
@@ -926,6 +938,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
     /**
      * Shutdown
      */
+    @Override
     public void shutdown() {
 	this.shutdown(new Message("shutdown"));
     }

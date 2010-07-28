@@ -43,7 +43,7 @@ final class MessageBroker {
     static Hashtable rms = new Hashtable();
 
     static void delegateMessage(Ticket ticket, Name name, Message msg)
-	    throws InvalidAgletException {
+								      throws InvalidAgletException {
 	try {
 	    MAFAgentSystem maf = MAFAgentSystem.getMAFAgentSystem(ticket);
 	    ResourceManager rm = getCurrentResourceManager();
@@ -165,8 +165,11 @@ final class MessageBroker {
 	return rm;
     }
 
-    static FutureReplyImpl sendFutureMessage(Ticket ticket, Name name,
-	    Message msg) throws InvalidAgletException {
+    static FutureReplyImpl sendFutureMessage(
+					     Ticket ticket,
+					     Name name,
+					     Message msg)
+							 throws InvalidAgletException {
 	try {
 	    MAFAgentSystem maf = MAFAgentSystem.getMAFAgentSystem(ticket);
 	    ResourceManager rm = getCurrentResourceManager();
@@ -207,7 +210,9 @@ final class MessageBroker {
     }
 
     static Object sendMessage(Ticket ticket, Name name, Message msg)
-	    throws InvalidAgletException, MessageException, NotHandledException {
+								    throws InvalidAgletException,
+								    MessageException,
+								    NotHandledException {
 
 	try {
 	    MAFAgentSystem maf = MAFAgentSystem.getMAFAgentSystem(ticket);
@@ -267,7 +272,7 @@ final class MessageBroker {
     }
 
     static void sendOnewayMessage(Ticket ticket, Name name, Message msg)
-	    throws InvalidAgletException {
+									throws InvalidAgletException {
 	try {
 	    MAFAgentSystem maf = MAFAgentSystem.getMAFAgentSystem(ticket);
 	    ResourceManager rm = getCurrentResourceManager();
@@ -305,8 +310,10 @@ final class MessageBroker {
 	return ex.getClass().getName() + ':' + ex.getMessage();
     }
 
-    static public void waitFutureReply(FutureReplyImpl reply,
-	    ResourceManager rm, Long return_id) {
+    static public void waitFutureReply(
+				       FutureReplyImpl reply,
+				       ResourceManager rm,
+				       Long return_id) {
 	synchronized (MessageBroker.class) {
 	    replies.put(return_id, reply);
 	    rms.put(return_id, rm);

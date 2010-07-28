@@ -493,7 +493,8 @@ public final class MainWindow extends TahitiWindow implements ItemListener,
 		dialog = AboutDialog.getInstance(this);
 	    else if (GUICommandStrings.DOC_COMMAND.equals(command)) {
 		// get the documentation root file
-		String docRoot = this.translator.translate(this.baseKey	+ ".documentationFile");
+		String docRoot = this.translator.translate(this.baseKey
+			+ ".documentationFile");
 		this.showDocumentation(docRoot);
 		return;
 	    } else if (GUICommandStrings.WEB_COMMAND.equals(command)) {
@@ -1490,8 +1491,10 @@ public final class MainWindow extends TahitiWindow implements ItemListener,
      * @param out
      *            the stream to which write the thread group
      */
-    private static void dumpThreadGroup(ThreadGroup currentGroup, int level,
-	    PrintStream out) {
+    private static void dumpThreadGroup(
+					ThreadGroup currentGroup,
+					int level,
+					PrintStream out) {
 	StringBuffer buffer = new StringBuffer(500);
 
 	// check params
@@ -1599,8 +1602,8 @@ public final class MainWindow extends TahitiWindow implements ItemListener,
     }
 
     /**
-     * Shuts down the Tahiti server.
-     * The tahiti server has the information about the rebooting!
+     * Shuts down the Tahiti server. The tahiti server has the information about
+     * the rebooting!
      * 
      */
     public void shutdown() {

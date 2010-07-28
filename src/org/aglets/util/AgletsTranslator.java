@@ -62,10 +62,11 @@ public class AgletsTranslator implements Cloneable {
 	try {
 	    this.bundle = ResourceBundle.getBundle(this.baseName, currentLocale);
 	} catch (MissingResourceException e) {
-	    // if here the bundle cannot be found with the standard locale, try using no locale at all
-	    try{
+	    // if here the bundle cannot be found with the standard locale, try
+	    // using no locale at all
+	    try {
 		this.bundle = ResourceBundle.getBundle(localeBaseName);
-	    }catch ( MissingResourceException ex ){
+	    } catch (MissingResourceException ex) {
 		logger.error("Exception caught while trying to build a resource bundle", ex);
 		this.bundle = null;
 	    }
@@ -88,16 +89,16 @@ public class AgletsTranslator implements Cloneable {
     public String translate(String text) {
 	// be sure there is something to translate and I have a bundle to
 	// ask for translation
-	if ((text != null) && (text.length() > 0) && (this.bundle != null) && this.bundle.containsKey(text)){
+	if ((text != null) && (text.length() > 0) && (this.bundle != null)
+		&& this.bundle.containsKey(text)) {
 	    String translated = null;
 	    translated = this.bundle.getString(text);
-	    
+
 	    // do I have the translation?
-	    if( translated != null ){
+	    if (translated != null) {
 		logger.translation(text, translated);
 		return translated;
-	    }
-	    else 
+	    } else
 		return text;
 	} else
 	    // nothing to do, return the string passed as argument
@@ -147,8 +148,9 @@ public class AgletsTranslator implements Cloneable {
      *            the locale
      * @return the aglets translator
      */
-    public static AgletsTranslator getInstance(String localeBaseName,
-	    Locale currentLocale) {
+    public static AgletsTranslator getInstance(
+					       String localeBaseName,
+					       Locale currentLocale) {
 	String key = localeBaseName + currentLocale.toString();
 
 	// search first in the cache

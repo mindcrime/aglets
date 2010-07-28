@@ -57,14 +57,16 @@ abstract public class AgletStub {
     abstract protected void deactivate(long duration) throws IOException;
 
     // trip with Ticket
-    abstract protected void dispatch(Ticket ticket) throws IOException,
-	    RequestRefusedException;
+    abstract protected void dispatch(Ticket ticket)
+						   throws IOException,
+						   RequestRefusedException;
 
     /*
      * Dispatches the aglet
      */
-    abstract protected void dispatch(URL url) throws IOException,
-	    RequestRefusedException;
+    abstract protected void dispatch(URL url)
+					     throws IOException,
+					     RequestRefusedException;
 
     /*
      * Disposes the aglet

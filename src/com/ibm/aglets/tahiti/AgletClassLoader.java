@@ -511,7 +511,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      */
     @Override
     protected synchronized Class loadClass(String name, boolean resolve)
-	    throws ClassNotFoundException {
+									throws ClassNotFoundException {
 	logger.debug("loadClass()++ [" + resolve + "]");
 	try {
 	    Class cl = this.findResolvedClass(name);
@@ -644,7 +644,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      * @since
      */
     private Class loadClassFromCodeBase(String classname)
-	    throws ClassNotFoundException {
+							 throws ClassNotFoundException {
 	logger.debug("loadClassFromCodeBase(" + classname + ")");
 	byte[] bytecode = this.findByteCode(classname);
 

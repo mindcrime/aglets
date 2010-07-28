@@ -14,7 +14,6 @@ package com.ibm.aglets.tahiti;
  * deposited with the U.S. Copyright Office.
  */
 
-
 class ContextPermissionEditor extends GeneralPermissionEditor {
 
     // possible actions are "start", "shutdown", "add", "remove",

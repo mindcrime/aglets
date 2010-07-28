@@ -27,8 +27,10 @@ public interface ResourceManagerFactory {
 
     void clearCache(URL codebase, Certificate owner);
 
-    ResourceManager createResourceManager(URL codebase, Certificate owner,
-	    ClassName[] table);
+    ResourceManager createResourceManager(
+					  URL codebase,
+					  Certificate owner,
+					  ClassName[] table);
 
     ResourceManager getCurrentResourceManager();
 
