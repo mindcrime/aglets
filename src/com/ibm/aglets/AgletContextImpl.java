@@ -34,7 +34,7 @@ import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Vector;
 
-import org.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.log.AgletsLogger;
 
 import sun.audio.AudioData;
 import sun.audio.AudioStream;

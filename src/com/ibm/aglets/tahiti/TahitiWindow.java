@@ -26,11 +26,11 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.aglets.log.AgletsLogger;
-import org.aglets.util.AgletsTranslator;
-import org.aglets.util.gui.GUICommandStrings;
-import org.aglets.util.gui.JComponentBuilder;
-import org.aglets.util.gui.WindowManager;
+import net.sourceforge.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.util.AgletsTranslator;
+import net.sourceforge.aglets.util.gui.GUICommandStrings;
+import net.sourceforge.aglets.util.gui.JComponentBuilder;
+import net.sourceforge.aglets.util.gui.WindowManager;
 
 /**
  * A base window for all the windows of the Tahiti GUI. Please note that this

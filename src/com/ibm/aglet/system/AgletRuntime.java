@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.security.cert.Certificate;
 
-import org.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.log.AgletsLogger;
 
 import com.ibm.aglet.Aglet;
 import com.ibm.aglet.AgletContext;

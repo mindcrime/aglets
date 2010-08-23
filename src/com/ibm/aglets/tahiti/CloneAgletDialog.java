@@ -19,8 +19,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
-import org.aglets.util.gui.GUICommandStrings;
-import org.aglets.util.gui.JComponentBuilder;
+import net.sourceforge.aglets.util.gui.GUICommandStrings;
+import net.sourceforge.aglets.util.gui.JComponentBuilder;
 
 import com.ibm.aglet.AgletInfo;
 import com.ibm.aglet.AgletProxy;

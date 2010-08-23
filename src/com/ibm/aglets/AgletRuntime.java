@@ -34,7 +34,7 @@ import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
-import org.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.log.AgletsLogger;
 
 import com.ibm.aglet.AgletContext;
 import com.ibm.aglet.AgletID;

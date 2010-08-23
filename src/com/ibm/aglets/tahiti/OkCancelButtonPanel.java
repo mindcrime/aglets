@@ -7,9 +7,9 @@ import java.util.Locale;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import org.aglets.util.AgletsTranslator;
-import org.aglets.util.gui.GUICommandStrings;
-import org.aglets.util.gui.JComponentBuilder;
+import net.sourceforge.aglets.util.AgletsTranslator;
+import net.sourceforge.aglets.util.gui.GUICommandStrings;
+import net.sourceforge.aglets.util.gui.JComponentBuilder;
 
 /**
  * A panel that contains a couple of buttons for the generic ok/cancel

@@ -1,4 +1,4 @@
-package org.aglets.util.gui;
+package net.sourceforge.aglets.util.gui;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
@@ -22,8 +22,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import org.aglets.log.AgletsLogger;
-import org.aglets.util.AgletsTranslator;
+import net.sourceforge.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.util.AgletsTranslator;
 
 import com.ibm.aglets.tahiti.OkCancelButtonPanel;
 

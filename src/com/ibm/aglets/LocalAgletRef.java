@@ -29,7 +29,7 @@ import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import org.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.log.AgletsLogger;
 
 import com.ibm.aglet.Aglet;
 import com.ibm.aglet.AgletContext;

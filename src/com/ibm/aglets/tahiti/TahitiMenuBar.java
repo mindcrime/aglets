@@ -8,8 +8,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import org.aglets.util.gui.GUICommandStrings;
-import org.aglets.util.gui.JComponentBuilder;
+import net.sourceforge.aglets.util.gui.GUICommandStrings;
+import net.sourceforge.aglets.util.gui.JComponentBuilder;
 
 // TODO cambiare la costruzione dei menu usando il jcomponent
 

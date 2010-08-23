@@ -10,9 +10,9 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 
-import org.aglets.util.gui.GUICommandStrings;
-import org.aglets.util.gui.ImagePanel;
-import org.aglets.util.gui.JComponentBuilder;
+import net.sourceforge.aglets.util.gui.GUICommandStrings;
+import net.sourceforge.aglets.util.gui.ImagePanel;
+import net.sourceforge.aglets.util.gui.JComponentBuilder;
 
 import com.ibm.aglets.AgletRuntime;
 

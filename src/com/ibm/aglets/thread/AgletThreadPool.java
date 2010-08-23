@@ -2,7 +2,7 @@ package com.ibm.aglets.thread;
 
 import java.util.Stack;
 
-import org.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.log.AgletsLogger;
 
 import com.ibm.aglet.AgletException;
 import com.ibm.aglet.message.MessageManager;

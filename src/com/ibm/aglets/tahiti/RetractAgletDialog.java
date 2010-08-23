@@ -29,8 +29,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.aglets.util.gui.GUICommandStrings;
-import org.aglets.util.gui.JComponentBuilder;
+import net.sourceforge.aglets.util.gui.GUICommandStrings;
+import net.sourceforge.aglets.util.gui.JComponentBuilder;
 
 import com.ibm.aglet.AgletProxy;
 import com.ibm.aglet.system.Aglets;

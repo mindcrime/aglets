@@ -32,7 +32,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Hashtable;
 
-import org.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.log.AgletsLogger;
 
 import com.ibm.aglet.Ticket;
 import com.ibm.aglets.security.Randoms;

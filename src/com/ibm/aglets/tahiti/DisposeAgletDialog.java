@@ -19,7 +19,7 @@ import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.aglets.util.gui.GUICommandStrings;
+import net.sourceforge.aglets.util.gui.GUICommandStrings;
 
 import com.ibm.aglet.AgletProxy;
 

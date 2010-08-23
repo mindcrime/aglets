@@ -11,9 +11,9 @@ import javax.swing.JButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 
-import org.aglets.util.gui.GUICommandStrings;
-import org.aglets.util.gui.ImagePanel;
-import org.aglets.util.gui.JComponentBuilder;
+import net.sourceforge.aglets.util.gui.GUICommandStrings;
+import net.sourceforge.aglets.util.gui.ImagePanel;
+import net.sourceforge.aglets.util.gui.JComponentBuilder;
 
 public class TahitiToolBar extends JToolBar implements ActionListener {
 

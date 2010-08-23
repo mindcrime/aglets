@@ -49,9 +49,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.aglets.util.gui.GUICommandStrings;
-import org.aglets.util.gui.JComponentBuilder;
-import org.aglets.util.gui.WindowManager;
+import net.sourceforge.aglets.util.gui.GUICommandStrings;
+import net.sourceforge.aglets.util.gui.JComponentBuilder;
+import net.sourceforge.aglets.util.gui.WindowManager;
 
 import com.ibm.aglet.Aglet;
 import com.ibm.aglet.AgletException;

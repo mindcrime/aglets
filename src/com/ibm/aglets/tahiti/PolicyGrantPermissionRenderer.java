@@ -7,7 +7,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
 import javax.swing.JList;
 
-import org.aglets.util.AgletsTranslator;
+import net.sourceforge.aglets.util.AgletsTranslator;
 
 import com.ibm.aglets.security.PolicyGrant;
 import com.ibm.aglets.security.PolicyPermission;

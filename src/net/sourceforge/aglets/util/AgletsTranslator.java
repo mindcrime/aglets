@@ -1,4 +1,4 @@
-package org.aglets.util;
+package net.sourceforge.aglets.util;
 
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.log.AgletsLogger;
 
 /**
  * This class represnts a "translator" object for anything in the platform (even

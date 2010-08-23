@@ -16,7 +16,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionListener;
 
-import org.aglets.util.gui.JComponentBuilder;
+import net.sourceforge.aglets.util.gui.JComponentBuilder;
 
 /**
  * A class that embeds a JList to show agent data in the main Tahiti window.

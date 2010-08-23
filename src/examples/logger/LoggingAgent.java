@@ -1,6 +1,6 @@
 package examples.logger;
 
-import org.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.log.AgletsLogger;
 
 import com.ibm.aglet.Aglet;
 

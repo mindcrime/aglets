@@ -13,7 +13,7 @@ import java.security.ProtectionDomain;
 import java.security.cert.Certificate;
 import java.util.Hashtable;
 
-import org.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.log.AgletsLogger;
 
 import com.ibm.aglet.message.MessageManager;
 import com.ibm.aglets.ResourceManager;

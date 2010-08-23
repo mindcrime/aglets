@@ -1,4 +1,4 @@
-package org.aglets.util.gui;
+package net.sourceforge.aglets.util.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;

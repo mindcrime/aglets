@@ -21,7 +21,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.StreamTokenizer;
 
-import org.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.log.AgletsLogger;
 
 import com.ibm.awb.misc.FileUtils;
 import com.ibm.awb.misc.MalformedURIPatternException;

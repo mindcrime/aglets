@@ -26,7 +26,7 @@ import java.security.PrivilegedAction;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import org.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.log.AgletsLogger;
 
 import com.ibm.awb.misc.FileUtils;
 import com.ibm.awb.misc.Resource;

@@ -19,7 +19,7 @@ import java.security.PrivilegedAction;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import org.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.log.AgletsLogger;
 
 import com.ibm.aglet.message.MessageManager;
 import com.ibm.aglets.thread.AgletThread;

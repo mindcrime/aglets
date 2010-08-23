@@ -2,7 +2,7 @@ package examples.translator;
 
 import java.util.Enumeration;
 
-import org.aglets.util.AgletsTranslator;
+import net.sourceforge.aglets.util.AgletsTranslator;
 
 import com.ibm.aglet.Aglet;
 

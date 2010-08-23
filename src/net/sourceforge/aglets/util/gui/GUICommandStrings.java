@@ -1,4 +1,4 @@
-package org.aglets.util.gui;
+package net.sourceforge.aglets.util.gui;
 
 public class GUICommandStrings {
 

@@ -25,9 +25,9 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import org.aglets.util.gui.GUICommandStrings;
-import org.aglets.util.gui.ImagePanel;
-import org.aglets.util.gui.JComponentBuilder;
+import net.sourceforge.aglets.util.gui.GUICommandStrings;
+import net.sourceforge.aglets.util.gui.ImagePanel;
+import net.sourceforge.aglets.util.gui.JComponentBuilder;
 
 import com.ibm.aglet.system.AgletRuntime;
 

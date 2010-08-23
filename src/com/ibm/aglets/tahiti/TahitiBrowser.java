@@ -10,7 +10,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLEditorKit;
 
-import org.aglets.util.AgletsTranslator;
+import net.sourceforge.aglets.util.AgletsTranslator;
 
 public class TahitiBrowser extends TahitiDialog implements Runnable {
 

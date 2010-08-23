@@ -14,7 +14,7 @@ package com.ibm.aglets.thread;
  * deposited with the U.S. Copyright Office.
  */
 
-import org.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.log.AgletsLogger;
 
 import com.ibm.aglet.InvalidAgletException;
 import com.ibm.aglet.message.MessageManager;

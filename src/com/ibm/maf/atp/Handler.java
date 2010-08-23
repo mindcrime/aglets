@@ -17,7 +17,7 @@ package com.ibm.maf.atp;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import org.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.log.AgletsLogger;
 
 import com.ibm.aglet.Ticket;
 import com.ibm.aglet.system.AgletRuntime;

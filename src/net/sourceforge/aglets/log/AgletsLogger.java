@@ -1,4 +1,4 @@
-package org.aglets.log;
+package net.sourceforge.aglets.log;
 
 import java.util.HashMap;
 import java.util.Map;

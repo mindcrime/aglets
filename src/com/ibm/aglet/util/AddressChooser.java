@@ -36,7 +36,7 @@ import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import org.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.log.AgletsLogger;
 
 /**
  * @version 1.50 $Date: 2009/07/28 07:04:54 $

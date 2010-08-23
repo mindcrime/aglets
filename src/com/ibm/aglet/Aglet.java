@@ -31,8 +31,8 @@ import java.net.URL;
 import java.security.PermissionCollection;
 import java.util.Locale;
 
-import org.aglets.log.AgletsLogger;
-import org.aglets.util.AgletsTranslator;
+import net.sourceforge.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.util.AgletsTranslator;
 
 import com.ibm.aglet.event.AgletEvent;
 import com.ibm.aglet.event.AgletEventListener;

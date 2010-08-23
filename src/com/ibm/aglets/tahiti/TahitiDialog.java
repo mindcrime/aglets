@@ -35,8 +35,8 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 
-import org.aglets.util.AgletsTranslator;
-import org.aglets.util.gui.JComponentBuilder;
+import net.sourceforge.aglets.util.AgletsTranslator;
+import net.sourceforge.aglets.util.gui.JComponentBuilder;
 
 import com.ibm.aglet.AgletInfo;
 import com.ibm.aglet.AgletProxy;

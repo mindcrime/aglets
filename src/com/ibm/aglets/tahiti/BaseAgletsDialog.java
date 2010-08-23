@@ -7,9 +7,9 @@ import java.util.Locale;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
-import org.aglets.log.AgletsLogger;
-import org.aglets.util.AgletsTranslator;
-import org.aglets.util.gui.GUICommandStrings;
+import net.sourceforge.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.util.AgletsTranslator;
+import net.sourceforge.aglets.util.gui.GUICommandStrings;
 
 public class BaseAgletsDialog extends JDialog implements ActionListener {
 

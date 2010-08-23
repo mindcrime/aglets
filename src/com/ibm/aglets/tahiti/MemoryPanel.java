@@ -12,8 +12,8 @@ import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
-import org.aglets.log.AgletsLogger;
-import org.aglets.util.AgletsTranslator;
+import net.sourceforge.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.util.AgletsTranslator;
 
 import com.ibm.aglets.thread.AgletThreadPool;
 

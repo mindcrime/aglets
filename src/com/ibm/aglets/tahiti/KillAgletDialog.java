@@ -12,7 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
-import org.aglets.util.gui.JComponentBuilder;
+import net.sourceforge.aglets.util.gui.JComponentBuilder;
 
 import com.ibm.aglet.AgletInfo;
 import com.ibm.aglet.AgletProxy;

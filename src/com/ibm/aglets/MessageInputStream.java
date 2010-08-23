@@ -22,7 +22,7 @@ import java.io.ObjectStreamClass;
 import java.io.OptionalDataException;
 import java.io.StreamCorruptedException;
 
-import org.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.log.AgletsLogger;
 
 /**
  * 

@@ -29,7 +29,7 @@ import java.io.StreamCorruptedException;
 import java.net.URL;
 import java.security.cert.Certificate;
 
-import org.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.log.AgletsLogger;
 
 /**
  * AgletInfo class is a object which contains the information of the aglet.

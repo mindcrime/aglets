@@ -13,8 +13,8 @@ import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 
-import org.aglets.util.AgletsTranslator;
-import org.aglets.util.gui.JComponentBuilder;
+import net.sourceforge.aglets.util.AgletsTranslator;
+import net.sourceforge.aglets.util.gui.JComponentBuilder;
 
 import com.ibm.aglet.AgletException;
 import com.ibm.aglet.AgletInfo;
