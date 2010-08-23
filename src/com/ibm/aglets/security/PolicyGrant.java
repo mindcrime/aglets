@@ -173,6 +173,7 @@ public class PolicyGrant {
 	    final Certificate fCert = cert;
 
 	    username = (String) AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    return com.ibm.aglets.AgletRuntime.getCertificateAlias(fCert);
 		}
@@ -193,6 +194,7 @@ public class PolicyGrant {
 	    return true;
 	}
 	Boolean bb = (Boolean) AccessController.doPrivileged(new PrivilegedAction() {
+	    @Override
 	    public Object run() {
 		if (myCB == null) {
 		    return new Boolean(true);
@@ -316,7 +318,7 @@ public class PolicyGrant {
     }
 
     public void setCodeBase(String codeBase)
-					    throws MalformedURIPatternException {
+    throws MalformedURIPatternException {
 	this._codeBase = new URIPattern(codeBase);
     }
 
@@ -430,7 +432,7 @@ public class PolicyGrant {
 	// signed by
 	if ((this._signerNames != null) && !this._signerNames.equals("")) {
 	    line += " " + PolicyFileReader.WORD_SIGNEDBY + " " + QUOTE
-		    + this._signerNames + QUOTE;
+	    + this._signerNames + QUOTE;
 	}
 
 	// code base
@@ -439,7 +441,7 @@ public class PolicyGrant {
 		line += COMMA;
 	    }
 	    line += " " + PolicyFileReader.WORD_CODEBASE + " " + QUOTE
-		    + this._codeBase.toString() + QUOTE;
+	    + this._codeBase.toString() + QUOTE;
 	}
 
 	// owned by
@@ -448,7 +450,7 @@ public class PolicyGrant {
 		line += COMMA;
 	    }
 	    line += " " + PolicyFileReader.WORD_OWNEDBY + " " + QUOTE
-		    + this._ownerNames + QUOTE;
+	    + this._ownerNames + QUOTE;
 	}
 	line += " " + BEGIN_BLOCK;
 	lines.addElement(line);

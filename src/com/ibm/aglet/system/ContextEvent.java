@@ -61,7 +61,7 @@ public class ContextEvent extends AgletEvent {
      * Constructs an ContextEvent with the specified type.
      */
     public ContextEvent(Object context, AgletProxy target, Object arg,
-	    EventType type) {
+                        EventType type) {
 	this(context, target, type);
 	this.agletproxy = target;
 	this.arg = arg;

@@ -34,7 +34,7 @@ import com.ibm.aglet.event.MobilityEvent;
  * @see Task
  */
 public abstract class SeqItinerary extends MobilityAdapter implements
-	java.io.Serializable {
+java.io.Serializable {
 
     static final long serialVersionUID = 7979344708988677111L;
 

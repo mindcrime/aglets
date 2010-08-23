@@ -270,7 +270,7 @@ public class QoC implements Serializable {
     public String toString() {
 	final String integrity = "Integrity=" + this._integrity;
 	final String confidentiality = "Confidentiality="
-		+ this._confidentiality;
+	    + this._confidentiality;
 	final String timeout = "Timeout=" + this._timeout;
 	final String str = integrity + ", " + confidentiality + ", " + timeout;
 

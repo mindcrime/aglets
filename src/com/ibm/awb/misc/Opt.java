@@ -100,14 +100,15 @@ abstract public class Opt {
     };
 
     static Opt o[] = {
-	    Opt.Entry("-help", new Proc() {
-		public boolean exec(String a) {
-		    message();
-		    return true;
-		}
-	    }, " -help        print this message"),
-	    Opt.Entry("-verbose", "verbose", "true", " -verbose     turn on verbose mode"),
-	    Opt.Entry("-port", "port", " -port <port> set the port number"), };
+	Opt.Entry("-help", new Proc() {
+	    @Override
+	    public boolean exec(String a) {
+		message();
+		return true;
+	    }
+	}, " -help        print this message"),
+	Opt.Entry("-verbose", "verbose", "true", " -verbose     turn on verbose mode"),
+	Opt.Entry("-port", "port", " -port <port> set the port number"), };
 
     Opt(String n, String m) {
 	this.name = n;

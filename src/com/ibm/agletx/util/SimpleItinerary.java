@@ -68,7 +68,7 @@ import com.ibm.aglet.message.Message;
 // public class SimpleItinerary extends MobilityAdapter implements
 // java.io.Serializable {
 public class SimpleItinerary extends MobilityAdapter implements
-	java.io.Externalizable {
+java.io.Externalizable {
 
     static final long serialVersionUID = -5696240265720297145L;
 
@@ -107,8 +107,8 @@ public class SimpleItinerary extends MobilityAdapter implements
      *                if dispatch completely failed
      */
     public void go(String address, Message msg)
-					       throws java.io.IOException,
-					       AgletException {
+    throws java.io.IOException,
+    AgletException {
 	this.next = msg;
 	this.aglet.dispatch(new URL(address));
     }
@@ -127,8 +127,8 @@ public class SimpleItinerary extends MobilityAdapter implements
      *                if dispatch completely failed
      */
     public void go(String address, String msg)
-					      throws java.io.IOException,
-					      AgletException {
+    throws java.io.IOException,
+    AgletException {
 	this.go(address, new Message(msg));
     }
 
@@ -149,16 +149,18 @@ public class SimpleItinerary extends MobilityAdapter implements
 	}
     }
 
+    @Override
     public void readExternal(java.io.ObjectInput in)
-						    throws java.io.IOException,
-						    ClassNotFoundException {
+    throws java.io.IOException,
+    ClassNotFoundException {
 	this.aglet = (Aglet) in.readObject();
 	this.next = (Message) in.readObject();
 	this.plan = (Hashtable) in.readObject();
     }
 
+    @Override
     public void writeExternal(java.io.ObjectOutput oo)
-						      throws java.io.IOException {
+    throws java.io.IOException {
 	oo.writeObject(this.aglet);
 	oo.writeObject(this.next);
 	oo.writeObject(this.plan);

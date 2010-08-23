@@ -15,7 +15,9 @@ package com.ibm.aglets.tahiti;
  */
 
 abstract class PermissionEditor extends PermissionPanel implements Editor {
+    @Override
     abstract public String getText();
 
+    @Override
     abstract public void setText(String text);
 }

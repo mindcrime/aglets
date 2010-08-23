@@ -42,18 +42,18 @@ public final class CommandLine implements ContextListener, Runnable {
 
     private static UserManager _userManager = new CommandLineUserManager();
     private static String helpMsg = "help                    Display this message. \n"
-	    + "shutdown                Shutdown the server. \n"
-	    + "reboot                  Reboot the server. \n"
-	    + "list                    List all aglets in the server. \n"
-	    + "prompt                  Display or changes the prompt. \n"
-	    + "msg on|off              Message printing on/off. \n"
-	    + "create [codeBase] name  Create new aglet. \n"
-	    + "<aglet> dispatch URL    Dispatch the aglet to the URL. \n"
-	    + "<aglet> clone           Clone the aglet. \n"
-	    + "<aglet> dispose         Dispose the aglet. \n"
-	    + "<aglet> dialog          Request a dialog to interact with.\n"
-	    + "<aglet> property        Display properties of the aglet.\n"
-	    + "Note: <aglet> is a left most string listed in the result of list command. ";
+	+ "shutdown                Shutdown the server. \n"
+	+ "reboot                  Reboot the server. \n"
+	+ "list                    List all aglets in the server. \n"
+	+ "prompt                  Display or changes the prompt. \n"
+	+ "msg on|off              Message printing on/off. \n"
+	+ "create [codeBase] name  Create new aglet. \n"
+	+ "<aglet> dispatch URL    Dispatch the aglet to the URL. \n"
+	+ "<aglet> clone           Clone the aglet. \n"
+	+ "<aglet> dispose         Dispose the aglet. \n"
+	+ "<aglet> dialog          Request a dialog to interact with.\n"
+	+ "<aglet> property        Display properties of the aglet.\n"
+	+ "Note: <aglet> is a left most string listed in the result of list command. ";
 
     /*
      * for autonumbering aglets
@@ -91,6 +91,7 @@ public final class CommandLine implements ContextListener, Runnable {
      * @param event
      *            an ContextEvent
      */
+    @Override
     public void agletActivated(ContextEvent event) {
 	if (this.message) {
 	    System.out.println("Activated " + event.getAgletProxy());
@@ -105,6 +106,7 @@ public final class CommandLine implements ContextListener, Runnable {
      * @param event
      *            an ContextEvent
      */
+    @Override
     public void agletArrived(ContextEvent event) {
 	this.added(event.getAgletProxy());
     }
@@ -115,6 +117,7 @@ public final class CommandLine implements ContextListener, Runnable {
      * @param event
      *            an ContextEvent
      */
+    @Override
     public void agletCloned(ContextEvent event) {
 	this.added(event.getAgletProxy());
     }
@@ -125,6 +128,7 @@ public final class CommandLine implements ContextListener, Runnable {
      * @param event
      *            an AgletEvent
      */
+    @Override
     public void agletCreated(ContextEvent event) {
 	this.added(event.getAgletProxy());
     }
@@ -135,6 +139,7 @@ public final class CommandLine implements ContextListener, Runnable {
      * @param event
      *            an ContextEvent
      */
+    @Override
     public void agletDeactivated(ContextEvent event) {
 	if (this.message) {
 	    System.out.println("Deactivated " + event.getAgletProxy());
@@ -149,6 +154,7 @@ public final class CommandLine implements ContextListener, Runnable {
      * @param event
      *            an ContextEvent
      */
+    @Override
     public void agletDispatched(ContextEvent event) {
 
 	// event.getAgletProxy() is the AgletProxy AFTER dispatching,
@@ -163,6 +169,7 @@ public final class CommandLine implements ContextListener, Runnable {
      * @param event
      *            an ContextEvent
      */
+    @Override
     public void agletDisposed(ContextEvent event) {
 	this.removed(event.getAgletProxy());
     }
@@ -173,6 +180,7 @@ public final class CommandLine implements ContextListener, Runnable {
      * @param event
      *            an ContextEvent
      */
+    @Override
     public void agletResumed(ContextEvent event) {
 	if (this.message) {
 	    System.out.println("Resumed " + event.getAgletProxy());
@@ -187,6 +195,7 @@ public final class CommandLine implements ContextListener, Runnable {
      * @param event
      *            an ContextEvent
      */
+    @Override
     public void agletReverted(ContextEvent event) {
 	this.removed(event.getAgletProxy());
     }
@@ -197,6 +206,7 @@ public final class CommandLine implements ContextListener, Runnable {
      * @param event
      *            an ContextEvent
      */
+    @Override
     public void agletStateChanged(ContextEvent event) {
 	synchronized (this.aglets) {
 	    Enumeration e = this.aglets.keys();
@@ -221,6 +231,7 @@ public final class CommandLine implements ContextListener, Runnable {
      * @param event
      *            an ContextEvent
      */
+    @Override
     public void agletSuspended(ContextEvent event) {
 	if (this.message) {
 	    System.out.println("Suspended " + event.getAgletProxy());
@@ -311,6 +322,7 @@ public final class CommandLine implements ContextListener, Runnable {
 	}
     }
 
+    @Override
     public void contextShutdown(ContextEvent ev) {
 
 	//
@@ -322,6 +334,7 @@ public final class CommandLine implements ContextListener, Runnable {
      * @param context
      *            the AgletContext assigned to this Viewer.
      */
+    @Override
     public void contextStarted(ContextEvent ev) {
 	this.context = ev.getAgletContext();
 	Resource res = Resource.getResourceFor("aglets");
@@ -376,6 +389,7 @@ public final class CommandLine implements ContextListener, Runnable {
     /**
      * Infinite loop to process inputs
      */
+    @Override
     public void run() {
 	Thread.currentThread().setPriority(1);
 	DataInput in = new DataInputStream(System.in);
@@ -400,6 +414,7 @@ public final class CommandLine implements ContextListener, Runnable {
      * @param event
      *            an ContextEvent
      */
+    @Override
     public void showDocument(ContextEvent event) {
 	if (this.message) {
 	    System.out.println("hyper link required :" + event.arg);
@@ -412,6 +427,7 @@ public final class CommandLine implements ContextListener, Runnable {
      * @param event
      *            an ContextEvent
      */
+    @Override
     public void showMessage(ContextEvent event) {
 	if (this.message) {
 	    System.out.println((String) event.arg);

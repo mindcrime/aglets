@@ -100,7 +100,7 @@ public interface AgletRef extends com.ibm.awb.weakref.Ref {
      *            the message to send
      */
     public FutureReply sendFutureMessage(Message msg)
-						     throws InvalidAgletException;
+    throws InvalidAgletException;
 
     /**
      * Sends a message in synchronous way.
@@ -109,9 +109,9 @@ public interface AgletRef extends com.ibm.awb.weakref.Ref {
      *            the message to send
      */
     public Object sendMessage(Message msg)
-					  throws MessageException,
-					  InvalidAgletException,
-					  NotHandledException;
+    throws MessageException,
+    InvalidAgletException,
+    NotHandledException;
 
     /**
      * Sends an oneway message

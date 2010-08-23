@@ -36,11 +36,13 @@ final class SimplePEntry implements com.ibm.aglets.PersistentEntry {
 	this.file = f;
     }
 
+    @Override
     public InputStream getInputStream() throws FileNotFoundException {
 	try {
 	    final File f = this.file;
 
 	    return (InputStream) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws FileNotFoundException {
 		    return new FileInputStream(f);
 		}
@@ -50,11 +52,13 @@ final class SimplePEntry implements com.ibm.aglets.PersistentEntry {
 	}
     }
 
+    @Override
     public OutputStream getOutputStream() throws IOException {
 	try {
 	    final File f = this.file;
 
 	    return (OutputStream) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws IOException {
 		    if (!f.exists()) {
 			File dir = f.getCanonicalFile().getParentFile();

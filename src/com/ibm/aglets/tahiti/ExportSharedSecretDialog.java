@@ -88,7 +88,7 @@ public class ExportSharedSecretDialog extends TahitiDialog {
 	    return;
 
 	for (Enumeration enumer = allSecrets.getDomainNames(); (enumer != null)
-		&& enumer.hasMoreElements();) {
+	&& enumer.hasMoreElements();) {
 	    String currentDomain = (String) enumer.nextElement();
 	    this.domainList.addItem(currentDomain);
 	}
@@ -121,7 +121,7 @@ public class ExportSharedSecretDialog extends TahitiDialog {
 		this.logger.error("Exception caught while trying to get a certificate from the filesystem (browsing)", e);
 		JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 			+ ".fileError"), this.translator.translate(this.baseKey
-			+ ".fileError.title"), JOptionPane.ERROR_MESSAGE);
+				+ ".fileError.title"), JOptionPane.ERROR_MESSAGE);
 	    }
 
 	} else if (GUICommandStrings.OK_COMMAND.equals(command)) {
@@ -137,7 +137,7 @@ public class ExportSharedSecretDialog extends TahitiDialog {
 		if (secret == null)
 		    JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 			    + ".sharedSecretNotExists"), this.translator.translate(this.baseKey
-			    + ".sharedSecretNotExists.title"), JOptionPane.ERROR_MESSAGE);
+				    + ".sharedSecretNotExists.title"), JOptionPane.ERROR_MESSAGE);
 		else
 		    secret.save(file);
 
@@ -145,13 +145,13 @@ public class ExportSharedSecretDialog extends TahitiDialog {
 		this.logger.error("Shared secret file not found, cannot import", e);
 		JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 			+ ".fileError2"), this.translator.translate(this.baseKey
-			+ ".fileError2.title"), JOptionPane.ERROR_MESSAGE);
+				+ ".fileError2.title"), JOptionPane.ERROR_MESSAGE);
 
 	    } catch (IOException e) {
 		this.logger.error("Exception caught while trying to access the shared secret file", e);
 		JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 			+ ".fileError2"), this.translator.translate(this.baseKey
-			+ ".fileError2.title"), JOptionPane.ERROR_MESSAGE);
+				+ ".fileError2.title"), JOptionPane.ERROR_MESSAGE);
 	    }
 
 	}

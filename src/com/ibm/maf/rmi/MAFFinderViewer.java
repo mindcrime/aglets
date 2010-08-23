@@ -26,7 +26,7 @@ import com.ibm.maf.MAFFinder;
 import com.ibm.maf.Name;
 
 public class MAFFinderViewer extends Frame implements WindowListener,
-	ActionListener {
+ActionListener {
     private String _finder_url = "rmi://localhost:4435/MAFFinder";
     private MAFFinder _finder = null;
 
@@ -159,6 +159,7 @@ public class MAFFinderViewer extends Frame implements WindowListener,
 	this.add(bottom_panel, "South");
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
 	if ("Update".equals(e.getActionCommand())) {
 	    this.update_lists();
@@ -281,25 +282,32 @@ public class MAFFinderViewer extends Frame implements WindowListener,
 	}
     }
 
+    @Override
     public void windowActivated(WindowEvent e) {
     }
 
+    @Override
     public void windowClosed(WindowEvent e) {
     }
 
+    @Override
     public void windowClosing(WindowEvent e) {
 	System.exit(0);
     }
 
+    @Override
     public void windowDeactivated(WindowEvent e) {
     }
 
+    @Override
     public void windowDeiconified(WindowEvent e) {
     }
 
+    @Override
     public void windowIconified(WindowEvent e) {
     }
 
+    @Override
     public void windowOpened(WindowEvent e) {
     }
 }

@@ -46,7 +46,7 @@ import com.ibm.awb.misc.Resource;
  */
 
 final class CreateAgletDialog extends TahitiDialog implements ActionListener,
-	ListSelectionListener {
+ListSelectionListener {
 
     /*
      * GUI components
@@ -276,6 +276,7 @@ final class CreateAgletDialog extends TahitiDialog implements ActionListener,
      * @param e
      *            the event
      */
+    @Override
     public void valueChanged(ListSelectionEvent e) {
 	// get the list selected in the list
 	String selectedItem = this.selectionList.getSelectedItem();

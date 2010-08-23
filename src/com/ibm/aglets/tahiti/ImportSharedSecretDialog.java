@@ -89,7 +89,7 @@ public class ImportSharedSecretDialog extends TahitiDialog {
 		this.logger.error("Exception caught while trying to get a certificate from the filesystem (browsing)", e);
 		JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 			+ ".fileError"), this.translator.translate(this.baseKey
-			+ ".fileError.title"), JOptionPane.ERROR_MESSAGE);
+				+ ".fileError.title"), JOptionPane.ERROR_MESSAGE);
 	    }
 
 	} else if (GUICommandStrings.OK_COMMAND.equals(command)) {
@@ -108,7 +108,7 @@ public class ImportSharedSecretDialog extends TahitiDialog {
 		if ((allSecrets.getSharedSecret(secret.getDomainName())) != null) {
 		    JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 			    + ".sharedSecretExists"), this.translator.translate(this.baseKey
-			    + ".sharedSecretExists.title"), JOptionPane.ERROR_MESSAGE);
+				    + ".sharedSecretExists.title"), JOptionPane.ERROR_MESSAGE);
 		} else {
 		    // ok, add the shared secret
 		    allSecrets.addSharedSecret(secret);
@@ -119,13 +119,13 @@ public class ImportSharedSecretDialog extends TahitiDialog {
 		this.logger.error("Shared secret file not found, cannot import", e);
 		JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 			+ ".fileError2"), this.translator.translate(this.baseKey
-			+ ".fileError2.title"), JOptionPane.ERROR_MESSAGE);
+				+ ".fileError2.title"), JOptionPane.ERROR_MESSAGE);
 
 	    } catch (IOException e) {
 		this.logger.error("Exception caught while trying to access the shared secret file", e);
 		JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 			+ ".fileError2"), this.translator.translate(this.baseKey
-			+ ".fileError2.title"), JOptionPane.ERROR_MESSAGE);
+				+ ".fileError2.title"), JOptionPane.ERROR_MESSAGE);
 	    }
 
 	}

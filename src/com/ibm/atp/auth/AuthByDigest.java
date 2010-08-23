@@ -81,7 +81,7 @@ public class AuthByDigest extends Auth {
      */
     @Override
     public final byte[] calculateResponse(int turn, Challenge challenge)
-									throws AuthenticationException {
+    throws AuthenticationException {
 	return this.hash(turn, challenge);
     }
 
@@ -107,7 +107,7 @@ public class AuthByDigest extends Auth {
      */
     @Override
     protected final byte[] hash(int turn, Challenge challenge)
-							      throws AuthenticationException {
+    throws AuthenticationException {
 	this.resetDigest();
 
 	if (challenge == null) {
@@ -156,7 +156,7 @@ public class AuthByDigest extends Auth {
      */
     @Override
     public boolean verify(int turn, Challenge challenge, byte[] response)
-									 throws AuthenticationException {
+    throws AuthenticationException {
 	ByteSequence seq = new ByteSequence(this.calculateResponse(turn, challenge));
 
 	return seq.equals(response);
@@ -176,7 +176,7 @@ public class AuthByDigest extends Auth {
      */
     @Override
     public boolean verify(int turn, Challenge challenge, ByteSequence response)
-									       throws AuthenticationException {
+    throws AuthenticationException {
 	ByteSequence seq = new ByteSequence(this.calculateResponse(turn, challenge));
 
 	return seq.equals(response);

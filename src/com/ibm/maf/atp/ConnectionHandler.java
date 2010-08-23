@@ -124,8 +124,8 @@ final class ConnectionHandler extends Thread implements AtpConstants {
     byte future_reply[] = null;
 
     /*
-	 * 
-	 */
+     * 
+     */
     private static final String CRLF = "\r\n";
 
     public ConnectionHandler(MAFAgentSystem maf, ServerSocket s) {
@@ -405,9 +405,9 @@ final class ConnectionHandler extends Thread implements AtpConstants {
      * Handles Dispatch Requests
      */
     protected void handleDispatchRequest(
-					 AtpRequest request,
-					 AtpResponse response)
-							      throws IOException {
+                                         AtpRequest request,
+                                         AtpResponse response)
+    throws IOException {
 	response.setContentType("application/x-aglets");
 	boolean sent = false;
 
@@ -480,7 +480,7 @@ final class ConnectionHandler extends Thread implements AtpConstants {
      * @param response
      */
     protected void handleFetchRequest(AtpRequest request, AtpResponse response)
-									       throws IOException {
+    throws IOException {
 	response.setContentType("application/x-aglets");
 	boolean sent = false;
 
@@ -552,7 +552,7 @@ final class ConnectionHandler extends Thread implements AtpConstants {
     // - }
 
     protected void handleMessageRequest(AtpRequest request, AtpResponse response)
-										 throws IOException {
+    throws IOException {
 
 	response.setContentType("application/x-aglets");
 	boolean sent = false;
@@ -670,7 +670,7 @@ final class ConnectionHandler extends Thread implements AtpConstants {
      * Handle ATP Requests
      */
     void handleRequest(AtpRequest request, AtpResponse response)
-								throws IOException {
+    throws IOException {
 	switch (request.getMethod()) {
 	case DISPATCH:
 	    this.handleDispatchRequest(request, response);
@@ -719,7 +719,7 @@ final class ConnectionHandler extends Thread implements AtpConstants {
      * @param response
      */
     protected void handleRetractRequest(AtpRequest request, AtpResponse response)
-										 throws IOException {
+    throws IOException {
 	response.setContentType("application/x-aglets");
 	boolean sent = false;
 
@@ -785,6 +785,7 @@ final class ConnectionHandler extends Thread implements AtpConstants {
 			final ServerSocket fServerSocket = this._serversocket;
 
 			this._connection = (Socket) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+			    @Override
 			    public Object run() throws IOException {
 				return fServerSocket.accept();
 			    }
@@ -825,7 +826,7 @@ final class ConnectionHandler extends Thread implements AtpConstants {
 	p.print("Content-type: text/html" + CRLF);
 
 	String s = "<HTTP><HEAD> ATP DAEMON/0.1 </HEAD><BODY>"
-		+ "<H1> IBM ATP DAEMON/0.1 </H1><BR>" + "</BODY></HTTP>";
+	    + "<H1> IBM ATP DAEMON/0.1 </H1><BR>" + "</BODY></HTTP>";
 
 	p.print("Content-length: " + s.length() + CRLF + CRLF);
 	p.println(s);

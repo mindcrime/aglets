@@ -53,7 +53,7 @@ import java.awt.event.WindowListener;
 import com.ibm.awb.misc.Resource;
 
 public class AddressBook extends Window implements ActionListener,
-	ItemListener, FocusListener {
+ItemListener, FocusListener {
 
     transient List _list = new List(10, false);
     transient AddressChooser _chooser = null;
@@ -139,6 +139,7 @@ public class AddressBook extends Window implements ActionListener,
 	this.addFocusListener(this);
     }
 
+    @Override
     public void actionPerformed(ActionEvent ev) {
 	if ("add".equals(ev.getActionCommand())) {
 	    if (this._chooser != null) {
@@ -195,6 +196,7 @@ public class AddressBook extends Window implements ActionListener,
 	this.setLocation(loc.x, loc.y);
     }
 
+    @Override
     public void focusGained(FocusEvent ev) {
 	if (this.isVisible()) {
 	    this.adjust();
@@ -202,9 +204,11 @@ public class AddressBook extends Window implements ActionListener,
 	}
     }
 
+    @Override
     public void focusLost(FocusEvent ev) {
     }
 
+    @Override
     public void itemStateChanged(ItemEvent ev) {
 	String item = this._list.getSelectedItem();
 

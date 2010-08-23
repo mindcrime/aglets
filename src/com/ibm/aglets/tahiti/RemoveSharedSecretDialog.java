@@ -80,7 +80,7 @@ public class RemoveSharedSecretDialog extends TahitiDialog {
 	    return;
 
 	for (Enumeration enumer = allSecrets.getDomainNames(); (enumer != null)
-		&& enumer.hasMoreElements();) {
+	&& enumer.hasMoreElements();) {
 	    String currentDomain = (String) enumer.nextElement();
 	    this.domainList.addItem(currentDomain);
 	}
@@ -106,7 +106,7 @@ public class RemoveSharedSecretDialog extends TahitiDialog {
 	    if (selectedSecret == null) {
 		JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 			+ ".sharedSecretNotExists"), this.translator.translate(this.baseKey
-			+ ".sharedSecretNotExists.title"), JOptionPane.ERROR_MESSAGE);
+				+ ".sharedSecretNotExists.title"), JOptionPane.ERROR_MESSAGE);
 		return;
 
 	    }
@@ -117,7 +117,7 @@ public class RemoveSharedSecretDialog extends TahitiDialog {
 	    if (runTime.authenticateOwner(username, password) == null) {
 		JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 			+ ".authError"), this.translator.translate(this.baseKey
-			+ ".authError.title"), JOptionPane.ERROR_MESSAGE);
+				+ ".authError.title"), JOptionPane.ERROR_MESSAGE);
 		return;
 
 	    }

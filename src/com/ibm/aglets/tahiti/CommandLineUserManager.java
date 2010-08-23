@@ -32,7 +32,7 @@ public final class CommandLineUserManager extends UserManager {
 	while (true) {
 	    System.out.print(title
 		    + ((defval == null) || (defval.length() == 0) ? ":" : "["
-			    + defval + "]:"));
+			+ defval + "]:"));
 	    System.out.flush();
 	    try {
 		line = r.readLine();
@@ -52,15 +52,15 @@ public final class CommandLineUserManager extends UserManager {
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     private String inputUsername(String title) {
 	return this.inputUsername(title, getDefaultUsername());
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     private String inputUsername(String title, String defaultUsername) {
 	return this.input(title, defaultUsername, true);
     }

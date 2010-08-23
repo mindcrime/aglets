@@ -47,8 +47,9 @@ public class Handler implements AgentSystemHandler {
 
     static private int MAX_RETRY = 3;
 
+    @Override
     public MAFAgentSystem getMAFAgentSystem(Ticket ticket)
-							  throws java.net.UnknownHostException {
+    throws java.net.UnknownHostException {
 
 	// tentative
 	java.net.URL u = ticket.getDestination();
@@ -59,8 +60,9 @@ public class Handler implements AgentSystemHandler {
 	return this.getMAFAgentSystem0(address);
     }
 
+    @Override
     public MAFAgentSystem getMAFAgentSystem(String address)
-							   throws java.net.UnknownHostException {
+    throws java.net.UnknownHostException {
 
 	int to = -1;
 
@@ -85,7 +87,7 @@ public class Handler implements AgentSystemHandler {
     }
 
     private MAFAgentSystem getMAFAgentSystem0(String address)
-							     throws java.net.UnknownHostException {
+    throws java.net.UnknownHostException {
 	MAFAgentSystem local = MAFAgentSystem_RMIImpl.getLocalAgentSystem(address);
 
 	if (local != null) {
@@ -99,11 +101,12 @@ public class Handler implements AgentSystemHandler {
 		    final String fAddress = address;
 
 		    rmi = (MAFAgentSystem_RMI) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+			@Override
 			public Object run()
-					   throws UnknownHostException,
-					   MalformedURLException,
-					   NotBoundException,
-					   RemoteException {
+			throws UnknownHostException,
+			MalformedURLException,
+			NotBoundException,
+			RemoteException {
 			    return Naming.lookup("//" + fAddress + "/aglets");
 			}
 		    });
@@ -132,8 +135,9 @@ public class Handler implements AgentSystemHandler {
 	}
     }
 
+    @Override
     synchronized public void initMAFAgentSystem(MAFAgentSystem local)
-								     throws MAFExtendedException {
+    throws MAFExtendedException {
 	try {
 	    if (initialized) {
 		return;
@@ -205,8 +209,9 @@ public class Handler implements AgentSystemHandler {
 	return null;
     }
 
+    @Override
     public void startMAFAgentSystem(MAFAgentSystem local)
-							 throws MAFExtendedException {
+    throws MAFExtendedException {
 	try {
 	    MAFAgentSystem_RMIImpl impl = new MAFAgentSystem_RMIImpl(local);
 

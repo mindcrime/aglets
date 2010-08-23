@@ -70,7 +70,7 @@ final class AgletTimer implements Runnable {
 	DeactivationInfo tmp;
 
 	for (tmp = this.top; (tmp.next != null)
-		&& (tmp.next.wakeup < dinfo.wakeup); tmp = tmp.next) {
+	&& (tmp.next.wakeup < dinfo.wakeup); tmp = tmp.next) {
 	}
 	dinfo.next = tmp.next;
 	tmp.next = dinfo;
@@ -190,6 +190,7 @@ final class AgletTimer implements Runnable {
 	}
     }
 
+    @Override
     public void run() {
 	long sleeptime = 0;
 

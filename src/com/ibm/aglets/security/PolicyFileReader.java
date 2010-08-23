@@ -114,8 +114,8 @@ public class PolicyFileReader {
     }
 
     protected synchronized static PolicyDB getAllPolicyDB(
-							  String systemPolicyFilename,
-							  String userPolicyFilename) {
+                                                          String systemPolicyFilename,
+                                                          String userPolicyFilename) {
 	PolicyFileReader reader = new PolicyFileReader(systemPolicyFilename);
 
 	try {
@@ -137,7 +137,7 @@ public class PolicyFileReader {
     }
 
     protected synchronized PolicyPermission getPolicyPermission()
-								 throws PolicyFileParsingException {
+    throws PolicyFileParsingException {
 	if (!this.isPolicyPermission()) {
 
 	    // # throw
@@ -251,7 +251,7 @@ public class PolicyFileReader {
 	    return null;
 	}
 	return javahome + SEP + "lib" + SEP + "security" + SEP
-		+ FILENAME_JAVAPOLICY;
+	+ FILENAME_JAVAPOLICY;
     }
 
     public static String getUserPolicyFilename() {
@@ -435,7 +435,7 @@ public class PolicyFileReader {
     }
 
     protected synchronized void readPolicyDB()
-					      throws PolicyFileParsingException {
+    throws PolicyFileParsingException {
 	this.nextToken();
 
 	// at least one grant clause is needed
@@ -459,7 +459,7 @@ public class PolicyFileReader {
     }
 
     protected synchronized void readPolicyFile(String filename)
-							       throws FileNotFoundException {
+    throws FileNotFoundException {
 	logger.info("Reading security policy file: " + filename);
 	if (filename == null) {
 	    throw new FileNotFoundException("Policy filename is null.");
@@ -481,7 +481,7 @@ public class PolicyFileReader {
     }
 
     protected synchronized void readPolicyGrant()
-						 throws PolicyFileParsingException {
+    throws PolicyFileParsingException {
 	if (!this.isGrant()) {
 	    throw this.getParsingException("The reserved word '" + WORD_GRANT
 		    + "' is expected, not '" + this.token() + "'.");

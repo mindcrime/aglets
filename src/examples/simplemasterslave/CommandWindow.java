@@ -45,6 +45,7 @@ class CommandWindow extends Frame implements ActionListener {
     }
 
     // handle action event
+    @Override
     public void actionPerformed(ActionEvent ae) {
 	try {
 	    if ("go".equals(ae.getActionCommand())) {

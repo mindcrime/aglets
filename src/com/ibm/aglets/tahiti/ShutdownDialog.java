@@ -50,8 +50,8 @@ final class ShutdownDialog extends TahitiDialog {
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     /* package protected */
     ShutdownDialog(MainWindow parent, String msg) {
 	super(parent);

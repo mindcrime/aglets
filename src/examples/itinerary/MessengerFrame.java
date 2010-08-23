@@ -76,6 +76,7 @@ class MessengerFrame extends Frame implements WindowListener, ActionListener {
      * @param ae
      *            the event to be handled
      */
+    @Override
     public void actionPerformed(ActionEvent ae) {
 	if ("Start!".equals(ae.getActionCommand())) {
 	    if (this.aglet.itinerary == null) {
@@ -119,9 +120,11 @@ class MessengerFrame extends Frame implements WindowListener, ActionListener {
 	}
     }
 
+    @Override
     public void windowActivated(WindowEvent we) {
     }
 
+    @Override
     public void windowClosed(WindowEvent we) {
     }
 
@@ -132,19 +135,24 @@ class MessengerFrame extends Frame implements WindowListener, ActionListener {
      *            the event to be handled
      */
 
+    @Override
     public void windowClosing(WindowEvent we) {
 	this.dispose();
     }
 
+    @Override
     public void windowDeactivated(WindowEvent we) {
     }
 
+    @Override
     public void windowDeiconified(WindowEvent we) {
     }
 
+    @Override
     public void windowIconified(WindowEvent we) {
     }
 
+    @Override
     public void windowOpened(WindowEvent we) {
     }
 }

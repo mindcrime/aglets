@@ -49,8 +49,8 @@ public abstract class SampleWindow extends Frame {
 
     // -- error msg for malformed URLs.
     static final String MAL_FORMED_URL_MSG = "Invalid destination address.\n"
-	    + "Please type the correct destination to go.\n"
-	    + "Example: {atp|http}://java.trl.ibm.com.";
+	+ "Please type the correct destination to go.\n"
+	+ "Example: {atp|http}://java.trl.ibm.com.";
 
     // -- error msg for missing file name.
     static final String NO_FILENAME_MSG = "Please insert a valid file name.";
@@ -300,6 +300,6 @@ public abstract class SampleWindow extends Frame {
     // -- inherited from a context of a specific aglet.
     //
     public static void setWindowProperties(Frame f, Aglet aglet)
-								throws AgletException {
+    throws AgletException {
     }
 }

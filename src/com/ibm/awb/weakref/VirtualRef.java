@@ -25,28 +25,34 @@ public class VirtualRef implements java.io.Serializable {
 	public NullRef() {
 	}
 
+	@Override
 	public void referenced() {
 	}
 
+	@Override
 	public void unreferenced() {
 	}
 
+	@Override
 	public String getRefClassName() {
 	    return NullRef.class.getName();
 	}
 
+	@Override
 	public Ref getRef(VirtualRef vref) {
 	    return null;
 	}
 
+	@Override
 	public void writeInfo(ObjectOutputStream s) {
 
 	    // do nothing.
 	}
 
+	@Override
 	public void setRef(VirtualRef vref, ObjectInputStream s)
-								throws IOException,
-								ClassNotFoundException {
+	throws IOException,
+	ClassNotFoundException {
 	}
     }
 
@@ -90,8 +96,8 @@ public class VirtualRef implements java.io.Serializable {
     }
 
     private void readObject(ObjectInputStream s)
-						throws IOException,
-						ClassNotFoundException {
+    throws IOException,
+    ClassNotFoundException {
 	String name = (String) s.readObject();
 	Ref tmp = (Ref) cache.get(name);
 

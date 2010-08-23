@@ -58,8 +58,8 @@ public class AtpConnectionImpl extends URLConnection implements AtpConstants {
     protected static final String ATP_VERSION = "ATP/0.1";
 
     /*
-	 * 
-	 */
+     * 
+     */
     static Hashtable default_request_properties = new Hashtable();
     static AgentProfile agent_profile = null;
 
@@ -67,8 +67,8 @@ public class AtpConnectionImpl extends URLConnection implements AtpConstants {
 	short one = (short) 1;
 
 	agent_profile = new AgentProfile(one, // Java
-	one, // Aglets
-	"Aglets", one, one, one, null);
+		one, // Aglets
+		"Aglets", one, one, one, null);
 
 	/*
 	 * default_request_properties.put("agent-language", "java");
@@ -82,8 +82,8 @@ public class AtpConnectionImpl extends URLConnection implements AtpConstants {
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     private int _request_type = REQUEST_TYPE_BASE;
 
     private InputStream _inputStream = null;
@@ -100,8 +100,8 @@ public class AtpConnectionImpl extends URLConnection implements AtpConstants {
     private byte[] mic = null;
 
     /*
-	 * 
-	 */
+     * 
+     */
     Hashtable request_properties;
 
     /*
@@ -147,7 +147,7 @@ public class AtpConnectionImpl extends URLConnection implements AtpConstants {
 	if (HttpProxyConnection.useHttpProxy(this.url)) {
 	    int port = this.url.getPort();
 	    String target = this.url.getHost() + ':'
-		    + (port == -1 ? ATP_DEFAULT_PORT : port);
+	    + (port == -1 ? ATP_DEFAULT_PORT : port);
 	    Permission p = new SocketPermission(target, "connect");
 
 	    AccessController.checkPermission(p);
@@ -343,8 +343,8 @@ public class AtpConnectionImpl extends URLConnection implements AtpConstants {
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     static protected int guessRequestTypeFromURL(URL url) throws IOException {
 	String file = url.getFile();
 	String ref = url.getRef();
@@ -382,7 +382,7 @@ public class AtpConnectionImpl extends URLConnection implements AtpConstants {
     }
 
     public static void parseHeaders(DataInputStream di, Hashtable headers)
-									  throws IOException {
+    throws IOException {
 	String statusLine = di.readLine();
 	int statusCode = -1;
 
@@ -442,8 +442,8 @@ public class AtpConnectionImpl extends URLConnection implements AtpConstants {
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     public void sendRequest() throws IOException {
 	switch (this._request_type) {
 
@@ -471,8 +471,8 @@ public class AtpConnectionImpl extends URLConnection implements AtpConstants {
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     protected void sendRequestHeaders(PrintStream p) throws IOException {
 	switch (this._request_type) {
 	case DISPATCH:
@@ -523,9 +523,9 @@ public class AtpConnectionImpl extends URLConnection implements AtpConstants {
 		+ "agent-id:"
 		+ ((this.agent_name == null) ? null
 			: MAFUtil.decodeString(MAFUtil.encodeName(this.agent_name)))
-		+ CRLF
-		+ (this.mic == null ? "" : ("mic:"
-			+ Hexadecimal.valueOf(this.mic) + CRLF)));
+			+ CRLF
+			+ (this.mic == null ? "" : ("mic:"
+				+ Hexadecimal.valueOf(this.mic) + CRLF)));
     }
 
     public void setAgentName(Name name) {
@@ -571,8 +571,8 @@ public class AtpConnectionImpl extends URLConnection implements AtpConstants {
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     public void setRequestType(int i) {
 	if (this.connected) {
 	    throw new IllegalAccessError("Already connected");

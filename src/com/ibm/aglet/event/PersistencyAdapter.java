@@ -36,12 +36,14 @@ public class PersistencyAdapter implements PersistencyListener {
     /**
      * Invoked just after the aglet was activated.
      */
+    @Override
     public void onActivation(PersistencyEvent event) {
     }
 
     /**
      * Invoked when an aglet is attempted to deactivate.
      */
+    @Override
     public void onDeactivating(PersistencyEvent event) {
     }
 }

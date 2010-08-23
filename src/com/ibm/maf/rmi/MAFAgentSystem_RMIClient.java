@@ -62,18 +62,18 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 
     @Override
     public Name create_agent(
-			     Name agent_name,
-			     AgentProfile agent_profile,
-			     byte[] agent,
-			     String place_name,
-			     Object[] arguments,
-			     ClassName[] class_names,
-			     String code_base,
-			     MAFAgentSystem class_provider)
-							   throws ClassUnknown,
-							   ArgumentInvalid,
-							   DeserializationFailed,
-							   MAFExtendedException
+                             Name agent_name,
+                             AgentProfile agent_profile,
+                             byte[] agent,
+                             String place_name,
+                             Object[] arguments,
+                             ClassName[] class_names,
+                             String code_base,
+                             MAFAgentSystem class_provider)
+    throws ClassUnknown,
+    ArgumentInvalid,
+    DeserializationFailed,
+    MAFExtendedException
 
     /* RequestRefused */
     {
@@ -89,6 +89,7 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 	    final MAFAgentSystem fClassProvider = class_provider;
 
 	    return (Name) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws RemoteException {
 		    MAFAgentSystem_RMI rmi_class_provider = to_rmi_agentsystem(fClassProvider);
 
@@ -130,11 +131,11 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 
     @Override
     public byte[][] fetch_class(
-				ClassName[] class_name_list,
-				String code_base,
-				AgentProfile agent_profile)
-							   throws ClassUnknown,
-							   MAFExtendedException
+                                ClassName[] class_name_list,
+                                String code_base,
+                                AgentProfile agent_profile)
+    throws ClassUnknown,
+    MAFExtendedException
 
     /* , RequestRefused */
     {
@@ -145,6 +146,7 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 	    final AgentProfile fAgentProfile = agent_profile;
 
 	    return (byte[][]) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws RemoteException {
 		    while (true) {
 			try {
@@ -179,8 +181,8 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
     }
 
     static synchronized MAFAgentSystem find_maf_agentsystem(
-							    MAFAgentSystem_RMI __rmi,
-							    String address) {
+                                                            MAFAgentSystem_RMI __rmi,
+                                                            String address) {
 	if (__rmi == null) {
 	    return null;
 	}
@@ -195,12 +197,13 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 
     @Override
     public String find_nearby_agent_system_of_profile(AgentProfile profile)
-									   throws EntryNotFound {
+    throws EntryNotFound {
 	try {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 	    final AgentProfile fProfile = profile;
 
 	    return (String) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws RemoteException {
 		    while (true) {
 			try {
@@ -239,6 +242,7 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 	    final Name fAgentName = agent_name;
 
 	    return (AgentStatus) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws RemoteException {
 		    while (true) {
 			try {
@@ -276,6 +280,7 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 
 	    return (AgentSystemInfo) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws RemoteException {
 		    while (true) {
 			try {
@@ -312,6 +317,7 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 	    final Name fAgentName = agent_name;
 
 	    return (AuthInfo) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws RemoteException {
 		    while (true) {
 			try {
@@ -349,6 +355,7 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 
 	    return (MAFFinder) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws RemoteException {
 		    while (true) {
 			try {
@@ -386,7 +393,7 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
     }
 
     static public MAFAgentSystem_RMI getMAFAgentSystem_RMI(String address)
-									  throws java.io.IOException {
+    throws java.io.IOException {
 	return to_rmi_agentsystem(MAFAgentSystem.getMAFAgentSystem(address));
     }
 
@@ -396,6 +403,7 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 
 	    return (Name[]) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws RemoteException {
 		    while (true) {
 			try {
@@ -432,6 +440,7 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 	    final byte[] fAuthority = authority;
 
 	    return (Name[]) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws RemoteException {
 		    while (true) {
 			try {
@@ -467,6 +476,7 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 
 	    return (String[]) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws RemoteException {
 		    while (true) {
 			try {
@@ -518,16 +528,16 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 
     @Override
     public void receive_agent(
-			      Name agent_name,
-			      AgentProfile agent_profile,
-			      byte[] agent,
-			      String place_name,
-			      ClassName[] class_names,
-			      String code_base,
-			      MAFAgentSystem class_sender)
-							  throws ClassUnknown,
-							  DeserializationFailed,
-							  MAFExtendedException
+                              Name agent_name,
+                              AgentProfile agent_profile,
+                              byte[] agent,
+                              String place_name,
+                              ClassName[] class_names,
+                              String code_base,
+                              MAFAgentSystem class_sender)
+    throws ClassUnknown,
+    DeserializationFailed,
+    MAFExtendedException
 
     /* RequestRefused */
     {
@@ -542,6 +552,7 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 	    final MAFAgentSystem fClassSender = class_sender;
 
 	    AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws RemoteException {
 		    MAFAgentSystem_RMI rmi_class_sender = to_rmi_agentsystem(fClassSender);
 
@@ -582,11 +593,11 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 
     @Override
     public long receive_future_message(
-				       Name agent_name,
-				       byte[] msg,
-				       MAFAgentSystem message_sender)
-								     throws AgentNotFound,
-								     MAFExtendedException {
+                                       Name agent_name,
+                                       byte[] msg,
+                                       MAFAgentSystem message_sender)
+    throws AgentNotFound,
+    MAFExtendedException {
 	try {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 	    final Name fAgentName = agent_name;
@@ -594,6 +605,7 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 	    final MAFAgentSystem fMessageSender = message_sender;
 
 	    Long result = (Long) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws RemoteException {
 		    MAFAgentSystem_RMI rmi_message_sender = to_rmi_agentsystem(fMessageSender);
 
@@ -635,14 +647,15 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 
     @Override
     public void receive_future_reply(long return_id, byte[] reply)
-								  throws EntryNotFound,
-								  MAFExtendedException {
+    throws EntryNotFound,
+    MAFExtendedException {
 	try {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 	    final long fReturnID = return_id;
 	    final byte[] fReply = reply;
 
 	    AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws RemoteException {
 		    while (true) {
 			try {
@@ -679,16 +692,17 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 
     @Override
     public byte[] receive_message(Name agent_name, byte[] msg)
-							      throws AgentNotFound,
-							      NotHandled,
-							      MessageEx,
-							      MAFExtendedException {
+    throws AgentNotFound,
+    NotHandled,
+    MessageEx,
+    MAFExtendedException {
 	try {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 	    final Name fAgentName = agent_name;
 	    final byte[] fMsg = msg;
 
 	    return (byte[]) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws RemoteException {
 		    while (true) {
 			try {
@@ -728,14 +742,15 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 
     @Override
     public void receive_oneway_message(Name agent_name, byte[] msg)
-								   throws AgentNotFound,
-								   MAFExtendedException {
+    throws AgentNotFound,
+    MAFExtendedException {
 	try {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 	    final Name fAgentName = agent_name;
 	    final byte[] fMsg = msg;
 
 	    AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws RemoteException {
 		    while (true) {
 			try {
@@ -772,14 +787,15 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 
     @Override
     public void resume_agent(Name agent_name)
-					     throws AgentNotFound,
-					     ResumeFailed,
-					     AgentIsRunning {
+    throws AgentNotFound,
+    ResumeFailed,
+    AgentIsRunning {
 	try {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 	    final Name fAgentName = agent_name;
 
 	    AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws RemoteException {
 		    while (true) {
 			try {
@@ -818,13 +834,14 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 
     @Override
     public byte[] retract_agent(Name agent_name)
-						throws AgentNotFound,
-						MAFExtendedException {
+    throws AgentNotFound,
+    MAFExtendedException {
 	try {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 	    final Name fAgentName = agent_name;
 
 	    return (byte[]) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws RemoteException {
 		    while (true) {
 			try {
@@ -865,14 +882,15 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 
     @Override
     public void suspend_agent(Name agent_name)
-					      throws AgentNotFound,
-					      SuspendFailed,
-					      AgentIsSuspended {
+    throws AgentNotFound,
+    SuspendFailed,
+    AgentIsSuspended {
 	try {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 	    final Name fAgentName = agent_name;
 
 	    AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws RemoteException {
 		    while (true) {
 			try {
@@ -911,13 +929,14 @@ public final class MAFAgentSystem_RMIClient extends MAFAgentSystem {
 
     @Override
     public void terminate_agent(Name agent_name)
-						throws AgentNotFound,
-						TerminateFailed {
+    throws AgentNotFound,
+    TerminateFailed {
 	try {
 	    final MAFAgentSystem_RMI fAgentSystem = this._agent_system;
 	    final Name fAgentName = agent_name;
 
 	    AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws RemoteException {
 		    while (true) {
 			try {

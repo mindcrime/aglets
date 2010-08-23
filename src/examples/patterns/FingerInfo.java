@@ -110,13 +110,13 @@ final class FingerInfo implements Serializable {
 
     String toTextBlock() {
 	String str = "Host Name: " + this._hostName + "\n" + "User Name: "
-		+ this._userName + "\n" + "Home Directory: "
-		+ this._homeDirectory + "\n" + "Working Directory: "
-		+ this._workingDirectory + "\n" + "Machine Architecture: "
-		+ this._architecture + "\n" + "OS Name: " + this._osName + "\n"
-		+ "OS Version: " + this._osVersion + "\n" + "Java Version: "
-		+ this._javaVersion + "\n" + "Local Time: "
-		+ this._localTime.toString();
+	+ this._userName + "\n" + "Home Directory: "
+	+ this._homeDirectory + "\n" + "Working Directory: "
+	+ this._workingDirectory + "\n" + "Machine Architecture: "
+	+ this._architecture + "\n" + "OS Name: " + this._osName + "\n"
+	+ "OS Version: " + this._osVersion + "\n" + "Java Version: "
+	+ this._javaVersion + "\n" + "Local Time: "
+	+ this._localTime.toString();
 
 	return str;
     }

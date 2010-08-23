@@ -21,9 +21,9 @@ final public class MAFUtil {
     private static Name null_name = new Name(new byte[1], new byte[1], (short) 0);
 
     static String[] agent_systems = { "NonAgentSystem", "Aglets", "MOA",
-	    "AgentTcl" };
+    "AgentTcl" };
     static String[] languages = { "LanguageNotSpecified", "Java", "Tcl",
-	    "Scheme", "Perl" };
+	"Scheme", "Perl" };
 
     public static final short AGENT_SYSTEM_TYPE_AGLETS = (short) 1;
 

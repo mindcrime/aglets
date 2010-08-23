@@ -156,7 +156,7 @@ public class ProtectionAglet extends Aglet {
 
 	this._owner = info.getAuthorityName();
 	String label = "Protection Dialog: " + info.getAgletID() + "("
-		+ this._owner + ")";
+	+ this._owner + ")";
 	this._protectionDialog = new ProtectionDialog(this, label);
 	this._protectionDialog.pack();
     }

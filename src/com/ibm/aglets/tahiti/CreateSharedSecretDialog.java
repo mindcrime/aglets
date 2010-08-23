@@ -22,7 +22,7 @@ import com.ibm.atp.auth.SharedSecrets;
  * @author: Hideki Tai
  */
 class CreateSharedSecretDialog extends TahitiDialog implements
-	java.awt.event.ActionListener {
+java.awt.event.ActionListener {
 
     /**
      * GUI Components
@@ -86,21 +86,21 @@ class CreateSharedSecretDialog extends TahitiDialog implements
 	    if ((domainName == null) || (domainName.length() == 0)) {
 		JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 			+ ".error.domain"), this.translator.translate(this.baseKey
-			+ ".error.domain.title"), JOptionPane.ERROR_MESSAGE);
+				+ ".error.domain.title"), JOptionPane.ERROR_MESSAGE);
 		return;
 	    }
 
 	    if ((keyAlias == null) || (keyAlias.length() == 0)) {
 		JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 			+ ".error.alias"), this.translator.translate(this.baseKey
-			+ ".error.alias.title"), JOptionPane.ERROR_MESSAGE);
+				+ ".error.alias.title"), JOptionPane.ERROR_MESSAGE);
 		return;
 	    }
 
 	    if ((keyPassword == null) || (keyPassword.length() == 0)) {
 		JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 			+ ".error.password"), this.translator.translate(this.baseKey
-			+ ".error.password.title"), JOptionPane.ERROR_MESSAGE);
+				+ ".error.password.title"), JOptionPane.ERROR_MESSAGE);
 		return;
 	    }
 
@@ -112,7 +112,7 @@ class CreateSharedSecretDialog extends TahitiDialog implements
 	    if (secret != null) {
 		JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 			+ ".error.domainExists"), this.translator.translate(this.baseKey
-			+ ".error.domainExists.title"), JOptionPane.ERROR_MESSAGE);
+				+ ".error.domainExists.title"), JOptionPane.ERROR_MESSAGE);
 		return;
 	    }
 
@@ -122,14 +122,14 @@ class CreateSharedSecretDialog extends TahitiDialog implements
 	    if (secret == null)
 		JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 			+ ".error.secret"), this.translator.translate(this.baseKey
-			+ ".error.secret.title"), JOptionPane.ERROR_MESSAGE);
+				+ ".error.secret.title"), JOptionPane.ERROR_MESSAGE);
 	    else {
 		// add the secret to the shared secrets
 		secrets.addSharedSecret(secret);
 		secrets.save();
 		JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 			+ ".secret"), this.translator.translate(this.baseKey
-			+ ".secret.title"), JOptionPane.INFORMATION_MESSAGE);
+				+ ".secret.title"), JOptionPane.INFORMATION_MESSAGE);
 	    }
 
 	    this.setVisible(false);

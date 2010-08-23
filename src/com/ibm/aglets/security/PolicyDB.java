@@ -140,12 +140,13 @@ public class PolicyDB {
 
 				if (cb != null) {
 				    Permission p = (Permission) AccessController.doPrivileged(new PrivilegedAction() {
+					@Override
 					public Object run() {
 					    if (PROTOCOL_FILE.equalsIgnoreCase(cb.getProtocol())) {
 						String file = URIPattern.canonicalFilename(cb.getFile());
 
 						file += File.separator
-							+ WILDCARD_ANYDIR;
+						+ WILDCARD_ANYDIR;
 						return new FilePermission(file, filep.getActions());
 					    } else if (cb.equals(PolicyDB.this._system_codebase)) {
 						String file = PolicyDB.this._public_root;

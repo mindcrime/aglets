@@ -92,6 +92,7 @@ class SocketConnection implements Connection {
 	}
     }
 
+    @Override
     public void close() throws IOException {
 	this._socket.close();
 
@@ -100,6 +101,7 @@ class SocketConnection implements Connection {
 	this.message = "Socket closed";
     }
 
+    @Override
     public String getAuthenticatedSecurityDomain() {
 	if (!this.established || (this.auth == null)) {
 	    return null;
@@ -107,14 +109,17 @@ class SocketConnection implements Connection {
 	return this.auth.getSelectedDomainName();
     }
 
+    @Override
     public InputStream getInputStream() throws IOException {
 	return new BufferedInputStream(this._socket.getInputStream(), BUFFSIZE);
     }
 
+    @Override
     public String getMessage() {
 	return this.message;
     }
 
+    @Override
     public OutputStream getOutputStream() throws IOException {
 	this.output_type = true;
 
@@ -122,10 +127,12 @@ class SocketConnection implements Connection {
 	return this._socket.getOutputStream();
     }
 
+    @Override
     public boolean isEstablished() {
 	return this.established;
     }
 
+    @Override
     public void sendRequest() throws IOException {
 	if (this.output_type) {
 	    this._socket.getOutputStream().flush();

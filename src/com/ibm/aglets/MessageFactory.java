@@ -34,10 +34,10 @@ public class MessageFactory {
      * @return the message
      */
     public static Message getMessage(
-				     Message msg,
-				     FutureReplyImpl future,
-				     int msg_type,
-				     long timestamp) {
+                                     Message msg,
+                                     FutureReplyImpl future,
+                                     int msg_type,
+                                     long timestamp) {
 	return new MessageImpl(msg, future, msg_type, timestamp);
     }
 }

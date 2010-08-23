@@ -65,6 +65,6 @@ public class ContextPermission extends AgletsPermissionBase {
 	ContextPermission cp = (ContextPermission) p;
 
 	return matches(this.getName(), cp.getName())
-		&& matches(this._actionList, cp._actionList);
+	&& matches(this._actionList, cp._actionList);
     }
 }

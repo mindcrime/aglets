@@ -83,11 +83,11 @@ public class Watcher extends SampleAglet {
      *            contains the destination URL.
      */
     protected void go(
-		      URL destination,
-		      double interval,
-		      double duration,
-		      boolean stay,
-		      String path) {
+                      URL destination,
+                      double interval,
+                      double duration,
+                      boolean stay,
+                      String path) {
 	this.interval = interval;
 	this.duration = duration;
 	this.stay = stay;

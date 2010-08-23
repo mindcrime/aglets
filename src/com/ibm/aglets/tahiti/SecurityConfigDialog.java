@@ -61,7 +61,7 @@ import com.ibm.awb.misc.URIPattern;
 // TODO testare a modo
 
 final class SecurityConfigDialog extends TahitiDialog implements
-	ActionListener, ItemListener, ListSelectionListener {
+ActionListener, ItemListener, ListSelectionListener {
 
     /*
      * Singleton instance reference.
@@ -273,7 +273,7 @@ final class SecurityConfigDialog extends TahitiDialog implements
      * @return the instance of the dialog
      */
     protected static synchronized SecurityConfigDialog getInstance(
-								   MainWindow parent) {
+                                                                   MainWindow parent) {
 	if (mySelf == null) {
 	    mySelf = new SecurityConfigDialog(parent);
 	}
@@ -297,6 +297,7 @@ final class SecurityConfigDialog extends TahitiDialog implements
     /*
      * Handles the events
      */
+    @Override
     public void itemStateChanged(ItemEvent ev) {
 	String item = this._grantList.getSelectedItem();
 
@@ -453,6 +454,7 @@ final class SecurityConfigDialog extends TahitiDialog implements
     /**
      * Manages selection on the grant list.
      */
+    @Override
     public void valueChanged(ListSelectionEvent event) {
 	if (event == null)
 	    return;
@@ -592,12 +594,12 @@ final class SecurityConfigDialog extends TahitiDialog implements
 	    this.logger.error("Exception caught while building the policy grant", e);
 	    JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 		    + ".uriError"), this.translator.translate(this.baseKey
-		    + ".uriError.title"), JOptionPane.ERROR_MESSAGE);
+			    + ".uriError.title"), JOptionPane.ERROR_MESSAGE);
 	} catch (ClassNotFoundException e) {
 	    this.logger.error("Exception caught while building the policy permission", e);
 	    JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 		    + ".permissionError"), this.translator.translate(this.baseKey
-		    + ".permissionError.title"), JOptionPane.ERROR_MESSAGE);
+			    + ".permissionError.title"), JOptionPane.ERROR_MESSAGE);
 	}
     }
 

@@ -32,15 +32,15 @@ final class MAF {
 
     static AgentProfile toAgentProfile(AgletInfo info) {
 	AgentProfile p = new AgentProfile(MAFUtil.toLanguageID("Java"), MAFUtil.toAgentSystemType("Aglets"), "Aglets 2.5 alpha", info.getAPIMajorVersion(), info.getAPIMinorVersion(), (short) 1, /* serialization */
-	null);
+		null);
 
 	// Object[] __properties);
 	return p;
     }
 
     static Name toAgentSystemName(
-				  MAFAgentSystem_AgletsImpl sys,
-				  Certificate owner) {
+                                  MAFAgentSystem_AgletsImpl sys,
+                                  Certificate owner) {
 	java.util.Random r = new java.util.Random();
 	byte[] ident_bytes = new byte[8];
 

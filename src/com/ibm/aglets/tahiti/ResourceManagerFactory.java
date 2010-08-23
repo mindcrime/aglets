@@ -32,17 +32,17 @@ import com.ibm.maf.MAFAgentSystem;
  * @version 1.10 $Date: 2009/07/28 07:04:53 $
  */
 final class ResourceManagerFactory implements
-	com.ibm.aglets.ResourceManagerFactory {
+com.ibm.aglets.ResourceManagerFactory {
 
     static Class exportedClass[];
 
     static String[] exportedClassName = { "com.ibm.aglets.AgletProxyImpl",
-	    "com.ibm.aglets.DeactivationInfo", "com.ibm.aglets.MessageImpl",
-	    "com.ibm.aglets.MessageManagerImpl",
-	    "com.ibm.aglets.SystemMessage", "com.ibm.aglets.AgletImageData",
-	    "com.ibm.aglets.AgletAudioClip",
-	    "com.ibm.aglets.ByteArrayImageSource", "com.ibm.awb.misc.Resource",
-	    "com.ibm.awb.weakref.VirtualRef", };
+	"com.ibm.aglets.DeactivationInfo", "com.ibm.aglets.MessageImpl",
+	"com.ibm.aglets.MessageManagerImpl",
+	"com.ibm.aglets.SystemMessage", "com.ibm.aglets.AgletImageData",
+	"com.ibm.aglets.AgletAudioClip",
+	"com.ibm.aglets.ByteArrayImageSource", "com.ibm.awb.misc.Resource",
+	"com.ibm.awb.weakref.VirtualRef", };
 
     private static String _agletsClassPath[];
     private static Hashtable _manifests;
@@ -132,6 +132,7 @@ final class ResourceManagerFactory implements
 
 	try {
 	    return (String) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws IOException {
 		    String cp = file.getCanonicalPath();
 
@@ -174,15 +175,16 @@ final class ResourceManagerFactory implements
      *                Description of Exception
      */
     private static String lookupCodeBaseFrom(
-					     final String name,
-					     String[] pathList)
-							       throws IOException {
+                                             final String name,
+                                             String[] pathList)
+    throws IOException {
 	final String[] pl = pathList;
 	final String classFileName = name.replace('.', File.separatorChar)
-		+ ".class";
+	+ ".class";
 	logger.debug("lookupCodeBaseFrom()++");
 	try {
 	    return (String) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws IOException {
 		    for (String element : pl) {
 			final File f = new File(element + File.separator
@@ -217,7 +219,7 @@ final class ResourceManagerFactory implements
      *                Description of Exception
      */
     private static String lookupCodeBaseInManifest(String name)
-							       throws IOException {
+    throws IOException {
 
 	logger.debug("lookupCodeBaseInManifest() : [" + name + "]");
 	Enumeration e = _manifests.keys();
@@ -244,6 +246,7 @@ final class ResourceManagerFactory implements
     private static void lookupJarFiles(String path, boolean recursive) {
 	final File f = new File(path);
 	Boolean b = (Boolean) AccessController.doPrivileged(new PrivilegedAction() {
+	    @Override
 	    public Object run() {
 		return new Boolean(f.isDirectory());
 	    }
@@ -252,6 +255,7 @@ final class ResourceManagerFactory implements
 
 	if (isDir && recursive) {
 	    AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    String[] list = f.list();
 		    String front = f.getPath() + File.separator;
@@ -298,6 +302,7 @@ final class ResourceManagerFactory implements
      * 
      * @return The currentResourceManager value
      */
+    @Override
     public ResourceManager getCurrentResourceManager() {
 	ResourceManager rm = ResourceManagerImpl.getResourceManagerContext();
 
@@ -323,6 +328,7 @@ final class ResourceManagerFactory implements
 
     /**
      */
+    @Override
     public synchronized void clearCache() {
 	this._map = new Hashtable();
     }
@@ -333,6 +339,7 @@ final class ResourceManagerFactory implements
      * @param owner
      *            Description of Parameter
      */
+    @Override
     public synchronized void clearCache(URL codebase, Certificate owner) {
 	if (codebase == null) {
 	    this.clearCache();
@@ -354,10 +361,11 @@ final class ResourceManagerFactory implements
      *            Description of Parameter
      * @return Description of the Returned Value
      */
+    @Override
     public synchronized ResourceManager createResourceManager(
-							      URL codebase,
-							      Certificate owner,
-							      ClassName[] t) {
+                                                              URL codebase,
+                                                              Certificate owner,
+                                                              ClassName[] t) {
 	AgletClassLoader loader = this.getClassLoaderInCache(codebase, owner, t);
 	logger.info("Creating ResourceManager.");
 	if (loader == null) {
@@ -379,6 +387,7 @@ final class ResourceManagerFactory implements
      *            Description of Parameter
      * @return Description of the Returned Value
      */
+    @Override
     public URL lookupCodeBaseFor(String name) {
 	String codebase = null;
 	logger.debug("lookupCodeBaseFor()++ : [" + name + "]");
@@ -401,7 +410,7 @@ final class ResourceManagerFactory implements
 	// System.out.println("export root="+_exportRoot);
 	if (codebase.startsWith(_publicRoot)) {
 	    codebase = _localAddr + File.separatorChar
-		    + codebase.substring(_publicRoot.length());
+	    + codebase.substring(_publicRoot.length());
 	} else {
 	    if (codebase.startsWith("/")) {
 		codebase = "file:" + codebase;
@@ -435,9 +444,9 @@ final class ResourceManagerFactory implements
      * @return The classLoaderInCache value
      */
     private AgletClassLoader getClassLoaderInCache(
-						   URL codebase,
-						   Certificate owner,
-						   ClassName[] table) {
+                                                   URL codebase,
+                                                   Certificate owner,
+                                                   ClassName[] table) {
 
 	Certificate[] owners;
 
@@ -456,6 +465,7 @@ final class ResourceManagerFactory implements
 	    try {
 		final URL fCodebase = codebase;
 		ClassName[] tmpTab = (ClassName[]) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		    @Override
 		    public Object run() throws IOException {
 			java.io.InputStream in = fCodebase.openStream();
 			JarArchive jar = new JarArchive(in);
@@ -574,6 +584,7 @@ final class ResourceManagerFactory implements
 	 * Sets the resourceManagerContext attribute of the AppResourceManager
 	 * object
 	 */
+	@Override
 	public void setResourceManagerContext() {
 	}
 
@@ -584,6 +595,7 @@ final class ResourceManagerFactory implements
 	 *            Description of Parameter
 	 * @return The archive value
 	 */
+	@Override
 	public Archive getArchive(ClassName[] table) {
 	    return null;
 	}
@@ -595,6 +607,7 @@ final class ResourceManagerFactory implements
 	 *            Description of Parameter
 	 * @return The classNames value
 	 */
+	@Override
 	public ClassName[] getClassNames(Class[] classes) {
 	    return null;
 	}
@@ -608,6 +621,7 @@ final class ResourceManagerFactory implements
 	 * @exception ClassNotFoundException
 	 *                Description of Exception
 	 */
+	@Override
 	public Class loadClass(String name) throws ClassNotFoundException {
 	    return Class.forName(name);
 	}
@@ -619,6 +633,7 @@ final class ResourceManagerFactory implements
 	 *            Description of Parameter
 	 * @return Description of the Returned Value
 	 */
+	@Override
 	public boolean contains(Class cls) {
 	    return (cls != null) && (cls.getClassLoader() == null);
 	}
@@ -629,6 +644,7 @@ final class ResourceManagerFactory implements
 	 * @param a
 	 *            Description of Parameter
 	 */
+	@Override
 	public void importArchive(Archive a) {
 	}
 
@@ -639,12 +655,14 @@ final class ResourceManagerFactory implements
 	 * @param obj
 	 *            The feature to be added to the Resource attribute
 	 */
+	@Override
 	public void addResource(Object obj) {
 	}
 
 	/**
 	 * Description of the Method
 	 */
+	@Override
 	public void disposeAllResources() {
 	}
 
@@ -655,6 +673,7 @@ final class ResourceManagerFactory implements
 	 *            Description of Parameter
 	 * @return Description of the Returned Value
 	 */
+	@Override
 	public AgletThread newAgletThread(MessageManager mm) {
 	    return null;
 	}
@@ -662,30 +681,35 @@ final class ResourceManagerFactory implements
 	/**
 	 * Description of the Method
 	 */
+	@Override
 	public void stopAllThreads() {
 	}
 
 	/**
 	 * Description of the Method
 	 */
+	@Override
 	public void stopThreadGroup() {
 	}
 
 	/**
 	 * Description of the Method
 	 */
+	@Override
 	public void suspendAllThreads() {
 	}
 
 	/**
 	 * Description of the Method
 	 */
+	@Override
 	public void resumeAllThreads() {
 	}
 
 	/**
 	 * Description of the Method
 	 */
+	@Override
 	public void unsetResourceManagerContext() {
 	}
     }

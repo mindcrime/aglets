@@ -30,7 +30,7 @@ import com.ibm.aglet.event.MobilityEvent;
  * @author Yariv Aridor
  */
 public class MetaItinerary extends MobilityAdapter implements
-	java.io.Serializable {
+java.io.Serializable {
 
     private Vector visitedHosts = new Vector();
     private Vector hosts = new Vector();

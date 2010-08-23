@@ -37,8 +37,8 @@ public final class AgentSystemInfo implements java.io.Serializable {
     }
 
     public AgentSystemInfo(Name __agent_system_name, short __agent_system_type,
-	    LanguageMap[] __language_maps, String __agent_system_description,
-	    short __major_version, short __minor_version, Object[] __properties) {
+                           LanguageMap[] __language_maps, String __agent_system_description,
+                           short __major_version, short __minor_version, Object[] __properties) {
 
 	this.agent_system_name = __agent_system_name;
 	this.agent_system_type = __agent_system_type;

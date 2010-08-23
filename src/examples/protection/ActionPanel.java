@@ -68,6 +68,7 @@ class ActionPanel extends Panel implements ItemListener, ActionListener {
 	this.add(this._doButton);
     }
 
+    @Override
     public void actionPerformed(ActionEvent ev) {
 	if (ev.getSource() == this._doButton) {
 
@@ -99,6 +100,7 @@ class ActionPanel extends Panel implements ItemListener, ActionListener {
 	}
     }
 
+    @Override
     public void itemStateChanged(ItemEvent ev) {
 	String action = this.selectedAction(ev);
 

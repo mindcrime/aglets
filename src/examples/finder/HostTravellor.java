@@ -107,6 +107,7 @@ public class HostTravellor extends Aglet implements MobilityListener {
 	return true;
     }
 
+    @Override
     public void onArrival(MobilityEvent event) {
 	AgletProxy ap = (AgletProxy) this.getAgletContext().getProperty("hostlist");
 
@@ -159,12 +160,14 @@ public class HostTravellor extends Aglet implements MobilityListener {
 	}
     }
 
+    @Override
     public void onDispatching(MobilityEvent event) {
     }
 
     public void onRetraction(MobilityEvent event) {
     }
 
+    @Override
     public void onReverting(MobilityEvent event) {
     }
 

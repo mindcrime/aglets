@@ -151,9 +151,9 @@ public class TahitiDialog extends BaseAgletsDialog implements ActionListener {
      * @return the button for further evaluation
      */
     public JButton addButton(
-			     String key,
-			     ActionListener listener,
-			     KeyListener keyListener) {
+                             String key,
+                             ActionListener listener,
+                             KeyListener keyListener) {
 	// check params
 	if (key == null)
 	    return null;
@@ -410,8 +410,8 @@ public class TahitiDialog extends BaseAgletsDialog implements ActionListener {
     }
 
     protected static final TahitiDialog info(
-					     JFrame parentFrame,
-					     AgletProxy proxy) {
+                                             JFrame parentFrame,
+                                             AgletProxy proxy) {
 	// check params
 	if (proxy == null)
 	    return null;

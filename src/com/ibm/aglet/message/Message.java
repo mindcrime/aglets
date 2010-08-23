@@ -597,7 +597,7 @@ public class Message implements java.io.Serializable {
     @Override
     public String toString() {
 	return "[kind = " + this.kind + ": arg = " + String.valueOf(this.arg)
-		+ ']';
+	+ ']';
     }
 
     /**

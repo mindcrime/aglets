@@ -20,13 +20,13 @@ import java.security.Permission;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-// 
+//
 // Base class for Aglets related Permission and Protection classes,
 // i.e. AgletPermission, AgletProtection, MessagePermission, MessageProtection.
 // (This class was com.ibm.awb.security.Permission)
-// 
+//
 abstract public class AgletsPermissionBase extends Permission implements Guard,
-	Serializable {
+Serializable {
     protected static final char CHAR_ASTERISK = '*';
     protected static final String STRING_ASTERISK = String.valueOf(CHAR_ASTERISK);
     protected static final char CHAR_HYPHEN = '-';
@@ -219,9 +219,9 @@ abstract public class AgletsPermissionBase extends Permission implements Guard,
     }
 
     static final protected String select(
-					 String[] label,
-					 boolean[] flag,
-					 String separator) {
+                                         String[] label,
+                                         boolean[] flag,
+                                         String separator) {
 	int num = 0;
 	int i = 0;
 

@@ -255,7 +255,7 @@ public class CacheManager {
 	    return this.name.length() * 2 + 8 +
 
 	    // ((filename != null) ? filename.length() * 2 : 0) +
-		    4 + ((this.data != null) ? this.data.length : 0);
+	    4 + ((this.data != null) ? this.data.length : 0);
 	}
 
 	/* synchronized */
@@ -270,6 +270,7 @@ public class CacheManager {
 
 	    try {
 		this.data = (byte[]) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		    @Override
 		    public Object run() throws IOException {
 			DataInputStream oi = new DataInputStream(new FileInputStream(fFile));
 
@@ -311,7 +312,7 @@ public class CacheManager {
 
 	    CacheManager.this._pool_index++;
 	    this.filename = CacheManager.this._pool_dir + File.separator + "c@"
-		    + CacheManager.this._pool_index;
+	    + CacheManager.this._pool_index;
 
 	    CacheManager.this.debug("<Saving cache for '" + this.name + "'... ");
 	    try {
@@ -321,6 +322,7 @@ public class CacheManager {
 		final byte[] fData = this.data;
 
 		AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		    @Override
 		    public Object run() throws IOException {
 			DataOutputStream out = new DataOutputStream(new FileOutputStream(fFileName));
 
@@ -362,7 +364,7 @@ public class CacheManager {
 		long v2 = ((Entry) anObject).version;
 
 		return this.name.equals(((Entry) anObject).name)
-			&& ((this.version == 0) || (v2 == 0) || (this.version == v2));
+		&& ((this.version == 0) || (v2 == 0) || (this.version == v2));
 
 		// byte v1[] = version;
 		// byte v2[] = ((Entry)anObject).version;
@@ -382,6 +384,7 @@ public class CacheManager {
 
 	    try {
 		AccessController.doPrivileged(new PrivilegedAction() {
+		    @Override
 		    public Object run() {
 			f.delete();
 			return null;
@@ -404,10 +407,10 @@ public class CacheManager {
 	public String toString() {
 	    if (this.data != null) {
 		return "Entry:[" + this.name + '.' + this.version + '.'
-			+ this.data.length + ']';
+		+ this.data.length + ']';
 	    } else {
 		return "Entry:[" + this.name + '.' + this.version + '.' + null
-			+ ']';
+		+ ']';
 	    }
 	}
     }
@@ -449,7 +452,7 @@ public class CacheManager {
 	    URL u = new URL(server);
 
 	    this._pool_dir = res.getString("aglets.cache") + File.separator
-		    + u.getHost() + '@' + u.getPort();
+	    + u.getHost() + '@' + u.getPort();
 	} catch (MalformedURLException ex) {
 	    throw new IOException("Could not get host info.");
 	}
@@ -460,6 +463,7 @@ public class CacheManager {
 
 	try {
 	    Boolean[] bb = (Boolean[]) AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    Boolean[] result = new Boolean[2];
 
@@ -577,10 +581,10 @@ public class CacheManager {
     }
 
     synchronized public void putData(
-				     String name,
-				     long version,
-				     byte[] data,
-				     boolean refCount) {
+                                     String name,
+                                     long version,
+                                     byte[] data,
+                                     boolean refCount) {
 	Entry e = new Entry(name, version, data);
 
 	this.putIntoCache(e);
@@ -615,6 +619,7 @@ public class CacheManager {
 
 	try {
 	    lists = (String[]) AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    return f.list();
 		}
@@ -656,6 +661,7 @@ public class CacheManager {
 			final String fFileName = filename;
 
 			AccessController.doPrivileged(new PrivilegedAction() {
+			    @Override
 			    public Object run() {
 				new File(fFileName).delete();
 				return null;

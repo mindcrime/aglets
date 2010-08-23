@@ -29,7 +29,7 @@ import com.ibm.atp.ContentBuffer;
  */
 
 final class HttpResponseOutputStream extends ByteArrayOutputStream implements
-	ContentBuffer {
+ContentBuffer {
 
     /**
      * A separator in the message's header.
@@ -75,6 +75,7 @@ final class HttpResponseOutputStream extends ByteArrayOutputStream implements
     /*
      * Sends the content
      */
+    @Override
     public void sendContent() throws IOException {
 	synchronized (this) {
 	    if (this.content_sent) {

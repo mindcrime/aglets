@@ -65,8 +65,8 @@ public class MessageException extends AgletException {
     }
 
     private void readObject(ObjectInputStream s)
-						throws IOException,
-						ClassNotFoundException {
+    throws IOException,
+    ClassNotFoundException {
 	Object ex = s.readObject();
 
 	if (ex instanceof String) {
@@ -88,8 +88,8 @@ public class MessageException extends AgletException {
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     private void writeObject(ObjectOutputStream s) throws IOException {
 	if (this._exception instanceof Serializable) {
 	    s.writeObject(this._exception);

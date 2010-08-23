@@ -112,7 +112,7 @@ public class URIEncoder {
      * @see java.net.URLEncoder
      */
     public static String decode(String str, String encoding)
-							    throws UnsupportedEncodingException {
+    throws UnsupportedEncodingException {
 	if (str == null) {
 	    return null;
 	}
@@ -224,7 +224,7 @@ public class URIEncoder {
      * @return the translated <code>String</code>.
      */
     public static String encode(String str, String encoding)
-							    throws UnsupportedEncodingException {
+    throws UnsupportedEncodingException {
 	if (str == null) {
 	    return null;
 	}

@@ -52,7 +52,7 @@ public class DeliveryMessageThread extends Thread {
 	super("Delivery Message Thread " + DeliveryMessageThread.counter);
 
 	this.setDaemon(true); // keep this thread as a daemon in order to not
-			      // interfere with the virtual machine threads
+	// interfere with the virtual machine threads
 	DeliveryMessageThread.counter++;
 	this.proxy = p;
 	this.message = msg;
@@ -70,7 +70,7 @@ public class DeliveryMessageThread extends Thread {
      *            true if the message must be delivered immediatly
      */
     public DeliveryMessageThread(AgletProxy p, Message msg,
-	    boolean deliveryImmediatly) {
+                                 boolean deliveryImmediatly) {
 	this(p, msg);
 	if (deliveryImmediatly)
 	    this.deliverMessage();
@@ -121,9 +121,9 @@ public class DeliveryMessageThread extends Thread {
      *            thread.
      */
     public final synchronized void deliverMessage(
-						  AgletProxy p,
-						  Message m,
-						  boolean deliverNow) {
+                                                  AgletProxy p,
+                                                  Message m,
+                                                  boolean deliverNow) {
 	this.message = m;
 	this.proxy = p;
 	if (deliverNow)

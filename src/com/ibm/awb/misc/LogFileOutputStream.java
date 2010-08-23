@@ -48,7 +48,7 @@ public class LogFileOutputStream extends OutputStream {
      * @return an instance of this class.
      */
     public LogFileOutputStream(String filename, long maxFileSize)
-	    throws IOException {
+    throws IOException {
 	this.checkFile(filename);
 	this._file = new RandomAccessFile(filename, "rw");
 	this._file.seek(this._file.length());
@@ -57,7 +57,7 @@ public class LogFileOutputStream extends OutputStream {
     }
 
     private RandomAccessFile changeFile(RandomAccessFile file, String filename)
-									       throws Exception {
+    throws Exception {
 	String dstName = filename + ".arc";
 
 	file.close();
@@ -67,8 +67,8 @@ public class LogFileOutputStream extends OutputStream {
 	if (dst.exists()) {
 	    Calendar date = new GregorianCalendar();
 	    String bakName = dstName + date.get(Calendar.MINUTE)
-		    + date.get(Calendar.HOUR_OF_DAY) + date.get(Calendar.DATE)
-		    + date.get(Calendar.MONTH) + date.get(Calendar.YEAR);
+	    + date.get(Calendar.HOUR_OF_DAY) + date.get(Calendar.DATE)
+	    + date.get(Calendar.MONTH) + date.get(Calendar.YEAR);
 	    File bak = new File(bakName);
 
 	    if (bak.exists() == false) {
@@ -152,7 +152,7 @@ public class LogFileOutputStream extends OutputStream {
      */
     @Override
     public synchronized void write(byte[] b, int off, int len)
-							      throws IOException {
+    throws IOException {
 	long pointer = this._file.getFilePointer();
 
 	if (pointer > this._maxFileSize) {

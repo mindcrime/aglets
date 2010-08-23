@@ -237,9 +237,9 @@ public class JComponentBuilder {
      * @return
      */
     public static final JButton createJButton(
-					      String key,
-					      String actionCommand,
-					      ActionListener listener) {
+                                              String key,
+                                              String actionCommand,
+                                              ActionListener listener) {
 	// check params
 	if (key == null)
 	    return null;
@@ -285,9 +285,9 @@ public class JComponentBuilder {
      * @return the checkbox
      */
     public static final JCheckBox createJCheckBox(
-						  String key,
-						  boolean selected,
-						  ItemListener listener) {
+                                                  String key,
+                                                  boolean selected,
+                                                  ItemListener listener) {
 	// check params
 	if (key == null)
 	    return null;
@@ -331,9 +331,9 @@ public class JComponentBuilder {
      * @return the created textfield or null if the size is less or equal zero
      */
     public static final JTextField createJTextField(
-						    int size,
-						    String initialText,
-						    String key) {
+                                                    int size,
+                                                    String initialText,
+                                                    String key) {
 	// check params
 	if (size <= 0)
 	    return null;
@@ -395,9 +395,9 @@ public class JComponentBuilder {
      * @return the panel with the two buttons
      */
     public static final OkCancelButtonPanel createOkCancelButtonPanel(
-								      String okKey,
-								      String cancelKey,
-								      ActionListener listener) {
+                                                                      String okKey,
+                                                                      String cancelKey,
+                                                                      ActionListener listener) {
 	return new OkCancelButtonPanel(okKey, cancelKey, listener);
 	/*
 	 * JPanel buttonPanel = new JPanel(); buttonPanel.setLayout(new
@@ -480,9 +480,9 @@ public class JComponentBuilder {
      * @return the menu entry
      */
     public static JMenuItem createJMenuItem(
-					    String key,
-					    String actionCommand,
-					    ActionListener listener) {
+                                            String key,
+                                            String actionCommand,
+                                            ActionListener listener) {
 	// check params
 	if ((key == null) || (key.length() == 0))
 	    return null;
@@ -591,7 +591,7 @@ public class JComponentBuilder {
 		    line = reader.readLine();
 		    text.append(line);
 		    text.append("\n"); // new line in order to report the same
-				       // text structure as in the file
+		    // text structure as in the file
 		} while (line != null);
 
 	    } catch (IOException e) {

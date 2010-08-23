@@ -74,6 +74,7 @@ class HttpProxyConnection implements Connection {
 	    final Socket fSocket = this._socket;
 
 	    this.out = (OutputStream) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws IOException {
 		    return fSocket.getOutputStream();
 		}
@@ -96,6 +97,7 @@ class HttpProxyConnection implements Connection {
 	this.established = true;
     }
 
+    @Override
     public void close() throws IOException {
 	if (this._socket != null) {
 	    this._socket.close();
@@ -105,10 +107,12 @@ class HttpProxyConnection implements Connection {
 	this.established = false;
     }
 
+    @Override
     public String getAuthenticatedSecurityDomain() {
 	return null;
     }
 
+    @Override
     synchronized public InputStream getInputStream() throws IOException {
 	if (this._inputStream == null) {
 	    this._inputStream = this._socket.getInputStream();
@@ -117,10 +121,12 @@ class HttpProxyConnection implements Connection {
 	return this._inputStream;
     }
 
+    @Override
     public String getMessage() {
 	return null;
     }
 
+    @Override
     synchronized public OutputStream getOutputStream() throws IOException {
 	if (this._outputStream == null) {
 	    this._outputStream = new ContentOutputStream(this.out, true);
@@ -128,6 +134,7 @@ class HttpProxyConnection implements Connection {
 	return this._outputStream;
     }
 
+    @Override
     public boolean isEstablished() {
 	return this.established;
     }
@@ -192,6 +199,7 @@ class HttpProxyConnection implements Connection {
 	}
     }
 
+    @Override
     public void sendRequest() throws IOException {
 	this._outputStream.sendContent();
 
@@ -199,8 +207,8 @@ class HttpProxyConnection implements Connection {
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     static boolean useHttpProxy(URL url) {
 	boolean useProxy = false;
 

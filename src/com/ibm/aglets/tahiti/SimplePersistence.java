@@ -43,6 +43,7 @@ final class SimplePersistence implements com.ibm.aglets.Persistence {
 
 	try {
 	    boolean[] bb = (boolean[]) AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    boolean[] result = new boolean[2];
 
@@ -68,11 +69,13 @@ final class SimplePersistence implements com.ibm.aglets.Persistence {
 	}
     }
 
+    @Override
     public PersistentEntry createEntryWith(String key) {
 	final File f = new File(this.spool_dir + key);
 
 	try {
 	    return (PersistentEntry) AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    if (!f.exists() || f.canWrite()) {
 			return new SimplePEntry(f);
@@ -87,15 +90,18 @@ final class SimplePersistence implements com.ibm.aglets.Persistence {
 	return null;
     }
 
+    @Override
     public Enumeration entryKeys() {
 	return new KeyEnumerator(this.spool_dir);
     }
 
+    @Override
     public PersistentEntry getEntry(String key) {
 	final File f = new File(this.spool_dir + key);
 
 	try {
 	    return (PersistentEntry) AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    if (f.exists() && f.canWrite()) {
 			return new SimplePEntry(f);
@@ -110,12 +116,14 @@ final class SimplePersistence implements com.ibm.aglets.Persistence {
 	return null;
     }
 
+    @Override
     public void removeEntry(String key) {
 	try {
 	    final String fSpoolDir = this.spool_dir;
 	    final String fKey = key;
 
 	    AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    String filename = fSpoolDir + fKey;
 

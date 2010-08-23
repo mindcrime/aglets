@@ -42,6 +42,7 @@ public class AgletAudioClip implements AudioClip, java.io.Serializable {
 	return this.url.hashCode();
     }
 
+    @Override
     public synchronized void loop() {
 	this.stop();
 	if (this.data != null) {
@@ -50,6 +51,7 @@ public class AgletAudioClip implements AudioClip, java.io.Serializable {
 	}
     }
 
+    @Override
     public synchronized void play() {
 	this.stop();
 	if (this.data != null) {
@@ -58,6 +60,7 @@ public class AgletAudioClip implements AudioClip, java.io.Serializable {
 	}
     }
 
+    @Override
     public synchronized void stop() {
 	if (this.stream != null) {
 	    try {

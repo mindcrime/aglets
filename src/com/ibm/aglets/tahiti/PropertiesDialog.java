@@ -112,8 +112,8 @@ final class PropertiesDialog extends TahitiDialog {
 
 	MyPanel my_panel =
 
-	// - new MyPanel("Aglet Instance Information:" + subtitle);
-	new MyPanel("Aglet Instance Information:");
+	    // - new MyPanel("Aglet Instance Information:" + subtitle);
+	    new MyPanel("Aglet Instance Information:");
 
 	p.add(my_panel, cns);
 

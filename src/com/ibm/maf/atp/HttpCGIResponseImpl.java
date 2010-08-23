@@ -39,6 +39,7 @@ final class HttpCGIResponseImpl implements AtpResponse, AtpConstants {
 	this.out = out;
     }
 
+    @Override
     public OutputStream getOutputStream() throws IOException {
 	if (this.bout == null) {
 	    this.bout = new ContentOutputStream(this.out, true);
@@ -46,15 +47,17 @@ final class HttpCGIResponseImpl implements AtpResponse, AtpConstants {
 	return this.bout;
     }
 
+    @Override
     public int getStatusCode() {
 	return this.statusCode;
     }
 
+    @Override
     public void sendError(int i) throws IOException {
 	this.setStatusCode(i);
 	this.writeStatusLine();
 	String h = "<HTML><BODY>ERROR statusCode = " + i + " : "
-		+ this.statusMsg + "</BODY></HTML>";
+	+ this.statusMsg + "</BODY></HTML>";
 
 	int len = h.length();
 
@@ -70,6 +73,7 @@ final class HttpCGIResponseImpl implements AtpResponse, AtpConstants {
 	this.out.flush();
     }
 
+    @Override
     public void sendResponse() throws IOException {
 	this.writeStatusLine();
 	this.writeHeaders();
@@ -85,10 +89,12 @@ final class HttpCGIResponseImpl implements AtpResponse, AtpConstants {
 	this.out.flush();
     }
 
+    @Override
     public void setContentType(String type) {
 	return;
     }
 
+    @Override
     public void setStatusCode(int i) {
 	this.statusCode = i;
 	switch (this.statusCode) {
@@ -123,6 +129,7 @@ final class HttpCGIResponseImpl implements AtpResponse, AtpConstants {
 	}
     }
 
+    @Override
     public void setStatusCode(int i, String msg) {
 	this.statusCode = i;
 	this.statusMsg = msg;
@@ -147,7 +154,7 @@ final class HttpCGIResponseImpl implements AtpResponse, AtpConstants {
 
     private void writeStatusLine() throws IOException {
 	String h = "HTTP/1.0 " + (this.statusCode + 100) + " " + this.statusMsg
-		+ CRLF;
+	+ CRLF;
 	int len = h.length();
 
 	for (int i = 0; i < len; i++) {

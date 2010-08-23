@@ -41,7 +41,7 @@ import com.ibm.maf.SuspendFailed;
 import com.ibm.maf.TerminateFailed;
 
 public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
-	MAFAgentSystem_RMI {
+MAFAgentSystem_RMI {
 
     MAFAgentSystem maf = null;
 
@@ -56,7 +56,7 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
 	try {
 	    java.net.URL u = new java.net.URL(__maf.getAddress());
 	    String addr = u.getHost() + ":"
-		    + (u.getPort() == -1 ? 1099 : u.getPort());
+	    + (u.getPort() == -1 ? 1099 : u.getPort());
 
 	    locals.put(addr, __maf);
 	} catch (Exception ex) {
@@ -64,16 +64,17 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
 	}
     }
 
+    @Override
     public Name create_agent(
-			     Name agent_name,
-			     AgentProfile agent_profile,
-			     byte[] agent,
-			     String place_name,
-			     Object[] arguments,
-			     ClassName[] class_names,
-			     String code_base,
-			     MAFAgentSystem_RMI rmi_class_provider)
-								   throws RemoteException {
+                             Name agent_name,
+                             AgentProfile agent_profile,
+                             byte[] agent,
+                             String place_name,
+                             Object[] arguments,
+                             ClassName[] class_names,
+                             String code_base,
+                             MAFAgentSystem_RMI rmi_class_provider)
+    throws RemoteException {
 	try {
 	    MAFAgentSystem class_provider = to_maf_agentsystem(rmi_class_provider);
 
@@ -89,11 +90,12 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
 	}
     }
 
+    @Override
     public byte[][] fetch_class(
-				ClassName[] class_name_list,
-				String code_base,
-				AgentProfile agent_profile)
-							   throws RemoteException {
+                                ClassName[] class_name_list,
+                                String code_base,
+                                AgentProfile agent_profile)
+    throws RemoteException {
 	try {
 	    return this.maf.fetch_class(class_name_list, code_base, agent_profile);
 	} catch (ClassUnknown ex) {
@@ -103,8 +105,9 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
 	}
     }
 
+    @Override
     public String find_nearby_agent_system_of_profile(AgentProfile profile)
-									   throws RemoteException {
+    throws RemoteException {
 	try {
 	    return this.maf.find_nearby_agent_system_of_profile(profile);
 	} catch (EntryNotFound ex) {
@@ -119,6 +122,7 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
 	return (MAFAgentSystem_RMI) to_rmi.get(__maf);
     }
 
+    @Override
     public AgentStatus get_agent_status(Name agent_name) throws RemoteException {
 	try {
 	    return this.maf.get_agent_status(agent_name);
@@ -127,10 +131,12 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
 	}
     }
 
+    @Override
     public AgentSystemInfo get_agent_system_info() throws RemoteException {
 	return this.maf.get_agent_system_info();
     }
 
+    @Override
     public AuthInfo get_authinfo(Name agent_name) throws RemoteException {
 	try {
 	    return this.maf.get_authinfo(agent_name);
@@ -139,6 +145,7 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
 	}
     }
 
+    @Override
     public MAFFinder get_MAFFinder() throws RemoteException {
 	return null;
     }
@@ -147,28 +154,32 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
 	return (MAFAgentSystem) locals.get(address);
     }
 
+    @Override
     public Name[] list_all_agents() throws RemoteException {
 	return this.maf.list_all_agents();
     }
 
+    @Override
     public Name[] list_all_agents_of_authority(byte[] authority)
-								throws RemoteException {
+    throws RemoteException {
 	return this.maf.list_all_agents_of_authority(authority);
     }
 
+    @Override
     public String[] list_all_places() throws RemoteException {
 	return this.maf.list_all_places();
     }
 
+    @Override
     public void receive_agent(
-			      Name agent_name,
-			      AgentProfile agent_profile,
-			      byte[] agent,
-			      String place_name,
-			      ClassName[] class_names,
-			      String code_base,
-			      MAFAgentSystem_RMI rmi_class_sender)
-								  throws RemoteException {
+                              Name agent_name,
+                              AgentProfile agent_profile,
+                              byte[] agent,
+                              String place_name,
+                              ClassName[] class_names,
+                              String code_base,
+                              MAFAgentSystem_RMI rmi_class_sender)
+    throws RemoteException {
 	try {
 	    MAFAgentSystem class_sender = to_maf_agentsystem(rmi_class_sender);
 
@@ -182,11 +193,12 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
 	}
     }
 
+    @Override
     public long receive_future_message(
-				       Name agent_name,
-				       byte[] msg,
-				       MAFAgentSystem_RMI message_sender)
-									 throws RemoteException {
+                                       Name agent_name,
+                                       byte[] msg,
+                                       MAFAgentSystem_RMI message_sender)
+    throws RemoteException {
 	try {
 	    MAFAgentSystem maf_message_sender = to_maf_agentsystem(message_sender);
 
@@ -204,8 +216,9 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
 	}
     }
 
+    @Override
     public void receive_future_reply(long return_id, byte[] reply)
-								  throws RemoteException {
+    throws RemoteException {
 	try {
 	    this.maf.receive_future_reply(return_id, reply);
 	} catch (EntryNotFound ex) {
@@ -224,8 +237,9 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
     /**
      * Messaging
      */
+    @Override
     public byte[] receive_message(Name agent_name, byte[] msg)
-							      throws RemoteException {
+    throws RemoteException {
 	try {
 	    return this.maf.receive_message(agent_name, msg);
 	} catch (AgentNotFound ex) {
@@ -245,8 +259,9 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
 	}
     }
 
+    @Override
     public void receive_oneway_message(Name agent_name, byte[] msg)
-								   throws RemoteException {
+    throws RemoteException {
 	try {
 	    this.maf.receive_oneway_message(agent_name, msg);
 	} catch (AgentNotFound ex) {
@@ -262,6 +277,7 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
 	}
     }
 
+    @Override
     public void resume_agent(Name agent_name) throws RemoteException {
 	try {
 	    this.maf.resume_agent(agent_name);
@@ -277,6 +293,7 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
     /*
      * Aglets Sepcific
      */
+    @Override
     public byte[] retract_agent(Name agent_name) throws RemoteException {
 	try {
 	    return this.maf.retract_agent(agent_name);
@@ -288,6 +305,7 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
 	}
     }
 
+    @Override
     public void suspend_agent(Name agent_name) throws RemoteException {
 	try {
 	    this.maf.suspend_agent(agent_name);
@@ -300,6 +318,7 @@ public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
 	}
     }
 
+    @Override
     public void terminate_agent(Name agent_name) throws RemoteException {
 	try {
 	    this.maf.terminate_agent(agent_name);

@@ -79,7 +79,7 @@ public final class MessageEx extends MAFExtendedException {
     @Override
     public String toString() {
 	return super.toString() + ": " + this._exception.getClass().getName()
-		+ "," + this._exception.getMessage();
+	+ "," + this._exception.getMessage();
     }
 
     public void write(DataOutput out) throws IOException {

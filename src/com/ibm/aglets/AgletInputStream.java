@@ -57,7 +57,7 @@ final class AgletInputStream extends ObjectInputStream {
      *                if data in the input stream is invalid.
      */
     public AgletInputStream(InputStream in, ResourceManager rm)
-	    throws IOException {
+    throws IOException {
 	super(in);
 	this.rm = rm;
     }
@@ -67,8 +67,8 @@ final class AgletInputStream extends ObjectInputStream {
      */
     @Override
     protected void readStreamHeader()
-				     throws IOException,
-				     StreamCorruptedException {
+    throws IOException,
+    StreamCorruptedException {
 	int incoming_magic = this.readInt();
 
 	if (incoming_magic != AgletRuntime.AGLET_MAGIC) {
@@ -102,8 +102,8 @@ final class AgletInputStream extends ObjectInputStream {
      */
     @Override
     public Class resolveClass(ObjectStreamClass classinfo)
-							  throws IOException,
-							  ClassNotFoundException {
+    throws IOException,
+    ClassNotFoundException {
 	return this.rm.loadClass(classinfo.getName());
     }
 }

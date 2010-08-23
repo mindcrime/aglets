@@ -110,16 +110,16 @@ final class AgletOutputStream extends ObjectOutputStream {
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     /* package */
     ClassName[] getClassNames(ResourceManager rm) {
 	return rm.getClassNames(this.getClasses());
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     @Override
     protected void writeStreamHeader() throws IOException {
 	this.writeInt(AgletRuntime.AGLET_MAGIC);

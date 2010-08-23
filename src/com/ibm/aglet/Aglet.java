@@ -151,7 +151,7 @@ public abstract class Aglet implements java.io.Serializable {
      *            the persistency listener
      */
     synchronized final public void addPersistencyListener(
-							  PersistencyListener listener) {
+                                                          PersistencyListener listener) {
 	if (this.persistencyListener == null) {
 	    this.persistencyListener = listener;
 	} else if (this.persistencyListener == listener) {
@@ -217,8 +217,8 @@ public abstract class Aglet implements java.io.Serializable {
      * @see MobilityListener#onArrival
      */
     public final void dispatch(Ticket ticket)
-					     throws IOException,
-					     RequestRefusedException {
+    throws IOException,
+    RequestRefusedException {
 	this._stub.dispatch(ticket);
     }
 
@@ -241,8 +241,8 @@ public abstract class Aglet implements java.io.Serializable {
      * @see MobilityListener#onArrival
      */
     public final void dispatch(URL destination)
-					       throws IOException,
-					       RequestRefusedException {
+    throws IOException,
+    RequestRefusedException {
 	this._stub.dispatch(destination);
     }
 
@@ -583,7 +583,7 @@ public abstract class Aglet implements java.io.Serializable {
      *            the persistency listener
      */
     synchronized final public void removePersistencyListener(
-							     PersistencyListener l) {
+                                                             PersistencyListener l) {
 	if (this.persistencyListener == l) {
 	    this.persistencyListener = null;
 	} else if (this.persistencyListener instanceof AgletEventListener) {
@@ -732,8 +732,8 @@ public abstract class Aglet implements java.io.Serializable {
      *             if the duration is less then zero
      */
     public final void suspend(long duration)
-					    throws AgletException,
-					    IllegalArgumentException {
+    throws AgletException,
+    IllegalArgumentException {
 	// check params
 	if (duration < 0)
 	    throw new IllegalArgumentException("Sleeping time cannot be negative! Please specify a positive millisecs value!");
@@ -756,8 +756,8 @@ public abstract class Aglet implements java.io.Serializable {
      *             if the duration is less then zero
      */
     public final void sleep(long duration)
-					  throws AgletException,
-					  IllegalArgumentException {
+    throws AgletException,
+    IllegalArgumentException {
 	this.suspend(duration);
     }
 

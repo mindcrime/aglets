@@ -102,7 +102,7 @@ public class AgletThreadPool {
 	AgletThread thread = new AgletThread(this.threadGroup);
 	thread.setName("PooledAgletThread num." + this.createdThread);
 	thread.setDaemon(true); // all the pooled thread are daemons, they are
-				// utility threads
+	// utility threads
 	this.threads.push(thread);
 	this.createdThread++;
     }
@@ -140,7 +140,7 @@ public class AgletThreadPool {
      *             while waiting for a new thread to be available on the pool.
      */
     public synchronized AgletThread pop(MessageManager messageManager)
-								      throws AgletException {
+    throws AgletException {
 	// first of all check if the message manager is valid
 	if ((messageManager == null)
 		|| (!(messageManager instanceof MessageManagerImpl)))
@@ -315,7 +315,7 @@ public class AgletThreadPool {
      *            the thread to insert
      */
     public synchronized void pushDeliveryMessageThread(
-						       DeliveryMessageThread deliveryMessageThread) {
+                                                       DeliveryMessageThread deliveryMessageThread) {
 	// check arguments
 	if ((deliveryMessageThread == null)
 		|| this.deliveryMessageThreads.contains(deliveryMessageThread))

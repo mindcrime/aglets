@@ -105,13 +105,13 @@ public interface AgletContext {
      * @see Aglet#onCreation
      */
     abstract public AgletProxy createAglet(
-					   URL codeBase,
-					   String code,
-					   Object init)
-						       throws IOException,
-						       AgletException,
-						       ClassNotFoundException,
-						       InstantiationException;
+                                           URL codeBase,
+                                           String code,
+                                           Object init)
+    throws IOException,
+    AgletException,
+    ClassNotFoundException,
+    InstantiationException;
 
     /**
      * Gets an enumeration of all aglets in the current context including
@@ -272,8 +272,8 @@ public interface AgletContext {
      */
     @Deprecated
     abstract public AgletProxy retractAglet(URL url)
-						    throws IOException,
-						    AgletException;
+    throws IOException,
+    AgletException;
 
     /**
      * Retracts the aglet specified by its url and id
@@ -297,8 +297,8 @@ public interface AgletContext {
      *                if the aglet could not be found.
      */
     abstract public AgletProxy retractAglet(URL url, AgletID aid)
-								 throws IOException,
-								 AgletException;
+    throws IOException,
+    AgletException;
 
     /**
      * Sets the context property indicated by the key and value.

@@ -84,6 +84,7 @@ final public class Daemon {
     static {
 	try {
 	    nullStream = (PrintStream) AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    return new PrintStream(new NullOutputStream());
 		}
@@ -128,11 +129,11 @@ final public class Daemon {
      * Write a access log
      */
     static public void access(
-			      InetAddress host,
-			      long time,
-			      String requestLine,
-			      int statusCode,
-			      String misc) {
+                              InetAddress host,
+                              long time,
+                              String requestLine,
+                              int statusCode,
+                              String misc) {
 	DateFormat dfmt = DateFormat.getDateInstance();
 
 	access.println(host.getHostName() + " - - ["
@@ -144,10 +145,10 @@ final public class Daemon {
      * Write a error message into a log file
      */
     static public void error(
-			     InetAddress host,
-			     long time,
-			     String err,
-			     String reason) {
+                             InetAddress host,
+                             long time,
+                             String err,
+                             String reason) {
 	DateFormat dfmt = DateFormat.getDateInstance();
 
 	error.println("[" + dfmt.format(new Date(time)) + "] " + err + " from "
@@ -183,8 +184,8 @@ final public class Daemon {
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     static private OutputStream openStream(String filename) throws IOException {
 	if (FileUtils.ensureDirectory(filename) == false) {
 	    throw new IOException("Cannot create diretory for " + filename);
@@ -205,6 +206,7 @@ final public class Daemon {
 	if (this._port == -1) {
 	    try {
 		String s_port = (String) AccessController.doPrivileged(new PrivilegedAction() {
+		    @Override
 		    public Object run() {
 			return System.getProperty("maf.port");
 		    }
@@ -228,6 +230,7 @@ final public class Daemon {
 	    final OutputStream fOut = out;
 
 	    access = (PrintStream) AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    return new PrintStream(fOut);
 		}
@@ -246,6 +249,7 @@ final public class Daemon {
 	    final OutputStream fOut = out;
 
 	    error = (PrintStream) AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    return new PrintStream(fOut);
 		}
@@ -264,6 +268,7 @@ final public class Daemon {
 	    final OutputStream fOut = out;
 
 	    message = (PrintStream) AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    return new PrintStream(fOut);
 		}
@@ -324,6 +329,7 @@ final public class Daemon {
 	    final int fPort = this._port;
 
 	    socket = (ServerSocket) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() throws IOException {
 		    return new ServerSocket(fPort);
 		}

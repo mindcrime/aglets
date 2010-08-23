@@ -27,7 +27,7 @@ public class OkCancelButtonPanel extends JPanel {
     private JButton cancelButton = null;
 
     public OkCancelButtonPanel(String okKey, String cancelKey,
-	    ActionListener listener) {
+                               ActionListener listener) {
 	super();
 	this.setLayout(new FlowLayout(FlowLayout.RIGHT));
 

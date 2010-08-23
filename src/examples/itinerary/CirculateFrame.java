@@ -34,7 +34,7 @@ import com.ibm.aglet.util.AddressChooser;
 import com.ibm.agletx.util.SeqPlanItinerary;
 
 class CirculateFrame extends Frame implements WindowListener, ActionListener,
-	ItemListener {
+ItemListener {
     CirculateAglet aglet;
     List list = new List(10, false);
     AddressChooser address = new AddressChooser(15);
@@ -89,6 +89,7 @@ class CirculateFrame extends Frame implements WindowListener, ActionListener,
      * @param ae
      *            the event to be handled
      */
+    @Override
     public void actionPerformed(ActionEvent ae) {
 	if ("Once More".equals(ae.getActionCommand())) {
 	    this.aglet.oncemore();
@@ -107,6 +108,7 @@ class CirculateFrame extends Frame implements WindowListener, ActionListener,
 	}
     }
 
+    @Override
     public void itemStateChanged(ItemEvent ie) {
 	this.aglet.itinerary.setRepeat(this.check.getState());
     }
@@ -134,16 +136,18 @@ class CirculateFrame extends Frame implements WindowListener, ActionListener,
 
 	for (int i = 0; i < size; i++) {
 	    String s = spi.getAddressAt(i) + " : "
-		    + spi.getMessageAt(i).getKind();
+	    + spi.getMessageAt(i).getKind();
 
 	    this.list.add(s);
 	}
 	this.check.setState(this.aglet.itinerary.isRepeat());
     }
 
+    @Override
     public void windowActivated(WindowEvent we) {
     }
 
+    @Override
     public void windowClosed(WindowEvent we) {
     }
 
@@ -154,19 +158,24 @@ class CirculateFrame extends Frame implements WindowListener, ActionListener,
      *            the event to be handled
      */
 
+    @Override
     public void windowClosing(WindowEvent we) {
 	this.dispose();
     }
 
+    @Override
     public void windowDeactivated(WindowEvent we) {
     }
 
+    @Override
     public void windowDeiconified(WindowEvent we) {
     }
 
+    @Override
     public void windowIconified(WindowEvent we) {
     }
 
+    @Override
     public void windowOpened(WindowEvent we) {
     }
 }

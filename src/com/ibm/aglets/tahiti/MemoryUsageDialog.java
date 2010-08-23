@@ -79,6 +79,7 @@ final class MemoryUsageDialog extends TahitiDialog implements Runnable {
     /*
      * Save options
      */
+    @Override
     public void run() {
 	while (true) {
 	    this._myCanvas.repaint();

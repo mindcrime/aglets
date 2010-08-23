@@ -66,7 +66,7 @@ public class BaseItinerary implements SimpleItinerary {
      *             if the owner is null.
      */
     public BaseItinerary(Aglet owner, int baseSize)
-	    throws IllegalArgumentException {
+    throws IllegalArgumentException {
 	super();
 
 	// check if the agent is valid
@@ -126,6 +126,7 @@ public class BaseItinerary implements SimpleItinerary {
      *            the destination to add.
      * @return true if the destination is added, false otherwise.
      */
+    @Override
     public boolean addNextDestination(String destinationURI) {
 	// check param
 	if ((destinationURI == null) || (destinationURI.equals("") == true)) {
@@ -162,6 +163,7 @@ public class BaseItinerary implements SimpleItinerary {
      *            inserted.
      * @return true if the destination is added, false otherwise
      */
+    @Override
     public boolean addNextDestination(String destinationURI, int index) {
 	// check param
 	if ((destinationURI == null) || (destinationURI.equals("") == true)) {
@@ -197,9 +199,10 @@ public class BaseItinerary implements SimpleItinerary {
      *            added.
      * @return true if the destination is inserted, false otherwise
      */
+    @Override
     public boolean addNextDestination(
-				      String destinationURI,
-				      String previousDestinationURI) {
+                                      String destinationURI,
+                                      String previousDestinationURI) {
 	// check params
 	if ((destinationURI == null) || destinationURI.equals("")
 		|| (previousDestinationURI == null)
@@ -244,6 +247,7 @@ public class BaseItinerary implements SimpleItinerary {
      *            the destination to add
      * @return true if the destination has been added, false otherwise
      */
+    @Override
     public boolean addNextDestinationIfNotDuplicated(String destinationURI) {
 	// check params
 	if ((destinationURI == null) || destinationURI.equals("")) {
@@ -268,6 +272,7 @@ public class BaseItinerary implements SimpleItinerary {
      * 
      * @return true if the destination has been removed, false otherwise.
      */
+    @Override
     public boolean removeDestination(String destinationURI) {
 	// cehck params
 	if ((destinationURI == null) || destinationURI.equals("")
@@ -296,6 +301,7 @@ public class BaseItinerary implements SimpleItinerary {
      *            index of the destination to be removed.
      * @return true if the destination has been removed, false otherwise.
      */
+    @Override
     public boolean removeDestinationAt(int index) {
 	// check params
 	if ((index < 0) || (index > this.destinations.size())) {
@@ -320,6 +326,7 @@ public class BaseItinerary implements SimpleItinerary {
      * @return the iterator with the list of destinations stored, at the moment,
      *         in the itinerary.
      */
+    @Override
     public Iterator getDestinations() {
 	return this.destinations.iterator();
     }
@@ -331,6 +338,7 @@ public class BaseItinerary implements SimpleItinerary {
      * there's the risk that the itinerary is changed multiple times (e.g., due
      * to a message handling).
      */
+    @Override
     public final void setImmutable() {
 	this.mutable = false;
     }
@@ -351,6 +359,7 @@ public class BaseItinerary implements SimpleItinerary {
      * @param the
      *            first destination stored in this itinerary.
      */
+    @Override
     public String getFirstDestination() {
 	return (String) this.destinations.firstElement();
     }
@@ -360,6 +369,7 @@ public class BaseItinerary implements SimpleItinerary {
      * 
      * @return the last destination stored in the itinerary.
      */
+    @Override
     public String getLastDestination() {
 	return (String) this.destinations.lastElement();
     }
@@ -370,6 +380,7 @@ public class BaseItinerary implements SimpleItinerary {
      * 
      * @return the destination the agent is at.
      */
+    @Override
     public String getCurrentLocation() {
 	return (String) this.destinations.get(this.currentIndex);
     }
@@ -379,6 +390,7 @@ public class BaseItinerary implements SimpleItinerary {
      * 
      * @return the number of destinations stored in this itinerary.
      */
+    @Override
     public int getDestinationCount() {
 	return this.destinations.size();
     }
@@ -388,6 +400,7 @@ public class BaseItinerary implements SimpleItinerary {
      * 
      * @return the number of destinations not yet visited during this itinerary.
      */
+    @Override
     public int getRemainingDestinationCount() {
 	return this.destinations.size() - this.currentIndex;
     }
@@ -395,6 +408,7 @@ public class BaseItinerary implements SimpleItinerary {
     /**
      * Skips the next destination on this itinerary.
      */
+    @Override
     public void skipNext() {
 	this.currentIndex++;
     }
@@ -406,6 +420,7 @@ public class BaseItinerary implements SimpleItinerary {
      * has visited all the destinations, the execution of this method will have
      * no effect.</B>
      */
+    @Override
     public void goToNextDestination() {
 
 	// has the agent already visited all the destinations?

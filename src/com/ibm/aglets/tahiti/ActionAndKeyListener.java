@@ -20,24 +20,28 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 abstract public class ActionAndKeyListener implements ActionListener,
-	KeyListener {
+KeyListener {
+    @Override
     public void actionPerformed(ActionEvent ev) {
 	this.doAction();
     }
 
     abstract protected void doAction();
 
+    @Override
     public void keyPressed(KeyEvent ev) {
 	if (ev.getKeyCode() == KeyEvent.VK_ENTER) {
 	    this.doAction();
 	}
     }
 
+    @Override
     public void keyReleased(KeyEvent ev) {
 
 	// do nothing
     }
 
+    @Override
     public void keyTyped(KeyEvent ev) {
 
 	// do nothing

@@ -45,7 +45,7 @@ class WriterSlaveWindow extends Frame {
     // -- Constructs the dialog window.
     //
     public WriterSlaveWindow(Aglet ag, String text, String from)
-	    throws AgletException {
+    throws AgletException {
 	super(TITLE);
 	this._aglet = ag;
 	this.setLayout(this.layout = new GridBagLayout());

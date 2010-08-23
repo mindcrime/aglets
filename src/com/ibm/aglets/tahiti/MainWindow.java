@@ -82,11 +82,12 @@ import com.ibm.awb.misc.Resource;
  */
 
 public final class MainWindow extends TahitiWindow implements ItemListener,
-	ActionListener, ListSelectionListener {
+ActionListener, ListSelectionListener {
     static ResourceBundle bundle = null;
 
     static {
 	bundle = (ResourceBundle) AccessController.doPrivileged(new PrivilegedAction() {
+	    @Override
 	    public Object run() {
 		return ResourceBundle.getBundle("tahiti");
 	    }
@@ -263,7 +264,7 @@ public final class MainWindow extends TahitiWindow implements ItemListener,
 	    // get a few resources (i.e., wrappers around the
 	    // system properties) for the aglets
 	    String titleAddition = " " + ownerName + "@" + hosting + " - "
-		    + this.getInformativeTitle();
+	    + this.getInformativeTitle();
 	    this.setTitle(this.getTitle() + titleAddition);
 	} catch (Exception e) {
 	    this.logger.error("Cannot get an Aglet Runtime instance! Cannot continue!", e);
@@ -397,7 +398,7 @@ public final class MainWindow extends TahitiWindow implements ItemListener,
 		    // ask the user how many time it will deactivate the agent
 		    String deactivationTime = JOptionPane.showInputDialog(this, this.translator.translate(this.baseKey
 			    + ".deactivationTime"), this.translator.translate(this.baseKey
-			    + ".deactivationTime.title"), JOptionPane.YES_NO_OPTION);
+				    + ".deactivationTime.title"), JOptionPane.YES_NO_OPTION);
 		    try {
 			long millis = Long.parseLong(deactivationTime);
 			this.deactivateAglet(currentProxy, millis);
@@ -418,7 +419,7 @@ public final class MainWindow extends TahitiWindow implements ItemListener,
 
 			String deactivationTime = JOptionPane.showInputDialog(this, this.translator.translate(this.baseKey
 				+ ".sleepTime"), this.translator.translate(this.baseKey
-				+ ".sleepTime.title"), JOptionPane.YES_NO_OPTION);
+					+ ".sleepTime.title"), JOptionPane.YES_NO_OPTION);
 			long millis = Long.parseLong(deactivationTime);
 
 			aglet.sleep(millis);
@@ -427,7 +428,7 @@ public final class MainWindow extends TahitiWindow implements ItemListener,
 			this.logger.error("Exception caught while trying to call a sleep within the aglet", e);
 			JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 				+ ".error.sleepMessage"), this.translator.translate(this.baseKey
-				+ ".error.sleepTitle"), JOptionPane.ERROR_MESSAGE);
+					+ ".error.sleepTitle"), JOptionPane.ERROR_MESSAGE);
 		    }
 
 		} else if (GUICommandStrings.DISPATCH_AGLET_COMMAND.equals(command))
@@ -458,13 +459,13 @@ public final class MainWindow extends TahitiWindow implements ItemListener,
 		// ask confirmation for rebooting
 		if (JOptionPane.showConfirmDialog(this.getParent(), this.translator.translate(this.baseKey
 			+ ".rebootMessage"), this.translator.translate(this.baseKey
-			+ ".rebootMessage.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+				+ ".rebootMessage.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
 		    this.reboot();
 	    } else if (GUICommandStrings.EXIT_COMMAND.equals(command)) {
 		// ask confirmation for rebooting
 		if (JOptionPane.showConfirmDialog(this.getParent(), this.translator.translate(this.baseKey
 			+ ".shutdownMessage"), this.translator.translate(this.baseKey
-			+ ".shutdownMessage.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+				+ ".shutdownMessage.title"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
 
 		    this.shutdown();
 	    } else if (GUICommandStrings.RETRACT_AGLET_COMMAND.equals(command))
@@ -519,8 +520,8 @@ public final class MainWindow extends TahitiWindow implements ItemListener,
 		this.logger.info("Garbage collector invoked.");
 		JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 			+ ".garbageCollector"), this.translator.translate(this.baseKey
-			+ ".garbageCollector.title"), JOptionPane.INFORMATION_MESSAGE, JComponentBuilder.getIcon(this.baseKey
-			+ ".garbageCollector.icon"));
+				+ ".garbageCollector.title"), JOptionPane.INFORMATION_MESSAGE, JComponentBuilder.getIcon(this.baseKey
+					+ ".garbageCollector.icon"));
 	    } else if (GUICommandStrings.THREAD_COMMAND.equals(command))
 		// dump the threads
 		dumpThreads(System.out);
@@ -689,12 +690,12 @@ public final class MainWindow extends TahitiWindow implements ItemListener,
 		    case ABOUT_AGLETS:
 			res = Resource.getResourceFor("aglets");
 			String msg = "Aglets Version : "
-				+ res.getString("aglets.version") + "\n"
-				+ "Aglets API : " + Aglet.MAJOR_VERSION + "."
-				+ Aglet.MINOR_VERSION + "\n"
-				+ "Aglet Transfer Format : "
-				+ res.getString("aglets.stream.version") + "\n"
-				+ "\n" + res.getString("aglets.copyright");
+			    + res.getString("aglets.version") + "\n"
+			    + "Aglets API : " + Aglet.MAJOR_VERSION + "."
+			    + Aglet.MINOR_VERSION + "\n"
+			    + "Aglet Transfer Format : "
+			    + res.getString("aglets.stream.version") + "\n"
+			    + "\n" + res.getString("aglets.copyright");
 
 			d = TahitiDialog.message(MainWindow.this, "About Aglets", msg);
 			d.popupAtCenterOfParent();
@@ -784,7 +785,7 @@ public final class MainWindow extends TahitiWindow implements ItemListener,
 		    }
 		}
 		URL url = !this._codebase.equals("") ? new URL(this._codebase)
-			: null;
+		: null;
 
 		if (this._reload) {
 		    Tahiti.CONTEXT.clearCache(null);
@@ -1492,9 +1493,9 @@ public final class MainWindow extends TahitiWindow implements ItemListener,
      *            the stream to which write the thread group
      */
     private static void dumpThreadGroup(
-					ThreadGroup currentGroup,
-					int level,
-					PrintStream out) {
+                                        ThreadGroup currentGroup,
+                                        int level,
+                                        PrintStream out) {
 	StringBuffer buffer = new StringBuffer(500);
 
 	// check params

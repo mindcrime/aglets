@@ -173,10 +173,10 @@ public class FileUtils {
      * Gets property filename for a user
      */
     public final static String getPropertyFilenameForUser(
-							  String username,
-							  String propname) {
+                                                          String username,
+                                                          String propname) {
 	return getPropertyDirectoryForUser(username) + File.separator
-		+ propname + ".properties";
+	+ propname + ".properties";
     }
 
     /**
@@ -290,11 +290,11 @@ public class FileUtils {
 	case '\\': // DOS,WINDOWS,OS/2
 	    return (abs.toUpperCase().startsWith(path) ||
 
-	    //
-	    // the file is like /e:/test/memoryBar..
-	    //
-	    ((abs.charAt(0) == '/') && (abs.length() > 2)
-		    && (abs.charAt(2) == ':') && abs.toUpperCase().startsWith('/' + path)));
+		    //
+		    // the file is like /e:/test/memoryBar..
+		    //
+		    ((abs.charAt(0) == '/') && (abs.length() > 2)
+			    && (abs.charAt(2) == ':') && abs.toUpperCase().startsWith('/' + path)));
 	case '/': // UNIX , Mac MRJ.
 	    return abs.startsWith(path);
 	case ':': // none..
@@ -322,8 +322,8 @@ public class FileUtils {
     }
 
     public static final Enumeration strToPathList(
-						  String path_list,
-						  String separators) {
+                                                  String path_list,
+                                                  String separators) {
 	if (path_list == null) {
 	    return null;
 	}

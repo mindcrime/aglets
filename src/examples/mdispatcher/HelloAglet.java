@@ -46,8 +46,8 @@ public class HelloAglet extends Aglet {
     String message = "Hello World!";
 
     /*
-	 * 
-	 */
+     * 
+     */
     String home = null;
 
     /*
@@ -61,8 +61,8 @@ public class HelloAglet extends Aglet {
     MethodDispatcher mdispatcher = null;
 
     /*
-	 * 
-	 */
+     * 
+     */
     public void atHome(Message msg) {
 	this.setText("I'm back.");
 	this.waitMessage(2 * 1000);

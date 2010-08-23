@@ -33,7 +33,7 @@ public final class AgentStatus implements java.io.Serializable {
     }
 
     public static final AgentStatus from_int(int i)
-						   throws IllegalArgumentException {
+    throws IllegalArgumentException {
 	switch (i) {
 	case _Running:
 	    return Running;

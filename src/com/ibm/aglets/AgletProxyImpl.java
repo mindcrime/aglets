@@ -46,6 +46,7 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
 	super(ref);
     }
 
+    @Override
     public void activate() throws IOException, AgletException {
 	this.getAgletRef().activate();
     }
@@ -85,9 +86,10 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
      * @exception AgletEception
      *                if can not deactivate the aglet.
      */
+    @Override
     public void deactivate(long duration)
-					 throws IOException,
-					 InvalidAgletException {
+    throws IOException,
+    InvalidAgletException {
 	Message msg = new SystemMessage(Message.DEACTIVATE, new Long(duration), SystemMessage.DEACTIVATE_REQUEST);
 
 	try {
@@ -111,14 +113,16 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
     /**
      * Delegates a message
      */
+    @Override
     public void delegateMessage(Message msg) throws InvalidAgletException {
 	this.getAgletRef().delegateMessage(msg);
     }
 
     // trip with Ticket
+    @Override
     public AgletProxy dispatch(Ticket ticket)
-					     throws IOException,
-					     AgletException {
+    throws IOException,
+    AgletException {
 	Message msg = new SystemMessage(Message.DISPATCH, ticket, SystemMessage.DISPATCH_REQUEST);
 
 	try {
@@ -142,6 +146,7 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
     /*
      * dispatches
      */
+    @Override
     public AgletProxy dispatch(URL url) throws IOException, AgletException {
 	return this.dispatch(new Ticket(url));
     }
@@ -152,6 +157,7 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
      * @exception InvalidAgletException
      *                if the aglet is invalid.
      */
+    @Override
     public void dispose() throws InvalidAgletException {
 	Message msg = new SystemMessage(Message.DISPOSE, null, SystemMessage.DISPOSE_REQUEST);
 
@@ -201,6 +207,7 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
      * 
      * @return the address.
      */
+    @Override
     public String getAddress() throws InvalidAgletException {
 	return this.getAgletRef().getAddress();
     }
@@ -213,6 +220,7 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
      * @exception SecurityException
      *                if the current execution is not allowed.
      */
+    @Override
     public Aglet getAglet() throws InvalidAgletException {
 	return this.getAgletRef().getAglet();
     }
@@ -222,6 +230,7 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
      * 
      * @return the class name.
      */
+    @Override
     public String getAgletClassName() throws InvalidAgletException {
 	return this.getAgletInfo().getAgletClassName();
     }
@@ -233,6 +242,7 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
      * @exception InvalidAgletException
      *                if the aglet is not valid.
      */
+    @Override
     public AgletID getAgletID() throws InvalidAgletException {
 	return this.getAgletInfo().getAgletID();
     }
@@ -242,6 +252,7 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
      * 
      * @return the AgletInfo of the aglet
      */
+    @Override
     public AgletInfo getAgletInfo() throws InvalidAgletException {
 	AgletRef ref = this.getAgletRef();
 
@@ -263,8 +274,8 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     @Override
     public int hashCode() {
 	try {
@@ -277,6 +288,7 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
     /*
      * Checks if it's active.
      */
+    @Override
     public boolean isActive() {
 	return this.getAgletRef().isActive();
     }
@@ -284,10 +296,12 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
     /**
      * Checks if it's remote
      */
+    @Override
     public boolean isRemote() {
 	return this.getAgletRef().isRemote();
     }
 
+    @Override
     public boolean isState(int state) {
 	return this.getAgletRef().isState(state);
     }
@@ -295,6 +309,7 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
     /**
      * Checks if it's valid.
      */
+    @Override
     public boolean isValid() {
 	return this.getAgletRef().isValid();
     }
@@ -309,8 +324,9 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
      * @param msg
      *            the message to send
      */
+    @Override
     synchronized public FutureReply sendAsyncMessage(Message msg)
-								 throws InvalidAgletException {
+    throws InvalidAgletException {
 	return this.getAgletRef().sendFutureMessage(msg);
     }
 
@@ -320,8 +336,9 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
      * @param msg
      *            the message to send
      */
+    @Override
     synchronized public FutureReply sendFutureMessage(Message msg)
-								  throws InvalidAgletException {
+    throws InvalidAgletException {
 	return this.getAgletRef().sendFutureMessage(msg);
     }
 
@@ -331,10 +348,11 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
      * @param msg
      *            the message to send
      */
+    @Override
     public Object sendMessage(Message msg)
-					  throws MessageException,
-					  InvalidAgletException,
-					  NotHandledException {
+    throws MessageException,
+    InvalidAgletException,
+    NotHandledException {
 	return this.getAgletRef().sendMessage(msg);
     }
 
@@ -344,8 +362,9 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
      * @param msg
      *            the message to send
      */
+    @Override
     synchronized public void sendOnewayMessage(Message msg)
-							   throws InvalidAgletException {
+    throws InvalidAgletException {
 	this.getAgletRef().sendOnewayMessage(msg);
     }
 
@@ -360,6 +379,7 @@ public final class AgletProxyImpl extends VirtualRef implements AgletProxy {
      * @exception IllegalArgumentException
      *                if the minutes parameter is negative.
      */
+    @Override
     public void suspend(long duration) throws InvalidAgletException {
 	Message msg = new SystemMessage(Message.DEACTIVATE, new Long(duration), SystemMessage.SUSPEND_REQUEST);
 

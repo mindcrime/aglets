@@ -73,7 +73,7 @@ final class CloneAgletDialog extends TahitiDialog implements ActionListener {
 	} catch (InvalidAgletException ex) {
 	    JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 		    + ".infoError"), this.translator.translate(this.baseKey
-		    + ".infoError.title"), JOptionPane.ERROR_MESSAGE);
+			    + ".infoError.title"), JOptionPane.ERROR_MESSAGE);
 	} finally {
 	    this.pack();
 	}

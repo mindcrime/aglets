@@ -73,6 +73,7 @@ class MultiList extends Panel implements ItemSelectable {
 	this.addItems(items, idx);
     }
 
+    @Override
     public void addItemListener(ItemListener listener) {
 	this._listeners.addElement(listener);
     }
@@ -311,6 +312,7 @@ class MultiList extends Panel implements ItemSelectable {
 	return this._selectedItems;
     }
 
+    @Override
     public synchronized Object[] getSelectedObjects() {
 	return this._selectedItems;
     }
@@ -557,6 +559,7 @@ class MultiList extends Panel implements ItemSelectable {
 	}
     }
 
+    @Override
     public void removeItemListener(ItemListener listener) {
 	this._listeners.removeElement(listener);
     }

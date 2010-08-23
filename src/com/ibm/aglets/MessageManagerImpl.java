@@ -56,7 +56,7 @@ import com.ibm.aglets.thread.AgletThreadPool;
  * @author Luca Ferrari
  */
 public final class MessageManagerImpl implements MessageManager,
-	java.io.Serializable {
+java.io.Serializable {
     private static AgletsLogger logger = AgletsLogger.getLogger(MessageManagerImpl.class.getName());
 
     /*
@@ -72,7 +72,7 @@ public final class MessageManagerImpl implements MessageManager,
      * Status String
      */
     static private String[] state_string = { "UNINITIALIZED", "RUNNING",
-	    "SUSPENDED", "DEACTIVATED", "DESTRYOED" };
+	"SUSPENDED", "DEACTIVATED", "DESTRYOED" };
 
     transient private MessageQueue<MessageImpl> message_queue = new MessageQueue<MessageImpl>();
 
@@ -198,6 +198,7 @@ public final class MessageManagerImpl implements MessageManager,
     //
     // This have to be improved.
     //
+    @Override
     public void destroy() {
 	// Debug.check();
 	synchronized (this.message_queue) {
@@ -230,6 +231,7 @@ public final class MessageManagerImpl implements MessageManager,
 	// Debug.check();
     }
 
+    @Override
     public void exitMonitor() {
 	synchronized (this.message_queue) {
 	    if (this.isOwner() == false) {
@@ -305,6 +307,7 @@ public final class MessageManagerImpl implements MessageManager,
 	this.ref = null;
     }
 
+    @Override
     public void notifyAllMessages() {
 	MessageImpl notifier = null;
 
@@ -325,6 +328,7 @@ public final class MessageManagerImpl implements MessageManager,
 	notifier.doWait();
     }
 
+    @Override
     public void notifyMessage() {
 	MessageImpl notifier = null;
 	MessageImpl waiting = null;
@@ -419,8 +423,8 @@ public final class MessageManagerImpl implements MessageManager,
      * 	try{
      * 	// change the post message flag
      * 	this.postMessage = ! this.postMessage;
-     * 	
-     * 	
+     * 
+     * 
      * 	if( this.postMessage ){
      * 	    System.out.println("\n\t POSTING A MESSAGE TO MYSELF\n");
      * 	    AgletProxy myself = this.getProxy();
@@ -509,15 +513,15 @@ public final class MessageManagerImpl implements MessageManager,
 			// activated it will process the message.
 			logger.debug("Re-activating the message manager and delegating the message");
 			this.ref.activate(); // activate the aglet ref and the
-					     // message manager
+			// message manager
 			msg.enableDelegation(); // set the message to accept
-						// delegation
+			// delegation
 			this.ref.delegateMessage(msg); // delegate the message
-						       // to the aglet ref and
-						       // thus to this message
-						       // manager again
+			// to the aglet ref and
+			// thus to this message
+			// manager again
 			return; // nothing more to do (the delegation will
-				// re-enter this method to process the message)
+			// re-enter this method to process the message)
 		    } catch (Exception ex) {
 			// cannot re-activate
 			logger.error("Exception caught while re-activating the message manager", ex);
@@ -556,7 +560,7 @@ public final class MessageManagerImpl implements MessageManager,
 		}
 	    } else
 		priority = msg.getPriority(); // the message has no kind, run it
-					      // at its own priority
+	    // at its own priority
 
 	    // depending on the message priority we can have two cases:
 	    // 1) the message has a very high priority and must be processed
@@ -606,28 +610,28 @@ public final class MessageManagerImpl implements MessageManager,
 		    // now place on top the current message
 		    msg.setPriority(Message.REENTRANT_PRIORITY);
 		    msg.setThread(this.owner.getThread()); // copy the thread,
-							   // thus if a thread
-							   // has already been
-							   // assigned we don't
-							   // need to get one
-							   // new thread from
-							   // the thread pool
+		    // thus if a thread
+		    // has already been
+		    // assigned we don't
+		    // need to get one
+		    // new thread from
+		    // the thread pool
 		    msg.setReplyAvailable(); // needed if we want to work with
-					     // the sendMessage methods, since
-					     // they will
-					     // block waiting for a reply, that
-					     // will never come since the agent
-					     // will not
-					     // respond to itself!
+		    // the sendMessage methods, since
+		    // they will
+		    // block waiting for a reply, that
+		    // will never come since the agent
+		    // will not
+		    // respond to itself!
 		    AgletThread aThread = this.owner.getThread();
 		    if (aThread != null)
 			aThread.setReentrant(true); // with this the aglet
-						    // thread that is processing
-						    // the owner message
-						    // knows that it is
-						    // re-entrant, and thus that
-						    // it will process this
-						    // message too
+		    // thread that is processing
+		    // the owner message
+		    // knows that it is
+		    // re-entrant, and thus that
+		    // it will process this
+		    // message too
 
 		    this.message_queue.insertAtTop(msg);
 
@@ -763,8 +767,8 @@ public final class MessageManagerImpl implements MessageManager,
      */
 
     private void readObject(java.io.ObjectInputStream s)
-							throws IOException,
-							ClassNotFoundException {
+    throws IOException,
+    ClassNotFoundException {
 	s.defaultReadObject();
 
 	this.message_queue = new MessageQueue();
@@ -788,6 +792,7 @@ public final class MessageManagerImpl implements MessageManager,
 	this.ref = r;
     }
 
+    @Override
     public void setPriority(String kind, int priority) {
 	if ((priority & ACTIVATE_AGLET) == ACTIVATE_AGLET) {
 	    if (this.activationTable == null) {
@@ -891,10 +896,12 @@ public final class MessageManagerImpl implements MessageManager,
 	return buffer.toString();
     }
 
+    @Override
     public void waitMessage() {
 	this.waitMessage(0);
     }
 
+    @Override
     public void waitMessage(long timeout) {
 
 	MessageImpl wait = null;

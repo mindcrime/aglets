@@ -53,6 +53,7 @@ public class BaseTask implements Task, Serializable {
     /**
      * Executes nothing!
      */
+    @Override
     public void execute() {
 
     }
@@ -62,6 +63,7 @@ public class BaseTask implements Task, Serializable {
      * 
      * @return the execution type as specified in the Task interface.
      */
+    @Override
     public int getExecutionType() {
 	return this.executionPolicy;
     }
@@ -69,6 +71,6 @@ public class BaseTask implements Task, Serializable {
     @Override
     public String toString() {
 	return this.description + " (execution policy = "
-		+ this.executionPolicy + ")";
+	+ this.executionPolicy + ")";
     }
 }

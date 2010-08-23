@@ -31,7 +31,7 @@ import com.ibm.awb.misc.Resource;
  * @author Mitsuru Oshima
  */
 final public class ContentOutputStream extends ByteArrayOutputStream implements
-	ContentBuffer {
+ContentBuffer {
 
     /**
      * A separator in the message's header.
@@ -96,6 +96,7 @@ final public class ContentOutputStream extends ByteArrayOutputStream implements
 	}
     }
 
+    @Override
     synchronized public void sendContent() throws IOException {
 	if (this.content_sent) {
 	    throw new IOException("Content has been already sent");

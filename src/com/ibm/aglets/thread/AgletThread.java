@@ -205,10 +205,10 @@ public final class AgletThread extends Thread {
 
 		    logger.debug("AgletThread is starting processing");
 		    this.setReentrant(false); // if the process is here and is
-					      // re-entrant now I'm processing
-					      // a re-entrant message, thus
-					      // after this I have to suspend
-					      // myself.
+		    // re-entrant now I'm processing
+		    // a re-entrant message, thus
+		    // after this I have to suspend
+		    // myself.
 		    this.setProcessing(true);
 		    // get the right reference to the aglet behind the current
 		    // message manager. This must be done each time in the cycle
@@ -222,12 +222,12 @@ public final class AgletThread extends Thread {
 		    LocalAgletRef ref = manager.getAgletRef();
 		    this.message.handle(ref); // handle the message
 		    this.messageHandled++; // increment the number of messages
-					   // handled by this thread
+		    // handled by this thread
 
 		    synchronized (this) {
 			if (!this.isReentrant()) {
 			    this.message = null; // invalidate the message so to
-						 // not repeat the handling
+			    // not repeat the handling
 			    logger.debug("AgletThread has invalidate the message just processed (no reentrant find!)");
 			}
 		    }
@@ -348,7 +348,7 @@ public final class AgletThread extends Thread {
 		    && (!this.isReentrant())) {
 		logger.debug("Thread waiting to set the message to process...");
 		this.wait(); // suspend myself until the current message has
-			     // been processed
+		// been processed
 	    }
 
 	    // substitute the message
@@ -389,7 +389,7 @@ public final class AgletThread extends Thread {
      *            the messageManager to set
      */
     protected synchronized void setMessageManager(
-						  MessageManagerImpl messageManager) {
+                                                  MessageManagerImpl messageManager) {
 	try {
 	    // first of all check if the thread is alive and is already
 	    // processing
@@ -398,7 +398,7 @@ public final class AgletThread extends Thread {
 
 	    while (this.isAlive() && this.isProcessing()) {
 		this.wait(); // suspend myself until the current message has
-			     // been processed
+		// been processed
 	    }
 
 	    // substitute the message

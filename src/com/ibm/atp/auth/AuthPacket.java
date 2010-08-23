@@ -144,8 +144,8 @@ public class AuthPacket extends Object {
     protected final static String STEP_END = "AUTH_END";
 
     /**
-	 * 
-	 */
+     * 
+     */
     private int _step = Authentication.STEP_NOT_AUTHENTICATED;
 
     /**
@@ -193,7 +193,7 @@ public class AuthPacket extends Object {
      *            response of challenge
      */
     public AuthPacket(int step, int status, String domain, int manner,
-	    Challenge challenge, Response response) {
+                      Challenge challenge, Response response) {
 	this.setServerID(SERVERID);
 	this.setStep(step);
 	this.setStatus(status);
@@ -220,7 +220,7 @@ public class AuthPacket extends Object {
      *            response of challenge
      */
     public AuthPacket(int step, int status, Enumeration domains, int manner,
-	    Challenge challenge, Response response) {
+                      Challenge challenge, Response response) {
 	this.setServerID(SERVERID);
 	this.setStep(step);
 	this.setStatus(status);
@@ -295,6 +295,7 @@ public class AuthPacket extends Object {
 	    final String fStr = str;
 
 	    s = (String) AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    return URIEncoder.decode(fStr);
 		}
@@ -315,6 +316,7 @@ public class AuthPacket extends Object {
 	    final String fStr = str;
 
 	    s = (String) AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    return URIEncoder.encode(fStr);
 		}
@@ -367,7 +369,7 @@ public class AuthPacket extends Object {
 
 	if (this._challenge != null) {
 	    str = CHALLENGE_FIELDNAME + FIELD_SEPARATOR + " "
-		    + this._challenge.toString();
+	    + this._challenge.toString();
 	}
 	return str;
     }
@@ -391,7 +393,7 @@ public class AuthPacket extends Object {
 
 	if (this._response != null) {
 	    str = RESPONSE_FIELDNAME + FIELD_SEPARATOR + " "
-		    + this._response.toString();
+	    + this._response.toString();
 	}
 	return str;
     }
@@ -735,7 +737,7 @@ public class AuthPacket extends Object {
      *            data input stream for packet
      */
     public synchronized void readFrom(String topLine, DataInput di)
-								   throws IOException {
+    throws IOException {
 
 	// top line
 	this.parseTopLine(topLine);
@@ -752,7 +754,7 @@ public class AuthPacket extends Object {
      * @exception java.lang.IllegalArgumentException
      */
     private final void setAuthManner(int manner)
-						throws IllegalArgumentException {
+    throws IllegalArgumentException {
 	switch (manner) {
 	case AtpConstants.NO_AUTHENTICATION_MANNER:
 	case AtpConstants.AUTHENTICATION_MANNER_DIGEST:
@@ -773,7 +775,7 @@ public class AuthPacket extends Object {
      * @exception java.lang.IllegalArgumentException
      */
     private final void setAuthManner(String manner)
-						   throws IllegalArgumentException {
+    throws IllegalArgumentException {
 	try {
 	    this.setAuthManner(toAuthManner(manner));
 	} catch (IllegalArgumentException excpt) {
@@ -1016,8 +1018,8 @@ public class AuthPacket extends Object {
      */
     public synchronized void writeTo(OutputStream out) throws IOException {
 	final String topLine = this.getStepString() + " "
-		+ this.getStatusString() + " "
-		+ AUTHENTICATION_PROTOCOL_VERSION + CRLF;
+	+ this.getStatusString() + " "
+	+ AUTHENTICATION_PROTOCOL_VERSION + CRLF;
 	final String serverIDField = this.getServerIDField();
 	final String domainsField = this.getSecurityDomainsField();
 	final String domainField = this.getSecurityDomainField();

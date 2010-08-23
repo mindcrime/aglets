@@ -92,6 +92,7 @@ public class AddressChooser extends Panel implements ActionListener {
 	this.address.addActionListener(this);
     }
 
+    @Override
     public void actionPerformed(ActionEvent ev) {
 	String cmd = ev.getActionCommand();
 

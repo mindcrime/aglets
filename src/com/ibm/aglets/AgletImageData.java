@@ -24,7 +24,7 @@ import java.io.OutputStream;
 import java.net.URL;
 
 public class AgletImageData implements com.ibm.aglet.util.ImageData,
-	java.io.Serializable {
+java.io.Serializable {
 
     static final long serialVersionUID = 5393039055419095915L;
 
@@ -38,6 +38,7 @@ public class AgletImageData implements com.ibm.aglet.util.ImageData,
 	this.type = t;
     }
 
+    @Override
     public ImageProducer getImageProducer() {
 	return new ByteArrayImageSource(this.buf, this.type);
     }
@@ -60,6 +61,7 @@ public class AgletImageData implements com.ibm.aglet.util.ImageData,
      * throw new IOException(ex.getMessage()); } }
      */
 
+    @Override
     public void writeTo(OutputStream out) throws IOException {
 	out.write(this.buf);
     }

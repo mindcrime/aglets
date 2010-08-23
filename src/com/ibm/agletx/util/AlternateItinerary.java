@@ -70,7 +70,7 @@ import com.ibm.aglet.message.Message;
  */
 
 public class AlternateItinerary extends MobilityAdapter implements
-	java.io.Serializable {
+java.io.Serializable {
 
     private Aglet aglet;
     private Vector hosts = new Vector();

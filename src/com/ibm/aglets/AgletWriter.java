@@ -41,15 +41,15 @@ final class AgletWriter {
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     byte[] getBytes() {
 	return this._baos.toByteArray();
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     ClassName[] getClassNames() {
 	return this._table;
     }

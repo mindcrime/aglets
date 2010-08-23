@@ -36,7 +36,7 @@ import com.ibm.aglets.security.PlainAgletPermission;
  */
 
 public final class AgletProtection extends PlainAgletPermission implements
-	Protection {
+Protection {
     public AgletProtection(String name, String actions) {
 	super(name, actions);
     }

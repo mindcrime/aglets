@@ -124,9 +124,9 @@ final class SystemMessage extends MessageImpl {
 	    aglet.onCreation(this.arg);
 	    break;
 
-	/*
-	 * Handles requests
-	 */
+	    /*
+	     * Handles requests
+	     */
 	case CLONE_REQUEST:
 	    try {
 

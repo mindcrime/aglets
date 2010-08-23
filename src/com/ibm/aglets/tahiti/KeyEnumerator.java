@@ -31,6 +31,7 @@ class KeyEnumerator implements Enumeration {
 	    final String fSpoolDir = this.spool_dir;
 
 	    this.filelist = (String[]) AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    return new File(fSpoolDir).list();
 		}
@@ -45,6 +46,7 @@ class KeyEnumerator implements Enumeration {
 	}
     }
 
+    @Override
     public boolean hasMoreElements() {
 	if (this.filelist == null) {
 	    return false;
@@ -55,6 +57,7 @@ class KeyEnumerator implements Enumeration {
 	    final String[] fFilelist = this.filelist;
 
 	    AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    while ((fFilelist.length > fThis.i)
 			    && (new File(fSpoolDir
@@ -70,6 +73,7 @@ class KeyEnumerator implements Enumeration {
 	return this.filelist.length > this.i;
     }
 
+    @Override
     public Object nextElement() {
 	return ((this.filelist == null) ? null : this.filelist[this.i++]);
     }

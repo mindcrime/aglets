@@ -33,12 +33,12 @@ class JarAgletClassLoader extends AgletClassLoader {
      * _digest_table.match(table, false); }
      */
     JarAgletClassLoader(String name, Certificate cert)
-	    throws java.io.IOException {
+    throws java.io.IOException {
 	this(new URL(name), cert);
     }
 
     JarAgletClassLoader(URL codebase, Certificate cert)
-	    throws java.io.IOException {
+    throws java.io.IOException {
 	super(checkAndTrim(codebase), cert);
 	this._jar = new com.ibm.awb.misc.JarArchive(codebase.openStream());
 

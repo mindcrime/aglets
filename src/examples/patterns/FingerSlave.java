@@ -51,9 +51,9 @@ public class FingerSlave extends Slave {
 
 	FingerInfo info = new FingerInfo(hostname,
 
-	// PropertyPermission for the following properties
-	// should be specified in aglets.policy file.
-	this.getProperty("user.name"), this.getProperty("user.home"), this.getProperty("user.dir"), this.getProperty("os.arch"), this.getProperty("os.name"), this.getProperty("os.version"), this.getProperty("java.version"), (new Date()));
+		// PropertyPermission for the following properties
+		// should be specified in aglets.policy file.
+		this.getProperty("user.name"), this.getProperty("user.home"), this.getProperty("user.dir"), this.getProperty("os.arch"), this.getProperty("os.name"), this.getProperty("os.version"), this.getProperty("java.version"), (new Date()));
 
 	return info;
     }

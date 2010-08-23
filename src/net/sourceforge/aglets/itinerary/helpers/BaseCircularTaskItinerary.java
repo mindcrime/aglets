@@ -15,7 +15,7 @@ import com.ibm.aglet.Aglet;
  * 
  */
 public class BaseCircularTaskItinerary extends BaseTaskItinerary implements
-	CircularItinerary {
+CircularItinerary {
 
     /**
      * Traces the number of loops the agent owner of this itinerary has already
@@ -67,6 +67,7 @@ public class BaseCircularTaskItinerary extends BaseTaskItinerary implements
      * Provides information about the loops performed by the agent owner of this
      * itinerary.
      */
+    @Override
     public int getLoopCount() {
 	return this.loopCount;
     }

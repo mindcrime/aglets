@@ -36,16 +36,16 @@ final class AgletReader {
     private ObjectInputStream _ois = null;
 
     /*
-	 * 
-	 */
+     * 
+     */
     AgletReader(byte[] agent) throws IOException {
 	this._is = new ByteArrayInputStream(agent);
 	this._ois = new ObjectInputStream(this._is);
     }
 
     void readAglet(LocalAgletRef ref)
-				     throws IOException,
-				     ClassNotFoundException {
+    throws IOException,
+    ClassNotFoundException {
 	ref.resourceManager.setResourceManagerContext();
 
 	Archive a = (Archive) this._ois.readObject();

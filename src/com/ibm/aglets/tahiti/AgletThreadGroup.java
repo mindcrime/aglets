@@ -46,8 +46,8 @@ final class AgletThreadGroup extends ThreadGroup {
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     public void setMaxThreadNumber(int i) {
 	this.checkAccess();
 	this.maxThreadNumber = i;
@@ -56,6 +56,6 @@ final class AgletThreadGroup extends ThreadGroup {
     @Override
     public String toString() {
 	return this.getClass().getName() + "[name=" + this.getName()
-		+ ",maxpri=" + this.getMaxPriority() + "]";
+	+ ",maxpri=" + this.getMaxPriority() + "]";
     }
 }

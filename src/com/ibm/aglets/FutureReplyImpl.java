@@ -66,8 +66,8 @@ class FutureReplyImpl extends FutureReply {
 
     @Override
     final synchronized public Object getReply()
-					       throws MessageException,
-					       NotHandledException {
+    throws MessageException,
+    NotHandledException {
 	this.waitForReply();
 	if (this.exception != null) {
 	    if (this.exception instanceof NotHandledException) {

@@ -60,10 +60,10 @@ public class MessageImpl extends Message implements Cloneable {
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     public MessageImpl(Message msg, FutureReplyImpl future, int msg_type,
-	    long timestamp) {
+                       long timestamp) {
 	super(msg.getKind(), msg.getArg());
 	this.future = future;
 	this.msg_type = msg_type;
@@ -124,6 +124,7 @@ public class MessageImpl extends Message implements Cloneable {
 	    final Thread th = this.thread;
 
 	    AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 
 		    // all thread will be stopped and them resumed
@@ -184,8 +185,8 @@ public class MessageImpl extends Message implements Cloneable {
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     final void enableDelegation() {
 	this.delegatable = true;
     }
@@ -248,7 +249,7 @@ public class MessageImpl extends Message implements Cloneable {
     /* synchronized */
     boolean isDelegatable() {
 	return this.delegatable && (this.future != null)
-		&& !this.future.available;
+	&& !this.future.available;
     }
 
     final boolean isWaiting() {
@@ -256,16 +257,16 @@ public class MessageImpl extends Message implements Cloneable {
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     @Override
     final public void sendException(Exception exp) {
 	this.future.setExceptionAndNotify(exp);
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     @Override
     final public void sendReply() {
 	this.future.setReplyAndNotify(null);

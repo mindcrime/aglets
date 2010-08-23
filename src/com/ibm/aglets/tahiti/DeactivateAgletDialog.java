@@ -41,7 +41,7 @@ import com.ibm.aglets.tahiti.utils.TahitiCommandStrings;
  */
 
 final class DeactivateAgletDialog extends TahitiDialog implements
-	ActionListener {
+ActionListener {
 
     /*
      * The proxy to be deactivated

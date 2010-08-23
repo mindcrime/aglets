@@ -35,8 +35,8 @@ import com.ibm.atp.AtpConstants;
  */
 public class Authentication {
     /**
-	 * 
-	 */
+     * 
+     */
     private boolean _authenticatedMyself = false;
     private boolean _authenticatedOpponent = false;
 
@@ -159,8 +159,8 @@ public class Authentication {
      * @exception IOException
      */
     public final synchronized boolean authenticate()
-						    throws AuthenticationProtocolException,
-						    IOException {
+    throws AuthenticationProtocolException,
+    IOException {
 	if (this._step != STEP_NOT_AUTHENTICATED) {
 	    this._status = STATUS_ERROR;
 	    throw new AuthenticationProtocolException("Illegal initial step.");
@@ -808,7 +808,7 @@ public class Authentication {
      * @exception java.lang.IllegalArgumentException
      */
     private final void setAuthManner(int manner)
-						throws IllegalArgumentException {
+    throws IllegalArgumentException {
 	if ((manner == AtpConstants.AUTHENTICATION_MANNER_DIGEST)
 		|| (manner == AtpConstants.AUTHENTICATION_MANNER_SIGNATURE)) {
 	    this._manner = manner;

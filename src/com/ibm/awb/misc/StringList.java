@@ -26,10 +26,12 @@ public class StringList implements Enumeration {
 	this._list.addElement(str);
     }
 
+    @Override
     public boolean hasMoreElements() {
 	return this._index < this._list.size();
     }
 
+    @Override
     public Object nextElement() {
 	if (!this.hasMoreElements()) {
 	    throw new NoSuchElementException("no more elements.");

@@ -35,8 +35,8 @@ public class ByteSequence extends Object implements Cloneable, Serializable {
     static final long serialVersionUID = -742497536523647344L;
 
     /**
-	 * 
-	 */
+     * 
+     */
     final private static char DELIMITER = ' ';
     final private static String DELIMITERS = String.valueOf(DELIMITER);
 

@@ -71,6 +71,7 @@ class MyDialog extends Frame implements ActionListener, WindowListener {
      * @param ae
      *            the event to be handled
      */
+    @Override
     public void actionPerformed(ActionEvent ae) {
 	if ("GO!".equals(ae.getActionCommand())) {
 	    this.aglet.message = this.msg.getText();
@@ -123,9 +124,11 @@ class MyDialog extends Frame implements ActionListener, WindowListener {
 	p.add(this.close);
     }
 
+    @Override
     public void windowActivated(WindowEvent we) {
     }
 
+    @Override
     public void windowClosed(WindowEvent we) {
     }
 
@@ -135,19 +138,24 @@ class MyDialog extends Frame implements ActionListener, WindowListener {
      * @param ae
      *            the event to be handled
      */
+    @Override
     public void windowClosing(WindowEvent we) {
 	this.dispose();
     }
 
+    @Override
     public void windowDeactivated(WindowEvent we) {
     }
 
+    @Override
     public void windowDeiconified(WindowEvent we) {
     }
 
+    @Override
     public void windowIconified(WindowEvent we) {
     }
 
+    @Override
     public void windowOpened(WindowEvent we) {
     }
 }

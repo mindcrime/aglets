@@ -38,7 +38,7 @@ import com.ibm.awb.misc.Resource;
  */
 
 final class ServerPrefsDialog extends TahitiDialog implements ActionListener,
-	ItemListener {
+ItemListener {
 
     private TextField _pubRoot;
     private List _aliases;
@@ -162,7 +162,7 @@ final class ServerPrefsDialog extends TahitiDialog implements ActionListener,
     }
 
     private String getAliasEntry(String ali_name, String ali_path)
-								  throws NullPointerException {
+    throws NullPointerException {
 	if ((ali_name.length() == 0) || (ali_path.length() == 0)) {
 	    throw new NullPointerException();
 	}
@@ -187,6 +187,7 @@ final class ServerPrefsDialog extends TahitiDialog implements ActionListener,
 	return _instance;
     }
 
+    @Override
     public void itemStateChanged(java.awt.event.ItemEvent ev) {
 	if ((ev.getItemSelectable() == this._aliases)
 		&& (ev.getStateChange() == ItemEvent.SELECTED)) {

@@ -36,18 +36,21 @@ public class MobilityAdapter implements MobilityListener {
     /**
      * Invoked when the aglet is retracted.
      */
+    @Override
     public void onArrival(MobilityEvent event) {
     }
 
     /**
      * Invoked when the aglet is attempted to dispatch.
      */
+    @Override
     public void onDispatching(MobilityEvent event) {
     }
 
     /**
      * Invoked just after the aglet arrived at the destination
      */
+    @Override
     public void onReverting(MobilityEvent event) {
     }
 }

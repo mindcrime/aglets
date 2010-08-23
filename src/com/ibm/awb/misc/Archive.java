@@ -135,8 +135,8 @@ public class Archive implements java.io.Serializable {
      * { s.defaultWriteObject(); System.out.println("writeObject" + cache); }
      */
     private void readObject(ObjectInputStream s)
-						throws IOException,
-						ClassNotFoundException {
+    throws IOException,
+    ClassNotFoundException {
 	s.defaultReadObject();
     }
 

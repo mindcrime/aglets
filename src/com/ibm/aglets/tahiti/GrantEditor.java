@@ -84,6 +84,7 @@ class GrantEditor extends EditorPanel implements Editor {
 	grid.setConstraints(this.ownedBy, cns);
     }
 
+    @Override
     public String getText() {
 	Vector args = new Vector();
 	final String codebase = this.codeBase.getText();
@@ -105,6 +106,7 @@ class GrantEditor extends EditorPanel implements Editor {
 	return toText(args);
     }
 
+    @Override
     public void setText(String text) {
 	this.parseText(text);
 	final String codebase = this.getArg(0);

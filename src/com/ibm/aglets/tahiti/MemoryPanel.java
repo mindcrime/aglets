@@ -133,7 +133,7 @@ public class MemoryPanel extends JPanel implements ActionListener {
      *            progress memoryBar
      */
     public MemoryPanel(int width, int height, boolean startThread,
-	    boolean showDescription) {
+                       boolean showDescription) {
 	super();
 	this.showDescription = showDescription;
 	this.description = new JLabel();
@@ -164,8 +164,8 @@ public class MemoryPanel extends JPanel implements ActionListener {
      * @return the string that describes the memory usage
      */
     protected String getCurrentMemoryStringDescription(
-						       long currentValue,
-						       long maxValue) {
+                                                       long currentValue,
+                                                       long maxValue) {
 	return String.format(this.memoryString, new Object[] { currentValue,
 		maxValue, (float) ((float) currentValue / (float) maxValue) });
     }
@@ -180,8 +180,8 @@ public class MemoryPanel extends JPanel implements ActionListener {
      * @return the string with the description
      */
     protected String getCurrentThreadStringDescription(
-						       long currentValue,
-						       long maxValue) {
+                                                       long currentValue,
+                                                       long maxValue) {
 	return String.format(this.threadString, new Object[] { currentValue,
 		maxValue });
     }
@@ -273,6 +273,7 @@ public class MemoryPanel extends JPanel implements ActionListener {
 	}
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
 	Runtime.getRuntime();
 

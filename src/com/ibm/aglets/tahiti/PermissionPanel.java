@@ -27,8 +27,8 @@ class PermissionPanel extends EditorPanel {
     protected TextField actions = new TextField(LENGTH_ACTIONS);
 
     public static final PolicyPermission toPermission(
-						      String className,
-						      String text) {
+                                                      String className,
+                                                      String text) {
 	PolicyPermission permission = null;
 
 	try {

@@ -58,6 +58,7 @@ final public class SharedSecrets {
     static {
 	try {
 	    _strNewLine = (String) AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    return System.getProperty(PROPERTY_CRLF, DEFAULT_CRLF);
 		}
@@ -107,7 +108,7 @@ final public class SharedSecrets {
      * Converts lines into shared secrets.
      */
     protected final static SharedSecrets convertLinesToSharedSecrets(
-								     Enumeration lines) {
+                                                                     Enumeration lines) {
 	if (lines == null) {
 	    return null;
 	}
@@ -177,7 +178,7 @@ final public class SharedSecrets {
      * @return created shared secrets NOT NEEDED????(HT)
      */
     protected synchronized static SharedSecrets createSharedSecretsFile(
-									String filename) {
+                                                                        String filename) {
 
 	// shall back up ?
 	// SharedSecret secret = SharedSecret.createSampleSharedSecret();
@@ -267,7 +268,7 @@ final public class SharedSecrets {
     private static String getSharedSecretsFilename() {
 	final String securityDir = FileUtils.getSecurityDirectory();
 	final String default_file = securityDir + File.separator
-		+ "secrets.dat";
+	+ "secrets.dat";
 	Resource res = Resource.getResourceFor("atp");
 
 	if (res == null) {

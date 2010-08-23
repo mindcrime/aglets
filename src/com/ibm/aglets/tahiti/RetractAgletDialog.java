@@ -45,7 +45,7 @@ import com.ibm.awb.misc.Resource;
  */
 
 final class RetractAgletDialog extends TahitiDialog implements ActionListener,
-	ItemListener {
+ItemListener {
 
     private JComboBox servers = null;
     private AgletListPanel<AgletProxy> agletsList = null;
@@ -138,6 +138,7 @@ final class RetractAgletDialog extends TahitiDialog implements ActionListener,
     /**
      * Handles the events on the combobox menu.
      */
+    @Override
     public synchronized void itemStateChanged(ItemEvent event) {
 	// check params
 	if ((event == null) || (this.servers.getSelectedItem() == null))
@@ -182,7 +183,7 @@ final class RetractAgletDialog extends TahitiDialog implements ActionListener,
 	    this.agletsList.removeAllItems();
 	    JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 		    + ".error.proxy"), this.translator.translate(this.baseKey
-		    + ".error.proxy.title"), JOptionPane.ERROR_MESSAGE);
+			    + ".error.proxy.title"), JOptionPane.ERROR_MESSAGE);
 	}
     }
 

@@ -85,8 +85,8 @@ public interface TaskItinerary extends Itinerary {
      * @return true if the task has been removed, false otherwise.
      */
     public boolean removeTaskForDestination(
-					    String destinationURI,
-					    Task toExecute);
+                                            String destinationURI,
+                                            Task toExecute);
 
     /**
      * Removes all tasks to be executed on a specified destination.

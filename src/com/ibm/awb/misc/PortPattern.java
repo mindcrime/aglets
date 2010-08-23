@@ -63,7 +63,7 @@ public class PortPattern {
 		this._type = TYPE_NOTYPE;
 		this._portFrom = NO_PORT;
 		throw getException(this._pattern
-			+ ". Port number should be positive.");
+		                   + ". Port number should be positive.");
 	    }
 	}
     }
@@ -125,7 +125,7 @@ public class PortPattern {
 		this._type = TYPE_NOTYPE;
 		this._portFrom = NO_PORT;
 		throw getException(this._pattern
-			+ ". Port number should be positive.");
+		                   + ". Port number should be positive.");
 	    }
 	    break;
 	case TYPE_ANYPORT:
@@ -227,7 +227,7 @@ public class PortPattern {
 	    break;
 	case TYPE_BETWEEN:
 	    eq = (ppat._portFrom == this._portFrom)
-		    && (ppat._portTo == this._portTo);
+	    && (ppat._portTo == this._portTo);
 	    break;
 	}
 	return eq;
@@ -345,7 +345,7 @@ public class PortPattern {
 	    break;
 	case TYPE_BETWEEN:
 	    str = String.valueOf(this._portFrom) + BETWEEN_PORTS
-		    + String.valueOf(this._portTo);
+	    + String.valueOf(this._portTo);
 	    break;
 	}
 	return str;

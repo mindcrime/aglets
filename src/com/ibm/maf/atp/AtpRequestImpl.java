@@ -46,18 +46,20 @@ public final class AtpRequestImpl implements AtpRequest {
 	short one = (short) 1;
 
 	agent_profile = new AgentProfile(one, // Java
-	one, // Aglets
-	"Aglets", one, one, one, null);
+		one, // Aglets
+		"Aglets", one, one, one, null);
     }
 
     public AtpRequestImpl(InputStream in) throws IOException {
 	this.in = in;
     }
 
+    @Override
     public Name getAgentName() {
 	return MAFUtil.decodeName(MAFUtil.encodeString(this.getRequestParameter("agent-id")));
     }
 
+    @Override
     public String getAgentNameAsString() {
 	return this.getRequestParameter("agent-id");
     }
@@ -69,10 +71,12 @@ public final class AtpRequestImpl implements AtpRequest {
      * din.readFully(b); return b; } catch (Exception ex) {
      * ex.printStackTrace(); return null; } }
      */
+    @Override
     public AgentProfile getAgentProfile() {
 	return agent_profile;
     }
 
+    @Override
     public int getContentLength() {
 	try {
 	    return Integer.parseInt(this.getRequestParameter("content-length"));
@@ -81,18 +85,22 @@ public final class AtpRequestImpl implements AtpRequest {
 	}
     }
 
+    @Override
     public String getFetchClassFile() {
 	return this.requestURI.toString();
     }
 
+    @Override
     public InputStream getInputStream() {
 	return this.in;
     }
 
+    @Override
     public int getMethod() {
 	return this.method;
     }
 
+    @Override
     public String getPlaceName() {
 	String name = this.requestURI.getFile();
 
@@ -133,6 +141,7 @@ public final class AtpRequestImpl implements AtpRequest {
      * public URL getRequestURI() { return requestURI; }
      */
 
+    @Override
     public String getRequestLine() {
 	return this.requestLine;
     }
@@ -140,6 +149,7 @@ public final class AtpRequestImpl implements AtpRequest {
     /*
      * public String getCodeBase() { return getRequestParameter("codebase"); }
      */
+    @Override
     public String getRequestParameter(String key) {
 	return this.getRequestParameter(key, null);
     }
@@ -150,10 +160,12 @@ public final class AtpRequestImpl implements AtpRequest {
 	return r == null ? defValue : r;
     }
 
+    @Override
     public String getSender() {
 	return this.getRequestParameter("from");
     }
 
+    @Override
     public void parseHeaders() throws IOException {
 	DataInput di = new DataInputStream(this.in);
 

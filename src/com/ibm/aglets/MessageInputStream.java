@@ -43,7 +43,7 @@ final class MessageInputStream extends ObjectInputStream {
      *                if data in the input stream is invalid.
      */
     public MessageInputStream(InputStream in, ResourceManager rm)
-	    throws IOException {
+    throws IOException {
 	super(in);
 	this.rm = rm;
     }
@@ -59,8 +59,8 @@ final class MessageInputStream extends ObjectInputStream {
      */
     @Override
     public Class resolveClass(ObjectStreamClass osc)
-						    throws IOException,
-						    ClassNotFoundException {
+    throws IOException,
+    ClassNotFoundException {
 
 	Class cls = (this.rm == null) ? Class.forName(osc.getName())
 		: this.rm.loadClass(osc.getName());
@@ -76,9 +76,9 @@ final class MessageInputStream extends ObjectInputStream {
     }
 
     static Object toObject(ResourceManager rm, byte[] b)
-							throws OptionalDataException,
-							ClassNotFoundException,
-							IOException {
+    throws OptionalDataException,
+    ClassNotFoundException,
+    IOException {
 	ByteArrayInputStream in = new ByteArrayInputStream(b);
 	MessageInputStream ois = new MessageInputStream(in, rm);
 

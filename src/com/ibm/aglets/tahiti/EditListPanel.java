@@ -25,7 +25,7 @@ import java.awt.event.ItemListener;
 import java.util.Vector;
 
 class EditListPanel extends GridBagPanel implements ItemListener,
-	ActionListener {
+ActionListener {
     private static final String LABEL_ADD = "add";
     private static final String LABEL_REMOVE = "remove";
 
@@ -66,6 +66,7 @@ class EditListPanel extends GridBagPanel implements ItemListener,
 	this._list.addItemListener(this);
     }
 
+    @Override
     public void actionPerformed(ActionEvent ev) {
 	String cmd = ev.getActionCommand();
 
@@ -117,6 +118,7 @@ class EditListPanel extends GridBagPanel implements ItemListener,
 	return false;
     }
 
+    @Override
     public void itemStateChanged(ItemEvent ev) {
 	if (this._list.getSelectedIndex() >= 0) {
 	    this._remove.setEnabled(true);

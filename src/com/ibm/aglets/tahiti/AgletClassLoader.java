@@ -80,26 +80,26 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
 	_cache = CacheManager.getCacheManager();
 
 	_agent_profile = new AgentProfile((short) 1,
-	/*
-	 * java
-	 */
-	(short) 1,
-	/*
-	 * Aglets
-	 */
-	"Aglets", (short) 0,
-	/*
-	 * Major
-	 */
-	(short) 2,
-	/*
-	 * minor
-	 */
-	(short) 1,
-	/*
-	 * serialization
-	 */
-	null);
+		/*
+		 * java
+		 */
+		(short) 1,
+		/*
+		 * Aglets
+		 */
+		"Aglets", (short) 0,
+		/*
+		 * Major
+		 */
+		(short) 2,
+		/*
+		 * minor
+		 */
+		(short) 1,
+		/*
+		 * serialization
+		 */
+		null);
     }
 
     /**
@@ -121,6 +121,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      * 
      * @since
      */
+    @Override
     public void setResourceManagerContext() {
     }
 
@@ -132,6 +133,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      * @return The archive value
      * @since
      */
+    @Override
     public Archive getArchive(ClassName[] t) {
 	int size = t.length;
 
@@ -165,6 +167,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      * @return The classNames value
      * @since
      */
+    @Override
     public synchronized ClassName[] getClassNames(Class[] classes) {
 	return this._digest_table.getClassNames(classes);
     }
@@ -214,6 +217,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      *            The feature to be added to the Resource attribute
      * @since
      */
+    @Override
     public void addResource(Object o) {
 	logger.debug("Adding resource.");
 	synchronized (this._resources) {
@@ -242,6 +246,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      * @return Description of the Returned Value
      * @since
      */
+    @Override
     public boolean contains(Class cls) {
 	return this._resolvedClassCache.contains(cls);
     }
@@ -251,6 +256,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      * 
      * @since
      */
+    @Override
     public void disposeAllResources() {
 	synchronized (this._resources) {
 	    java.util.Enumeration e = this._resources.elements();
@@ -289,6 +295,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      *            Description of Parameter
      * @since
      */
+    @Override
     public void importArchive(Archive a) {
 	Archive.Entry ae[] = a.entries();
 
@@ -350,6 +357,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      * @return Description of the Returned Value
      * @since
      */
+    @Override
     public AgletThread newAgletThread(MessageManager mm) {
 	return null;
     }
@@ -359,6 +367,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      * 
      * @since
      */
+    @Override
     public void resumeAllThreads() {
     }
 
@@ -367,6 +376,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      * 
      * @since
      */
+    @Override
     public void stopAllThreads() {
     }
 
@@ -375,6 +385,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      * 
      * @since
      */
+    @Override
     public void stopThreadGroup() {
     }
 
@@ -383,6 +394,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      * 
      * @since
      */
+    @Override
     public void suspendAllThreads() {
     }
 
@@ -416,6 +428,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      * 
      * @since
      */
+    @Override
     public void unsetResourceManagerContext() {
     }
 
@@ -441,6 +454,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
 		final String fn = filename;
 
 		data = (byte[]) AccessController.doPrivileged(new PrivilegedAction() {
+		    @Override
 		    public Object run() {
 			logger.debug("get '" + fn + "' from codebase");
 			byte[] res = AgletClassLoader.this.loadResourceFromCodeBase(fn);
@@ -511,7 +525,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      */
     @Override
     protected synchronized Class loadClass(String name, boolean resolve)
-									throws ClassNotFoundException {
+    throws ClassNotFoundException {
 	logger.debug("loadClass()++ [" + resolve + "]");
 	try {
 	    Class cl = this.findResolvedClass(name);
@@ -644,7 +658,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      * @since
      */
     private Class loadClassFromCodeBase(String classname)
-							 throws ClassNotFoundException {
+    throws ClassNotFoundException {
 	logger.debug("loadClassFromCodeBase(" + classname + ")");
 	byte[] bytecode = this.findByteCode(classname);
 
@@ -671,6 +685,7 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
 	    // Permissions perms = new Permissions();
 	    // perms.add(new AllPermission()); // ???????(To be implemented)
 	    ProtectionDomain pd = (ProtectionDomain) AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    Policy policy = Policy.getPolicy();
 		    PermissionCollection perms = policy.getPermissions(cs);

@@ -35,7 +35,7 @@ final class MessageOutputStream extends ObjectOutputStream {
      *                if can not write into the output stream.
      */
     MessageOutputStream(OutputStream out, ResourceManager rm)
-	    throws IOException {
+    throws IOException {
 	super(out);
 	this.rm = rm;
     }
@@ -60,7 +60,7 @@ final class MessageOutputStream extends ObjectOutputStream {
     }
 
     static byte[] toByteArray(ResourceManager rm, Object obj)
-							     throws IOException {
+    throws IOException {
 	ByteArrayOutputStream out = new ByteArrayOutputStream();
 	MessageOutputStream mos = new MessageOutputStream(out, rm);
 

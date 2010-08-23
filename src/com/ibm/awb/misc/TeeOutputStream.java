@@ -124,7 +124,7 @@ public class TeeOutputStream extends OutputStream {
      */
     @Override
     synchronized public void write(byte b[], int off, int len)
-							      throws IOException {
+    throws IOException {
 	this.exception = null;
 	try {
 	    this.out1.write(b, off, len);

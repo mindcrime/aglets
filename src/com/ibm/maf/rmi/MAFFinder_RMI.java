@@ -32,46 +32,46 @@ import com.ibm.maf.NameInvalid;
 public interface MAFFinder_RMI extends java.rmi.Remote {
 
     String[] lookup_agent(Name agent_name, AgentProfile agent_profile)
-								      throws RemoteException,
-								      EntryNotFound;
+    throws RemoteException,
+    EntryNotFound;
 
     String[] lookup_agent_system(
-				 Name agent_system_name,
-				 AgentSystemInfo agent_system_info)
-								   throws RemoteException,
-								   EntryNotFound;
+                                 Name agent_system_name,
+                                 AgentSystemInfo agent_system_info)
+    throws RemoteException,
+    EntryNotFound;
 
     String[] lookup_place(String place_name)
-					    throws RemoteException,
-					    EntryNotFound;
+    throws RemoteException,
+    EntryNotFound;
 
     void register_agent(
-			Name agent_name,
-			String agent_location,
-			AgentProfile agent_profile)
-						   throws RemoteException,
-						   NameInvalid;
+                        Name agent_name,
+                        String agent_location,
+                        AgentProfile agent_profile)
+    throws RemoteException,
+    NameInvalid;
 
     void register_agent_system(
-			       Name agent_system_name,
-			       String agent_system_location,
-			       AgentSystemInfo agent_system_info)
-								 throws RemoteException,
-								 NameInvalid;
+                               Name agent_system_name,
+                               String agent_system_location,
+                               AgentSystemInfo agent_system_info)
+    throws RemoteException,
+    NameInvalid;
 
     void register_place(String place_name, String place_location)
-								 throws RemoteException,
-								 NameInvalid;
+    throws RemoteException,
+    NameInvalid;
 
     void unregister_agent(Name agent_name)
-					  throws RemoteException,
-					  EntryNotFound;
+    throws RemoteException,
+    EntryNotFound;
 
     void unregister_agent_system(Name agent_system_name)
-							throws RemoteException,
-							EntryNotFound;
+    throws RemoteException,
+    EntryNotFound;
 
     void unregister_place(Name place_name)
-					  throws RemoteException,
-					  EntryNotFound;
+    throws RemoteException,
+    EntryNotFound;
 }

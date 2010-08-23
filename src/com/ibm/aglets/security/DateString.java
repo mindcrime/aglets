@@ -71,8 +71,8 @@ final public class DateString {
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     public static Date getCurrentTime() {
 	Calendar cal = Calendar.getInstance();
 

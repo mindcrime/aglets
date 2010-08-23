@@ -179,6 +179,7 @@ public class TahitiToolBar extends JToolBar implements ActionListener {
      * @param event
      *            the event to manage
      */
+    @Override
     public void actionPerformed(ActionEvent event) {
 	String command = event.getActionCommand();
 

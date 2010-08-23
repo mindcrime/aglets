@@ -32,35 +32,42 @@ package com.ibm.aglet.system;
  * @author Misturu Oshima
  */
 public class ContextAdapter implements ContextListener {
+    @Override
     public void agletActivated(ContextEvent ev) {
 	this.agletAdded(ev);
     }
 
     /**
-	 */
+     */
     public void agletAdded(ContextEvent ev) {
     }
 
+    @Override
     public void agletArrived(ContextEvent ev) {
 	this.agletAdded(ev);
     }
 
+    @Override
     public void agletCloned(ContextEvent ev) {
 	this.agletAdded(ev);
     }
 
+    @Override
     public void agletCreated(ContextEvent ev) {
 	this.agletAdded(ev);
     }
 
+    @Override
     public void agletDeactivated(ContextEvent ev) {
 	this.agletRemoved(ev);
     }
 
+    @Override
     public void agletDispatched(ContextEvent ev) {
 	this.agletRemoved(ev);
     }
 
+    @Override
     public void agletDisposed(ContextEvent ev) {
 	this.agletRemoved(ev);
     }
@@ -68,30 +75,38 @@ public class ContextAdapter implements ContextListener {
     public void agletRemoved(ContextEvent ev) {
     }
 
+    @Override
     public void agletResumed(ContextEvent ev) {
 	this.agletAdded(ev);
     }
 
+    @Override
     public void agletReverted(ContextEvent ev) {
 	this.agletRemoved(ev);
     }
 
+    @Override
     public void agletStateChanged(ContextEvent ev) {
     }
 
+    @Override
     public void agletSuspended(ContextEvent ev) {
 	this.agletRemoved(ev);
     }
 
+    @Override
     public void contextShutdown(ContextEvent ev) {
     }
 
+    @Override
     public void contextStarted(ContextEvent ev) {
     }
 
+    @Override
     public void showDocument(ContextEvent ev) {
     }
 
+    @Override
     public void showMessage(ContextEvent ev) {
     }
 }

@@ -28,7 +28,7 @@ import java.util.Hashtable;
 final class HttpFilter {
 
     static void readHttpHeaders(InputStream in, Hashtable headers)
-								  throws IOException {
+    throws IOException {
 
 	// -in.mark(8192);
 	// -BufferedReader r = new BufferedReader(new InputStreamReader(in));

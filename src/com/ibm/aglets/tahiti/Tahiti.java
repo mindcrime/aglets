@@ -46,8 +46,8 @@ public final class Tahiti implements ContextListener {
 
     private static UserManager _userManager = new TahitiUserManager();
     static String default_resources[][] = {
-	    { "tahiti.background",
-		    String.valueOf(java.awt.Color.lightGray.getRGB()) },
+	{ "tahiti.background",
+	    String.valueOf(java.awt.Color.lightGray.getRGB()) },
 	    { "tahiti.titleFont", "Helvetica-bold-16" },
 	    { "tahiti.font", "Helvetica-plain-12" },
 	    { "tahiti.fixedFont", "Courier-plain-12" }, };
@@ -78,15 +78,18 @@ public final class Tahiti implements ContextListener {
     public Tahiti() {
     }
 
+    @Override
     public void agletActivated(ContextEvent event) {
 	this._window.updateProxyInList(event.getAgletProxy());
     }
 
+    @Override
     public void agletArrived(ContextEvent event) {
 	this.logger.debug("{EVENT} AgletArrived event " + event);
 	this._window.insertProxyToList(event.getAgletProxy());
     }
 
+    @Override
     public void agletCloned(ContextEvent event) {
 	this.logger.debug("{EVENT} Aglet cloned event " + event);
 	this._window.insertProxyToList(event.getAgletProxy());
@@ -95,33 +98,40 @@ public final class Tahiti implements ContextListener {
     /*
      * ContextEvent callbacks
      */
+    @Override
     public void agletCreated(ContextEvent event) {
 	this.logger.debug("{EVENT} Aglet created event " + event);
 	this._window.insertProxyToList(event.getAgletProxy());
     }
 
+    @Override
     public void agletDeactivated(ContextEvent event) {
 	this._window.updateProxyInList(event.getAgletProxy());
 
 	// _window.removeProxyList(event.getAgletProxy());
     }
 
+    @Override
     public void agletDispatched(ContextEvent event) {
 	this._window.removeProxyFromList(event.getAgletProxy());
     }
 
+    @Override
     public void agletDisposed(ContextEvent event) {
 	this._window.removeProxyFromList(event.getAgletProxy());
     }
 
+    @Override
     public void agletResumed(ContextEvent event) {
 	this._window.updateProxyInList(event.getAgletProxy());
     }
 
+    @Override
     public void agletReverted(ContextEvent event) {
 	this._window.removeProxyFromList(event.getAgletProxy());
     }
 
+    @Override
     public void agletStateChanged(ContextEvent event) {
 	AgletProxy proxy = event.getAgletProxy();
 	String text = event.getText();
@@ -130,6 +140,7 @@ public final class Tahiti implements ContextListener {
 	this._window.updateProxyInList(proxy);
     }
 
+    @Override
     public void agletSuspended(ContextEvent event) {
 	this._window.updateProxyInList(event.getAgletProxy());
 
@@ -139,15 +150,18 @@ public final class Tahiti implements ContextListener {
     /**
      * shutdowned
      */
+    @Override
     public void contextShutdown(ContextEvent event) {
     }
 
+    @Override
     public void contextStarted(ContextEvent event) {
 	CONTEXT = event.getAgletContext();
 	final Tahiti tahiti = this;
 	final Resource tahiti_res = Resource.getResourceFor("tahiti");
 
 	this._window = (MainWindow) AccessController.doPrivileged(new PrivilegedAction() {
+	    @Override
 	    public Object run() {
 
 		// Create Tahiti's main window.
@@ -208,6 +222,7 @@ public final class Tahiti implements ContextListener {
 	    return;
 	}
 	AccessController.doPrivileged(new PrivilegedAction() {
+	    @Override
 	    public Object run() {
 		return System.getProperties();
 	    }
@@ -314,10 +329,12 @@ public final class Tahiti implements ContextListener {
 	this.exit();
     }
 
+    @Override
     public void showDocument(ContextEvent event) {
 	this._window.showURL(event.getDocumentURL().toString());
     }
 
+    @Override
     public void showMessage(ContextEvent event) {
 	String l = event.getMessage();
 

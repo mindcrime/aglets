@@ -27,7 +27,7 @@ import com.ibm.maf.Name;
 import com.ibm.maf.NameInvalid;
 
 public class MAFFinder_RMIImpl extends java.rmi.server.UnicastRemoteObject
-	implements com.ibm.maf.MAFFinder {
+implements com.ibm.maf.MAFFinder {
     static private boolean _verbose = false;
 
     static public final String REGISTRY_NAME = "MAFFinder";
@@ -43,21 +43,25 @@ public class MAFFinder_RMIImpl extends java.rmi.server.UnicastRemoteObject
 	this._agents = new Hashtable();
     }
 
+    @Override
     public Hashtable list_agent_entries() throws RemoteException {
 	return this._agents;
     }
 
+    @Override
     public Hashtable list_agent_system_entries() throws RemoteException {
 	return this._agent_systems;
     }
 
+    @Override
     public Hashtable list_place_entries() throws RemoteException {
 	return this._places;
     }
 
+    @Override
     public String[] lookup_agent(Name agent_name, AgentProfile agent_profile)
-									     throws EntryNotFound,
-									     RemoteException {
+    throws EntryNotFound,
+    RemoteException {
 	VerbosePrintln("lookup_agent: " + agent_name.toString());
 	String result[];
 
@@ -90,11 +94,12 @@ public class MAFFinder_RMIImpl extends java.rmi.server.UnicastRemoteObject
 	return result;
     }
 
+    @Override
     public String[] lookup_agent_system(
-					Name agent_system_name,
-					AgentSystemInfo agent_system_info)
-									  throws EntryNotFound,
-									  RemoteException {
+                                        Name agent_system_name,
+                                        AgentSystemInfo agent_system_info)
+    throws EntryNotFound,
+    RemoteException {
 	VerbosePrintln("lookup_agent_system: " + agent_system_name.toString());
 	String result[];
 
@@ -127,9 +132,10 @@ public class MAFFinder_RMIImpl extends java.rmi.server.UnicastRemoteObject
 	}
     }
 
+    @Override
     public String[] lookup_place(String place_name)
-						   throws EntryNotFound,
-						   RemoteException {
+    throws EntryNotFound,
+    RemoteException {
 	VerbosePrintln("lookup_place: " + place_name);
 	String place = (String) this._places.get(place_name);
 
@@ -182,24 +188,26 @@ public class MAFFinder_RMIImpl extends java.rmi.server.UnicastRemoteObject
 	}
     }
 
+    @Override
     public void register_agent(
-			       Name agent_name,
-			       String agent_location,
-			       AgentProfile agent_profile)
-							  throws NameInvalid,
-							  RemoteException {
+                               Name agent_name,
+                               String agent_location,
+                               AgentProfile agent_profile)
+    throws NameInvalid,
+    RemoteException {
 	VerbosePrintln("register_agent:");
 	VerbosePrintln(" name:\t" + agent_name.toString());
 	VerbosePrintln(" location:\t" + agent_location);
 	this._agents.put(agent_name, new LocationInfo(agent_location, agent_profile));
     }
 
+    @Override
     public void register_agent_system(
-				      Name agent_system_name,
-				      String agent_system_location,
-				      AgentSystemInfo agent_system_info)
-									throws NameInvalid,
-									RemoteException {
+                                      Name agent_system_name,
+                                      String agent_system_location,
+                                      AgentSystemInfo agent_system_info)
+    throws NameInvalid,
+    RemoteException {
 	VerbosePrintln("register_agent_system:");
 	VerbosePrintln(" name:\t" + agent_system_name.toString());
 	VerbosePrintln(" location:\t" + agent_system_location);
@@ -211,9 +219,10 @@ public class MAFFinder_RMIImpl extends java.rmi.server.UnicastRemoteObject
 	this._agent_systems.put(agent_system_name, new LocationInfo(agent_system_location, agent_system_info));
     }
 
+    @Override
     public void register_place(String place_name, String place_location)
-									throws NameInvalid,
-									RemoteException {
+    throws NameInvalid,
+    RemoteException {
 	VerbosePrintln("register_place:");
 	VerbosePrintln(" name:\t" + place_name);
 	VerbosePrintln(" location:\t" + place_location);
@@ -234,9 +243,10 @@ public class MAFFinder_RMIImpl extends java.rmi.server.UnicastRemoteObject
 	System.out.println("\tport: " + port);
     }
 
+    @Override
     public void unregister_agent(Name agent_name)
-						 throws EntryNotFound,
-						 RemoteException {
+    throws EntryNotFound,
+    RemoteException {
 	VerbosePrintln("unregister_agent:");
 	VerbosePrintln(" name:\t" + agent_name.toString());
 	Object o = this._agents.remove(agent_name);
@@ -246,9 +256,10 @@ public class MAFFinder_RMIImpl extends java.rmi.server.UnicastRemoteObject
 	}
     }
 
+    @Override
     public void unregister_agent_system(Name agent_system_name)
-							       throws EntryNotFound,
-							       RemoteException {
+    throws EntryNotFound,
+    RemoteException {
 	VerbosePrintln("unregister_agent_system:");
 	VerbosePrintln(" name:\t" + agent_system_name.toString());
 	Object o = this._agent_systems.remove(agent_system_name);
@@ -258,9 +269,10 @@ public class MAFFinder_RMIImpl extends java.rmi.server.UnicastRemoteObject
 	}
     }
 
+    @Override
     public void unregister_place(String place_name)
-						   throws EntryNotFound,
-						   RemoteException {
+    throws EntryNotFound,
+    RemoteException {
 	VerbosePrintln("unregister_place:");
 	VerbosePrintln(" name:\t" + place_name);
 	Object o = this._places.remove(place_name);

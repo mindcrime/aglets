@@ -23,7 +23,7 @@ public class LoggerFactory {
      * cnf directory.
      */
     protected static String loggerConfigFile = System.getProperty("aglets.home")
-	    + "/cnf/log4j.conf.xml";
+    + "/cnf/log4j.conf.xml";
 
     /**
      * Indicates whever or not the logging has been already configured.

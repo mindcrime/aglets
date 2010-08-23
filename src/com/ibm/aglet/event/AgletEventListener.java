@@ -34,7 +34,7 @@ import java.util.Vector;
  * @author Mitsuru Oshima
  */
 public class AgletEventListener implements CloneListener, MobilityListener,
-	PersistencyListener {
+PersistencyListener {
     Vector vector = new Vector();
 
     public AgletEventListener() {
@@ -101,6 +101,7 @@ public class AgletEventListener implements CloneListener, MobilityListener,
      * Calls the onActivation methods on the listers with the specified
      * persistency event.
      */
+    @Override
     public void onActivation(PersistencyEvent ev) {
 	Enumeration e = this.vector.elements();
 
@@ -113,6 +114,7 @@ public class AgletEventListener implements CloneListener, MobilityListener,
      * Calls the onArrival methods on the listers with the specified mobility
      * event.
      */
+    @Override
     public void onArrival(MobilityEvent ev) {
 	Enumeration e = this.vector.elements();
 
@@ -124,6 +126,7 @@ public class AgletEventListener implements CloneListener, MobilityListener,
     /**
      * Calls the onClone methods on the listers with the specified Clone event.
      */
+    @Override
     public void onClone(CloneEvent ev) {
 	Enumeration e = this.vector.elements();
 
@@ -135,6 +138,7 @@ public class AgletEventListener implements CloneListener, MobilityListener,
     /**
      * Calls the onCloned methods on the listers with the specified Clone event.
      */
+    @Override
     public void onCloned(CloneEvent ev) {
 	Enumeration e = this.vector.elements();
 
@@ -147,6 +151,7 @@ public class AgletEventListener implements CloneListener, MobilityListener,
      * Calls the onCloning methods on the listers with the specified Clone
      * event.
      */
+    @Override
     public void onCloning(CloneEvent ev) {
 	Enumeration e = this.vector.elements();
 
@@ -159,6 +164,7 @@ public class AgletEventListener implements CloneListener, MobilityListener,
      * Calls the onDeactivating methods on the listers with the specified
      * persistency event.
      */
+    @Override
     public void onDeactivating(PersistencyEvent ev) {
 	Enumeration e = this.vector.elements();
 
@@ -171,6 +177,7 @@ public class AgletEventListener implements CloneListener, MobilityListener,
      * Calls the onDispatching methods on the listers with the specified
      * mobility event.
      */
+    @Override
     public void onDispatching(MobilityEvent ev) {
 	Enumeration e = this.vector.elements();
 
@@ -183,6 +190,7 @@ public class AgletEventListener implements CloneListener, MobilityListener,
      * Calls the onReverting methods on the listers with the specified mobility
      * event.
      */
+    @Override
     public void onReverting(MobilityEvent ev) {
 	Enumeration e = this.vector.elements();
 

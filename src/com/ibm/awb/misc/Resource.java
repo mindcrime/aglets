@@ -74,8 +74,8 @@ public class Resource {
      */
 
     /*
-	 * 
-	 */
+     * 
+     */
 
     /*
      * Constructs the Resource for System properties.
@@ -137,10 +137,10 @@ public class Resource {
      * @see getResourceFor
      */
     synchronized static public Resource createResource(
-						       String name,
-						       String file,
-						       Properties defaults)
-									   throws java.net.MalformedURLException {
+                                                       String name,
+                                                       String file,
+                                                       Properties defaults)
+    throws java.net.MalformedURLException {
 	URL url = file == null ? null : new URL(PROTOCOL_FILE, "", file);
 
 	return createResource(name, url, defaults);
@@ -152,9 +152,9 @@ public class Resource {
      * @see getResourceFor
      */
     synchronized static private Resource createResource(
-							String name,
-							URL file,
-							Properties defaults) {
+                                                        String name,
+                                                        URL file,
+                                                        Properties defaults) {
 	if (resourceTable.contains(name)) {
 	    throw new SecurityException("cannot re-create existing resource");
 	}
@@ -171,8 +171,8 @@ public class Resource {
      * @see getResourceFor
      */
     synchronized static public Resource createResource(
-						       String name,
-						       Properties defaults) {
+                                                       String name,
+                                                       Properties defaults) {
 	return createResource(name, (URL) null, defaults);
     }
 
@@ -183,8 +183,8 @@ public class Resource {
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     public Color getColor(String key, Color defaultColor) {
 	String color = this.option.getProperty(key);
 
@@ -199,8 +199,8 @@ public class Resource {
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     public Font getFont(String key, Font defaultFont) {
 	String value = this.option.getProperty(key);
 
@@ -274,8 +274,8 @@ public class Resource {
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     public String getString(String key) {
 	return this.option.getProperty(key);
     }
@@ -285,8 +285,8 @@ public class Resource {
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     public String[] getStringArray(String key, String sep) {
 	String v = this.getString(key, null);
 
@@ -317,7 +317,7 @@ public class Resource {
     }
 
     /**
-	 */
+     */
     public URL getURL(String key, URL defaultValue) {
 	String v = this.option.getProperty(key);
 
@@ -348,8 +348,8 @@ public class Resource {
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     public void list(java.io.PrintStream out) {
 	this.option.list(System.out);
     }
@@ -414,8 +414,8 @@ public class Resource {
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     public void removePersistentResourcesStartsWith(String startsWith) {
 	Enumeration e = this.persistent.keys();
 	java.util.Vector v = new java.util.Vector();

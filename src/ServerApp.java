@@ -40,9 +40,9 @@ public class ServerApp extends ContextAdapter {
 
     // additional options
     final static Opt options[] = {
-	    Opt.Entry("-protocol", "maf.protocol", null),
-	    Opt.Entry("-username", "username", null),
-	    Opt.Entry("-password", "password", null), };
+	Opt.Entry("-protocol", "maf.protocol", null),
+	Opt.Entry("-username", "username", null),
+	Opt.Entry("-password", "password", null), };
 
     @Override
     public void agletActivated(ContextEvent ev) {
@@ -89,6 +89,7 @@ public class ServerApp extends ContextAdapter {
 	AgletRuntime runtime = AgletRuntime.init(args);
 
 	String[] r = (String[]) AccessController.doPrivileged(new PrivilegedAction() {
+	    @Override
 	    public Object run() {
 		String[] results = new String[2];
 		String userName = System.getProperty("user.name");
@@ -122,6 +123,7 @@ public class ServerApp extends ContextAdapter {
 	String protocol = "atp";
 
 	protocol = (String) AccessController.doPrivileged(new PrivilegedAction() {
+	    @Override
 	    public Object run() {
 		return System.getProperty("maf.protocol", "atp");
 	    }

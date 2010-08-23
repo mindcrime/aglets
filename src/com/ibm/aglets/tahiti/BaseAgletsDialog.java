@@ -44,6 +44,7 @@ public class BaseAgletsDialog extends JDialog implements ActionListener {
      * cancel event. You should override this method in order to get advantage
      * of your own method and window control.
      */
+    @Override
     public void actionPerformed(ActionEvent event) {
 	// check params
 	if (event == null)

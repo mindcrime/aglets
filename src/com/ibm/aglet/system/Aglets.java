@@ -67,10 +67,10 @@ abstract public class Aglets {
      * 
      */
     static public AgletProxy createAglet(
-					 String contextAddress,
-					 URL codebase,
-					 String classname,
-					 Object init) throws IOException {
+                                         String contextAddress,
+                                         URL codebase,
+                                         String classname,
+                                         Object init) throws IOException {
 	return AgletRuntime.getAgletRuntime().createAglet(contextAddress, codebase, classname, init);
     }
 
@@ -82,7 +82,7 @@ abstract public class Aglets {
      *            specify context URL with a string.
      */
     static public AgletProxy[] getAgletProxies(String contextAddress)
-								     throws IOException {
+    throws IOException {
 	return AgletRuntime.getAgletRuntime().getAgletProxies(contextAddress);
     }
 
@@ -90,7 +90,7 @@ abstract public class Aglets {
      * Obtains a proxy reference to the remote aglet.
      */
     static public AgletProxy getAgletProxy(String contextAddress, AgletID id)
-									     throws IOException {
+    throws IOException {
 	return AgletRuntime.getAgletRuntime().getAgletProxy(contextAddress, id);
     }
 }

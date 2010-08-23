@@ -79,8 +79,8 @@ final public class AgletInfo implements java.io.Serializable, Cloneable {
      *            the authority's certificate of the aglet.
      */
     public AgletInfo(AgletID aid, String classname, URL codebase,
-	    String origin, long birthtime, short api_major_version,
-	    short api_minor_version, Certificate authorityCert) {
+                     String origin, long birthtime, short api_major_version,
+                     short api_minor_version, Certificate authorityCert) {
 	this.aid = aid;
 	this.classname = classname;
 	this.codebase = codebase.toExternalForm();
@@ -202,8 +202,8 @@ final public class AgletInfo implements java.io.Serializable, Cloneable {
      */
 
     private void readObject(ObjectInputStream s)
-						throws IOException,
-						ClassNotFoundException {
+    throws IOException,
+    ClassNotFoundException {
 	s.defaultReadObject();
 	this.authorityCert = com.ibm.aglets.AgletRuntime.getCertificate(this.authorityCertEncoded);
 	if (this.api_major_version != Aglet.MAJOR_VERSION) {

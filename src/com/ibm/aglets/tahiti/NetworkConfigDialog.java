@@ -47,7 +47,7 @@ import com.ibm.awb.misc.Resource;
  */
 
 final class NetworkConfigDialog extends TahitiDialog implements ActionListener,
-	ItemListener {
+ItemListener {
 
     /*
      * Proxy Configuration
@@ -264,6 +264,7 @@ final class NetworkConfigDialog extends TahitiDialog implements ActionListener,
     /**
      * manages checkbox events in order to keep the gui state coherent.
      */
+    @Override
     public void itemStateChanged(ItemEvent event) {
 	if (event == null)
 	    return;

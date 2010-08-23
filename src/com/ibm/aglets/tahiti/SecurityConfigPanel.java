@@ -240,6 +240,7 @@ class SecurityConfigPanel extends GridBagPanel implements ItemListener {
     /*
      * Handles the events
      */
+    @Override
     public void itemStateChanged(ItemEvent ev) {
 	this.layout.show(this.setting_panel, (String) ev.getItemSelectable().getSelectedObjects()[0]);
     }
@@ -248,10 +249,10 @@ class SecurityConfigPanel extends GridBagPanel implements ItemListener {
      * setup General Permission Panel
      */
     void setupGeneralPermissionPanel(
-				     BorderPanel panel,
-				     List list,
-				     PermissionEditor editor,
-				     String className) {
+                                     BorderPanel panel,
+                                     List list,
+                                     PermissionEditor editor,
+                                     String className) {
 	GridBagConstraints cns = new GridBagConstraints();
 
 	cns.weightx = 1.0;
@@ -588,8 +589,8 @@ class SecurityConfigPanel extends GridBagPanel implements ItemListener {
     // - }
 
     /*
-	 * 
-	 */
+     * 
+     */
     void updateValues() {
 
 	// - Resource privilege_res = Resource.getResourceFor("security." +

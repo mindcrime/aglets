@@ -44,71 +44,78 @@ public class Main {
     private static boolean reactivation = true;
 
     static private Opt option_defs[] = {
-	    Opt.Entry("-help", new Opt.Proc() {
-		public boolean exec(String a) {
-		    Opt.message();
-		    System.exit(2);
-		    return true;
-		}
-	    }, "    -help                print this message"),
-	    Opt.Entry("-verbose", "verbose", "true", "    -verbose             turn on verbose mode"),
-	    Opt.Entry("-debug", new Opt.Proc() {
-		public boolean exec(String a) {
-		    com.ibm.awb.misc.Debug.debug(true);
-		    return true;
-		}
-	    }, null),
-	    Opt.Entry("-err", new Opt.Proc() {
-		public boolean exec(String a) throws Exception {
-		    System.setErr(new PrintStream(new FileOutputStream(a)));
-		    return true;
-		}
-	    }, null),
-	    Opt.Entry("-out", new Opt.Proc() {
-		public boolean exec(String a) throws Exception {
-		    System.setOut(new PrintStream(new FileOutputStream(a)));
-		    return true;
-		}
-	    }, null),
-	    Opt.Entry("-cleanstart", new Opt.Proc() {
-		public boolean exec(String a) throws Exception {
-		    reactivation = false;
-		    return true;
-		}
-	    }, "    -cleanstart          do not re-activate aglets, remove it"),
-	    Opt.Entry("-startup", new Opt.Proc() {
-		public boolean exec(String a) throws Exception {
-		    StringTokenizer st = new StringTokenizer(a, DELIM);
-		    Vector v = new Vector();
+	Opt.Entry("-help", new Opt.Proc() {
+	    @Override
+	    public boolean exec(String a) {
+		Opt.message();
+		System.exit(2);
+		return true;
+	    }
+	}, "    -help                print this message"),
+	Opt.Entry("-verbose", "verbose", "true", "    -verbose             turn on verbose mode"),
+	Opt.Entry("-debug", new Opt.Proc() {
+	    @Override
+	    public boolean exec(String a) {
+		com.ibm.awb.misc.Debug.debug(true);
+		return true;
+	    }
+	}, null),
+	Opt.Entry("-err", new Opt.Proc() {
+	    @Override
+	    public boolean exec(String a) throws Exception {
+		System.setErr(new PrintStream(new FileOutputStream(a)));
+		return true;
+	    }
+	}, null),
+	Opt.Entry("-out", new Opt.Proc() {
+	    @Override
+	    public boolean exec(String a) throws Exception {
+		System.setOut(new PrintStream(new FileOutputStream(a)));
+		return true;
+	    }
+	}, null),
+	Opt.Entry("-cleanstart", new Opt.Proc() {
+	    @Override
+	    public boolean exec(String a) throws Exception {
+		reactivation = false;
+		return true;
+	    }
+	}, "    -cleanstart          do not re-activate aglets, remove it"),
+	Opt.Entry("-startup", new Opt.Proc() {
+	    @Override
+	    public boolean exec(String a) throws Exception {
+		StringTokenizer st = new StringTokenizer(a, DELIM);
+		Vector v = new Vector();
 
-		    while (st.hasMoreTokens()) {
-			v.addElement(st.nextToken());
-		    }
-		    startupAgletList = new String[v.size()];
-		    v.copyInto(startupAgletList);
-		    return true;
+		while (st.hasMoreTokens()) {
+		    v.addElement(st.nextToken());
 		}
-	    }, "    -startup <url,..>    create initial aglets"),
-	    Opt.Entry("-startup_file", new Opt.Proc() {
-		public boolean exec(String file) throws Exception {
-		    BufferedReader in = new BufferedReader(new FileReader(file));
-		    String line;
-		    Vector v = new Vector();
+		startupAgletList = new String[v.size()];
+		v.copyInto(startupAgletList);
+		return true;
+	    }
+	}, "    -startup <url,..>    create initial aglets"),
+	Opt.Entry("-startup_file", new Opt.Proc() {
+	    @Override
+	    public boolean exec(String file) throws Exception {
+		BufferedReader in = new BufferedReader(new FileReader(file));
+		String line;
+		Vector v = new Vector();
 
-		    while ((line = in.readLine()) != null) {
-			if (!line.startsWith("#")) {
-			    v.addElement(line);
-			}
+		while ((line = in.readLine()) != null) {
+		    if (!line.startsWith("#")) {
+			v.addElement(line);
 		    }
-		    startupAgletList = new String[v.size()];
-		    v.copyInto(startupAgletList);
-		    return true;
 		}
-	    }, "    -startup_file <file> create initial aglets"),
-	    Opt.Entry("-viewer", "aglets.viewer", "    -viewer <class>      set the viewer class"),
-	    Opt.Entry("-commandline", "aglets.viewer", VIEWER_COMMANDLINE, "    -commandline         use command line interface."),
-	    Opt.Entry("-noui", "aglets.viewer", "", "    -noui                no GUI/CUI."),
-	    Opt.Entry("-protocol", "maf.protocol", null), };
+		startupAgletList = new String[v.size()];
+		v.copyInto(startupAgletList);
+		return true;
+	    }
+	}, "    -startup_file <file> create initial aglets"),
+	Opt.Entry("-viewer", "aglets.viewer", "    -viewer <class>      set the viewer class"),
+	Opt.Entry("-commandline", "aglets.viewer", VIEWER_COMMANDLINE, "    -commandline         use command line interface."),
+	Opt.Entry("-noui", "aglets.viewer", "", "    -noui                no GUI/CUI."),
+	Opt.Entry("-protocol", "maf.protocol", null), };
 
     static private ContextListener getViewer() {
 	return getViewer(getViewerClassName());
@@ -148,6 +155,7 @@ public class Main {
 	    viewer = res.getString("aglets.viewer", DEFAULT_VIEWER);
 	} else {
 	    viewer = (String) AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    return System.getProperty("aglets.viewer", DEFAULT_VIEWER);
 		}
@@ -214,6 +222,7 @@ public class Main {
 	}
 	MAFAgentSystem maf_system = new MAFAgentSystem_AgletsImpl(runtime);
 	String protocol = (String) AccessController.doPrivileged(new PrivilegedAction() {
+	    @Override
 	    public Object run() {
 		return System.getProperty("maf.protocol", "atp");
 	    }

@@ -73,6 +73,7 @@ public class HostCollector extends Aglet implements MobilityListener {
 	return true;
     }
 
+    @Override
     public void onArrival(MobilityEvent event) {
 	AgletProxy ap = (AgletProxy) this.getAgletContext().getProperty("hostlist");
 
@@ -112,12 +113,14 @@ public class HostCollector extends Aglet implements MobilityListener {
 	this.addMobilityListener(this);
     }
 
+    @Override
     public void onDispatching(MobilityEvent event) {
     }
 
     public void onRetraction(MobilityEvent event) {
     }
 
+    @Override
     public void onReverting(MobilityEvent event) {
     }
 }

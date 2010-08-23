@@ -19,7 +19,7 @@ import java.security.Permission;
 import java.util.Vector;
 
 public class PlainMessagePermission extends AgletsPermissionBase implements
-	Serializable {
+Serializable {
     private String _actions = null;
     private Vector _messages = new Vector();
 

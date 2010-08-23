@@ -106,9 +106,9 @@ class EditorPanel extends Panel {
     }
 
     protected static final Vector toVector(
-					   String text,
-					   char cQuote,
-					   char cSeparator) {
+                                           String text,
+                                           char cQuote,
+                                           char cSeparator) {
 	Vector args = new Vector();
 	final String str = text.trim();
 	int idx = 0;

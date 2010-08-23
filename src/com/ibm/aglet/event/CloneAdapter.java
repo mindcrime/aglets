@@ -36,6 +36,7 @@ public class CloneAdapter implements CloneListener {
     /**
      * Invoked after an aglet was cloned. This is delivered to the cloned aglet.
      */
+    @Override
     public void onClone(CloneEvent event) {
     }
 
@@ -43,12 +44,14 @@ public class CloneAdapter implements CloneListener {
      * Invoked after an aglet was cloned. This is delivered to the original
      * aglet.
      */
+    @Override
     public void onCloned(CloneEvent event) {
     }
 
     /**
      * Invoked when an aglet is attempted to clone
      */
+    @Override
     public void onCloning(CloneEvent event) {
     }
 }

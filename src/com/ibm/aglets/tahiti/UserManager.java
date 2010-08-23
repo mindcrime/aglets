@@ -30,6 +30,7 @@ public abstract class UserManager {
     private static String DEFAULT_USERNAME = null;
     static {
 	DEFAULT_USERNAME = (String) AccessController.doPrivileged(new PrivilegedAction() {
+	    @Override
 	    public Object run() {
 		return System.getProperty("user.name");
 	    }

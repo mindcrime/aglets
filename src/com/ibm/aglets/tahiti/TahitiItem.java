@@ -132,7 +132,7 @@ final public class TahitiItem {
 		// replace last string "Aglet" with ".."
 		if (this._classname.endsWith("Aglet")) {
 		    this._classnameSimple = this._classname.substring(0, len - 5)
-			    + "..";
+		    + "..";
 		} else {
 		    this._classnameSimple = new String(this._classname);
 		}
@@ -141,7 +141,7 @@ final public class TahitiItem {
 		len = this._classnameSimple.length();
 		if (len > 20) {
 		    this._classnameSimple = ".."
-			    + this._classnameSimple.substring(len - 18, len);
+			+ this._classnameSimple.substring(len - 18, len);
 		} else {
 		    this._classnameSimple = (this._classnameSimple + "   ").substring(0, 20);
 		}

@@ -44,7 +44,7 @@ public class TestAgletThreadPool extends TestCase {
 		Thread t1 = this.pool.pop(new MessageManagerImpl(null));
 		assertNotNull(t1); // never be null
 		assertTrue((t1 instanceof AgletThread)); // should be an aglet
-							 // thread
+		// thread
 	    }
 
 	} catch (AgletException e) {
@@ -63,7 +63,7 @@ public class TestAgletThreadPool extends TestCase {
 	    AgletThread t = new AgletThread(this.pool.getThreadGroup());
 	    this.pool.push(t);
 	    assertTrue(this.pool.contains(t)); // the pool should contain the
-					       // thread now
+	    // thread now
 	} catch (AgletException e) {
 	    throw new RuntimeException(e);
 	}

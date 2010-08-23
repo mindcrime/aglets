@@ -1,7 +1,7 @@
 /*
  * $Id: TahitiDaemonClient.java,v 1.4 2009/07/28 07:04:53 cat4hire Exp $
  * 
- * @(#)TahitiDaemonClient.java 
+ * @(#)TahitiDaemonClient.java
  *
  * @author     Lary Spector
  * @created    July 22, 2001
@@ -10,7 +10,7 @@
  * and control a running TahitiDaemon.
  *
  * TahitiDaemon implements a Tahiti service which listens on
- * a configurable control port for commands. 
+ * a configurable control port for commands.
  */
 
 import java.io.BufferedReader;
@@ -36,19 +36,19 @@ public class TahitiDaemonClient {
     private static String _version_string = "1.0";
 
     private static String helpMsg = "help                    Display this message. \n"
-	    + "quit                    Disconnect from the server and quit. \n"
-	    + "shutdown                Shutdown the server and quit. \n"
-	    + "reboot                  Reboot the server and quit. \n"
-	    + "list                    List all aglets in the server. \n"
-	    + "msg on|off              Turns message printing on/off, default is off. \n"
-	    + "debug on|off            Debug output on/off, default is off. \n"
-	    + "create [codeBase] name  Create new aglet. \n"
-	    + "<aglet> dispatch URL    Dispatch the aglet to the URL. \n"
-	    + "<aglet> clone           Clone the aglet. \n"
-	    + "<aglet> dispose         Dispose the aglet. \n"
-	    + "<aglet> dialog          Request a dialog to interact with.\n"
-	    + "<aglet> property        Display properties of the aglet.\n"
-	    + "Note: <aglet> is a left most string listed in the result of list command. ";
+	+ "quit                    Disconnect from the server and quit. \n"
+	+ "shutdown                Shutdown the server and quit. \n"
+	+ "reboot                  Reboot the server and quit. \n"
+	+ "list                    List all aglets in the server. \n"
+	+ "msg on|off              Turns message printing on/off, default is off. \n"
+	+ "debug on|off            Debug output on/off, default is off. \n"
+	+ "create [codeBase] name  Create new aglet. \n"
+	+ "<aglet> dispatch URL    Dispatch the aglet to the URL. \n"
+	+ "<aglet> clone           Clone the aglet. \n"
+	+ "<aglet> dispose         Dispose the aglet. \n"
+	+ "<aglet> dialog          Request a dialog to interact with.\n"
+	+ "<aglet> property        Display properties of the aglet.\n"
+	+ "Note: <aglet> is a left most string listed in the result of list command. ";
 
     /*
      * Main method Args: -help -verbose -controlport -host
@@ -269,7 +269,7 @@ public class TahitiDaemonClient {
 		    _control_port_num = Integer.parseInt(args[i]);
 		} catch (NumberFormatException ex) {
 		    System.err.println("\nError! controlport <" + args[i]
-			    + "> is invalid, it  must be an integer ");
+		                                                       + "> is invalid, it  must be an integer ");
 		    _dont_connect = true;
 		    break;
 		}
@@ -283,7 +283,7 @@ public class TahitiDaemonClient {
 		    _socket_timeout = Integer.parseInt(args[i]);
 		} catch (NumberFormatException ex) {
 		    System.err.println("\nError! timeout <" + args[i]
-			    + "> is invalid, it  must be an integer ");
+		                                                   + "> is invalid, it  must be an integer ");
 		    _dont_connect = true;
 		    break;
 		}

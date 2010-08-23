@@ -36,6 +36,7 @@ class SeqPlanTask extends Task implements Runnable {
 	return this.msg;
     }
 
+    @Override
     public void run() {
 	AgletProxy p = this.itin.getOwnerAglet();
 

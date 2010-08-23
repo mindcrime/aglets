@@ -52,8 +52,8 @@ public class MessageDialog extends GeneralDialog {
      * @param modal
      */
     public MessageDialog(Frame parent, Component callback_component,
-	    String title, String message, int alignment, Object object,
-	    boolean modal) {
+                         String title, String message, int alignment, Object object,
+                         boolean modal) {
 
 	super(parent, callback_component, title, object, modal);
 
@@ -86,7 +86,7 @@ public class MessageDialog extends GeneralDialog {
      * @param object
      */
     public MessageDialog(Frame parent, String title, String message,
-	    Object object) {
+                         Object object) {
 	this(parent, parent, title, message, Label.CENTER, object, true);
     }
 

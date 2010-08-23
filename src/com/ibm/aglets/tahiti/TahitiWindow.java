@@ -96,9 +96,9 @@ public class TahitiWindow extends JFrame implements ActionListener {
 	this.translator = AgletsTranslator.getInstance("tahiti", Locale.getDefault());
 
 	this.setTitle(this.getClass().getName()); // translate the title to the
-						  // appropriate one
+	// appropriate one
 	this.windowManager = new WindowManager(this); // add the standard
-						      // management event system
+	// management event system
 	this.addWindowListener(this.windowManager);
 
 	if (inizializeGUI) {
@@ -185,9 +185,9 @@ public class TahitiWindow extends JFrame implements ActionListener {
      * @return the button for further evaluation
      */
     protected JButton addButton(
-				String key,
-				ActionListener listener,
-				KeyListener keyListener) {
+                                String key,
+                                ActionListener listener,
+                                KeyListener keyListener) {
 	JButton button = this.addButton(key, listener);
 
 	// add the key listener
@@ -240,6 +240,7 @@ public class TahitiWindow extends JFrame implements ActionListener {
     /**
      * Manages events related to buttons, menues, etc.
      */
+    @Override
     public void actionPerformed(ActionEvent event) {
 	// check params
 	if (event == null)

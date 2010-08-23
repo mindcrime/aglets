@@ -73,6 +73,7 @@ public class TalkWindow extends Frame implements ActionListener {
 	this.input.addActionListener(this);
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
 	Object source = e.getSource();
 

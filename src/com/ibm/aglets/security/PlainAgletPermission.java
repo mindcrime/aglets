@@ -18,7 +18,7 @@ import java.io.Serializable;
 import java.security.Permission;
 
 public class PlainAgletPermission extends AgletsPermissionBase implements
-	Serializable {
+Serializable {
     private static final String ACTION_DISPOSE = "dispose";
     private static final String ACTION_CLONE = "clone";
     private static final String ACTION_DISPATCH = "dispatch";
@@ -27,7 +27,7 @@ public class PlainAgletPermission extends AgletsPermissionBase implements
     private static final String ACTION_ACTIVATE = "activate";
 
     private static final String[] ACTIONS = { ACTION_DISPOSE, ACTION_CLONE,
-	    ACTION_DISPATCH, ACTION_RETRACT, ACTION_DEACTIVATE, ACTION_ACTIVATE };
+	ACTION_DISPATCH, ACTION_RETRACT, ACTION_DEACTIVATE, ACTION_ACTIVATE };
 
     private static final int INDEX_DISPOSE = 0;
     private static final int INDEX_CLONE = 1;

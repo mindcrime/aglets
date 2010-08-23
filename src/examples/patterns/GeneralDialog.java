@@ -105,7 +105,7 @@ abstract public class GeneralDialog extends Dialog {
      * @param modal the boolean to specify modality
      */
     public GeneralDialog(Frame parent, Component callback_component,
-	    String title, Object object, boolean modal) {
+                         String title, Object object, boolean modal) {
 	super(parent, title, modal);
 	this.callback_component = callback_component;
 	this.object = object;
@@ -146,9 +146,9 @@ abstract public class GeneralDialog extends Dialog {
      * @param cns a constraint object.
      */
     protected void addCmp(
-			  Component c,
-			  GridBagLayout grid,
-			  GridBagConstraints cns) {
+                          Component c,
+                          GridBagLayout grid,
+                          GridBagConstraints cns) {
 	grid.setConstraints(c, cns);
 	this.add(c);
     }
@@ -268,8 +268,8 @@ abstract public class GeneralDialog extends Dialog {
     abstract protected void makePanel(GridBagLayout grid);
 
     /*
-	 * 
-	 */
+     * 
+     */
     final private boolean my_action(Event ev) {
 	if (ev.target == this.okay) {
 	    return this.onOkay();
@@ -296,8 +296,8 @@ abstract public class GeneralDialog extends Dialog {
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     protected boolean onOkay() {
 	return false;
     }

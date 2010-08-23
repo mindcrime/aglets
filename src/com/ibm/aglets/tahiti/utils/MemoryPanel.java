@@ -131,6 +131,7 @@ public class MemoryPanel extends JPanel implements Runnable {
      * Method to run the memory thread. The thread calucaltes the memory spaces
      * and display the progress bar.
      */
+    @Override
     public void run() {
 
 	Runtime rt = Runtime.getRuntime();
@@ -177,7 +178,7 @@ public class MemoryPanel extends JPanel implements Runnable {
      *            progress bar
      */
     public MemoryPanel(int width, int height, boolean startThread,
-	    boolean showDescription) {
+                       boolean showDescription) {
 	super();
 	this.showDescription = showDescription;
 	// this.setLayout(new GridLayout(2,2));

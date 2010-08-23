@@ -110,12 +110,12 @@ public class ImagePanel extends JPanel implements ImageObserver {
      */
     @Override
     public boolean imageUpdate(
-			       Image image,
-			       int infoFlags,
-			       int x,
-			       int y,
-			       int width,
-			       int height) {
+                               Image image,
+                               int infoFlags,
+                               int x,
+                               int y,
+                               int width,
+                               int height) {
 	if ((infoFlags & ALLBITS) == 0) {
 	    /* the image is complete */
 	    this.isComplete = true;

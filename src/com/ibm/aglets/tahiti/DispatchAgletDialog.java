@@ -43,7 +43,7 @@ import com.ibm.awb.misc.Resource;
  */
 
 final class DispatchAgletDialog extends TahitiDialog implements ActionListener,
-	ItemListener {
+ItemListener {
 
     /*
      * The proxy to be dispatched.
@@ -125,7 +125,7 @@ final class DispatchAgletDialog extends TahitiDialog implements ActionListener,
 	    this.logger.error("Exception caught while converting a string to an url", e);
 	    JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 		    + ".error.URL"), this.translator.translate(this.baseKey
-		    + ".error.URL.title"), JOptionPane.ERROR_MESSAGE);
+			    + ".error.URL.title"), JOptionPane.ERROR_MESSAGE);
 
 	}
 
@@ -147,12 +147,13 @@ final class DispatchAgletDialog extends TahitiDialog implements ActionListener,
 	    this.logger.error("Exception caught while converting a string to an url", e);
 	    JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 		    + ".error.URL"), this.translator.translate(this.baseKey
-		    + ".error.URL.title"), JOptionPane.ERROR_MESSAGE);
+			    + ".error.URL.title"), JOptionPane.ERROR_MESSAGE);
 	}
     }
 
     // Handles list box selections.
     //
+    @Override
     public void itemStateChanged(ItemEvent event) {
 	if (event == null)
 	    return;
@@ -177,7 +178,7 @@ final class DispatchAgletDialog extends TahitiDialog implements ActionListener,
 	    this.logger.error("Exception caught while converting a string to an url", e);
 	    JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 		    + ".error.URL"), this.translator.translate(this.baseKey
-		    + ".error.URL.title"), JOptionPane.ERROR_MESSAGE);
+			    + ".error.URL.title"), JOptionPane.ERROR_MESSAGE);
 	}
     }
 

@@ -15,7 +15,7 @@ import com.ibm.aglet.Aglet;
  * @varsion 1.0
  */
 public class BaseCircularItinerary extends BaseItinerary implements
-	CircularItinerary, Serializable {
+CircularItinerary, Serializable {
 
     /**
      * The number of loops of this itinerary.
@@ -67,6 +67,7 @@ public class BaseCircularItinerary extends BaseItinerary implements
      * 
      * @return the number of loops.
      */
+    @Override
     public int getLoopCount() {
 	return this.loopCount;
     }

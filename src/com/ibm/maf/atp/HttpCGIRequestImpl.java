@@ -67,8 +67,8 @@ final class HttpCGIRequestImpl implements AtpRequest, AtpConstants {
 	short one = (short) 1;
 
 	agent_profile = new AgentProfile(one, // Java
-	one, // Aglets
-	"Aglets", one, one, one, null);
+		one, // Aglets
+		"Aglets", one, one, one, null);
     }
 
     public HttpCGIRequestImpl(InputStream in, Hashtable h) throws IOException {
@@ -115,6 +115,7 @@ final class HttpCGIRequestImpl implements AtpRequest, AtpConstants {
 	    final String fEncoding = urlEncoding;
 
 	    s = (String) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run() {
 		    try {
 			return URIEncoder.decode(fStr, fEncoding);
@@ -129,18 +130,22 @@ final class HttpCGIRequestImpl implements AtpRequest, AtpConstants {
 	return s;
     }
 
+    @Override
     public Name getAgentName() {
 	return this.name;
     }
 
+    @Override
     public String getAgentNameAsString() {
 	return MAFUtil.decodeString(MAFUtil.encodeName(this.name));
     }
 
+    @Override
     public AgentProfile getAgentProfile() {
 	return agent_profile;
     }
 
+    @Override
     public int getContentLength() {
 	return this.length;
 
@@ -150,26 +155,32 @@ final class HttpCGIRequestImpl implements AtpRequest, AtpConstants {
 	 */
     }
 
+    @Override
     public String getFetchClassFile() {
 	return null;
     }
 
+    @Override
     public InputStream getInputStream() {
 	return this.bin;
     }
 
+    @Override
     public int getMethod() {
 	return MESSAGE;
     }
 
+    @Override
     public String getPlaceName() {
 	return this.place;
     }
 
+    @Override
     public String getRequestLine() {
 	return this.requestLine;
     }
 
+    @Override
     public String getRequestParameter(String key) {
 	return this.getRequestParameter(key, null);
     }
@@ -180,14 +191,16 @@ final class HttpCGIRequestImpl implements AtpRequest, AtpConstants {
 	return r == null ? defValue : r;
     }
 
+    @Override
     public String getSender() {
 	return this.getRequestParameter("from");
     }
 
+    @Override
     public void parseHeaders() throws IOException {
 	this.requestLine = this.headers.get("method") + " "
-		+ this.headers.get("requestURI") + " "
-		+ this.headers.get("protocol");
+	+ this.headers.get("requestURI") + " "
+	+ this.headers.get("protocol");
 
 	String m = (String) this.headers.get("method");
 

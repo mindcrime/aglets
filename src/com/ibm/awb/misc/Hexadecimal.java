@@ -246,7 +246,7 @@ public class Hexadecimal {
      * @return byte sequence
      */
     public static byte[] parseSeq(String str, String delimiters)
-								throws NumberFormatException {
+    throws NumberFormatException {
 	if ((str == null) || str.equals("")) {
 	    return null;
 	}

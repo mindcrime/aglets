@@ -78,7 +78,7 @@ public class PolicyPermission {
     private PolicyFileReader _reader = null;
 
     public PolicyPermission(PolicyFileReader reader, String type,
-	    String className) throws ClassNotFoundException {
+                            String className) throws ClassNotFoundException {
 	this._reader = reader;
 	this.setType(type);
 	this.setClassName(className);
@@ -129,8 +129,8 @@ public class PolicyPermission {
     }
 
     public Permission create()
-			      throws PolicyFileParsingException,
-			      SecurityException {
+    throws PolicyFileParsingException,
+    SecurityException {
 	if (this._class == null) {
 	    throw this.getParsingException("No permission class.");
 	}
@@ -259,7 +259,7 @@ public class PolicyPermission {
 
     public static boolean equalsSigners(Vector signersA, Vector signersB) {
 	return includesSigners(signersA, signersB)
-		&& includesSigners(signersB, signersA);
+	&& includesSigners(signersB, signersA);
     }
 
     public boolean equalsTargetName(String target) {
@@ -338,9 +338,9 @@ public class PolicyPermission {
 	    type = PolicyFileReader.WORD_PROTECTION;
 	    break;
 
-	// # case TYPE_ALLOWANCE:
-	// # type = PolicyFileReader.WORD_ALLOWANCE;
-	// # break;
+	    // # case TYPE_ALLOWANCE:
+	    // # type = PolicyFileReader.WORD_ALLOWANCE;
+	    // # break;
 	}
 	return type;
     }
@@ -369,7 +369,7 @@ public class PolicyPermission {
 		|| className.equals(CLASSNAME_MESSAGE_PERMISSION)
 		|| className.equals(CLASSNAME_CONTEXT_PERMISSION)
 
-	// - || className.equals(CLASSNAME_THREAD_PERMISSION)
+		// - || className.equals(CLASSNAME_THREAD_PERMISSION)
 	) {
 	    type = PolicyFileReader.WORD_PERMISSION;
 	} else if (className.equals(CLASSNAME_AGLET_PROTECTION)
@@ -570,7 +570,7 @@ public class PolicyPermission {
 		}
 		names += QUOTE;
 		str += COMMA + " " + PolicyFileReader.WORD_SIGNEDBY + " "
-			+ names;
+		+ names;
 	    }
 	}
 

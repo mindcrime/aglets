@@ -36,11 +36,12 @@ public abstract class WeakRef implements Ref {
      * Find a reference in a table.
      */
     abstract protected Ref findRef(ObjectInputStream s)
-						       throws IOException,
-						       ClassNotFoundException;
+    throws IOException,
+    ClassNotFoundException;
 
     /* package */
     /* synchronized */
+    @Override
     public final Ref getRef(VirtualRef vref) {
 	Ref found = this.findRef();
 
@@ -61,6 +62,7 @@ public abstract class WeakRef implements Ref {
      * Called when referenced
      */
     /* package */
+    @Override
     synchronized public final void referenced() {
 
 	// System.out.println("-- referenced --");
@@ -72,9 +74,10 @@ public abstract class WeakRef implements Ref {
      * Get reference and increment refernce count
      */
     /* package */
+    @Override
     public final void setRef(VirtualRef vref, ObjectInputStream s)
-								  throws IOException,
-								  ClassNotFoundException {
+    throws IOException,
+    ClassNotFoundException {
 
 	// this reference must be already updated.
 	Ref ref = this.findRef(s);
@@ -93,6 +96,7 @@ public abstract class WeakRef implements Ref {
      * Called when the proxy unreferenced the ref.
      */
     /* package */
+    @Override
     public/* synchronized */final void unreferenced() {
 	this._table.unreference(this);
     }

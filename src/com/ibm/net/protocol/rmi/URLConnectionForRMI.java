@@ -41,8 +41,8 @@ public class URLConnectionForRMI extends URLConnection {
     static AgentProfile agent_profile = null;
 
     /*
-	 * 
-	 */
+     * 
+     */
     static {
 	Resource res = Resource.getResourceFor("aglets");
 
@@ -52,16 +52,16 @@ public class URLConnectionForRMI extends URLConnection {
 	short minor = Aglet.MINOR_VERSION;
 
 	agent_profile = new AgentProfile(major, // Java
-	major, // Aglets
-	"Aglets", major, // major,
-	minor, // minor,
-	major, // serialization,
-	null);
+		major, // Aglets
+		"Aglets", major, // major,
+		minor, // minor,
+		major, // serialization,
+		null);
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     private InputStream _inputStream = null;
 
     // MAFAgentSystem_RMI agentsystem;

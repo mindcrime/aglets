@@ -37,8 +37,8 @@ public final class AgentProfile implements java.io.Serializable {
     }
 
     public AgentProfile(short __language_id, short __agent_system_type,
-	    String __agent_system_description, short __major_version,
-	    short __minor_version, short __serialization, Object[] __properties) {
+                        String __agent_system_description, short __major_version,
+                        short __minor_version, short __serialization, Object[] __properties) {
 	this.language_id = __language_id;
 	this.agent_system_type = __agent_system_type;
 	this.agent_system_description = __agent_system_description;

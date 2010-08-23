@@ -70,7 +70,7 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
 		RefKey rk = (RefKey) obj;
 
 		return this.address.equals(rk.address)
-			&& equals(rk.name, this.name);
+		&& equals(rk.name, this.name);
 	    }
 	    return false;
 	}
@@ -139,6 +139,7 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
     /*
      * Activates the aglet
      */
+    @Override
     public void activate() throws IOException, AgletException {
 
 	// REMIND:
@@ -153,6 +154,7 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
     // # throw new RuntimeException("Remote Reference doens't have allowance.");
     // # }
 
+    @Override
     public void checkValidation() throws InvalidAgletException {
 	if (this._info == null) {
 	    this.getInfo();
@@ -162,8 +164,9 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
     /**
      * Delegates a message
      */
+    @Override
     synchronized public void delegateMessage(Message msg)
-							 throws InvalidAgletException {
+    throws InvalidAgletException {
 	MessageBroker.delegateMessage(this._ticket, this._name, msg);
     }
 
@@ -182,8 +185,8 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
      */
     @Override
     protected Ref findRef(ObjectInputStream s)
-					      throws IOException,
-					      ClassNotFoundException {
+    throws IOException,
+    ClassNotFoundException {
 	Name t_name = (Name) s.readObject();
 	String address = (String) s.readObject();
 
@@ -201,6 +204,7 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
     /**
      * Gets the address of the target aglet
      */
+    @Override
     public String getAddress() throws InvalidAgletException {
 	if (this._info == null) {
 	    this.getInfo();
@@ -216,6 +220,7 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
      * @exception SecurityException
      *                if the current execution is not allowed.
      */
+    @Override
     public Aglet getAglet() throws InvalidAgletException {
 	throw new InvalidAgletException("Remote Reference doens't have aglet");
     }
@@ -225,6 +230,7 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
      * 
      * @return the AgletInfo of the aglet
      */
+    @Override
     public AgletInfo getAgletInfo() {
 	if (this._info == null) {
 	    try {
@@ -254,6 +260,7 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
 	}
     }
 
+    @Override
     public String getRefClassName() {
 	return "com.ibm.aglets.RemoteAgletRef";
     }
@@ -268,12 +275,14 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
+    @Override
     public boolean isActive() {
 	return false;
     }
 
+    @Override
     public boolean isRemote() {
 	return true;
     }
@@ -281,10 +290,12 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
     /**
      * Check the state
      */
+    @Override
     public boolean isState(int s) {
 	return false;
     }
 
+    @Override
     public boolean isValid() {
 	return false;
     }
@@ -292,6 +303,7 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
     /*
      * Resumes the aglet
      */
+    @Override
     public void resume() throws AgletException {
 
 	// REMIND:
@@ -304,8 +316,9 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
      * @param msg
      *            the message to send
      */
+    @Override
     synchronized public FutureReply sendFutureMessage(Message msg)
-								  throws InvalidAgletException {
+    throws InvalidAgletException {
 	return MessageBroker.sendFutureMessage(this._ticket, this._name, msg);
     }
 
@@ -315,10 +328,11 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
      * @param msg
      *            the message to send
      */
+    @Override
     public Object sendMessage(Message msg)
-					  throws MessageException,
-					  InvalidAgletException,
-					  NotHandledException {
+    throws MessageException,
+    InvalidAgletException,
+    NotHandledException {
 	return MessageBroker.sendMessage(this._ticket, this._name, msg);
     }
 
@@ -328,8 +342,9 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
      * @param msg
      *            the message to send
      */
+    @Override
     synchronized public void sendOnewayMessage(Message msg)
-							   throws InvalidAgletException {
+    throws InvalidAgletException {
 	MessageBroker.sendOnewayMessage(this._ticket, this._name, msg);
     }
 
@@ -352,7 +367,7 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
     @Override
     public String toString() {
 	return "RemoteAgletRef : " + String.valueOf(this._info) + " .. "
-		+ super.toString();
+	+ super.toString();
     }
 
     /*
@@ -360,6 +375,7 @@ public final class RemoteAgletRef extends WeakRef implements AgletRef {
      * 
      * @see com.ibm.awb.weakref.Ref
      */
+    @Override
     public void writeInfo(ObjectOutputStream s) throws IOException {
 	try {
 	    s.writeObject(this._name);

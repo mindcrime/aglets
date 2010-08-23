@@ -47,10 +47,11 @@ public class MobilityEvents extends Aglet implements MobilityListener {
 	return false;
     }
 
+    @Override
     public void onArrival(MobilityEvent ev) {
 	this.count += 1;
 	this.history += "onArrival: "
-		+ this.getAgletContext().getHostingURL().toString() + "\n";
+	    + this.getAgletContext().getHostingURL().toString() + "\n";
     }
 
     @Override
@@ -60,14 +61,16 @@ public class MobilityEvents extends Aglet implements MobilityListener {
 	this.addMobilityListener(this);
     }
 
+    @Override
     public void onDispatching(MobilityEvent ev) {
 	this.history += "onDispatching: "
-		+ this.getAgletContext().getHostingURL().toString() + "\n";
+	    + this.getAgletContext().getHostingURL().toString() + "\n";
     }
 
+    @Override
     public void onReverting(MobilityEvent ev) {
 	this.history += "onReverting: "
-		+ this.getAgletContext().getHostingURL().toString() + "\n";
+	    + this.getAgletContext().getHostingURL().toString() + "\n";
     }
 
     @Override

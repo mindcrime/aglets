@@ -79,7 +79,7 @@ public final class Version {
      *            true if this product is stable, false otherwise
      */
     public Version(String kind, int major, int minor, int micro,
-	    boolean isStable) {
+                   boolean isStable) {
 	this(kind, major, minor, micro);
 	this.isStable = isStable;
     }

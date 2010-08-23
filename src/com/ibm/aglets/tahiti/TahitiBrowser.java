@@ -35,7 +35,7 @@ public class TahitiBrowser extends TahitiDialog implements Runnable {
 	} catch (Exception e) {
 	    JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 		    + ".URLError.title"), this.translator.translate(this.baseKey
-		    + ".URLError"), JOptionPane.ERROR_MESSAGE);
+			    + ".URLError"), JOptionPane.ERROR_MESSAGE);
 	    this.logger.error("Cannot load Documentation file " + fileName);
 	}
     }
@@ -67,15 +67,16 @@ public class TahitiBrowser extends TahitiDialog implements Runnable {
 	    final JEditorPane editorPanel = new JEditorPane();
 	    HTMLEditorKit kit = new HTMLEditorKit();
 	    editorPanel.setContentType("text/html"); // show only text/html
-						     // content type
+	    // content type
 	    editorPanel.setEditorKit(kit); // associate the editor panel and the
-					   // HTML editor
+	    // HTML editor
 	    editorPanel.setPage(this.mainPage); // show the file
 	    editorPanel.setEditable(false); // do not allow the content to be
-					    // changed by the user
+	    // changed by the user
 
 	    // associate a new link listener
 	    editorPanel.addHyperlinkListener(new HyperlinkListener() {
+		@Override
 		public void hyperlinkUpdate(HyperlinkEvent event) {
 		    try {
 			if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
@@ -86,7 +87,7 @@ public class TahitiBrowser extends TahitiDialog implements Runnable {
 			AgletsTranslator translator = TahitiBrowser.this.getAgletsTranslator();
 			JOptionPane.showMessageDialog(editorPanel, translator.translate(TahitiBrowser.this.baseKey
 				+ ".URLError.title"), translator.translate(TahitiBrowser.this.baseKey
-				+ ".URLError"), JOptionPane.ERROR_MESSAGE);
+					+ ".URLError"), JOptionPane.ERROR_MESSAGE);
 			TahitiBrowser.this.logger.error("Cannot load the page "
 				+ event.getURL());
 
@@ -110,7 +111,7 @@ public class TahitiBrowser extends TahitiDialog implements Runnable {
 	} catch (Exception ez) {
 	    JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
 		    + ".URLError.title"), this.translator.translate(this.baseKey
-		    + ".URLError"), JOptionPane.ERROR_MESSAGE);
+			    + ".URLError"), JOptionPane.ERROR_MESSAGE);
 	}
 
     }
@@ -119,6 +120,7 @@ public class TahitiBrowser extends TahitiDialog implements Runnable {
      * Show the main page of this browser.
      * 
      */
+    @Override
     public void run() {
 	this.showPage();
     }

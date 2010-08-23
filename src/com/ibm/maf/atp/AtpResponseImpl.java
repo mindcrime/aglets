@@ -42,6 +42,7 @@ public final class AtpResponseImpl implements AtpResponse {
 	this.out = out;
     }
 
+    @Override
     public OutputStream getOutputStream() throws IOException {
 	if (this.bout == null) {
 	    this.bout = new ContentOutputStream(this.out, true);
@@ -49,10 +50,12 @@ public final class AtpResponseImpl implements AtpResponse {
 	return this.bout;
     }
 
+    @Override
     public int getStatusCode() {
 	return this.statusCode;
     }
 
+    @Override
     public void sendError(int i) throws IOException {
 	this.setStatusCode(i);
 	this.writeStatusLine();
@@ -68,6 +71,7 @@ public final class AtpResponseImpl implements AtpResponse {
 	this.out.close();
     }
 
+    @Override
     public void sendResponse() throws IOException {
 	this.writeStatusLine();
 	this.writeHeaders();
@@ -77,10 +81,12 @@ public final class AtpResponseImpl implements AtpResponse {
 	this.out.flush();
     }
 
+    @Override
     public void setContentType(String type) {
 	this.content_type = type;
     }
 
+    @Override
     public void setStatusCode(int i) {
 	this.statusCode = i;
 	switch (this.statusCode) {
@@ -117,6 +123,7 @@ public final class AtpResponseImpl implements AtpResponse {
 	}
     }
 
+    @Override
     public void setStatusCode(int i, String msg) {
 	this.statusCode = i;
 	this.statusMsg = msg;
@@ -130,8 +137,8 @@ public final class AtpResponseImpl implements AtpResponse {
 	 * + CRLF; }
 	 */
 	h += "Content-Type:" + this.content_type + CRLF + "Content-Language:"
-		+ this.content_language + CRLF + "Content-Encoding:"
-		+ this.content_encoding + CRLF;
+	+ this.content_language + CRLF + "Content-Encoding:"
+	+ this.content_encoding + CRLF;
 
 	int len = h.length();
 
@@ -142,7 +149,7 @@ public final class AtpResponseImpl implements AtpResponse {
 
     private void writeStatusLine() throws IOException {
 	String h = AtpRequestImpl.ATP_VERSION + " " + this.statusCode + " "
-		+ this.statusMsg + CRLF;
+	+ this.statusMsg + CRLF;
 	int len = h.length();
 
 	for (int i = 0; i < len; i++) {

@@ -64,8 +64,8 @@ public class AuthenticationManager {
      *            domain name the server belongs
      */
     public final static synchronized void register(
-						   ServerIdentifier id,
-						   String domain) {
+                                                   ServerIdentifier id,
+                                                   String domain) {
 	_table.put(id, domain);
     }
 

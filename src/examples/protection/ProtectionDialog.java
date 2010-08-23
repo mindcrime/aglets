@@ -46,7 +46,7 @@ class ProtectionDialog extends JFrame implements ItemListener, ActionListener {
     static final String ACTION_RETRACT = "retract";
     static final String ACTION_DEACTIVATE = "deactivate";
     static final String[] ACTIONS = { ACTION_DISPOSE, ACTION_CLONE,
-	    ACTION_DISPATCH, ACTION_RETRACT, ACTION_DEACTIVATE };
+	ACTION_DISPATCH, ACTION_RETRACT, ACTION_DEACTIVATE };
 
     private ProtectionAglet _aglet;
 
@@ -133,6 +133,7 @@ class ProtectionDialog extends JFrame implements ItemListener, ActionListener {
 	return cmdPanel;
     }
 
+    @Override
     public void itemStateChanged(ItemEvent ev) {
 	Object evtSrc = ev.getItemSelectable();
 	if (evtSrc == this._cmdChoice) {
@@ -144,6 +145,7 @@ class ProtectionDialog extends JFrame implements ItemListener, ActionListener {
 	}
     }
 
+    @Override
     public void actionPerformed(ActionEvent ev) {
 	Object evtSrc = ev.getSource();
 	if (evtSrc == this._closeButton) {

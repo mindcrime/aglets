@@ -30,7 +30,7 @@ package com.ibm.aglet.event;
  * @author Mitsuru Oshima
  */
 public interface MobilityListener extends java.util.EventListener,
-	java.io.Serializable {
+java.io.Serializable {
 
     /**
      * Invoked just after the aglet arrived at the destination

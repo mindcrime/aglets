@@ -38,12 +38,13 @@ class PersistenceFactory implements com.ibm.aglets.PersistenceFactory {
 	    URL u = new URL(server);
 
 	    this._dir = spool_dir + File.separator + u.getHost() + '@'
-		    + u.getPort() + File.separator;
+	    + u.getPort() + File.separator;
 	} catch (Exception ex) {
 	    ex.printStackTrace();
 	}
     }
 
+    @Override
     public Persistence createPersistenceFor(com.ibm.aglet.AgletContext cxt) {
 
 	//

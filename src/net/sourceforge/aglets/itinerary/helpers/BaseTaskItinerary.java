@@ -29,7 +29,7 @@ import com.ibm.aglet.event.MobilityListener;
  * @version 1.0 13-set-2005
  */
 public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
-	Serializable, MobilityListener {
+Serializable, MobilityListener {
 
     /**
      * This hashthable contains the task list for each destination. The key of
@@ -85,6 +85,7 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      *            the task to execute on the arrival event
      * @return true if the task has been added to the task list, false otherwise
      */
+    @Override
     public final boolean addDefaultTask(Task toExecute) {
 	// check params
 	if ((toExecute == null)
@@ -105,6 +106,7 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      * @return true if the task is removed, false otherwise (e.g., the task is
      *         not contained in the list).
      */
+    @Override
     public final boolean removeDefaultTask(Task toExecute) {
 	// check params
 	if ((toExecute == null)
@@ -132,8 +134,8 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      * @return true if the task is added, false otherwise.
      */
     protected final boolean addTaskToDestination(
-						 String destinationURI,
-						 Task toExecute) {
+                                                 String destinationURI,
+                                                 Task toExecute) {
 	// check params
 	if ((destinationURI == null) || destinationURI.equals("")
 		|| (toExecute == null)) {
@@ -178,8 +180,8 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      * @return true if the task has been removed, false otherwise.
      */
     protected boolean removeTaskFromDestination(
-						String destinationURI,
-						Task toExecute) {
+                                                String destinationURI,
+                                                Task toExecute) {
 	// check params
 	if ((destinationURI == null) || destinationURI.equals("")
 		|| (this.taskList.containsKey(destinationURI) == false)
@@ -255,6 +257,7 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      *            the task to execute
      * @return true if the task has been added, false otherwise
      */
+    @Override
     public boolean addNextDestination(String destinationURI, Task toExecute) {
 	// the first step is to add the destination URI to the destination list,
 	// if the
@@ -278,6 +281,7 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      *            the tasks).
      * @return true if the destination is added, false otherwise
      */
+    @Override
     public boolean addNextDestination(String destinationURI, Task[] toExecute) {
 	// the first step is to add the destination to the destination list,
 	// then if it has been added
@@ -300,6 +304,7 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      *            the destination to check
      * @return the array of tasks associated with such destination.
      */
+    @Override
     public Task[] getTasksForDestination(String destinationURI) {
 	// check params
 	if ((destinationURI == null) || destinationURI.equals("")
@@ -318,6 +323,7 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      *            the task to execute
      * @return true if the association is done, false otherwise
      */
+    @Override
     public boolean addTaskForDestination(String destinationURI, Task toExecute) {
 	// check params (the internal method already does this check)
 	if ((destinationURI == null) || destinationURI.equals("")
@@ -337,9 +343,10 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      *            the task to remove
      * @return true if the task has been removed, false otherwise.
      */
+    @Override
     public boolean removeTaskForDestination(
-					    String destinationURI,
-					    Task toExecute) {
+                                            String destinationURI,
+                                            Task toExecute) {
 	// check params
 	if ((destinationURI == null) || destinationURI.equals("")
 		|| (toExecute == null))
@@ -356,6 +363,7 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      *            the destination to clean up
      * @return true if all the tasks have been removed, false otherwise.
      */
+    @Override
     public boolean removeAllTaskForDestination(String destinationURI) {
 	// check params
 	if ((destinationURI == null) || destinationURI.equals("")
@@ -375,6 +383,7 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      *            true if the tasks must be executed on the onArrival event,
      *            false otherwise.
      */
+    @Override
     public final void enableDefaultTaskExecutionOnArrival(boolean enable) {
 	this.executeDefaultTaskOnArrival = enable;
     }
@@ -386,6 +395,7 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      * @return true if the task will be executed due to the onArrival event,
      *         false otherwise.
      */
+    @Override
     public final boolean defaultTaskExecutionOnArrival() {
 	return this.executeDefaultTaskOnArrival;
     }
@@ -397,6 +407,7 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      *            true if the tasks must be executed on the onDispatching event,
      *            false otherwise.
      */
+    @Override
     public final void enableDefaultTaskExecutionOnDispatch(boolean enable) {
 	this.executeDefaultTaskOnDispatch = enable;
     }
@@ -408,6 +419,7 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      * @return true if the stats must be executed on the onDispatch event, false
      *         otherwise.
      */
+    @Override
     public final boolean defaultTaskExecutionOnDispatch() {
 	return this.executeDefaultTaskOnDispatch;
     }
@@ -419,6 +431,7 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      *            true if the tasks must be executed on the onRevertering event,
      *            false otherwise.
      */
+    @Override
     public final void enableDefaultTaskExecutionOnRevertering(boolean enable) {
 	this.executedDefaultTaskOnReverting = enable;
     }
@@ -430,6 +443,7 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      * @return true if the tasks must be executed on the onRevertering event,
      *         false otherwise.
      */
+    @Override
     public final boolean defaultTaskExecutionOnRevertering() {
 	return this.executedDefaultTaskOnReverting;
     }
@@ -482,6 +496,7 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      * Method invoked when arriving to a destination. Executes all the required
      * tasks.
      */
+    @Override
     public void onArrival(MobilityEvent event) {
 	// get the location I've arrived to
 	String currentDestination = this.getCurrentLocation();
@@ -519,6 +534,7 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
      * INvoked when the aglet is moving to a destination. Forces the execution
      * of all tasks for that destination.
      */
+    @Override
     public void onDispatching(MobilityEvent event) {
 	// get the location I'm moving to
 	String currentDestination = this.getCurrentLocation();
@@ -540,6 +556,7 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
     /**
      * Invoked when the agent is coming back.
      */
+    @Override
     public void onReverting(MobilityEvent event) {
 	// get the location I'm moving to
 	String currentDestination = this.getCurrentLocation();

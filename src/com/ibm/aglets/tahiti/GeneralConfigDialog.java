@@ -46,7 +46,7 @@ import com.ibm.awb.misc.Resource;
  */
 
 final class GeneralConfigDialog extends TahitiDialog implements ActionListener,
-	ItemListener {
+ItemListener {
 
     static final String STARTUP_AGLET = "com.ibm.aglets.samples.Writer";
 
@@ -115,7 +115,7 @@ final class GeneralConfigDialog extends TahitiDialog implements ActionListener,
     }
 
     /*
-	 */
+     */
     @Override
     public void actionPerformed(ActionEvent event) {
 	// check params
@@ -155,14 +155,15 @@ final class GeneralConfigDialog extends TahitiDialog implements ActionListener,
 	if (GeneralConfigDialog.mySelf == null) {
 	    GeneralConfigDialog.mySelf = new GeneralConfigDialog(parent);
 	} /*
-	   * else { mySelf.updateValues(); }
-	   */
+	 * else { mySelf.updateValues(); }
+	 */
 	return GeneralConfigDialog.mySelf;
     }
 
     /**
      * Manages events from the checkbox.
      */
+    @Override
     public void itemStateChanged(ItemEvent event) {
 	if (event == null)
 	    return;

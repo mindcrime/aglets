@@ -88,19 +88,19 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 	contents = new Object[][] {
 		{ "aglets.version", "[" + VERSION + "]" },
 		{
-			"aglets.license",
-			"---------------------------------------------\n"
-				+ " Licensed Materials - Property of IBM\n"
-				+ "         (c) Copyright IBM Corp.\n"
-				+ " 1996, 1998 All rights reserved.\n"
-				+ " US Government Users Restricted Rights - \n"
-				+ " Use, duplication or disclosure restricted\n"
-				+ " by GSA ADP Schedule Contract with IBM Corp.\n"
-				+ "---------------------------------------------" },
-		{
+		    "aglets.license",
+		    "---------------------------------------------\n"
+		    + " Licensed Materials - Property of IBM\n"
+		    + "         (c) Copyright IBM Corp.\n"
+		    + " 1996, 1998 All rights reserved.\n"
+		    + " US Government Users Restricted Rights - \n"
+		    + " Use, duplication or disclosure restricted\n"
+		    + " by GSA ADP Schedule Contract with IBM Corp.\n"
+		    + "---------------------------------------------" },
+		    {
 			"aglets.error.export_morethan_one",
 			"The obsolete AGLET_EXPORT_PATH env var contains more than one "
-				+ "directories." }, };
+			+ "directories." }, };
 
 	bundle = new ListResourceBundle() {
 	    @Override
@@ -120,9 +120,9 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
     private static final String DEFAULT_VIEWER = "com.ibm.aglets.tahiti.Tahiti";
 
     final static Opt option_defs[] = {
-	    Opt.Entry("-nosecurity", "aglets.secure", "false", "    -nosecurity          disable security manager"),
-	    Opt.Entry("-enablebox", "aglets.enableBox", "true", null),
-	    Opt.Entry("-nojit"), };
+	Opt.Entry("-nosecurity", "aglets.secure", "false", "    -nosecurity          disable security manager"),
+	Opt.Entry("-enablebox", "aglets.enableBox", "true", null),
+	Opt.Entry("-nojit"), };
 
     static AgletRuntime currentRuntime = null;
 
@@ -295,10 +295,10 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 
     @Override
     public AgletProxy createAglet(
-				  String contextName,
-				  URL codebase,
-				  String classname,
-				  Object init) throws IOException {
+                                  String contextName,
+                                  URL codebase,
+                                  String classname,
+                                  Object init) throws IOException {
 	try {
 	    Ticket ticket = new Ticket(contextName);
 
@@ -408,7 +408,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
      */
     @Override
     public AgletProxy getAgletProxy(String contextName, AgletID aid)
-								    throws IOException {
+    throws IOException {
 	Ticket ticket = new Ticket(contextName);
 
 	return new AgletProxyImpl(RemoteAgletRef.getAgletRef(ticket, MAFUtil.toName(aid, null)));
@@ -606,8 +606,8 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
      *            byte[]
      */
     public static java.security.PrivateKey getPrivateKey(
-							 Certificate cert,
-							 char[] passwd) {
+                                                         Certificate cert,
+                                                         char[] passwd) {
 	try {
 	    return (java.security.PrivateKey) _keyStore.getKey(getCertificateAlias(cert), passwd);
 	} catch (Exception ex) {
@@ -679,6 +679,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 	    final String prp = prop;
 
 	    propfile = (String) AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    return FileUtils.getPropertyFilenameForUser(uname, prp);
 		}
@@ -867,7 +868,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
      * Set a default ResourceManagerFactory
      */
     static public void setDefaultResourceManagerFactory(
-							ResourceManagerFactory factory) {
+                                                        ResourceManagerFactory factory) {
 	check();
 
 	defaultResourceManagerFactory = factory;
@@ -914,6 +915,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 	    final String prp = prop;
 
 	    propfile = (String) AccessController.doPrivileged(new PrivilegedAction() {
+		@Override
 		public Object run() {
 		    return FileUtils.getPropertyFilenameForUser(uname, prp);
 		}
@@ -943,6 +945,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 	this.shutdown(new Message("shutdown"));
     }
 
+    @Override
     public void shutdown(Message msg) {
 	synchronized (contexts) {
 	    Enumeration e = contexts.elements();
@@ -1026,13 +1029,13 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 
 		// {"aglets.box.userid", mailaddress},
 		{
-			"aglets.agletsList",
-			"examples.simple.DisplayAglet "
-				+ "examples.hello.HelloAglet "
-				+ "examples.itinerary.CirculateAglet "
-				+ "examples.mdispatcher.HelloAglet "
-				+ "examples.http.WebServerAglet "
-				+ "examples.talk.TalkMaster" }, };
+		    "aglets.agletsList",
+		    "examples.simple.DisplayAglet "
+		    + "examples.hello.HelloAglet "
+		    + "examples.itinerary.CirculateAglet "
+		    + "examples.mdispatcher.HelloAglet "
+		    + "examples.http.WebServerAglet "
+		    + "examples.talk.TalkMaster" }, };
 
 	res.setDefaultResources(default_resources);
 

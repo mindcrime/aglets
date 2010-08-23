@@ -39,13 +39,13 @@ public class OpenURL extends Aglet {
     transient Frame my_dialog = null;
 
     /*
-	 * 
-	 */
+     * 
+     */
     String url = "http://w3.trl.ibm.com";
 
     /*
-	 * 
-	 */
+     * 
+     */
     String home = null;
 
     /*
@@ -54,8 +54,8 @@ public class OpenURL extends Aglet {
     SimpleItinerary itinerary = null;
 
     /*
-	 * 
-	 */
+     * 
+     */
     public void atHome(Message msg) {
 	this.setText("I'm back.");
 	this.waitMessage(2 * 1000);

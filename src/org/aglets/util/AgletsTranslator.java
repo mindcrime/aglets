@@ -149,8 +149,8 @@ public class AgletsTranslator implements Cloneable {
      * @return the aglets translator
      */
     public static AgletsTranslator getInstance(
-					       String localeBaseName,
-					       Locale currentLocale) {
+                                               String localeBaseName,
+                                               Locale currentLocale) {
 	String key = localeBaseName + currentLocale.toString();
 
 	// search first in the cache

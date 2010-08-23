@@ -239,7 +239,7 @@ final public class AgletContextImpl implements AgletContext {
      * Adds an aglet to the current context.
      */
     void addAgletProxy(AgletID aid, AgletProxyImpl proxy)
-							 throws InvalidAgletException {
+    throws InvalidAgletException {
 
 	// proxy.checkValidation();
 	// REMIND: critical session
@@ -251,6 +251,7 @@ final public class AgletContextImpl implements AgletContext {
      * listener is not already contained in the listener list and if the agent
      * has the right permission.
      */
+    @Override
     public synchronized void addContextListener(ContextListener listener) {
 	// check params
 	if (listener == null)
@@ -295,6 +296,7 @@ final public class AgletContextImpl implements AgletContext {
     /**
      * Clear the cache
      */
+    @Override
     public void clearCache(URL codebase) {
 	this._rm_factory.clearCache(codebase, AgletRuntime.getCurrentCertificate());
     }
@@ -312,11 +314,12 @@ final public class AgletContextImpl implements AgletContext {
      * @exception InstantiationException
      *                if failed to instantiate the Aglet.
      */
+    @Override
     public AgletProxy createAglet(URL url, String classname, Object init)
-									 throws IOException,
-									 AgletException,
-									 ClassNotFoundException,
-									 InstantiationException {
+    throws IOException,
+    AgletException,
+    ClassNotFoundException,
+    InstantiationException {
 	Certificate owner = AgletRuntime.getCurrentCertificate();
 
 	return this.createAglet(url, classname, owner, init);
@@ -336,14 +339,14 @@ final public class AgletContextImpl implements AgletContext {
      *                if failed to instantiate the Aglet.
      */
     private AgletProxy createAglet(
-				   URL url,
-				   String classname,
-				   Certificate owner,
-				   Object init)
-					       throws IOException,
-					       AgletException,
-					       ClassNotFoundException,
-					       InstantiationException {
+                                   URL url,
+                                   String classname,
+                                   Certificate owner,
+                                   Object init)
+    throws IOException,
+    AgletException,
+    ClassNotFoundException,
+    InstantiationException {
 
 	// System.out.println("createAglet("+url+","+classname+","+owner.getName()+","+init+")");
 	this.startCreation();
@@ -428,12 +431,12 @@ final public class AgletContextImpl implements AgletContext {
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     synchronized ResourceManager createResourceManager(
-						       URL codebase,
-						       Certificate owner,
-						       ClassName[] table) {
+                                                       URL codebase,
+                                                       Certificate owner,
+                                                       ClassName[] table) {
 	return this._rm_factory.createResourceManager(codebase, owner, table);
     }
 
@@ -451,6 +454,7 @@ final public class AgletContextImpl implements AgletContext {
      * 
      * @return an enumeration of aglet proxies.
      */
+    @Override
     public Enumeration getAgletProxies() {
 	return this._agletProxies.elements();
     }
@@ -460,6 +464,7 @@ final public class AgletContextImpl implements AgletContext {
      * 
      * @return an enumeration of aglet proxies.
      */
+    @Override
     public Enumeration getAgletProxies(int type) {
 	synchronized (this._agletProxies) {
 	    Vector v = new Vector();
@@ -536,8 +541,8 @@ final public class AgletContextImpl implements AgletContext {
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     public AudioClip getAudioClip(URL url) {
 
 	/* NEW SECURITY */
@@ -596,8 +601,8 @@ final public class AgletContextImpl implements AgletContext {
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     public Image getImage(ImageData d) {
 	ImageData data = d;
 	Image img = (Image) this.images.get(data);
@@ -611,8 +616,8 @@ final public class AgletContextImpl implements AgletContext {
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     public Image getImage(URL url) {
 	Image img = (Image) this.images.get(url);
 
@@ -720,8 +725,8 @@ final public class AgletContextImpl implements AgletContext {
     }
 
     Object handleMessage(Message msg)
-				     throws NotHandledException,
-				     MessageException {
+    throws NotHandledException,
+    MessageException {
 	if (msg.sameKind("createAglet")) {
 	    Object codebase = msg.getArg("codebase");
 	    Object classname = msg.getArg("classname");
@@ -764,8 +769,8 @@ final public class AgletContextImpl implements AgletContext {
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     public ReplySet multicastMessage(Message msg) {
 	this.checkPermission(new ContextPermission(msg.getKind(), "multicast"));
 	return this._subscriberManager.multicastMessage(msg);
@@ -892,13 +897,13 @@ final public class AgletContextImpl implements AgletContext {
      *                if it is not received.
      */
     public void receiveAglet(
-			     Name agent_name,
-			     ClassName[] classnames,
-			     String codebase,
-			     byte[] agent,
-			     String sender)
-					   throws AgletException,
-					   ClassNotFoundException {
+                             Name agent_name,
+                             ClassName[] classnames,
+                             String codebase,
+                             byte[] agent,
+                             String sender)
+    throws AgletException,
+    ClassNotFoundException {
 
 	this.startCreation();
 	try {
@@ -932,7 +937,7 @@ final public class AgletContextImpl implements AgletContext {
 	    // / }
 
 	    String msg = "Receive : " + ref.info.getAgletClassName() + " from "
-		    + sender;
+	    + sender;
 
 	    this.postEvent(new ContextEvent(this, null, msg, EventType.AGLET_MESSAGE), false);
 
@@ -1001,8 +1006,8 @@ final public class AgletContextImpl implements AgletContext {
     }
 
     public AgletProxy retractAglet(Ticket ticket, AgletID aid)
-							      throws IOException,
-							      AgletException {
+    throws IOException,
+    AgletException {
 
 	String destination = ticket.getDestination().toString();
 
@@ -1108,8 +1113,8 @@ final public class AgletContextImpl implements AgletContext {
      *                when the method failed to retract the aglet.
      */
     public AgletProxy retractAglet(URL url, AgletID aid)
-							throws IOException,
-							AgletException {
+    throws IOException,
+    AgletException {
 	return this.retractAglet(new Ticket(url), aid);
     }
 
@@ -1134,8 +1139,8 @@ final public class AgletContextImpl implements AgletContext {
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     public void setResourceManagerFactory(ResourceManagerFactory rmf) {
 	if (this._rm_factory != null) {
 	    throw new AgletsSecurityException("Factory already set");
@@ -1169,8 +1174,8 @@ final public class AgletContextImpl implements AgletContext {
     }
 
     /*
-	 * 
-	 */
+     * 
+     */
     public void shutdown(Message msg) {
 	if (SHUTDOWN_PERMISSION == null) {
 	    SHUTDOWN_PERMISSION = new ContextPermission("context", "shutdown");

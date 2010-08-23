@@ -56,7 +56,7 @@ import com.ibm.maf.SuspendFailed;
 import com.ibm.maf.TerminateFailed;
 
 public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
-	AtpConstants {
+AtpConstants {
     private Ticket _ticket = null;
     private URL _url_address = null;
     private String _address = null;
@@ -116,18 +116,18 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
 
     @Override
     public Name create_agent(
-			     Name agent_name,
-			     AgentProfile agent_profile,
-			     byte[] agent,
-			     String place_name,
-			     Object[] arguments,
-			     ClassName[] class_names,
-			     String code_base,
-			     MAFAgentSystem class_provider)
-							   throws ClassUnknown,
-							   ArgumentInvalid,
-							   DeserializationFailed,
-							   MAFExtendedException {
+                             Name agent_name,
+                             AgentProfile agent_profile,
+                             byte[] agent,
+                             String place_name,
+                             Object[] arguments,
+                             ClassName[] class_names,
+                             String code_base,
+                             MAFAgentSystem class_provider)
+    throws ClassUnknown,
+    ArgumentInvalid,
+    DeserializationFailed,
+    MAFExtendedException {
 
 	/*
 	 * Message msg = new Message("createAglet"); msg.setArg("codebase",
@@ -145,11 +145,11 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
 
     @Override
     public byte[][] fetch_class(
-				ClassName[] class_name_list,
-				String code_base,
-				AgentProfile agent_profile)
-							   throws ClassUnknown,
-							   MAFExtendedException {
+                                ClassName[] class_name_list,
+                                String code_base,
+                                AgentProfile agent_profile)
+    throws ClassUnknown,
+    MAFExtendedException {
 	if ((class_name_list != null) && (class_name_list.length != 1)) {
 	    throw new MAFExtendedException("Multiple classes not supported");
 	}
@@ -215,7 +215,7 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
 
     @Override
     public String find_nearby_agent_system_of_profile(AgentProfile profile)
-									   throws EntryNotFound {
+    throws EntryNotFound {
 	return null;
     }
 
@@ -261,16 +261,16 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
 
     @Override
     public void receive_agent(
-			      Name agent_name,
-			      AgentProfile agent_profile,
-			      byte[] agent,
-			      String place_name,
-			      ClassName[] class_names,
-			      String code_base,
-			      MAFAgentSystem class_sender)
-							  throws ClassUnknown,
-							  DeserializationFailed,
-							  MAFExtendedException {
+                              Name agent_name,
+                              AgentProfile agent_profile,
+                              byte[] agent,
+                              String place_name,
+                              ClassName[] class_names,
+                              String code_base,
+                              MAFAgentSystem class_sender)
+    throws ClassUnknown,
+    DeserializationFailed,
+    MAFExtendedException {
 	try {
 	    final Name fAgentName = agent_name;
 	    final AgentProfile fAgentProfile = agent_profile;
@@ -281,10 +281,11 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
 	    final MAFAgentSystem fClassSender = class_sender;
 
 	    AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		@Override
 		public Object run()
-				   throws ClassUnknown,
-				   DeserializationFailed,
-				   MAFExtendedException {
+		throws ClassUnknown,
+		DeserializationFailed,
+		MAFExtendedException {
 		    MAFAgentSystem_ATPClient.this.receive_agent0(fAgentName, fAgentProfile, fAgent, fPlaceName, fClassNames, fCodeBase, fClassSender);
 		    return null;
 		}
@@ -305,16 +306,16 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
     }
 
     private void receive_agent0(
-				Name agent_name,
-				AgentProfile agent_profile,
-				byte[] agent,
-				String place_name,
-				ClassName[] class_names,
-				String code_base,
-				MAFAgentSystem class_sender)
-							    throws ClassUnknown,
-							    DeserializationFailed,
-							    MAFExtendedException {
+                                Name agent_name,
+                                AgentProfile agent_profile,
+                                byte[] agent,
+                                String place_name,
+                                ClassName[] class_names,
+                                String code_base,
+                                MAFAgentSystem class_sender)
+    throws ClassUnknown,
+    DeserializationFailed,
+    MAFExtendedException {
 	AtpConnectionImpl connection = null;
 
 	try {
@@ -397,13 +398,13 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
 
     @Override
     public long receive_future_message(
-				       Name agent_name,
-				       byte[] msg,
-				       MAFAgentSystem sender)
-							     throws AgentNotFound,
-							     ClassUnknown,
-							     DeserializationFailed,
-							     MAFExtendedException {
+                                       Name agent_name,
+                                       byte[] msg,
+                                       MAFAgentSystem sender)
+    throws AgentNotFound,
+    ClassUnknown,
+    DeserializationFailed,
+    MAFExtendedException {
 	AtpConnectionImpl connection = this.send_message_internal(agent_name, msg, FUTURE, sender);
 	long l = System.currentTimeMillis();
 
@@ -413,10 +414,10 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
 
     @Override
     synchronized public void receive_future_reply(long return_id, byte[] reply)
-									       throws EntryNotFound,
-									       ClassUnknown,
-									       DeserializationFailed,
-									       MAFExtendedException {
+    throws EntryNotFound,
+    ClassUnknown,
+    DeserializationFailed,
+    MAFExtendedException {
 	Long id = new Long(return_id);
 
 	ConnectionHandler handler = (ConnectionHandler) this.handlers.get(id);
@@ -434,284 +435,286 @@ public class MAFAgentSystem_ATPClient extends MAFAgentSystem implements
     /**
      * Messaging
      */
-    @Override
-    public byte[] receive_message(Name agent_name, byte[] msg)
-							      throws AgentNotFound,
-							      NotHandled,
-							      MessageEx,
-							      ClassUnknown,
-							      DeserializationFailed,
-							      MAFExtendedException {
-	AtpConnectionImpl connection = this.send_message_internal(agent_name, msg, SYNC, null);
+     @Override
+     public byte[] receive_message(Name agent_name, byte[] msg)
+     throws AgentNotFound,
+     NotHandled,
+     MessageEx,
+     ClassUnknown,
+     DeserializationFailed,
+     MAFExtendedException {
+	 AtpConnectionImpl connection = this.send_message_internal(agent_name, msg, SYNC, null);
 
-	try {
-	    InputStream in = connection.getInputStream();
-	    byte type = (byte) in.read();
+	 try {
+	     InputStream in = connection.getInputStream();
+	     byte type = (byte) in.read();
 
-	    switch (type) {
-	    case HANDLED:
-		int length = connection.getContentLength() - 1;
-		byte b[] = new byte[length];
+	     switch (type) {
+	     case HANDLED:
+		 int length = connection.getContentLength() - 1;
+		 byte b[] = new byte[length];
 
-		new DataInputStream(in).readFully(b);
-		return b;
-	    case NOT_HANDLED:
-		throw new NotHandled();
-	    case EXCEPTION:
-		throw MessageEx.read(new DataInputStream(connection.getInputStream()));
-	    default:
-		throw new MAFExtendedException("Unkonown Return Type");
-	    }
-	} catch (IOException ex) {
-	    ex.printStackTrace();
-	    throw new MAFExtendedException("Error in receiving reply");
-	} finally {
-	    try {
-		connection.close();
-	    } catch (IOException ex) {
-	    }
-	    ;
-	}
-    }
+		 new DataInputStream(in).readFully(b);
+		 return b;
+	     case NOT_HANDLED:
+		 throw new NotHandled();
+	     case EXCEPTION:
+		 throw MessageEx.read(new DataInputStream(connection.getInputStream()));
+	     default:
+		 throw new MAFExtendedException("Unkonown Return Type");
+	     }
+	 } catch (IOException ex) {
+	     ex.printStackTrace();
+	     throw new MAFExtendedException("Error in receiving reply");
+	 } finally {
+	     try {
+		 connection.close();
+	     } catch (IOException ex) {
+	     }
+	     ;
+	 }
+     }
 
-    @Override
-    public void receive_oneway_message(Name agent_name, byte[] msg)
-								   throws AgentNotFound,
-								   ClassUnknown,
-								   DeserializationFailed,
-								   MAFExtendedException {
-	try {
-	    this.send_message_internal(agent_name, msg, ONEWAY, null).close();
-	} catch (IOException ex) {
-	    throw new MAFExtendedException("Unexpected Exception " + ex);
-	}
-    }
+     @Override
+     public void receive_oneway_message(Name agent_name, byte[] msg)
+     throws AgentNotFound,
+     ClassUnknown,
+     DeserializationFailed,
+     MAFExtendedException {
+	 try {
+	     this.send_message_internal(agent_name, msg, ONEWAY, null).close();
+	 } catch (IOException ex) {
+	     throw new MAFExtendedException("Unexpected Exception " + ex);
+	 }
+     }
 
-    byte[] receive_reply_internal(AtpConnectionImpl connection)
-							       throws IOException {
-	try {
-	    int length = connection.getContentLength();
-	    InputStream in = connection.getInputStream();
+     byte[] receive_reply_internal(AtpConnectionImpl connection)
+     throws IOException {
+	 try {
+	     int length = connection.getContentLength();
+	     InputStream in = connection.getInputStream();
 
-	    if (length <= 0) {
-		length = in.available();
-	    }
+	     if (length <= 0) {
+		 length = in.available();
+	     }
 
-	    // System.out.println("length = " + length);
-	    if (length > 0) {
-		byte b[] = new byte[length];
-		DataInputStream din = new DataInputStream(in);
+	     // System.out.println("length = " + length);
+	     if (length > 0) {
+		 byte b[] = new byte[length];
+		 DataInputStream din = new DataInputStream(in);
 
-		din.readFully(b);
-		return b;
-	    } else {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		int i;
+		 din.readFully(b);
+		 return b;
+	     } else {
+		 ByteArrayOutputStream out = new ByteArrayOutputStream();
+		 int i;
 
-		while ((i = in.read()) >= 0) {
-		    out.write(i);
-		}
-		return out.toByteArray();
-	    }
-	} finally {
+		 while ((i = in.read()) >= 0) {
+		     out.write(i);
+		 }
+		 return out.toByteArray();
+	     }
+	 } finally {
 
-	    // Just to make sure
-	    if (connection != null) {
-		connection.close();
-	    }
-	}
-    }
+	     // Just to make sure
+	     if (connection != null) {
+		 connection.close();
+	     }
+	 }
+     }
 
-    synchronized public void registerFutureReply(
-						 ConnectionHandler handler,
-						 long id) {
-	this.handlers.put(new Long(id), handler);
-	this.notify();
-    }
+     synchronized public void registerFutureReply(
+                                                  ConnectionHandler handler,
+                                                  long id) {
+	 this.handlers.put(new Long(id), handler);
+	 this.notify();
+     }
 
-    @Override
-    public void resume_agent(Name agent_name)
-					     throws AgentNotFound,
-					     ResumeFailed,
-					     AgentIsRunning {
-    }
+     @Override
+     public void resume_agent(Name agent_name)
+     throws AgentNotFound,
+     ResumeFailed,
+     AgentIsRunning {
+     }
 
-    @Override
-    public byte[] retract_agent(Name agent_name)
-						throws AgentNotFound,
-						MAFExtendedException {
-	try {
-	    final Name fAgentName = agent_name;
+     @Override
+     public byte[] retract_agent(Name agent_name)
+     throws AgentNotFound,
+     MAFExtendedException {
+	 try {
+	     final Name fAgentName = agent_name;
 
-	    return (byte[]) AccessController.doPrivileged(new PrivilegedExceptionAction() {
-		public Object run() throws AgentNotFound, MAFExtendedException {
-		    return MAFAgentSystem_ATPClient.this.retract_agent0(fAgentName);
-		}
-	    });
-	} catch (PrivilegedActionException ex) {
-	    Exception e = ex.getException();
+	     return (byte[]) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		 @Override
+		 public Object run() throws AgentNotFound, MAFExtendedException {
+		     return MAFAgentSystem_ATPClient.this.retract_agent0(fAgentName);
+		 }
+	     });
+	 } catch (PrivilegedActionException ex) {
+	     Exception e = ex.getException();
 
-	    if (e instanceof AgentNotFound) {
-		throw (AgentNotFound) e;
-	    } else if (e instanceof MAFExtendedException) {
-		throw (MAFExtendedException) e;
-	    } else {
-		ex.printStackTrace();
-		return null;
-	    }
-	}
-    }
+	     if (e instanceof AgentNotFound) {
+		 throw (AgentNotFound) e;
+	     } else if (e instanceof MAFExtendedException) {
+		 throw (MAFExtendedException) e;
+	     } else {
+		 ex.printStackTrace();
+		 return null;
+	     }
+	 }
+     }
 
-    private byte[] retract_agent0(Name agent_name)
-						  throws AgentNotFound,
-						  MAFExtendedException {
-	AtpConnectionImpl connection = null;
+     private byte[] retract_agent0(Name agent_name)
+     throws AgentNotFound,
+     MAFExtendedException {
+	 AtpConnectionImpl connection = null;
 
-	try {
-	    connection = new AtpConnectionImpl(this._url_address);
-	    connection.setRequestType(RETRACT);
-	    connection.setAgentName(agent_name);
+	 try {
+	     connection = new AtpConnectionImpl(this._url_address);
+	     connection.setRequestType(RETRACT);
+	     connection.setAgentName(agent_name);
 
-	    // connection.setAgentProfile(agent_profile);
-	    // connection.setCodeBase(code_base);
-	    // connection.setSender(class_sender.getAddress());
+	     // connection.setAgentProfile(agent_profile);
+	     // connection.setCodeBase(code_base);
+	     // connection.setSender(class_sender.getAddress());
 
-	    connection.connect();
-	    connection.sendRequest();
-	    if ((connection.getStatusCode() != OKAY)
-		    && (connection.getStatusCode() != MOVED)) {
-		System.out.println("code = " + connection.getStatusCode());
-		throw new MAFExtendedException(connection.getReasonPhase());
-	    }
-	    if (content_type.equalsIgnoreCase(connection.getContentType()) == false) {
-		throw new MAFExtendedException(connection.getReasonPhase());
-	    }
-	    InputStream is = connection.getInputStream();
-	    DataInput in = new DataInputStream(is);
+	     connection.connect();
+	     connection.sendRequest();
+	     if ((connection.getStatusCode() != OKAY)
+		     && (connection.getStatusCode() != MOVED)) {
+		 System.out.println("code = " + connection.getStatusCode());
+		 throw new MAFExtendedException(connection.getReasonPhase());
+	     }
+	     if (content_type.equalsIgnoreCase(connection.getContentType()) == false) {
+		 throw new MAFExtendedException(connection.getReasonPhase());
+	     }
+	     InputStream is = connection.getInputStream();
+	     DataInput in = new DataInputStream(is);
 
-	    // REMIND : this data must be used to represent the
-	    // remote proxy.
-	    int content_length = connection.getContentLength();
+	     // REMIND : this data must be used to represent the
+	     // remote proxy.
+	     int content_length = connection.getContentLength();
 
-	    if (content_length <= 0) {
-		content_length = is.available();
-	    }
-	    if (content_length > 0) {
-		byte[] content = new byte[connection.getContentLength()];
+	     if (content_length <= 0) {
+		 content_length = is.available();
+	     }
+	     if (content_length > 0) {
+		 byte[] content = new byte[connection.getContentLength()];
 
-		in.readFully(content);
-		return content;
-	    } else {
-		throw new AgentNotFound(agent_name.toString());
-	    }
-	} catch (SocketException ex) {
-	    throw new MAFExtendedException("SocketException: "
-		    + this._url_address);
-	} catch (IOException ex) {
-	    throw new MAFExtendedException("IOException: " + this._url_address);
-	} finally {
-	    if (connection != null) {
-		try {
-		    connection.close();
-		} catch (IOException ex) {
-		}
-	    }
-	}
-    }
+		 in.readFully(content);
+		 return content;
+	     } else {
+		 throw new AgentNotFound(agent_name.toString());
+	     }
+	 } catch (SocketException ex) {
+	     throw new MAFExtendedException("SocketException: "
+		     + this._url_address);
+	 } catch (IOException ex) {
+	     throw new MAFExtendedException("IOException: " + this._url_address);
+	 } finally {
+	     if (connection != null) {
+		 try {
+		     connection.close();
+		 } catch (IOException ex) {
+		 }
+	     }
+	 }
+     }
 
-    //
-    // Utilities
-    //
-    private AtpConnectionImpl send_message_internal(
-						    Name agent_name,
-						    byte[] msg,
-						    int type,
-						    MAFAgentSystem sender)
-									  throws AgentNotFound,
-									  MAFExtendedException {
-	try {
-	    final Name fAgentName = agent_name;
-	    final byte[] fMsg = msg;
-	    final int fType = type;
-	    final MAFAgentSystem fSender = sender;
+     //
+     // Utilities
+     //
+     private AtpConnectionImpl send_message_internal(
+                                                     Name agent_name,
+                                                     byte[] msg,
+                                                     int type,
+                                                     MAFAgentSystem sender)
+     throws AgentNotFound,
+     MAFExtendedException {
+	 try {
+	     final Name fAgentName = agent_name;
+	     final byte[] fMsg = msg;
+	     final int fType = type;
+	     final MAFAgentSystem fSender = sender;
 
-	    return (AtpConnectionImpl) AccessController.doPrivileged(new PrivilegedExceptionAction() {
-		public Object run() throws AgentNotFound, MAFExtendedException {
-		    return MAFAgentSystem_ATPClient.this.send_message_internal0(fAgentName, fMsg, fType, fSender);
-		}
-	    });
-	} catch (PrivilegedActionException ex) {
-	    Exception e = ex.getException();
+	     return (AtpConnectionImpl) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+		 @Override
+		 public Object run() throws AgentNotFound, MAFExtendedException {
+		     return MAFAgentSystem_ATPClient.this.send_message_internal0(fAgentName, fMsg, fType, fSender);
+		 }
+	     });
+	 } catch (PrivilegedActionException ex) {
+	     Exception e = ex.getException();
 
-	    if (e instanceof AgentNotFound) {
-		throw (AgentNotFound) e;
-	    } else if (e instanceof MAFExtendedException) {
-		throw (MAFExtendedException) e;
-	    } else {
-		ex.printStackTrace();
-		return null;
-	    }
-	}
-    }
+	     if (e instanceof AgentNotFound) {
+		 throw (AgentNotFound) e;
+	     } else if (e instanceof MAFExtendedException) {
+		 throw (MAFExtendedException) e;
+	     } else {
+		 ex.printStackTrace();
+		 return null;
+	     }
+	 }
+     }
 
-    //
-    // Utilities
-    //
-    private AtpConnectionImpl send_message_internal0(
-						     Name agent_name,
-						     byte[] msg,
-						     int type,
-						     MAFAgentSystem sender)
-									   throws AgentNotFound,
-									   MAFExtendedException {
-	AtpConnectionImpl connection = null;
+     //
+     // Utilities
+     //
+     private AtpConnectionImpl send_message_internal0(
+                                                      Name agent_name,
+                                                      byte[] msg,
+                                                      int type,
+                                                      MAFAgentSystem sender)
+     throws AgentNotFound,
+     MAFExtendedException {
+	 AtpConnectionImpl connection = null;
 
-	try {
-	    connection = new AtpConnectionImpl(this._url_address);
-	    connection.setRequestType(MESSAGE);
-	    connection.setAgentName(agent_name);
-	    if (sender != null) {
-		connection.setSender(sender.getAddress());
-	    }
+	 try {
+	     connection = new AtpConnectionImpl(this._url_address);
+	     connection.setRequestType(MESSAGE);
+	     connection.setAgentName(agent_name);
+	     if (sender != null) {
+		 connection.setSender(sender.getAddress());
+	     }
 
-	    // connection.setAgentProfile(agent_profile);
-	    // connection.setContentType(content_type);
-	    connection.connect();
-	    OutputStream out = connection.getOutputStream();
+	     // connection.setAgentProfile(agent_profile);
+	     // connection.setContentType(content_type);
+	     connection.connect();
+	     OutputStream out = connection.getOutputStream();
 
-	    out.write(type & 0xFF); // byte
-	    out.write(msg);
-	    connection.sendRequest();
-	    if (connection.getStatusCode() != AtpConstants.OKAY) {
-		System.out.println("code = " + connection.getStatusCode());
-		throw new AgentNotFound(connection.getReasonPhase());
-	    }
-	    if (content_type.equalsIgnoreCase(connection.getContentType()) == false) {
-		throw new MAFExtendedException(connection.getReasonPhase());
-	    }
-	    return connection;
-	} catch (IOException ex) {
-	    ex.printStackTrace();
-	    throw new AgentNotFound(connection != null ? connection.getReasonPhase()
-		    : agent_name.toString());
-	}
-    }
+	     out.write(type & 0xFF); // byte
+	     out.write(msg);
+	     connection.sendRequest();
+	     if (connection.getStatusCode() != AtpConstants.OKAY) {
+		 System.out.println("code = " + connection.getStatusCode());
+		 throw new AgentNotFound(connection.getReasonPhase());
+	     }
+	     if (content_type.equalsIgnoreCase(connection.getContentType()) == false) {
+		 throw new MAFExtendedException(connection.getReasonPhase());
+	     }
+	     return connection;
+	 } catch (IOException ex) {
+	     ex.printStackTrace();
+	     throw new AgentNotFound(connection != null ? connection.getReasonPhase()
+		     : agent_name.toString());
+	 }
+     }
 
-    @Override
-    public void setAddress(String name) {
-	throw new NoSuchMethodError();
-    }
+     @Override
+     public void setAddress(String name) {
+	 throw new NoSuchMethodError();
+     }
 
-    @Override
-    public void suspend_agent(Name agent_name)
-					      throws AgentNotFound,
-					      SuspendFailed,
-					      AgentIsSuspended {
-    }
+     @Override
+     public void suspend_agent(Name agent_name)
+     throws AgentNotFound,
+     SuspendFailed,
+     AgentIsSuspended {
+     }
 
-    @Override
-    public void terminate_agent(Name agent_name)
-						throws AgentNotFound,
-						TerminateFailed {
-    }
+     @Override
+     public void terminate_agent(Name agent_name)
+     throws AgentNotFound,
+     TerminateFailed {
+     }
 }

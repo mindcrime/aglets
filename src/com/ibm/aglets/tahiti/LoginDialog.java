@@ -61,8 +61,8 @@ public class LoginDialog extends TahitiWindow {
 	super();
 	this.setTitle("Tahiti Log-in");
 	this.shouldExitOnClosing = true; // if this window is closed without the
-					 // ok button
-					 // exit from the application
+	// ok button
+	// exit from the application
 
 	// get the default username
 	this.username = UserManager.getDefaultUsername();

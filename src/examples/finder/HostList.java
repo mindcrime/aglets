@@ -37,7 +37,7 @@ import com.ibm.aglet.message.Message;
  */
 
 public class HostList extends Aglet implements PersistencyListener,
-	MobilityListener {
+MobilityListener {
     Hashtable hostList;
 
     public void appendList(Hashtable list) {
@@ -99,6 +99,7 @@ public class HostList extends Aglet implements PersistencyListener,
 	return true;
     }
 
+    @Override
     public void onActivation(PersistencyEvent event) {
 	AgletContext ac = this.getAgletContext();
 	AgletProxy proxy = this.getProxy();
@@ -118,6 +119,7 @@ public class HostList extends Aglet implements PersistencyListener,
 	}
     }
 
+    @Override
     public void onArrival(MobilityEvent event) {
 	this.dispose();
     }
@@ -154,18 +156,21 @@ public class HostList extends Aglet implements PersistencyListener,
 	}
     }
 
+    @Override
     public void onDeactivating(PersistencyEvent event) {
 
 	// unregistration
 	this.getAgletContext().setProperty("hostlist", null);
     }
 
+    @Override
     public void onDispatching(MobilityEvent event) {
     }
 
     public void onRetraction(MobilityEvent event) {
     }
 
+    @Override
     public void onReverting(MobilityEvent event) {
     }
 }

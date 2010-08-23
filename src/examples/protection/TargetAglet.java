@@ -13,7 +13,7 @@ import com.ibm.aglet.security.MessageProtection;
 import com.ibm.aglet.security.Protections;
 
 public class TargetAglet extends Aglet implements MobilityListener,
-	CloneListener, PersistencyListener {
+CloneListener, PersistencyListener {
     @Override
     public void onCreation(Object init) {
 	this.log("onCreation");
@@ -28,34 +28,42 @@ public class TargetAglet extends Aglet implements MobilityListener,
 	this.log("onDisposing");
     }
 
+    @Override
     public void onArrival(MobilityEvent event) {
 	this.log("onArrival - " + event.toString());
     }
 
+    @Override
     public void onDispatching(MobilityEvent event) {
 	this.log("onDispatching - " + event.toString());
     }
 
+    @Override
     public void onReverting(MobilityEvent event) {
 	this.log("onReverting - " + event.toString());
     }
 
+    @Override
     public void onClone(CloneEvent event) {
 	this.log("onClone - " + event.toString());
     }
 
+    @Override
     public void onCloned(CloneEvent event) {
 	this.log("onCloned - " + event.toString());
     }
 
+    @Override
     public void onCloning(CloneEvent event) {
 	this.log("onCloning - " + event.toString());
     }
 
+    @Override
     public void onActivation(PersistencyEvent event) {
 	this.log("onActivation - " + event.toString());
     }
 
+    @Override
     public void onDeactivating(PersistencyEvent event) {
 	this.log("onDeactivating - " + event.toString());
     }

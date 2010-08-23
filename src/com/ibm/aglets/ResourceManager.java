@@ -60,8 +60,8 @@ public interface ResourceManager {
     public ClassName[] getClassNames(Class[] classes);
 
     /*
-	 * 
-	 */
+     * 
+     */
     public void importArchive(Archive a);
 
     /*

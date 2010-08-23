@@ -41,7 +41,7 @@ import com.ibm.aglet.message.Message;
  */
 
 public abstract class SampleAglet extends Aglet implements MobilityListener,
-	PersistencyListener, CloneListener {
+PersistencyListener, CloneListener {
     /**
      * The main interaction window.
      */
@@ -62,7 +62,7 @@ public abstract class SampleAglet extends Aglet implements MobilityListener,
     // -- Return the proxy of a specific aglet
     //
     static public AgletProxy getAgletProxyInContext(Aglet m, AgletID id)
-									throws AgletException {
+    throws AgletException {
 	return m.getAgletContext().getAgletProxy(id);
     }
 
@@ -104,6 +104,7 @@ public abstract class SampleAglet extends Aglet implements MobilityListener,
 	return new URL(host.toString() + "#" + id.toString());
     }
 
+    @Override
     public void onActivation(PersistencyEvent ev) {
 	this._msw.show();
     }
@@ -111,16 +112,20 @@ public abstract class SampleAglet extends Aglet implements MobilityListener,
     /**
      * Makes this aglet immobile
      */
+    @Override
     public void onArrival(MobilityEvent ev) {
 	throw new SecurityException("should not arrive here");
     }
 
+    @Override
     public void onClone(CloneEvent ev) {
     }
 
+    @Override
     public void onCloned(CloneEvent ev) {
     }
 
+    @Override
     public void onCloning(CloneEvent ev) {
 	throw new SecurityException("not allowed");
     }
@@ -142,6 +147,7 @@ public abstract class SampleAglet extends Aglet implements MobilityListener,
 	this.createWindow(); // --create the GUI Window
     }
 
+    @Override
     public void onDeactivating(PersistencyEvent ev) {
 	this._msw.setVisible(false);
     }
@@ -149,6 +155,7 @@ public abstract class SampleAglet extends Aglet implements MobilityListener,
     /**
      * Makes this aglet immobile
      */
+    @Override
     public synchronized void onDispatching(MobilityEvent ev) {
 
 	// I will shout if you try to move me!
@@ -169,6 +176,7 @@ public abstract class SampleAglet extends Aglet implements MobilityListener,
     /**
      * Makes this aglet immobile
      */
+    @Override
     public void onReverting(MobilityEvent ev) {
 	throw new SecurityException();
     }

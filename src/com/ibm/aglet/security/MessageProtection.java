@@ -36,7 +36,7 @@ import com.ibm.aglets.security.PlainMessagePermission;
  */
 
 public final class MessageProtection extends PlainMessagePermission implements
-	Protection {
+Protection {
     public MessageProtection(String name, String actions) {
 	super(name, actions);
     }

@@ -73,6 +73,7 @@ class MyDialog extends Frame implements WindowListener, ActionListener {
      * @param ae
      *            the event to be handled
      */
+    @Override
     public void actionPerformed(ActionEvent ae) {
 
 	// execute "GO!" command
@@ -149,9 +150,11 @@ class MyDialog extends Frame implements WindowListener, ActionListener {
 	p.add(this.close);
     }
 
+    @Override
     public void windowActivated(WindowEvent we) {
     }
 
+    @Override
     public void windowClosed(WindowEvent we) {
     }
 
@@ -162,19 +165,24 @@ class MyDialog extends Frame implements WindowListener, ActionListener {
      *            the event to be handled
      */
 
+    @Override
     public void windowClosing(WindowEvent we) {
 	this.dispose();
     }
 
+    @Override
     public void windowDeactivated(WindowEvent we) {
     }
 
+    @Override
     public void windowDeiconified(WindowEvent we) {
     }
 
+    @Override
     public void windowIconified(WindowEvent we) {
     }
 
+    @Override
     public void windowOpened(WindowEvent we) {
     }
 }

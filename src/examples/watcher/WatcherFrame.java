@@ -72,6 +72,7 @@ class WatcherFrame extends Frame implements WindowListener, ActionListener {
      * @param ae
      *            the event to be handled
      */
+    @Override
     public void actionPerformed(ActionEvent ae) {
 	if ("Go!".equals(ae.getActionCommand())) {
 	    this.aglet.go(this.address.getAddress());
@@ -92,9 +93,11 @@ class WatcherFrame extends Frame implements WindowListener, ActionListener {
 	this.text.setText(s);
     }
 
+    @Override
     public void windowActivated(WindowEvent we) {
     }
 
+    @Override
     public void windowClosed(WindowEvent we) {
     }
 
@@ -105,19 +108,24 @@ class WatcherFrame extends Frame implements WindowListener, ActionListener {
      *            the event to be handled
      */
 
+    @Override
     public void windowClosing(WindowEvent we) {
 	this.dispose();
     }
 
+    @Override
     public void windowDeactivated(WindowEvent we) {
     }
 
+    @Override
     public void windowDeiconified(WindowEvent we) {
     }
 
+    @Override
     public void windowIconified(WindowEvent we) {
     }
 
+    @Override
     public void windowOpened(WindowEvent we) {
     }
 }

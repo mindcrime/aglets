@@ -54,6 +54,7 @@ public class Console extends Frame implements ActionListener {
 	});
     }
 
+    @Override
     public void actionPerformed(ActionEvent ev) {
 	if (this._close_button.getActionCommand().equals(ev.getActionCommand())) {
 	    this.setVisible(false);

@@ -54,6 +54,7 @@ public final class StationaryAglet extends Aglet implements MobilityListener {
 		+ id + "]");
     }
 
+    @Override
     public void onArrival(MobilityEvent ev) {
 	this.print("on Arrival");
 	this.dispatched = true;
@@ -71,6 +72,7 @@ public final class StationaryAglet extends Aglet implements MobilityListener {
 	this.meeting = (Meeting) ini;
     }
 
+    @Override
     public void onDispatching(MobilityEvent ev) {
 	if (this.dispatched) {
 	    throw new SecurityException("Don't try to move me!!");
@@ -82,6 +84,7 @@ public final class StationaryAglet extends Aglet implements MobilityListener {
 	this.print("disposed!!");
     }
 
+    @Override
     public void onReverting(MobilityEvent ev) {
 	throw new SecurityException();
     }
