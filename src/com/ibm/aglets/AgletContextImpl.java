@@ -35,7 +35,6 @@ import java.util.Properties;
 import java.util.Vector;
 
 import net.sourceforge.aglets.log.AgletsLogger;
-
 import sun.audio.AudioData;
 import sun.audio.AudioStream;
 
@@ -488,6 +487,7 @@ final public class AgletContextImpl implements AgletContext {
      *            the identity of the aglet.
      * @return the aglet proxy.
      */
+    @Override
     public AgletProxy getAgletProxy(AgletID aid) {
 	AgletProxy p = (AgletProxy) this._agletProxies.get(aid);
 
@@ -525,6 +525,7 @@ final public class AgletContextImpl implements AgletContext {
      * @return the aglet proxy
      * @deprecated
      */
+    @Override
     @Deprecated
     public AgletProxy getAgletProxy(URL host, AgletID aid) {
 	try {
@@ -543,6 +544,7 @@ final public class AgletContextImpl implements AgletContext {
     /**
      * 
      */
+    @Override
     public AudioClip getAudioClip(URL url) {
 
 	/* NEW SECURITY */
@@ -596,6 +598,7 @@ final public class AgletContextImpl implements AgletContext {
      * @exception AgletException
      *                if the hosting URL cannot be determined.
      */
+    @Override
     public URL getHostingURL() {
 	return this._hostingURL;
     }
@@ -603,6 +606,7 @@ final public class AgletContextImpl implements AgletContext {
     /**
      * 
      */
+    @Override
     public Image getImage(ImageData d) {
 	ImageData data = d;
 	Image img = (Image) this.images.get(data);

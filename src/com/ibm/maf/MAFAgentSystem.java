@@ -312,27 +312,27 @@ public abstract class MAFAgentSystem {
     /*
      * Aglets Specific
      */
-     public abstract byte[] retract_agent(Name agent_name)
-     throws AgentNotFound,
-     MAFExtendedException;
+    public abstract byte[] retract_agent(Name agent_name)
+    throws AgentNotFound,
+    MAFExtendedException;
 
-     public abstract void setAddress(String name);
+    public abstract void setAddress(String name);
 
-     public synchronized static void startMAFAgentSystem(
-                                                         MAFAgentSystem l,
-                                                         String protocol)
-     throws MAFExtendedException {
-	 AgentSystemHandler handler = getHandler(protocol);
+    public synchronized static void startMAFAgentSystem(
+                                                        MAFAgentSystem l,
+                                                        String protocol)
+    throws MAFExtendedException {
+	AgentSystemHandler handler = getHandler(protocol);
 
-	 handler.startMAFAgentSystem(l);
-     }
+	handler.startMAFAgentSystem(l);
+    }
 
-     public abstract void suspend_agent(Name agent_name)
-     throws AgentNotFound,
-     SuspendFailed,
-     AgentIsSuspended;
+    public abstract void suspend_agent(Name agent_name)
+    throws AgentNotFound,
+    SuspendFailed,
+    AgentIsSuspended;
 
-     public abstract void terminate_agent(Name agent_name)
-     throws AgentNotFound,
-     TerminateFailed;
+    public abstract void terminate_agent(Name agent_name)
+    throws AgentNotFound,
+    TerminateFailed;
 }
