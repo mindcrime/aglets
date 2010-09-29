@@ -7,10 +7,13 @@
 
 # Set this to your installation directory
 AGLET_HOME=@aglet_home@
-JDK_HOME=@jdk_home@
 
-if test -z "$JDK_HOME" -o -z "$AGLET_HOME"; then
-    echo Please set AGLET_HOME and JDK_HOME environment variable!
+
+# Do not set statically the JDK_HOME anymore, substitute it with the
+# JAVA_HOME variable that is more standard.
+
+if test -z "$JAVA_HOME" -o -z "$AGLET_HOME"; then
+    echo Please set AGLET_HOME and JAVA_HOME environment variable!
     exit
 fi
 
@@ -33,7 +36,7 @@ done
 
 while true ;
 do
-    cd ${AGLET_HOME} && ${JDK_HOME}/bin/java \
+    cd ${AGLET_HOME} && ${JAVA_HOME}/bin/java \
         -Daglets.home="${AGLET_HOME}" \
         -classpath "$LOCALCLASSPATH" \
         com.ibm.awb.launcher.Main \

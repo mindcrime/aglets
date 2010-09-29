@@ -13,7 +13,8 @@
   <target name="install">
       <filter token="aglet_home" value="${aglet.home}"/>
       <filter token="jdk_home" value="${java.home}"/>
-      <filter token="ant_home" value="${aglet.home}"/>
+  	  <filter token="java_home" value="${java.home}"/>
+      
       <copy todir="." filtering="true" overwrite="true" >
         <fileset dir=".">
             <include name="*.in"/>
