@@ -19,6 +19,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class VirtualRef implements java.io.Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1428089129052202920L;
     private Ref _ref;
 
     public class NullRef implements Ref {

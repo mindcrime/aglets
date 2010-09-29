@@ -16,6 +16,11 @@ package com.ibm.awb.misc;
 
 public class CGIMessage extends com.ibm.aglet.message.Message {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3976946843459836374L;
+
     public CGIMessage(String k) {
 	super(k);
     }

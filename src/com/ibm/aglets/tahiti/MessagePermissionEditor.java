@@ -16,6 +16,11 @@ package com.ibm.aglets.tahiti;
 
 class MessagePermissionEditor extends GeneralPermissionEditor {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4213639499188369048L;
+
     // possible actions are "message", "access", and so on.
     MessagePermissionEditor() {
 	super();

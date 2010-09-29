@@ -33,6 +33,10 @@ import com.ibm.agletx.patterns.Slave;
 
 public class WriterSlave extends Slave {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8630541103850357287L;
     // time (in secs) of showing the message window.
     private final int SHOW_TIME = 10;
 

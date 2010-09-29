@@ -37,6 +37,10 @@ import java.util.Vector;
  * @author ONO Kouichi
  */
 public class Protections extends PermissionCollection implements Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2786264259022840099L;
     private Vector pset = new Vector();
 
     public Protections() {

@@ -34,6 +34,10 @@ import com.ibm.aglet.AgletProxy;
 public class PersistencyEvent extends AgletEvent {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 4023883775091603405L;
+    /**
      * The duration of the persistency.
      */
     private long duration;

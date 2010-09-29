@@ -15,6 +15,11 @@ import com.ibm.aglets.security.PolicyPermission;
 public class PolicyGrantPermissionRenderer extends DefaultListCellRenderer {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = -9076261216157049609L;
+
+    /**
      * The translator of this class.
      */
     private static AgletsTranslator translator = null;

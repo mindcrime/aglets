@@ -23,6 +23,11 @@ import com.ibm.agletx.util.SeqItinerary;
 
 class AgletTask extends MeetingTask {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4205233067065946508L;
+
     public AgletTask(Meeting meeting) {
 	super(meeting);
     }

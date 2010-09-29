@@ -26,6 +26,10 @@ import java.awt.event.WindowListener;
 
 public class MAFFinder_InfoFrame extends Frame implements ActionListener,
 WindowListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6782945355902858396L;
     private Button _exit_button = new Button("Exit");
 
     public MAFFinder_InfoFrame(String name, int port) {

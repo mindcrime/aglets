@@ -18,6 +18,10 @@ public class BaseCircularItinerary extends BaseItinerary implements
 CircularItinerary, Serializable {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 8761678263123539307L;
+    /**
      * The number of loops of this itinerary.
      */
     private int loopCount = 0;

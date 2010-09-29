@@ -52,6 +52,10 @@ public abstract class Notifier extends Aglet {
 
     // Type of notification messages
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4167545259197191876L;
     public final static int NOTIFICATION = 0;
     public final static int EXPIRY = 1;
     public final static int EXCEPTION = 2;

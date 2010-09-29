@@ -31,6 +31,10 @@ import java.awt.Label;
 
 public class MessageDialog extends GeneralDialog {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2419734851714972830L;
     /*
      * Message panel used in this dialog
      */

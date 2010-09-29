@@ -15,6 +15,10 @@ import net.sourceforge.aglets.util.AgletsTranslator;
 public class TahitiBrowser extends TahitiDialog implements Runnable {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 3146407531945018490L;
+    /**
      * The main page to display
      */
     private URL mainPage = null;

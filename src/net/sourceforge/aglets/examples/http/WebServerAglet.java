@@ -45,6 +45,10 @@ import com.ibm.awb.misc.Encoding;
  * @author Mitsuru Oshima
  */
 public class WebServerAglet extends Aglet {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7996130836437543286L;
     static private final Encoding ENCODING = Encoding.getDefault();
     static private final String ENCODING_JAVA = ENCODING.getJavaEncoding();
     static private final String CHARSET_PAGE = ENCODING.getHTMLCharset();

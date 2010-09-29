@@ -33,6 +33,10 @@ import java.awt.Panel;
 
 public class MessagePanel extends Panel {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1845486283000204517L;
     private GridBagConstraints cns = new GridBagConstraints();
     private GridBagLayout grid = new GridBagLayout();
 

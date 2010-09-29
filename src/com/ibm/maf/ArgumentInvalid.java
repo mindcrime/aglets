@@ -23,6 +23,11 @@ package com.ibm.maf;
 
 public final class ArgumentInvalid extends MAFException {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2527856594831409238L;
+
     // constructor
     public ArgumentInvalid() {
 	super();

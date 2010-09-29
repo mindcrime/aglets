@@ -18,6 +18,10 @@ import javax.swing.SwingConstants;
  */
 public class TahitiToolBar extends JToolBar implements ActionListener {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2865556110361052045L;
     // The resource bundle component
     static ResourceBundle bundle = null;
     // loading resources from the bundle

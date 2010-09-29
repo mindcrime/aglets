@@ -16,6 +16,11 @@ package com.ibm.aglets;
 
 public class AgletsSecurityException extends SecurityException {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5259324066007646020L;
+
     /*
      * Constructs a AgletsSecurityException.
      */

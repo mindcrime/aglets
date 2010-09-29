@@ -27,6 +27,11 @@ import com.ibm.aglet.Aglet;
  */
 public class VanillaAglet extends Aglet {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8670612685572768343L;
+
     @Override
     public void run() {
     }

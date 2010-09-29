@@ -27,6 +27,10 @@ import com.ibm.aglet.message.Message;
  */
 public class TalkSlave extends Aglet {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6097401329664140630L;
     transient String name = "Unknown";
     transient TalkWindow window = null;
     AgletProxy masterProxy = null;
@@ -68,6 +72,11 @@ public class TalkSlave extends Aglet {
     public void onCreation(Object o) {
 	this.masterProxy = (AgletProxy) o;
 	this.addMobilityListener(new MobilityAdapter() {
+	    /**
+	     * 
+	     */
+	    private static final long serialVersionUID = 303895833937119354L;
+
 	    @Override
 	    public void onArrival(MobilityEvent ev) {
 		TalkSlave.this.window = new TalkWindow(TalkSlave.this);

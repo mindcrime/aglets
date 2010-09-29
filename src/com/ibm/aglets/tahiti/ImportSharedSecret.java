@@ -29,6 +29,11 @@ import com.ibm.awb.misc.FileUtils;
 class ImportSharedSecret extends TahitiDialog implements ActionListener {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 6985591177449002078L;
+
+    /**
      * A text field for the store file name
      */
     JTextField filename;

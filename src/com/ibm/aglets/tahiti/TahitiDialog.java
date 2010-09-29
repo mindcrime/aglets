@@ -42,6 +42,11 @@ import com.ibm.aglet.AgletInfo;
 import com.ibm.aglet.AgletProxy;
 
 public class TahitiDialog extends BaseAgletsDialog implements ActionListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3185078843794397732L;
+
     static final public String lineSeparator = "\n";
 
     /**

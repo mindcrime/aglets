@@ -12,6 +12,10 @@ import java.awt.BorderLayout;
 public class MemoryDialog extends TahitiDialog {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 4618287515135257471L;
+    /**
      * The memory panel for this dialog.
      */
     private MemoryPanel memory = null;

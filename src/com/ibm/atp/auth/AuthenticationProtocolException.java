@@ -25,6 +25,11 @@ import java.net.ProtocolException;
  */
 public class AuthenticationProtocolException extends ProtocolException {
     /**
+     * 
+     */
+    private static final long serialVersionUID = 4612183429410290207L;
+
+    /**
      * Default Constructor shows stack trace.
      */
     public AuthenticationProtocolException() {

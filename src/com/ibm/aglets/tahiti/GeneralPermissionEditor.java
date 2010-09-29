@@ -21,6 +21,10 @@ import java.awt.TextField;
 import java.util.Vector;
 
 class GeneralPermissionEditor extends PermissionEditor {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4260455073544559761L;
     private static final String DEFAULT_LABEL_NAME = "Name";
     private static final int LENGTH_NAME = 15;
 

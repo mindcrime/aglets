@@ -27,6 +27,10 @@ import java.awt.Rectangle;
  * @author      Yariv Aridor
  */
 class BorderPanel extends GridBagPanel {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6644105225459161966L;
     private String _title = null;
     private FontMetrics _fm = null;
     private Rectangle _titleBounds = null;

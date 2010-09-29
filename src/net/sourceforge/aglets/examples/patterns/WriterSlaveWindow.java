@@ -32,6 +32,10 @@ import com.ibm.aglet.Aglet;
 import com.ibm.aglet.AgletException;
 
 class WriterSlaveWindow extends Frame {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7946030737242983517L;
     private static final int SIZE = 40; // -- size of message field
     private static final String TITLE = "Writer"; // -- title of message window
     private static final String THANKS = "THANKS!!"; // -- thank message text

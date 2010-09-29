@@ -32,6 +32,10 @@ import com.ibm.aglet.util.AddressChooser;
 import com.ibm.agletx.util.MessengerItinerary;
 
 class MessengerFrame extends Frame implements WindowListener, ActionListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4088340869215914328L;
     MessengerAglet aglet;
     List list = new List(10, false);
     AddressChooser address = new AddressChooser(15);

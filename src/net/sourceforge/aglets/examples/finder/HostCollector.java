@@ -37,6 +37,10 @@ import com.ibm.aglet.message.Message;
  */
 
 public class HostCollector extends Aglet implements MobilityListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7122217680888792625L;
     Hashtable hostList;
 
     public void appendList(Hashtable list) {

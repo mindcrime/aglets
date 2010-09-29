@@ -16,6 +16,11 @@ package com.ibm.aglets.tahiti;
 
 class NetPermissionEditor extends GeneralPermissionEditor {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1096219448632373752L;
+
     // currently action should be null
     NetPermissionEditor() {
 	super();

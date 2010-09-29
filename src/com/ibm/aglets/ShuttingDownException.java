@@ -21,6 +21,11 @@ package com.ibm.aglets;
  */
 public class ShuttingDownException extends com.ibm.aglet.AgletException {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6898173772708562507L;
+
     /*
      * Constructs a ShuttingDownException.
      * 

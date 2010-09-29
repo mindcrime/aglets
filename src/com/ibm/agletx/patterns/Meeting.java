@@ -51,6 +51,10 @@ import com.ibm.aglet.message.ReplySet;
 
 public final class Meeting implements java.io.Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5522945932243735986L;
     private String _id = null;
     private String _place = null;
     private Vector _colleagues = null;

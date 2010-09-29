@@ -45,6 +45,11 @@ import net.sourceforge.aglets.util.gui.WindowManager;
  */
 public class TahitiWindow extends JFrame implements ActionListener {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -623077255997728363L;
+
     static final public String lineSeparator = "\n";
 
     /**

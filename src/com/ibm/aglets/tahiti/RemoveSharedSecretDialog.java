@@ -28,6 +28,11 @@ import com.ibm.atp.auth.SharedSecrets;
 public class RemoveSharedSecretDialog extends TahitiDialog {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = -5592252588199141821L;
+
+    /**
      * The text field where the user must specify the password.
      */
     private JPasswordField passwordField = null;

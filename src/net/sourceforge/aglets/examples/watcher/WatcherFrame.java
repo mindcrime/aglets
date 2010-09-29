@@ -30,6 +30,10 @@ import com.ibm.aglet.message.Message;
 import com.ibm.aglet.util.AddressChooser;
 
 class WatcherFrame extends Frame implements WindowListener, ActionListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1240859890295707297L;
     ProxyWatcher aglet;
     TextArea text = new TextArea(10, 10);
     AddressChooser address = new AddressChooser(15);

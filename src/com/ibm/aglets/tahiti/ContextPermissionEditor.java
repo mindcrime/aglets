@@ -16,6 +16,11 @@ package com.ibm.aglets.tahiti;
 
 class ContextPermissionEditor extends GeneralPermissionEditor {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 887240506791800694L;
+
     // possible actions are "start", "shutdown", "add", "remove",
     // "read", "write", "create" and "retract"
     ContextPermissionEditor() {

@@ -29,6 +29,10 @@ import com.ibm.aglets.security.PolicyGrant;
 import com.ibm.aglets.security.PolicyPermission;
 
 class SecurityConfigPanel extends GridBagPanel implements ItemListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6151071293604791204L;
     private static final String LABEL_FILE_PERMISSION = "FileSystem";
     private static final String LABEL_SOCKET_PERMISSION = "Socket";
     private static final String LABEL_AWT_PERMISSION = "Window";

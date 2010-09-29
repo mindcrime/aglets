@@ -48,6 +48,10 @@ import com.ibm.awb.misc.Resource;
 final class CreateAgletDialog extends TahitiDialog implements ActionListener,
 ListSelectionListener {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -9026108849866684010L;
     /*
      * GUI components
      */

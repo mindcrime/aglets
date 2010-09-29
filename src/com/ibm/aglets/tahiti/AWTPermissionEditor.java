@@ -16,6 +16,11 @@ package com.ibm.aglets.tahiti;
 
 class AWTPermissionEditor extends GeneralPermissionEditor {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6092594213911307041L;
+
     // currently action should be null
     AWTPermissionEditor() {
 	super();

@@ -622,6 +622,7 @@ final public class AgletContextImpl implements AgletContext {
     /**
      * 
      */
+    @Override
     public Image getImage(URL url) {
 	Image img = (Image) this.images.get(url);
 
@@ -635,6 +636,7 @@ final public class AgletContextImpl implements AgletContext {
     /*
      * Multi Media support.
      */
+    @Override
     public ImageData getImageData(URL url) {
 	InputStream in = null;
 
@@ -680,6 +682,7 @@ final public class AgletContextImpl implements AgletContext {
      * 
      * @return the name of the context
      */
+    @Override
     public String getName() {
 	return this._name;
     }
@@ -698,6 +701,7 @@ final public class AgletContextImpl implements AgletContext {
      *            the name of the context property.
      * @return the value of the specified key.
      */
+    @Override
     public Object getProperty(String key) {
 	return this.getProperty(key, null);
     }
@@ -711,6 +715,7 @@ final public class AgletContextImpl implements AgletContext {
      *            the value to use if this property is not set.
      * @return the value of the specified key.
      */
+    @Override
     public Object getProperty(String key, Object def) {
 
 	this.checkPermission(new ContextPermission("property." + key, "read"));

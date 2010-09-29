@@ -34,6 +34,11 @@ import com.ibm.aglet.system.AgletRuntime;
 public class LoginDialog extends TahitiWindow {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = -3551677656038813086L;
+
+    /**
      * The username of the user that is going to login.
      */
     protected String username = null;

@@ -29,6 +29,10 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 class MultiList extends Panel implements ItemSelectable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5850148005894578120L;
     int _rows = 0;
     int _cols = 0;
     int _line = 0;

@@ -83,6 +83,10 @@ import com.ibm.awb.misc.Resource;
 
 public final class MainWindow extends TahitiWindow implements ItemListener,
 ActionListener, ListSelectionListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7553640699339847522L;
     static ResourceBundle bundle = null;
 
     static {

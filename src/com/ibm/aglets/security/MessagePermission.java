@@ -18,6 +18,11 @@ import java.security.Permission;
 
 public class MessagePermission extends PlainMessagePermission {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -841386333497129077L;
+
     // should be implemented?
     // ==== public PermissionCollection newPermissionCollection();
     public MessagePermission(String name, String actions) {

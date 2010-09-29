@@ -34,6 +34,11 @@ package com.ibm.aglet.event;
 public class MobilityAdapter implements MobilityListener {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = -3069295648899616278L;
+
+    /**
      * Invoked when the aglet is retracted.
      */
     @Override

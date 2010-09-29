@@ -18,6 +18,10 @@ import com.ibm.aglet.InvalidAgletException;
 import com.ibm.aglet.event.AgletEvent;
 
 final class EventMessage extends MessageImpl {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3560452166103973047L;
     AgletEvent event;
 
     EventMessage(AgletEvent ev) {

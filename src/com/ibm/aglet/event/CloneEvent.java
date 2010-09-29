@@ -34,6 +34,11 @@ import com.ibm.aglet.AgletProxy;
 public class CloneEvent extends AgletEvent {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 5794430523051887230L;
+
+    /**
      * Constructs the clone event object with the specified id and aglet
      */
     @Deprecated

@@ -34,6 +34,11 @@ package com.ibm.aglet.event;
 public class PersistencyAdapter implements PersistencyListener {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 2939231421320230922L;
+
+    /**
      * Invoked just after the aglet was activated.
      */
     @Override

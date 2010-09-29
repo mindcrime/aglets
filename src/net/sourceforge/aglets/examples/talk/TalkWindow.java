@@ -32,6 +32,10 @@ import com.ibm.aglet.util.AddressChooser;
  * @author Yoshiaki Mima
  */
 public class TalkWindow extends Frame implements ActionListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4541762637219919068L;
     TextArea text = new TextArea();
     TextField input = new TextField();
     AddressChooser dest = null;

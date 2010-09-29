@@ -37,6 +37,11 @@ import com.ibm.aglets.security.PlainMessagePermission;
 
 public final class MessageProtection extends PlainMessagePermission implements
 Protection {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7851407203416690688L;
+
     public MessageProtection(String name, String actions) {
 	super(name, actions);
     }

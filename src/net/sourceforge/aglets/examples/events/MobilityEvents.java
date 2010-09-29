@@ -30,6 +30,10 @@ import com.ibm.aglet.message.Message;
  * @author Yoshiaki Mima
  */
 public class MobilityEvents extends Aglet implements MobilityListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4766693893154763601L;
     String history = null; // history
     int count = 0; // hopping counter
 

@@ -17,6 +17,11 @@ import net.sourceforge.aglets.util.gui.JComponentBuilder;
 
 public class TahitiToolBar extends JToolBar implements ActionListener {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6327657485302108603L;
+
     private String baseKey = this.getClass().getName();
 
     /**

@@ -17,6 +17,11 @@ package com.ibm.aglets.tahiti;
 import java.awt.Dimension;
 
 class MemCanvas extends java.awt.Canvas {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1248194503958262102L;
+
     @Override
     public Dimension getMinimumSize() {
 	return new Dimension(100, 20);

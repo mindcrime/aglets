@@ -6,6 +6,11 @@ import com.ibm.aglet.Aglet;
 
 public class LoggingAgent extends Aglet {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5751775040853226180L;
+
     @Override
     public void run() {
 	System.out.println("Hi, I'm a loggin aglet...");

@@ -25,6 +25,11 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 class MyPanel extends BorderPanel {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6230438978399025011L;
+
     Vector v = new Vector();
 
     GridBagConstraints cns = new GridBagConstraints();

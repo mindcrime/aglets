@@ -39,6 +39,10 @@ import com.ibm.aglet.message.Message;
  */
 
 public class HostTravellor extends Aglet implements MobilityListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4633387421654812204L;
     Hashtable hostList;
     Vector visitOrder = new Vector();
     int nextVisit = 0;

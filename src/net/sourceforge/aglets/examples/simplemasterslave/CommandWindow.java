@@ -33,6 +33,10 @@ import com.ibm.aglet.message.Message;
 import com.ibm.aglet.util.AddressChooser;
 
 class CommandWindow extends Frame implements ActionListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5621520180358200272L;
     AgletProxy ap = null;
     AddressChooser ac = null;
     java.awt.List list = null;

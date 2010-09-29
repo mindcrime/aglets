@@ -5,6 +5,10 @@ import com.ibm.aglet.message.Message;
 
 public class ThreadAgent extends Aglet {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1911523676221093402L;
     public static int messageCounter = 0;
 
     @Override

@@ -21,6 +21,11 @@ import net.sourceforge.aglets.util.gui.JComponentBuilder;
  */
 public class OkCancelButtonPanel extends JPanel {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 315108948949142575L;
+
     private static AgletsTranslator translator = AgletsTranslator.getInstance("tahiti", Locale.getDefault());
 
     private JButton okButton = null;

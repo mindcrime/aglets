@@ -19,6 +19,10 @@ import java.awt.ItemSelectable;
 import java.awt.TextField;
 
 class MultiListEditable extends MultiList implements ItemSelectable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7048653078325472820L;
     TextField[] _textFields = null;
 
     MultiListEditable(int rows, double[] weight) {

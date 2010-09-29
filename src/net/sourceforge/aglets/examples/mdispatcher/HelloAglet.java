@@ -34,6 +34,11 @@ import com.ibm.agletx.util.SimpleItinerary;
  */
 public class HelloAglet extends Aglet {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8658785846814939604L;
+
     /*
      * UI to interact with a User this will be automatically disposed when the
      * aglet is disposed

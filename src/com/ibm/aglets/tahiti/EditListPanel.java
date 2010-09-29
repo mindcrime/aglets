@@ -26,6 +26,10 @@ import java.util.Vector;
 
 class EditListPanel extends GridBagPanel implements ItemListener,
 ActionListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6991045036719636071L;
     private static final String LABEL_ADD = "add";
     private static final String LABEL_REMOVE = "remove";
 

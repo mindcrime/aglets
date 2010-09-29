@@ -43,6 +43,11 @@ import com.ibm.maf.TerminateFailed;
 public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
 MAFAgentSystem_RMI {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3020214045093753722L;
+
     MAFAgentSystem maf = null;
 
     static Hashtable to_rmi = new Hashtable();

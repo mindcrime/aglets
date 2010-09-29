@@ -25,6 +25,10 @@ class CreateSharedSecretDialog extends TahitiDialog implements
 java.awt.event.ActionListener {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 9072770323713204653L;
+    /**
      * GUI Components
      */
     private JTextField domain = null;

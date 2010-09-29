@@ -25,6 +25,10 @@ import sun.net.www.MessageHeader;
 
 public class Manifest implements java.io.Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2955273033902072906L;
     private Hashtable sections = new Hashtable();
 
     public Manifest(InputStream in) throws IOException {

@@ -32,6 +32,11 @@ import com.ibm.agletx.util.SimpleItinerary;
  */
 public class OpenURL extends Aglet {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5234890830553847795L;
+
     /*
      * UI to interact with a User this will be automatically disposed when the
      * aglet is disposed

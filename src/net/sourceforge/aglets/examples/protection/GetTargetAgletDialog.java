@@ -21,6 +21,10 @@ import com.ibm.aglet.AgletProxy;
 
 class GetTargetAgletDialog extends JDialog implements ActionListener {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8216898100559700859L;
     private ProtectionAglet _masterAglet;
     private JButton _updateButton = new JButton("Update");
     private JButton _selectButton = new JButton("Select");

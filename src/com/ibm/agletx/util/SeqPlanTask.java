@@ -19,6 +19,10 @@ import com.ibm.aglet.message.Message;
 
 class SeqPlanTask extends Task implements Runnable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3091321402129441206L;
     private Message msg = null;
     private SeqItinerary itin = null;
 

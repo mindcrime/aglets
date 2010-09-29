@@ -54,6 +54,10 @@ import com.ibm.aglet.message.Message;
  */
 public class MethodDispatcher implements Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1763521113053805059L;
     private static Class TYPE = null;
     private Object target;
 

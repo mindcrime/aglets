@@ -35,6 +35,10 @@ import com.ibm.aglet.InvalidAgletException;
 
 final class PropertiesDialog extends TahitiDialog {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3282190391091423057L;
     /*
      * Labels to display the properties
      */

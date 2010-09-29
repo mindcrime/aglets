@@ -27,6 +27,11 @@ import com.ibm.aglet.Aglet;
  */
 public class DisplayAglet extends Aglet {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6964440382045057726L;
+
     @Override
     public void run() {
 	this.setText("Hello, world! I am " + this.getClass().getName() + ".");

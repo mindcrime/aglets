@@ -26,6 +26,10 @@ import com.ibm.agletx.patterns.Meeting;
 
 public abstract class MeetingTask extends Task {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6406621214633110803L;
     private Meeting meeting = null;
 
     public MeetingTask(Meeting meeting) {

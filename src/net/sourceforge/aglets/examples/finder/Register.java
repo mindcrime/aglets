@@ -23,6 +23,10 @@ import com.ibm.aglet.message.Message;
 
 // now this is reusable!
 public class Register extends MobilityAdapter {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -494732523153736992L;
     AgletProxy _finder;
     Message _msg = new Message("Register");
 

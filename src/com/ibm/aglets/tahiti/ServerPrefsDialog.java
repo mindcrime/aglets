@@ -40,6 +40,10 @@ import com.ibm.awb.misc.Resource;
 final class ServerPrefsDialog extends TahitiDialog implements ActionListener,
 ItemListener {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6497112367615424089L;
     private TextField _pubRoot;
     private List _aliases;
     private TextField _alias_1;

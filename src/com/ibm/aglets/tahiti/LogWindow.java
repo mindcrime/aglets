@@ -39,6 +39,11 @@ import java.awt.event.WindowEvent;
 
 final class LogWindow extends Frame implements ActionListener {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4394807357766075062L;
+
     /*
      * The text area in which log messages are shown.
      */

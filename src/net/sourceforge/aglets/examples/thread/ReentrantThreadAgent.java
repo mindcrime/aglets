@@ -5,6 +5,10 @@ import com.ibm.aglet.message.Message;
 
 public class ReentrantThreadAgent extends ThreadAgent {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3244468321251977079L;
     protected boolean postMessage = false;
 
     @Override

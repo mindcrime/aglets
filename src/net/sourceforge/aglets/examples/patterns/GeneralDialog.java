@@ -38,6 +38,10 @@ import java.awt.Rectangle;
 
 abstract public class GeneralDialog extends Dialog {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7499873560406111977L;
     /*
      * Button (and Event?) constants
      */

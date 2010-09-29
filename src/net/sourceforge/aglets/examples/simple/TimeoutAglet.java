@@ -28,6 +28,11 @@ import com.ibm.aglet.Aglet;
  */
 public class TimeoutAglet extends Aglet {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7015232163677957516L;
+
     @Override
     public void run() {
 	try {

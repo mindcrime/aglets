@@ -16,6 +16,10 @@ package com.ibm.aglets.tahiti;
 
 class FilePermissionEditor extends GeneralPermissionEditor {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8621903446456385240L;
     // possible actions are "read", "write", "execute" and "delete"
     private static final String LABEL_FILE = "File/Directory";
 

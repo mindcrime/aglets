@@ -17,6 +17,10 @@ package com.ibm.aglets.tahiti;
 import java.awt.List;
 
 class GrantEditPanel extends EditListPanel {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7722004754186234319L;
     SecurityConfigDialog _dialog = null;
 
     GrantEditPanel(SecurityConfigDialog dialog, List list, Editor editor) {

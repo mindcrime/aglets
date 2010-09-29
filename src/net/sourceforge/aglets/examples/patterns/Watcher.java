@@ -41,6 +41,10 @@ import com.ibm.agletx.patterns.Notifier;
  */
 
 public class Watcher extends SampleAglet {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5034114008843261797L;
     private final static String NotifierClassName = "examples.patterns.WatcherNotifier";
     private double interval = 0.0;
     private double duration = 0.0;

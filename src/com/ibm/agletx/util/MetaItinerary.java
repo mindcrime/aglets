@@ -32,6 +32,10 @@ import com.ibm.aglet.event.MobilityEvent;
 public class MetaItinerary extends MobilityAdapter implements
 java.io.Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3170189459194900971L;
     private Vector visitedHosts = new Vector();
     private Vector hosts = new Vector();
 

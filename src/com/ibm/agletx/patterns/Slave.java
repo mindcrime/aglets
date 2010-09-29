@@ -49,6 +49,11 @@ import com.ibm.aglet.message.Message;
 
 public abstract class Slave extends Aglet {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3292145267680928210L;
+
     // the master identifier
     private AgletID master = null;
 

@@ -44,6 +44,11 @@ import com.ibm.aglet.util.AddressChooser;
 
 public abstract class SampleWindow extends Frame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4437953414140111820L;
+
     // -- size of text field
     static final int FIELD = 40;
 

@@ -34,6 +34,11 @@ package com.ibm.aglet.event;
 public class CloneAdapter implements CloneListener {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = -8036790083460884469L;
+
+    /**
      * Invoked after an aglet was cloned. This is delivered to the cloned aglet.
      */
     @Override

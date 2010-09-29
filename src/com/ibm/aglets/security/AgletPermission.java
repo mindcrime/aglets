@@ -18,6 +18,11 @@ import java.security.Permission;
 
 public class AgletPermission extends PlainAgletPermission {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2978265363262157692L;
+
     // should be implemented?
     // ==== public PermissionCollection newPermissionCollection();
     public AgletPermission(String name, String actions) {

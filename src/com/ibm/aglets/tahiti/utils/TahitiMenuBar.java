@@ -16,6 +16,10 @@ import javax.swing.JMenuItem;
  * The Manu bar of Tahiti, with all menus and their entries.
  */
 public class TahitiMenuBar extends JMenuBar {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4133329436920961455L;
     // The resource bundle component
     static ResourceBundle bundle = null;
     // loading resources from the bundle

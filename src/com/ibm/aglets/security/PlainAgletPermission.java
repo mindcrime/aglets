@@ -19,6 +19,10 @@ import java.security.Permission;
 
 public class PlainAgletPermission extends AgletsPermissionBase implements
 Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6336431654867047069L;
     private static final String ACTION_DISPOSE = "dispose";
     private static final String ACTION_CLONE = "clone";
     private static final String ACTION_DISPATCH = "dispatch";

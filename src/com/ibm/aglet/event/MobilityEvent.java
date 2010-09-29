@@ -37,6 +37,10 @@ import com.ibm.aglet.Ticket;
 public class MobilityEvent extends AgletEvent {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = -302947062244875184L;
+    /**
      * The ticket for the mobility.
      */
     private Ticket ticket;

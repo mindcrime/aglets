@@ -37,6 +37,10 @@ import com.ibm.aglet.AgletException;
  */
 
 class FingerWindow extends SampleWindow {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8507387907570451861L;
     private static final String TITLE = "Finger";
 
     // -- Constructor

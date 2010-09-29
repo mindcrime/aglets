@@ -22,6 +22,10 @@ package com.ibm.maf;
  */
 
 public final class AgentStatus implements java.io.Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8832582183048115230L;
     public static final int _Running = 0, _Suspended = 1, _Terminated = 2;
     public static final AgentStatus Running = new AgentStatus(_Running);
     public static final AgentStatus Suspended = new AgentStatus(_Suspended);

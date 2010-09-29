@@ -8,6 +8,11 @@ import com.ibm.aglet.Aglet;
 
 public class TranslatingAglet extends Aglet {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6400128254712042051L;
+
     @Override
     public void run() {
 	System.out.println("Hello, I'm a translating agent...");

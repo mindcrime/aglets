@@ -21,6 +21,10 @@ import com.ibm.aglet.message.Message;
 
 class MessengerTask extends Task {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1963644597621257467L;
     private AgletID id = null;
 
     public MessengerTask(AgletID id) {

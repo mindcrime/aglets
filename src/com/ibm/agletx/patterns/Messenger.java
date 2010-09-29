@@ -40,6 +40,10 @@ import com.ibm.agletx.util.MessengerItinerary;
 
 public final class Messenger extends Aglet {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5372840358253267377L;
     MessengerItinerary itin = null;
 
     /**

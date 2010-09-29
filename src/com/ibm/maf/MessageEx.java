@@ -21,6 +21,10 @@ import java.lang.reflect.Constructor;
 
 public final class MessageEx extends MAFExtendedException {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1470099716483531666L;
     // constructor
     transient Throwable _exception;
 

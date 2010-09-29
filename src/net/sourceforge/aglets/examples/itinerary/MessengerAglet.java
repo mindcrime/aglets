@@ -34,6 +34,10 @@ import com.ibm.agletx.util.MessengerItinerary;
  */
 public class MessengerAglet extends Aglet {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2982048683048297403L;
     MessengerItinerary itinerary;
     Vector addresses = new Vector();
 

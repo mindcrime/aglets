@@ -19,6 +19,10 @@ import com.ibm.aglet.Aglet;
 import com.ibm.aglet.AgletProxy;
 
 public class Traveller extends Aglet {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7660259734565493722L;
     Register register = null;
 
     @Override

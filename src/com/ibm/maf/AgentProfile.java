@@ -23,6 +23,10 @@ package com.ibm.maf;
 
 public final class AgentProfile implements java.io.Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1256734124644017705L;
     // instance variables
     public short language_id;
     public short agent_system_type;

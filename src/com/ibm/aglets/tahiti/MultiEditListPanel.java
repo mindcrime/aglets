@@ -22,6 +22,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 class MultiEditListPanel extends GridBagPanel implements ActionListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8831622465350074476L;
     private static final String LABEL_ADD = "add";
     private static final String LABEL_REMOVE = "remove";
     private static final String LABEL_MOVE_TO_TOP = "move to top";

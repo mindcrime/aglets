@@ -38,6 +38,11 @@ import com.ibm.aglet.AgletException;
  */
 
 public class WriterWindow extends SampleWindow {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3567219069273581289L;
+
     private static final String TITLE = "Writer";
 
     // -- Main panel

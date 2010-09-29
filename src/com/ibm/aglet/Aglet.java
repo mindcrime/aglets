@@ -58,6 +58,10 @@ import com.ibm.aglet.message.MessageManager;
  */
 public abstract class Aglet implements java.io.Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5076789216950888166L;
     /*
      * Current API version of the Aglet class.
      */

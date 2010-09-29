@@ -23,6 +23,10 @@ package com.ibm.maf;
 
 public final class LanguageMap implements java.io.Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6416561081727846735L;
     // instance variables
     public short language_id;
     public short[] serializations;

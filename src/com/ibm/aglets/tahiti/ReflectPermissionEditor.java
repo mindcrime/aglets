@@ -15,6 +15,11 @@ package com.ibm.aglets.tahiti;
  */
 
 class ReflectPermissionEditor extends GeneralPermissionEditor {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1941743713928438927L;
+
     ReflectPermissionEditor() {
 	super();
     }

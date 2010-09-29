@@ -28,6 +28,11 @@ import javax.swing.JButton;
 
 final class ShutdownDialog extends TahitiDialog {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8472863600041738626L;
+
     /*
      * Singleton instance reference.
      */

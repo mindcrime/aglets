@@ -17,6 +17,10 @@ import com.ibm.aglets.MessageImpl;
 
 public class RolexMessage extends MessageImpl {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3978234797697773927L;
     public static final int ASSUMPTION = 1;
     public static final int RELEASE = 2;
     public static final int SOURCE_ROLE = 3;

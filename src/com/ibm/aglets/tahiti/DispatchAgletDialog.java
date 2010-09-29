@@ -45,6 +45,11 @@ import com.ibm.awb.misc.Resource;
 final class DispatchAgletDialog extends TahitiDialog implements ActionListener,
 ItemListener {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7705281778334775710L;
+
     /*
      * The proxy to be dispatched.
      */

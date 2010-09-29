@@ -36,6 +36,10 @@ import com.ibm.aglet.InvalidAgletException;
 
 final class CloneAgletDialog extends TahitiDialog implements ActionListener {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -9035713424701354881L;
     /*
      * The proxy of the Aglet that is to be cloned
      */

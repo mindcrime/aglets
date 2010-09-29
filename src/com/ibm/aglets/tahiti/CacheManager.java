@@ -237,6 +237,10 @@ public class CacheManager {
     }
 
     private final class Entry implements java.io.Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 146119643340357304L;
 	String name;
 	long version;
 	String filename;

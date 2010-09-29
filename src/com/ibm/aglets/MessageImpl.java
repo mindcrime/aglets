@@ -37,6 +37,11 @@ import com.ibm.aglets.thread.AgletThread;
  */
 public class MessageImpl extends Message implements Cloneable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6493363552096602045L;
+
     transient FutureReplyImpl future = null;
 
     private int msg_type;

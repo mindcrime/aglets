@@ -32,6 +32,11 @@ import com.ibm.aglet.message.Message;
  */
 public class TalkMaster extends Aglet {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6463228915907125022L;
+
     transient AgletProxy remoteProxy = null;
 
     String name = "Unknown";

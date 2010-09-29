@@ -14,6 +14,11 @@ import com.ibm.aglet.security.Protections;
 
 public class TargetAglet extends Aglet implements MobilityListener,
 CloneListener, PersistencyListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5710029075498194848L;
+
     @Override
     public void onCreation(Object init) {
 	this.log("onCreation");

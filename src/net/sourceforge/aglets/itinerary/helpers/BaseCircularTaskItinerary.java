@@ -18,6 +18,10 @@ public class BaseCircularTaskItinerary extends BaseTaskItinerary implements
 CircularItinerary {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 6610194904023599370L;
+    /**
      * Traces the number of loops the agent owner of this itinerary has already
      * done.
      */

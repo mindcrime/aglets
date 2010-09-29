@@ -27,6 +27,10 @@ import java.util.Vector;
 //
 abstract public class AgletsPermissionBase extends Permission implements Guard,
 Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5410882102692333193L;
     protected static final char CHAR_ASTERISK = '*';
     protected static final String STRING_ASTERISK = String.valueOf(CHAR_ASTERISK);
     protected static final char CHAR_HYPHEN = '-';

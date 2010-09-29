@@ -20,6 +20,10 @@ import com.ibm.aglet.AgletProxy;
 import com.ibm.aglet.message.Message;
 
 public class Test extends Aglet {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7013701224449124317L;
     AgletProxy _finder;
     Message lookup = new Message("Lookup", "Traveller");
 

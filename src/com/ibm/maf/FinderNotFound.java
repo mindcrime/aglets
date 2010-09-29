@@ -23,6 +23,11 @@ package com.ibm.maf;
 
 public final class FinderNotFound extends MAFException {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2741271247765285459L;
+
     // constructor
     public FinderNotFound() {
 	super();

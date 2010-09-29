@@ -15,6 +15,10 @@ import javax.swing.JFrame;
  *         sourceforge.net</A>
  */
 public class MemoryWindow extends JFrame {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8080806717004726845L;
     private MemoryPanel mem;
 
     public MemoryWindow() {

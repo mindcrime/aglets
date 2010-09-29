@@ -6,6 +6,10 @@ import com.ibm.aglet.message.Message;
 
 public class SleepingAgent extends Aglet {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4471670993642296326L;
     protected long sleepingMillisec = 5000;
 
     @Override

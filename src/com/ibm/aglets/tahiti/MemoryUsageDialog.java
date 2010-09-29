@@ -26,6 +26,10 @@ import java.awt.event.WindowEvent;
 
 final class MemoryUsageDialog extends TahitiDialog implements Runnable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8229846872561650844L;
     private java.awt.Canvas _myCanvas = new MemCanvas();
     private Thread _handler = null;
 

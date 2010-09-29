@@ -41,6 +41,10 @@ import com.ibm.awb.misc.URIPattern;
  */
 public class Ticket implements Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3043680975007352670L;
     //
     // Scheme
     /**

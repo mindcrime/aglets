@@ -32,6 +32,10 @@ final class FingerInfo implements Serializable {
     // Private variables
     //
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -858635235655798471L;
     private String _hostName;
     private String _userName;
     private String _homeDirectory;

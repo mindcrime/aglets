@@ -31,6 +31,11 @@ package com.ibm.aglet.event;
  */
 abstract public class AgletEvent extends java.util.EventObject {
     /**
+     * 
+     */
+    private static final long serialVersionUID = 5753551787599230988L;
+
+    /**
      * Event id
      */
     private int id;

@@ -23,6 +23,11 @@ package com.ibm.maf;
 
 public final class ResumeFailed extends MAFException {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7441480360787597218L;
+
     // constructor
     public ResumeFailed() {
 	super();

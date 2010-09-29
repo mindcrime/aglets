@@ -23,6 +23,10 @@ import java.net.URL;
 
 class SlaveError implements java.io.Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7395042054370501312L;
     public String host = null;
     public String text = null;
 

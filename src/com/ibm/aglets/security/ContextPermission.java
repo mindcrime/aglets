@@ -18,6 +18,10 @@ import java.security.Permission;
 import java.util.Vector;
 
 public class ContextPermission extends AgletsPermissionBase {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1704237134466029296L;
     String _actions;
     private Vector _actionList = new Vector();
 

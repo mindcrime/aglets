@@ -23,6 +23,10 @@ import com.ibm.aglet.message.Message;
 
 public class Finder extends Aglet {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1996926670286924416L;
     // add this.
     Hashtable _database = new Hashtable();
 

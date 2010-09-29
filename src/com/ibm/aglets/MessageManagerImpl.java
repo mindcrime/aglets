@@ -57,6 +57,11 @@ import com.ibm.aglets.thread.AgletThreadPool;
  */
 public final class MessageManagerImpl implements MessageManager,
 java.io.Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5056206648262340360L;
+
     private static AgletsLogger logger = AgletsLogger.getLogger(MessageManagerImpl.class.getName());
 
     /*

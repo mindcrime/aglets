@@ -47,6 +47,10 @@ import com.ibm.awb.misc.Resource;
 final class RetractAgletDialog extends TahitiDialog implements ActionListener,
 ItemListener {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2767078222262785698L;
     private JComboBox servers = null;
     private AgletListPanel<AgletProxy> agletsList = null;
     private JButton refreshProxies = null;

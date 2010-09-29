@@ -32,6 +32,11 @@ import com.ibm.awb.misc.FileUtils;
 public class ImportSharedSecretDialog extends TahitiDialog {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 7476001494537909387L;
+
+    /**
      * A text field with the file name of the shared secret.
      */
     private JTextField fileName = null;

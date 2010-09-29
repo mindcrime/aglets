@@ -77,6 +77,11 @@ import com.ibm.agletx.patterns.Meeting;
 public class MeetingsItinerary extends SeqItinerary {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = -6503791120022552099L;
+
+    /**
      * Constructs a MeetingsItinerary object with the specified owner aglet.
      * 
      * @param aglet

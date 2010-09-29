@@ -20,6 +20,10 @@ import java.util.Vector;
 
 public class PlainMessagePermission extends AgletsPermissionBase implements
 Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6199236253073440162L;
     private String _actions = null;
     private Vector _messages = new Vector();
 

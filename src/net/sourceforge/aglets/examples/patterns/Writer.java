@@ -36,6 +36,11 @@ import com.ibm.agletx.patterns.Slave;
 
 public class Writer extends SampleAglet {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 686920604416831963L;
+
     // -- callback function for the "go" bottom.
     //
     @Override

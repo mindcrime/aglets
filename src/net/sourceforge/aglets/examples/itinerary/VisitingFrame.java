@@ -30,6 +30,10 @@ import java.util.Vector;
 import com.ibm.aglet.util.AddressChooser;
 
 class VisitingFrame extends Frame implements WindowListener, ActionListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7145013172086931418L;
     VisitingAglet aglet;
     List list = new List(10, false);
     AddressChooser address = new AddressChooser(15);

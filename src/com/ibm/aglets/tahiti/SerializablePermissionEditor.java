@@ -16,6 +16,11 @@ package com.ibm.aglets.tahiti;
 
 class SerializablePermissionEditor extends GeneralPermissionEditor {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6202919295054871916L;
+
     // currently action should be null
     SerializablePermissionEditor() {
 	super();

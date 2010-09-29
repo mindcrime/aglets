@@ -38,6 +38,11 @@ import com.ibm.aglet.util.AddressChooser;
  */
 class MyDialog extends Frame implements WindowListener, ActionListener {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2216352320901385314L;
+
     /*
      * The aglet a user interacts with.
      */

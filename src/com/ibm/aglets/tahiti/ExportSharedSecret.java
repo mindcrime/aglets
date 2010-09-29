@@ -27,6 +27,11 @@ import com.ibm.awb.misc.FileUtils;
 
 class ExportSharedSecret extends TahitiDialog implements ActionListener {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8780072653784282549L;
+
     AgentListPanel list;
 
     JTextField filename;

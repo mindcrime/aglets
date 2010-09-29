@@ -34,6 +34,10 @@ import com.ibm.aglet.AgletProxy;
 final class DisposeAgletDialog extends TahitiDialog implements ActionListener {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = -8146917115337440376L;
+    /**
      * A list of the agent proxies that must be disposed.
      */
     private LinkedList<AgletProxy> proxies = null;

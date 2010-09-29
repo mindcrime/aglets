@@ -16,6 +16,11 @@ import com.ibm.aglet.AgletException;
  */
 public class RolexException extends AgletException {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -9168967395840139557L;
+
     public RolexException() {
 	super();
     }

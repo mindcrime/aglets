@@ -21,6 +21,10 @@ import java.awt.Label;
 import java.awt.Panel;
 
 public class GridBagPanel extends Panel {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6827460767013290471L;
     public static final int RELATIVE = GridBagConstraints.RELATIVE;
     public static final int REMAINDER = GridBagConstraints.REMAINDER;
 

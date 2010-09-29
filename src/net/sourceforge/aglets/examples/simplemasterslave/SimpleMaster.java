@@ -23,6 +23,10 @@ import com.ibm.aglet.message.Message;
 import com.ibm.agletx.patterns.Slave;
 
 public class SimpleMaster extends Aglet {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2916763871556793792L;
     Vector urllist = null;
     String SlaveClassName = "examples.simplemasterslave.SimpleSlave";
 

@@ -27,6 +27,10 @@ import com.ibm.aglets.security.AgletPermission;
 
 final class SystemMessage extends MessageImpl {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4830876359982245483L;
     static final int CREATE = 2;
     static final int RUN = 7;
 

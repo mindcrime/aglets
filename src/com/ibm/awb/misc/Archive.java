@@ -23,7 +23,17 @@ import java.util.Hashtable;
 
 public class Archive implements java.io.Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1400757867680413756L;
+
     static final public class Entry implements java.io.Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -733774250305285238L;
+
 	Entry(String n, long d, byte[] b) {
 	    this.name = n;
 	    this.digest = d;

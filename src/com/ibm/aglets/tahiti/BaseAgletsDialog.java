@@ -14,6 +14,10 @@ import net.sourceforge.aglets.util.gui.GUICommandStrings;
 public class BaseAgletsDialog extends JDialog implements ActionListener {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = -8708029118108623421L;
+    /**
      * The aglet translator for this window.
      */
     protected AgletsTranslator translator = AgletsTranslator.getInstance("tahiti", Locale.getDefault());

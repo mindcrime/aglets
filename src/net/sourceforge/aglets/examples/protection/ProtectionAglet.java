@@ -35,6 +35,10 @@ import com.ibm.aglet.message.Message;
  * @author ONO Kouichi
  */
 public class ProtectionAglet extends Aglet {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8866311642773135301L;
     private AgletID _aid = null; // Original Aglet
     private AgletProxy _target = null; // Target Aglet Proxy
     private String _owner = null; // Aglet Owner

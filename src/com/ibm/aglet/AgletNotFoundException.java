@@ -32,6 +32,11 @@ package com.ibm.aglet;
 
 public class AgletNotFoundException extends AgletException {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6140535636613461078L;
+
     /*
      * Constructs a AgletNotFoundException
      */

@@ -18,6 +18,10 @@ import java.awt.Panel;
 import java.util.Vector;
 
 class EditorPanel extends Panel {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2028821710329549232L;
     private static final char CHAR_COMMA = ',';
     private static final char CHAR_SEPARATOR = CHAR_COMMA;
     private static final char CHAR_STRING_QUOTE = '"';

@@ -12,6 +12,11 @@ import com.ibm.aglet.message.Message;
  * 
  */
 public class AgletSleeping extends Aglet {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 764665884852314091L;
+
     @Override
     public void run() {
 	long startTime = 0;

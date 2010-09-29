@@ -55,6 +55,10 @@ import com.ibm.awb.misc.Resource;
 public class AddressBook extends Window implements ActionListener,
 ItemListener, FocusListener {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6730962348239624441L;
     transient List _list = new List(10, false);
     transient AddressChooser _chooser = null;
 

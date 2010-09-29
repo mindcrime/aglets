@@ -24,6 +24,10 @@ import com.ibm.agletx.patterns.Meeting;
 
 public final class StationaryAglet extends Aglet implements MobilityListener {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4884771624206640655L;
     private Meeting meeting = null;
     boolean dispatched = false;
 

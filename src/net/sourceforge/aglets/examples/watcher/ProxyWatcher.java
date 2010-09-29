@@ -45,6 +45,10 @@ import com.ibm.aglet.message.Message;
  * @updated by Shintaro Kosugi $Date: 98/11/24
  */
 public class ProxyWatcher extends Aglet {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6509197929548594627L;
     transient AgletContext ac;
     WatcherFrame frame;
     AgletProxy slave = null;

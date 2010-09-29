@@ -25,6 +25,11 @@ import java.util.zip.ZipInputStream;
 
 public class JarArchive extends Archive {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6983723997728651259L;
+
     static private boolean verbose = false;
 
     Manifest manifest = null;

@@ -48,6 +48,11 @@ import com.ibm.awb.misc.Resource;
 final class GeneralConfigDialog extends TahitiDialog implements ActionListener,
 ItemListener {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2800407145792800916L;
+
     static final String STARTUP_AGLET = "com.ibm.aglets.samples.Writer";
 
     /*

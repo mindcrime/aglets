@@ -38,6 +38,10 @@ import java.io.Serializable;
  * @author Danny B. Lange
  */
 public class AgletException extends Exception implements Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5852186361181050874L;
     private boolean _original = true;
     private String _stackTrace = null;
 

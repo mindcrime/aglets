@@ -40,6 +40,11 @@ import com.ibm.aglet.event.EventType;
 public class ContextEvent extends AgletEvent {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 7387680262581311719L;
+
+    /**
      * AgletProxy proxy
      */
     protected AgletProxy agletproxy;

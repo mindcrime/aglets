@@ -19,6 +19,11 @@ import net.sourceforge.aglets.util.gui.JComponentBuilder;
 public class TahitiMenuBar extends JMenuBar {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 624948583728651720L;
+
+    /**
      * The base name for this class.
      */
     private String baseKey = this.getClass().getName();

@@ -24,6 +24,11 @@ import java.io.IOException;
  * @author ONO Kouichi
  */
 public class PolicyFileParsingException extends IOException {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4695830155556644352L;
+
     public PolicyFileParsingException() {
 	this.printStackTrace();
     }

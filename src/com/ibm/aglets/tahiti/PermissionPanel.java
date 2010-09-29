@@ -21,6 +21,10 @@ import com.ibm.aglets.security.PolicyFileParsingException;
 import com.ibm.aglets.security.PolicyPermission;
 
 class PermissionPanel extends EditorPanel {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8376339851700076305L;
     protected static final String LABEL_ACTIONS = "Actions";
     private static final int LENGTH_ACTIONS = 15;
 

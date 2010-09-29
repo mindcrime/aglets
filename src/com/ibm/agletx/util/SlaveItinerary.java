@@ -77,6 +77,10 @@ import com.ibm.aglet.Aglet;
 
 public class SlaveItinerary extends SeqItinerary {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -528297595968340623L;
     private Task task = null;
 
     /**

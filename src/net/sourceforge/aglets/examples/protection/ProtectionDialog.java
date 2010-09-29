@@ -40,6 +40,10 @@ import javax.swing.JTextField;
  * @author TAI, Hideki
  */
 class ProtectionDialog extends JFrame implements ItemListener, ActionListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2602857253499863027L;
     static final String ACTION_DISPOSE = "dispose";
     static final String ACTION_CLONE = "clone";
     static final String ACTION_DISPATCH = "dispatch";

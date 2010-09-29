@@ -22,6 +22,11 @@ import javax.swing.SwingConstants;
  */
 public class MemoryPanel extends JPanel implements Runnable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8514585622436310579L;
+
     // The resource bundle component
     public static ResourceBundle bundle = null;
     // loading resources from the bundle

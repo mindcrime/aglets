@@ -14,6 +14,11 @@ import net.sourceforge.aglets.itinerary.Task;
 public class BaseTask implements Task, Serializable {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = -1304922928844500937L;
+
+    /**
      * The execution policy for this task.
      */
     private int executionPolicy;

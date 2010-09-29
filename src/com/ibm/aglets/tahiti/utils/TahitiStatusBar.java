@@ -17,6 +17,11 @@ import javax.swing.SwingConstants;
  */
 public class TahitiStatusBar extends JPanel {
     /**
+     * 
+     */
+    private static final long serialVersionUID = -7347272840438355180L;
+
+    /**
      * A label containing the current message.
      * 
      */

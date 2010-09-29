@@ -23,6 +23,11 @@ package com.ibm.atp.auth;
  */
 public class AuthenticationException extends Exception {
     /**
+     * 
+     */
+    private static final long serialVersionUID = 154613877253129357L;
+
+    /**
      * Default Constructor shows stack trace.
      */
     public AuthenticationException() {

@@ -23,6 +23,11 @@ package com.ibm.maf;
 
 public final class AgentIsRunning extends MAFException {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3773922808909480957L;
+
     // constructor
     public AgentIsRunning() {
 	super();

@@ -35,6 +35,10 @@ import com.ibm.agletx.util.SeqPlanItinerary;
 
 class CirculateFrame extends Frame implements WindowListener, ActionListener,
 ItemListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7817874648592803180L;
     CirculateAglet aglet;
     List list = new List(10, false);
     AddressChooser address = new AddressChooser(15);

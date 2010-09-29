@@ -37,6 +37,10 @@ import com.ibm.aglet.message.MessageManager;
  * @author Mitsuru Oshima
  */
 public class WatcherSlave extends Aglet {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2892337996219553685L;
     AgletProxy master;
     boolean started = false;
 
@@ -116,6 +120,11 @@ public class WatcherSlave extends Aglet {
 	// event listener
 	//
 	this.addPersistencyListener(new PersistencyAdapter() {
+	    /**
+	     * 
+	     */
+	    private static final long serialVersionUID = -1788859594009985012L;
+
 	    @Override
 	    public void onActivation(PersistencyEvent ev) {
 		WatcherSlave.this.setText("wakeup");
@@ -130,6 +139,11 @@ public class WatcherSlave extends Aglet {
 	    }
 	});
 	this.addMobilityListener(new MobilityAdapter() {
+	    /**
+	     * 
+	     */
+	    private static final long serialVersionUID = -1615892152139033000L;
+
 	    @Override
 	    public void onArrival(MobilityEvent ev) {
 		WatcherSlave.this.setText("arrived");

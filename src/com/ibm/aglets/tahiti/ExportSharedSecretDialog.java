@@ -26,6 +26,11 @@ import com.ibm.awb.misc.FileUtils;
 public class ExportSharedSecretDialog extends TahitiDialog {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 3129746473663734302L;
+
+    /**
      * The text field where the user can specify the file to export to.
      */
     private JTextField fileTextField = null;

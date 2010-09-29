@@ -13,6 +13,11 @@ import javax.swing.JPanel;
 public class ImagePanel extends JPanel implements ImageObserver {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = -749138256965811841L;
+
+    /**
      * The image to display
      */
     protected Image image = null;

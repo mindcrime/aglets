@@ -18,6 +18,10 @@ import com.ibm.maf.Name;
 
 final class DeactivationInfo implements java.io.Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1736860897551277584L;
     static final int DEACTIVATED = 0;
     static final int SUSPENDED = 1;
 

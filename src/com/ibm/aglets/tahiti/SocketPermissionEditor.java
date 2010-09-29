@@ -22,6 +22,10 @@ import java.util.Vector;
 
 class SocketPermissionEditor extends PermissionEditor {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6736625651419633111L;
     // possible actions are "accept", "connect", "listen" and "resolve"
     private static final String LABEL_HOST = "Host";
     private static final int LENGTH_HOST = 10;

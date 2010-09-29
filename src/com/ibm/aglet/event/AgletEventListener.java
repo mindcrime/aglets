@@ -35,6 +35,10 @@ import java.util.Vector;
  */
 public class AgletEventListener implements CloneListener, MobilityListener,
 PersistencyListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6181788401517660403L;
     Vector vector = new Vector();
 
     public AgletEventListener() {

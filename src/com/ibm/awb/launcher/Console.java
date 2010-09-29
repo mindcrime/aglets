@@ -25,6 +25,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class Console extends Frame implements ActionListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3813053602916153118L;
     private Button _clear_button = new Button("Clear");
     private Button _close_button = new Button("Close");
     private TextArea _log_text_area = new TextArea(15, 82);

@@ -33,6 +33,11 @@ package com.ibm.aglet;
 public class ServerNotFoundException extends java.io.IOException {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 2900051776874360057L;
+
+    /**
      * Constructs a ServerNotFoundException
      */
     public ServerNotFoundException() {

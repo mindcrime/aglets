@@ -35,6 +35,10 @@ import com.ibm.agletx.util.MeetingsItinerary;
  */
 public class VisitingAglet extends Aglet {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4362375345294662627L;
     MeetingsItinerary itinerary;
     Vector addresses = new Vector();
 

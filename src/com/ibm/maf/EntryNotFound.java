@@ -23,6 +23,11 @@ package com.ibm.maf;
 
 public final class EntryNotFound extends MAFException {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3677697065269276345L;
+
     // constructor
     public EntryNotFound() {
 	super();

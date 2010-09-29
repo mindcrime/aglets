@@ -17,6 +17,10 @@ import com.ibm.maf.AgentProfile;
 import com.ibm.maf.AgentSystemInfo;
 
 public class LocationInfo implements java.io.Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8597414854651255669L;
     private String _location;
     private Object _info;
 

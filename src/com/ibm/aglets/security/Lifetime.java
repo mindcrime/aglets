@@ -28,6 +28,10 @@ import java.util.Date;
  */
 public final class Lifetime implements Serializable, Cloneable {
     /**
+     * 
+     */
+    private static final long serialVersionUID = -4337804352929841734L;
+    /**
      * Infinite lifetime.
      */
     public final static Date UNLIMITED = null;

@@ -28,6 +28,11 @@ import net.sourceforge.aglets.util.gui.JComponentBuilder;
 public class AgletListPanel<ITEM> extends JPanel {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = -2303995451900847091L;
+
+    /**
      * The base key for the translations.
      */
     private String baseKey = this.getClass().getName();

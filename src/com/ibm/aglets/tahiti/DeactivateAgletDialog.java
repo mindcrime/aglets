@@ -43,6 +43,11 @@ import com.ibm.aglets.tahiti.utils.TahitiCommandStrings;
 final class DeactivateAgletDialog extends TahitiDialog implements
 ActionListener {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1443057850711450508L;
+
     /*
      * The proxy to be deactivated
      */

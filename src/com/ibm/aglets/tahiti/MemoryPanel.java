@@ -31,6 +31,10 @@ import com.ibm.aglets.thread.AgletThreadPool;
 public class MemoryPanel extends JPanel implements ActionListener {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 2429665474224569992L;
+    /**
      * The logger of this class.
      */
     private AgletsLogger logger = AgletsLogger.getLogger(this.getClass().getName());

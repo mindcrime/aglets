@@ -41,6 +41,10 @@ import com.ibm.aglet.AgletException;
  */
 
 public class WatcherWindow extends SampleWindow {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7079207043940551654L;
     private static final String TITLE = "Watcher";
     private static final String NO_FILENAME_MSG = "Please input a valid file name.";
     private PopUpMessageWindow _noFileNameWindow = null;

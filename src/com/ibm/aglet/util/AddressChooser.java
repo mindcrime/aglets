@@ -43,6 +43,11 @@ import net.sourceforge.aglets.log.AgletsLogger;
  * @author Mitsuru Oshima
  */
 public class AddressChooser extends Panel implements ActionListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6596959439213355530L;
+
     private static AgletsLogger logger = AgletsLogger.getLogger(AddressChooser.class.getName());
 
     private transient TextField address;

@@ -27,6 +27,11 @@ import com.ibm.aglets.AgletRuntime;
 public class AboutDialog extends BaseAgletsDialog {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 6317104289078288226L;
+
+    /**
      * The panel that will contain the image with the logo.
      */
     private ImagePanel image = null;

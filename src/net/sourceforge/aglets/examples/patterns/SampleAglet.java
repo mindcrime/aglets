@@ -43,6 +43,10 @@ import com.ibm.aglet.message.Message;
 public abstract class SampleAglet extends Aglet implements MobilityListener,
 PersistencyListener, CloneListener {
     /**
+     * 
+     */
+    private static final long serialVersionUID = 4541556138552175994L;
+    /**
      * The main interaction window.
      */
     protected SampleWindow _msw = null;

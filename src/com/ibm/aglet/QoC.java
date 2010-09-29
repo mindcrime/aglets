@@ -37,6 +37,10 @@ import java.util.Date;
  */
 public class QoC implements Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2429080288901779379L;
     //
     // Constants
     //

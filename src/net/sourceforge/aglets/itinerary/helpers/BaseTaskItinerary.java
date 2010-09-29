@@ -32,6 +32,11 @@ public class BaseTaskItinerary extends BaseItinerary implements TaskItinerary,
 Serializable, MobilityListener {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 2552387718482640723L;
+
+    /**
      * This hashthable contains the task list for each destination. The key of
      * the table is the URI string representing the destination, the value of
      * the table is a Task[] that represent each single task that must be

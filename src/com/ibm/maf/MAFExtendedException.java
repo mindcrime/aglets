@@ -23,6 +23,11 @@ package com.ibm.maf;
 
 public class MAFExtendedException extends MAFException {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2834711930048438069L;
+
     // constructor
     public MAFExtendedException() {
 	super();

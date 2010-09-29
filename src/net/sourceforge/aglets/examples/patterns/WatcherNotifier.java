@@ -31,6 +31,10 @@ import com.ibm.agletx.patterns.Notifier;
  */
 
 public class WatcherNotifier extends Notifier {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5679879225025244235L;
     private long _lastModified = 0;
     private String _filePath = "";
     private File f;

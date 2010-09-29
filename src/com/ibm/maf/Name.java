@@ -23,6 +23,10 @@ package com.ibm.maf;
 
 public final class Name implements java.io.Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5878175992615314666L;
     // instance variables
     public byte[] authority;
     public byte[] identity;

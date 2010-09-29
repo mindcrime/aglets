@@ -29,6 +29,11 @@ import com.ibm.aglets.AgletProxyImpl;
 public class AgletListRenderer extends DefaultListCellRenderer {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 5494221603098422328L;
+
+    /**
      * The translator of this class object.
      */
     private AgletsTranslator translator = null;

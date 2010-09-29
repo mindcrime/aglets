@@ -27,6 +27,11 @@ import javax.swing.event.ListSelectionListener;
 public class AgentListPanel extends JPanel {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = -3849702890166914054L;
+
+    /**
      * The jlist that displayes the agents
      */
     private JList _agentList;

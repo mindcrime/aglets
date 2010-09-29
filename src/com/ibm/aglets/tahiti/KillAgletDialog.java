@@ -27,6 +27,10 @@ import com.ibm.aglets.tahiti.utils.TahitiCommandStrings;
 public class KillAgletDialog extends TahitiDialog implements ActionListener {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = -310269321700342540L;
+    /**
      * The proxy to kill.
      */
     protected AgletProxy _proxies[] = null;

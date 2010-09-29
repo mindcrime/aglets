@@ -12,6 +12,10 @@ import com.ibm.aglet.message.Message;
 public class AgletThread extends Aglet {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = -5819151996876906822L;
+    /**
      * Indicates the thread that is executing the run method.
      */
     private transient Thread myThread = null;

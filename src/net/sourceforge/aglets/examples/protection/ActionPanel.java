@@ -34,6 +34,10 @@ import java.awt.event.ItemListener;
  * @author ONO Kouichi
  */
 class ActionPanel extends Panel implements ItemListener, ActionListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2589131708155099309L;
     private ProtectionAglet _aglet = null;
     private Choice _command = new Choice();
     private CardLayout _layout = new CardLayout();

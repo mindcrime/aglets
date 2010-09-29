@@ -37,6 +37,11 @@ import com.ibm.aglets.security.PlainAgletPermission;
 
 public final class AgletProtection extends PlainAgletPermission implements
 Protection {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6243256818417060681L;
+
     public AgletProtection(String name, String actions) {
 	super(name, actions);
     }

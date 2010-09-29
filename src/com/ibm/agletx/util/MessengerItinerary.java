@@ -79,6 +79,10 @@ import com.ibm.aglet.message.Message;
 
 public class MessengerItinerary extends SeqItinerary {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3585313769250709545L;
     private Message msg = null;
 
     /**

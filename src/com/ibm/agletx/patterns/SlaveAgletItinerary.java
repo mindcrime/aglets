@@ -31,6 +31,11 @@ import com.ibm.aglet.message.MessageException;
 
 final class SlaveAgletItinerary extends com.ibm.agletx.util.SeqPlanItinerary {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5753313996227566152L;
+
     private Message message = null;
 
     private boolean inOrigin = false;

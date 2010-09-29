@@ -23,6 +23,11 @@ package com.ibm.maf;
 
 public final class AgentNotFound extends MAFException {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7217841402955229000L;
+
     // constructor
     public AgentNotFound() {
 	super();

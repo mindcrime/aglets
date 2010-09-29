@@ -33,6 +33,11 @@ public final class ListenerList extends java.util.LinkedList<ContextListener>
 implements ContextListener {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 4801520071583607074L;
+
+    /**
      * Notifies all listeners than the aglet has been activated.
      */
     @Override

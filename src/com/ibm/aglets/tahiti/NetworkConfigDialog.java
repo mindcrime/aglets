@@ -49,6 +49,10 @@ import com.ibm.awb.misc.Resource;
 final class NetworkConfigDialog extends TahitiDialog implements ActionListener,
 ItemListener {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1590344113043220301L;
     /*
      * Proxy Configuration
      */

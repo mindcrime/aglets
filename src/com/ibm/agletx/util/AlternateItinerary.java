@@ -72,6 +72,10 @@ import com.ibm.aglet.message.Message;
 public class AlternateItinerary extends MobilityAdapter implements
 java.io.Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6259222370792813718L;
     private Aglet aglet;
     private Vector hosts = new Vector();
     private Message next;

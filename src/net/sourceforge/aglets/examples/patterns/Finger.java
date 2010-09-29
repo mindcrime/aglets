@@ -40,6 +40,10 @@ import com.ibm.agletx.patterns.Slave;
 
 public class Finger extends SampleAglet {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7835129519725014397L;
     // Aglet web source (the URL & classname of the slave class).
     private static final String SlaveClassName = "examples.patterns.FingerSlave";
 

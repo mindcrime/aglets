@@ -27,6 +27,10 @@ import com.ibm.maf.Name;
 
 public class MAFFinderViewer extends Frame implements WindowListener,
 ActionListener {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7549221609473733118L;
     private String _finder_url = "rmi://localhost:4435/MAFFinder";
     private MAFFinder _finder = null;
 

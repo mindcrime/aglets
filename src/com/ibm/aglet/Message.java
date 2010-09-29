@@ -10,4 +10,9 @@ package com.ibm.aglet;
  */
 public class Message extends com.ibm.aglet.message.Message {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1072798654334230343L;
+
 }

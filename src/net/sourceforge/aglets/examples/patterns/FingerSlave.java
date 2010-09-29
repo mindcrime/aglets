@@ -34,6 +34,11 @@ import com.ibm.agletx.patterns.Slave;
 
 public class FingerSlave extends Slave {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4290392056404272921L;
+
     @Override
     protected void doJob() throws AgletException {
 	this.RESULT = this.getLocalInfo();

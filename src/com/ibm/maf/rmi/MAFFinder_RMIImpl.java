@@ -28,6 +28,11 @@ import com.ibm.maf.NameInvalid;
 
 public class MAFFinder_RMIImpl extends java.rmi.server.UnicastRemoteObject
 implements com.ibm.maf.MAFFinder {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 747094334827238770L;
+
     static private boolean _verbose = false;
 
     static public final String REGISTRY_NAME = "MAFFinder";

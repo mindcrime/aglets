@@ -26,6 +26,11 @@ import com.ibm.atp.auth.SharedSecrets;
 
 class RemoveSharedSecret extends TahitiDialog implements ActionListener {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4401746296431455597L;
+
     AgentListPanel list;
 
     JTextField password;

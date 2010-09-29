@@ -38,6 +38,10 @@ import com.ibm.aglet.AgletException;
  */
 
 public class MessageException extends AgletException {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3923549098763231035L;
     private Throwable _exception;
 
     /*

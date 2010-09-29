@@ -24,6 +24,10 @@ import com.ibm.aglets.security.PolicyGrant;
 import com.ibm.awb.misc.MalformedURIPatternException;
 
 class GrantEditor extends EditorPanel implements Editor {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5058267678244617092L;
     private static final String LABEL_CODEBASE = "CodeBase";
     private static final int LENGTH_CODEBASE = 15;
     private static final String LABEL_SIGNEDBY = "Signed by";

@@ -63,6 +63,11 @@ import com.ibm.awb.misc.URIPattern;
 final class SecurityConfigDialog extends TahitiDialog implements
 ActionListener, ItemListener, ListSelectionListener {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8567450432518947469L;
+
     /*
      * Singleton instance reference.
      */

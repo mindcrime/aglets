@@ -31,6 +31,10 @@ import com.ibm.agletx.util.SeqPlanItinerary;
  * @author Mitsuru Oshima
  */
 public class CirculateAglet extends Aglet {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5121407791713217163L;
     StringBuffer buffer;
     SeqPlanItinerary itinerary;
     Vector proxies;
