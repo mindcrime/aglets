@@ -240,7 +240,6 @@ Aglets SDK Build $Revision: 1.14 $ $Date: 2009/07/28 07:04:53 $
     <delete>
         <fileset dir=".." defaultexcludes="no" >
             <include name="**/*~"/>
-            <include name="**/CVS/"/>
         </fileset>
     </delete>
   </target>
@@ -250,10 +249,12 @@ Aglets SDK Build $Revision: 1.14 $ $Date: 2009/07/28 07:04:53 $
     <delete>
         <fileset dir="../bin">
             <exclude name="*.in"/>
-            <exclude name="install*"/>
-            <exclude name="build.xml"/>
             <exclude name="ant*"/>
+            <exclude name="build.xml"/>
+        	<exclude name="credits.txt"/>
+            <exclude name="install*"/>
             <exclude name="lcp.bat"/>
+        	<exclude name="license.txt"/>
         </fileset>
     </delete>
     <delete dir="${public.dir}" />
@@ -263,14 +264,6 @@ Aglets SDK Build $Revision: 1.14 $ $Date: 2009/07/28 07:04:53 $
             <exclude name="spec11.html"/>
         </fileset>
     </delete>
-  </target>
-  
-  <target name="noCvs">
-    <delete includeEmptyDirs="true">
-        <fileset dir=".." defaultexcludes="no">
-            <include name="**/CVS/" />
-         </fileset>
-     </delete>
   </target>
         
 </project>

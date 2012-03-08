@@ -1,2 +1,5 @@
 /classes
 /doc
+/lib/classes
+/lib/aglets-*.jar
+/public
