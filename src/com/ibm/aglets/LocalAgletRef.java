@@ -428,7 +428,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
     /**
      * Returns that the protections can be set or not
      * 
-     * @param protections
+     * @param newprotections
      *            collection of protections about who can send what kind of
      *            messages to the aglet
      */
@@ -1637,7 +1637,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
      * Sets the protections: permission collection about who can send what kind
      * of messages to the aglet
      * 
-     * @param protections
+     * @param newprotections
      *            collection of protections about who can send what kind of
      *            messages to the aglet
      */
@@ -1743,11 +1743,9 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
     /**
      * Send events to the activated aglet.
      * 
-     * @param cxt
-     *            the aglet context in which the aglet activated
      * @exception AgletException
      *                if the activation fails.
-     * @see Aglet#onActivation
+     * @see com.ibm.aglet.event.PersistencyListener#onActivation
      */
     void startActivatedAglet() throws InvalidAgletException {
 	this._state = ACTIVE;
@@ -1769,7 +1767,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
      *            url of the departure
      * @exception AgletException
      *                if the activation fails.
-     * @see Aglet#onArrival
+     * @see com.ibm.aglet.event.MobilityListener#onArrival
      */
     void startArrivedAglet(AgletContextImpl cxt, String sender)
     throws InvalidAgletException {
@@ -1792,7 +1790,7 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
      *            proxy to the original aglet
      * @exception AgletException
      *                if the activation fails.
-     * @see Aglet#onClone
+     * @see com.ibm.aglet.event.CloneListener#onClone
      */
     void startClonedAglet(AgletContextImpl cxt, AgletProxyImpl parent)
     throws InvalidAgletException {
@@ -1840,11 +1838,9 @@ final public class LocalAgletRef extends AgletStub implements AgletRef {
     /**
      * Send events to the resumed aglet.
      * 
-     * @param cxt
-     *            the aglet context in which the aglet activated
      * @exception AgletException
      *                if the activation fails.
-     * @see Aglet#onActivation
+     * @see com.ibm.aglet.event.PersistencyListener#onActivation
      */
     void startResumedAglet() throws InvalidAgletException {
 	this._state = ACTIVE;

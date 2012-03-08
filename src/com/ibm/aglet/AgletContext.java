@@ -151,7 +151,7 @@ public interface AgletContext {
      * @param id
      *            the identity of the aglet.
      * @return the proxy.
-     * @see getName
+     * @see #getName
      * @deprecated
      */
     @Deprecated
@@ -233,7 +233,7 @@ public interface AgletContext {
     /**
      * Sends a multicast message to the subscribers in the context.
      * 
-     * @param message
+     * @param msg
      *            to send
      * @return ReplySet containing FutureReplies
      */
@@ -280,7 +280,7 @@ public interface AgletContext {
      * 
      * @param url
      *            the location of the aglet to be retracted.
-     * @param id
+     * @param aid
      *            the aglet identity of the aglet to be retracted.
      * @return the aglet proxy for the retracted aglet.
      * @exception AgletException
@@ -307,7 +307,6 @@ public interface AgletContext {
      *            the name of the context property.
      * @param value
      *            the value to be stored.
-     * @return the value of the specified key.
      */
     abstract public void setProperty(String key, Object value);
 
@@ -323,8 +322,8 @@ public interface AgletContext {
      * Shutdown the context. This is ignored if the context is already stopped.
      * 
      * @exception SecurityException
-     *                if the current execution context is not allowd to shutdown
-     * @see start
+     *             if the current execution context is not allowed to shut down
+     * @see #start
      */
     abstract public void shutdown();
 
@@ -334,8 +333,8 @@ public interface AgletContext {
      * killed. This is ignored if the context is already stopped.
      * 
      * @exception SecurityException
-     *                if the current execution context is not allowd to shutdown
-     * @see start
+     *             if the current execution context is not allowed to shut down
+     * @see #start
      */
     abstract public void shutdown(Message msg);
 

@@ -1,7 +1,7 @@
 package com.ibm.aglets.security;
 
 /**
- * @author: Hideki Tai
+ * @author Hideki Tai
  */
 public class X500Name {
     private java.lang.String CN = null;

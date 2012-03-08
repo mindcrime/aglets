@@ -260,7 +260,7 @@ public class AuthPacket extends Object {
     /**
      * Constructor for receiving packet
      * 
-     * @param in
+     * @param di
      *            data input stream for packet
      */
     public AuthPacket(DataInput di) {
@@ -612,7 +612,7 @@ public class AuthPacket extends Object {
     /**
      * Parses body of packet from data input stream.
      * 
-     * @param in
+     * @param di
      *            data input stream for packet
      */
     public synchronized void parseBody(DataInput di) throws IOException {
@@ -719,7 +719,7 @@ public class AuthPacket extends Object {
     /**
      * Reads packet from data input stream.
      * 
-     * @param in
+     * @param di
      *            input stream for packet
      */
     public synchronized void readFrom(DataInput di) throws IOException {
@@ -733,7 +733,7 @@ public class AuthPacket extends Object {
      * 
      * @param topLine
      *            top line of packet
-     * @param in
+     * @param di
      *            data input stream for packet
      */
     public synchronized void readFrom(String topLine, DataInput di)
@@ -845,7 +845,7 @@ public class AuthPacket extends Object {
     /**
      * Sets security domain names.
      * 
-     * @param names
+     * @param namelist
      *            security domain names (URI encoded)
      */
     private final void setSecurityDomains(String namelist) {
@@ -874,7 +874,7 @@ public class AuthPacket extends Object {
     /**
      * Sets server ID.
      * 
-     * @param name
+     * @param id
      *            server ID
      */
     private final void setServerID(String id) {
@@ -884,7 +884,7 @@ public class AuthPacket extends Object {
     /**
      * Sets authentication status.
      * 
-     * @Param status authentication status
+     * @param status authentication status
      */
     private final void setStatus(int status) {
 	this._status = status;
@@ -893,7 +893,7 @@ public class AuthPacket extends Object {
     /**
      * Sets authentication status.
      * 
-     * @Param string of authentication status
+     * @param status  desired authentication status
      */
     private final void setStatus(String status) {
 	this.setStatus(Integer.parseInt(status.trim()));
@@ -923,7 +923,7 @@ public class AuthPacket extends Object {
     /**
      * Sets authentication protocol step.
      * 
-     * @Param step string of authentication protocol step
+     * @param step string of authentication protocol step
      * @exception java.lang.IllegalArgumentException
      */
     private final void setStep(String step) throws IllegalArgumentException {

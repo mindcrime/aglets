@@ -43,7 +43,7 @@ import com.ibm.awb.misc.Resource;
  * 
  * @version 1.03 96/04/15
  * @author Danny B. Lange
- * @modified 97/02/17 Yariv Aridor : add subsription support
+ * @author Yariv Aridor: 97/02/17 - added subscription support
  */
 
 final class NetworkConfigDialog extends TahitiDialog implements ActionListener,

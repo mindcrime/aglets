@@ -46,7 +46,6 @@ import com.ibm.maf.MAFAgentSystem;
  * Aglets server bootstrap.
  * 
  * @author Hideki Tai
- * @created July 22, 2001
  * @version $Revision: 1.10 $ $Date: 2009/07/28 07:04:54 $ $Author: cat4hire $
  */
 public class Main {

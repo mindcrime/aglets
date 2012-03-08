@@ -142,7 +142,7 @@ public class TahitiWindow extends JFrame implements ActionListener {
      * Adds a button to the button panel of this window.
      * 
      * @param key
-     * @return
+     * @return created button
      */
     protected JButton addButton(String key) {
 	JButton button = this.addButton(key, this);

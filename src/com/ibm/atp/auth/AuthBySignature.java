@@ -286,7 +286,7 @@ public class AuthBySignature extends Auth {
      *            of individual
      * @param challenge
      *            a challenge
-     * @param response
+     * @param signature
      *            response value for authentication
      * @exception AuthenticationException
      *                byte sequence for response is invalid
@@ -324,7 +324,7 @@ public class AuthBySignature extends Auth {
      *            of individual
      * @param challenge
      *            a challenge
-     * @param response
+     * @param signature
      *            response value for authentication
      * @exception AuthenticationException
      *                byte sequence for response is invalid

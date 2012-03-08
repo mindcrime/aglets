@@ -45,7 +45,6 @@ public class LogFileOutputStream extends OutputStream {
      *            file will be created.
      * @exception IOException
      *                if fail to create or access the file.
-     * @return an instance of this class.
      */
     public LogFileOutputStream(String filename, long maxFileSize)
     throws IOException {

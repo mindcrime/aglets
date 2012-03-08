@@ -376,7 +376,7 @@ public class AgletListPanel<ITEM> extends JPanel {
      * 
      * @param background
      *            the background color
-     * @param foregroung
+     * @param foreground
      *            the foreground color
      */
     public void setColors(Color background, Color foreground) {

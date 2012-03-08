@@ -78,7 +78,7 @@ public class ByteSequence extends Object implements Cloneable, Serializable {
      *            length of byte sequence
      * @param str
      *            a hexadecimal string to be copied
-     * @see toString
+     * @see #toString
      */
     public ByteSequence(int length, String str) {
 	this(length, str, DELIMITERS);
@@ -95,7 +95,7 @@ public class ByteSequence extends Object implements Cloneable, Serializable {
      *            a hexadecimal string to be copied
      * @param delimiters
      *            delimiters between hexadecimal numbers
-     * @see toString
+     * @see #toString
      */
     public ByteSequence(int length, String str, String delimiters) {
 	byte[] seq = null;
@@ -229,8 +229,6 @@ public class ByteSequence extends Object implements Cloneable, Serializable {
     /**
      * Creates a clone of the byte sequence.
      * 
-     * @param seq
-     *            a byte sequence
      * @see java.lang.Object#clone
      * @see java.lang.Cloneable
      */
@@ -350,7 +348,6 @@ public class ByteSequence extends Object implements Cloneable, Serializable {
      *            a object
      * @return true if the object has same byte sequence; otherwise false.
      * @see java.lang.Object#equals
-     * @override java.lang.Object#equals
      */
     @Override
     public boolean equals(Object obj) {
@@ -387,7 +384,6 @@ public class ByteSequence extends Object implements Cloneable, Serializable {
      * 
      * @return a hexadecimal string representation of the byte sequence
      * @see java.lang.Object#toString
-     * @override java.lang.Object#toString
      */
     @Override
     public String toString() {

@@ -69,7 +69,7 @@ final class AgletOutputStream extends ObjectOutputStream {
      * Write the class data into the output stream. Class data of all super
      * classes of the class will be written together.
      * 
-     * @param cl
+     * @param cls
      *            class.
      * @exception IOException
      *                if can not write into the output stream.

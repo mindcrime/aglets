@@ -88,7 +88,7 @@ abstract public class AgletStub {
     /**
      * Gets the aglet's message manager object.
      * 
-     * @see aglet.MessageManager
+     * @see com.ibm.aglet.MessageManager
      * @return the method manager
      * @exception InvalidAgletException
      *                if the aglet is not valid.

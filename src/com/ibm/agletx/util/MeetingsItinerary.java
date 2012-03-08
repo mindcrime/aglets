@@ -94,8 +94,8 @@ public class MeetingsItinerary extends SeqItinerary {
     /**
      * Add the new plan item (meetingTask object)
      * 
-     * @param meeting
-     *            the meeting to participate
+     * @param task
+     *            a task containing also the meeting at which to be carried out 
      */
     public void addMeetingTask(MeetingTask task) {
 	this.addTask(task.getMeeting().getPlace(), task);

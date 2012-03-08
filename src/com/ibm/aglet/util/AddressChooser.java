@@ -60,10 +60,7 @@ public class AddressChooser extends Panel implements ActionListener {
 
     /**
      * Constructs a new AddressChooser with the default number of colums. The
-     * default nubmer is 10.
-     * 
-     * @param columns
-     *            the number of columns
+     * default number is 10.
      */
     public AddressChooser() {
 	this(10);

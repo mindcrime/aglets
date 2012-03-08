@@ -38,7 +38,6 @@ import com.ibm.awb.misc.Resource;
  * control a TahitiDaemon.
  * 
  * @author Lary Spector
- * @created July 22, 2001
  * @version $Revision: 1.5 $ $Date: 2009/07/28 07:04:53 $ $Author: cat4hire $
  * @see com.ibm.aglet.system.ContextListener
  * @see com.ibm.aglet.system.ContextEvent
@@ -388,7 +387,7 @@ public final class TahitiDaemon implements ContextListener, Runnable {
      * @param event
      *            an ContextEvent
      * @since
-     * @see Aglet#showDocument
+     * @see  com.ibm.aglets.tahiti.Tahiti#showDocument
      */
     @Override
     public void showDocument(ContextEvent event) {

@@ -164,7 +164,7 @@ public final class Meeting implements java.io.Serializable {
     /**
      * Accepts an aglet to a meeting.
      * 
-     * @param aglet
+     * @param ag
      *            the arrived aglet.
      * @return enumeration of the agletID of all presented aglets.
      * @exception AgletException

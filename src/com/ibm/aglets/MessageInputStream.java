@@ -49,8 +49,8 @@ final class MessageInputStream extends ObjectInputStream {
     }
 
     /**
-     * @param classname
-     *            class name.
+     * @param osc
+     *            object stream.
      * @return the resolved class.
      * @exception IOException
      *                if can not read data from the input stream.

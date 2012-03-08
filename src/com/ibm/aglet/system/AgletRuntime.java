@@ -52,9 +52,9 @@ public abstract class AgletRuntime {
 
     private boolean _secure = true;
 
-    /**
-     * [Preliminary] Exports the specified aglet context. After this successfull
-     * invocation, the specified context is visiable and accessible from a
+    /*
+     * [Preliminary] Exports the specified aglet context. After this successful
+     * invocation, the specified context is visible and accessible from a
      * remote host, which means that the aglet can be dispatched into and also
      * the remote operations like listing the aglet proxies residing in the
      * context are enabled.
@@ -67,7 +67,7 @@ public abstract class AgletRuntime {
      *                exportAgletContext(AgletContext cxt);
      */
 
-    /**
+    /*
      * [Preliminary] Exports the specified aglet. After this successfull
      * invocation, the specified aglet is visiable and accessible from a remote
      * host, which means that the aglet can be receive remote messages from
@@ -83,6 +83,7 @@ public abstract class AgletRuntime {
     /*
      * abstract public boolean isGuiAvailable();
      */
+
     private static AgletRuntime runtime = null;
 
     /**
@@ -272,7 +273,7 @@ public abstract class AgletRuntime {
     /**
      * Create and initialize a runtime environment with a string array
      * 
-     * @param a
+     * @param args
      *            string array which is typically given as a argument to
      *            <tt>main(String args[])</tt> function.
      */
@@ -283,7 +284,7 @@ public abstract class AgletRuntime {
     /**
      * Create and initialize a runtime environment with a string array
      * 
-     * @param a
+     * @param args
      *            string array which is typically given as a argument to
      *            <tt>main(String args[])</tt> function.
      * @param loader

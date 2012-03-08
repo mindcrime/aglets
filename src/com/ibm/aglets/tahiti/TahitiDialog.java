@@ -178,7 +178,7 @@ public class TahitiDialog extends BaseAgletsDialog implements ActionListener {
      * Creates a generic "close" button.
      * 
      * @param key
-     * @return
+     * @return the created button
      */
     public final JButton addCloseButton(String key) {
 	if (key == null)

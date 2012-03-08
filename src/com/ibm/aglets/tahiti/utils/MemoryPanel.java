@@ -35,7 +35,7 @@ public class MemoryPanel extends JPanel implements Runnable {
     }
 
     /**
-     * Memory ammount.
+     * Memory amount.
      */
     protected long total = 0, used = 0;
 
@@ -123,7 +123,7 @@ public class MemoryPanel extends JPanel implements Runnable {
     /**
      * Method to set the update time.
      * 
-     * @param time
+     * @param millis
      *            interval time in milliseconds
      */
     public void setUpdateTime(long millis) {

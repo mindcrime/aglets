@@ -219,8 +219,8 @@ final public class AgletContextImpl implements AgletContext {
     /**
      * Creates an execution context for aglets.
      * 
-     * @param prop
-     *            property list.
+     * @param name
+     *            name for the context.
      */
 
     /* package protected */
@@ -305,9 +305,11 @@ final public class AgletContextImpl implements AgletContext {
      * 
      * @param url
      *            the URL to load the aglet class from.
-     * @param name
+     * @param classname
      *            the aglet's class name.
-     * @return a newly instantiated and initialized Aglet.
+     * @param init
+     *            an initialization object for the new aglet
+     * @return a proxy to a newly instantiated and initialized Aglet.
      * @exception ClassNotFoundException
      *                if the class was not found
      * @exception InstantiationException
@@ -329,8 +331,12 @@ final public class AgletContextImpl implements AgletContext {
      * 
      * @param url
      *            the URL to load the aglet class from.
-     * @param name
+     * @param classname
      *            the aglet's class name.
+     * @param owner
+     *            the certificate of the aglet's owner
+     * @param init
+     *            an initialization object for the new aglet
      * @return a newly instantiated and initialized Aglet.
      * @exception ClassNotFoundException
      *                if the class was not found
@@ -900,8 +906,16 @@ final public class AgletContextImpl implements AgletContext {
     /**
      * Receives an aglet. Will start the aglet and return its proxy.
      * 
-     * @param aglet
-     *            the aglet to be received by the context.
+     * @param agent_name
+     *            the name of the aglet
+     * @param classnames
+     *            classes making up the received aglet
+     * @param codebase
+     *            identifier of the origin of the aglet
+     * @param agent
+     *            the serialized state of the received aglet
+     * @param sender
+     *            name of the user sending the aglet
      * @exception AgletException
      *                if it is not received.
      */

@@ -331,8 +331,8 @@ public final class CommandLine implements ContextListener, Runnable {
     /**
      * Initializes the Viewer with the context.
      * 
-     * @param context
-     *            the AgletContext assigned to this Viewer.
+     * @param ev
+     *           event containing the AgletContext.
      */
     @Override
     public void contextStarted(ContextEvent ev) {
@@ -410,7 +410,7 @@ public final class CommandLine implements ContextListener, Runnable {
     /**
      * Called when an aglet request to show the document given as URL
      * 
-     * @see Aglet#showDocument
+     * @see com.ibm.aglets.tahiti.Tahiti#showDocument
      * @param event
      *            an ContextEvent
      */

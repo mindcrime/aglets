@@ -18,7 +18,6 @@ import com.ibm.aglet.system.AgletRuntime;
  * Provides user authentication for the Tahiti Daemon.
  * 
  * @author Larry Spector
- * @created July 20, 2001
  * @version $Revision: 1.4 $ $Date: 2009/07/28 07:04:52 $ $Author: cat4hire $
  */
 public final class TahitiDaemonUserManager extends UserManager {

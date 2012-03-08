@@ -60,8 +60,8 @@ java.io.Serializable {
     /**
      * Add a new destination
      * 
-     * @param the
-     *            address of the host where the task is to be executed.
+     * @param address
+     *            name of the location where the task is to be executed.
      */
     public void addAddress(String address) {
 	this.addTask(address, (Task) null);
@@ -79,8 +79,8 @@ java.io.Serializable {
      * 
      * @param task
      *            the task to be added
-     * @param the
-     *            address of the host where the task is to be executed.
+     * @param address
+     *            name of the location where the task is to be executed.
      */
     public void addTask(String address, Task task) {
 	this.hosts.addElement(address);

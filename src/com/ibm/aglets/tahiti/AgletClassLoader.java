@@ -608,7 +608,6 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
      *                Description of Exception
      * @since
      * @see AgletClassLoader#loadClass
-     * @see AgletClassLoader#instantiageAglet
      */
     private Class findClassInternal(String name) throws ClassNotFoundException {
 	Class clazz = null;

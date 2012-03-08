@@ -173,8 +173,7 @@ public class QoC implements Serializable {
     /**
      * Gets the due-date to connect via this channel.
      * 
-     * @param due
-     *            -date to connect via this channel
+     * @return the date when to connect via this channel
      */
     public Date getDueDate() {
 	return new Date(this._timeout);
@@ -222,7 +221,7 @@ public class QoC implements Serializable {
      * Sets the due-date to connect via this channel. When null is given, there
      * is no due-date and infinitely try to connect.
      * 
-     * @param dueDate
+     * @param date
      *            due-date for time-out
      */
     public void setDueDate(Date date) {
@@ -268,7 +267,6 @@ public class QoC implements Serializable {
      * 
      * @return a string representation of the quality of communication
      * @see java.lang.Object#toString
-     * @override java.lang.Object#toString
      */
     @Override
     public String toString() {

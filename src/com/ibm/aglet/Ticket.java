@@ -113,7 +113,7 @@ public class Ticket implements Serializable {
      * communication for the trip is null. The scheme name is default("atp").
      * The port number is default.
      * 
-     * @param host
+     * @param destination
      *            destination host of the trip
      * @param qoc
      *            quality of communication for the trip
@@ -207,7 +207,6 @@ public class Ticket implements Serializable {
      * 
      * @return a string representation of the destination
      * @see java.lang.Object#toString
-     * @override java.lang.Object#toString
      */
     private String getDestinationString() {
 	String file = null;
@@ -475,7 +474,6 @@ public class Ticket implements Serializable {
      * 
      * @return a string representation of the ticket
      * @see java.lang.Object#toString
-     * @override java.lang.Object#toString
      */
     @Override
     public String toString() {

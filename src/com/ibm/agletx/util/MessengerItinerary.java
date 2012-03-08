@@ -164,8 +164,6 @@ public class MessengerItinerary extends SeqItinerary {
     /**
      * Return the message to be broadcast.
      * 
-     * @param index
-     *            the index to remove.
      */
     Message getMessage() {
 	return this.msg;

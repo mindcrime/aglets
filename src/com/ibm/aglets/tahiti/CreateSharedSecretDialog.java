@@ -19,7 +19,7 @@ import com.ibm.atp.auth.SharedSecrets;
 /**
  * Dialog for shared secret creation.
  * 
- * @author: Hideki Tai
+ * @author Hideki Tai
  */
 class CreateSharedSecretDialog extends TahitiDialog implements
 java.awt.event.ActionListener {

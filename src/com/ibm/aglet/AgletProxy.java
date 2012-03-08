@@ -118,8 +118,8 @@ public interface AgletProxy {
      * Dispatches the aglet to the location specified by the ticket as the
      * argument.
      * 
-     * @param address
-     *            the address of the destination context.
+     * @param ticket
+     *            the destination information.
      * @return the AgletProxy of the dispatched (remote) aglet.
      * @exception ServerNotFoundException
      *                if the server
@@ -188,8 +188,9 @@ public interface AgletProxy {
     /**
      * Gets the current address of the target aglet.
      * 
-     * @reutrn the address
-     * @return InvalidAgletException if the aglt is not valid.
+     * @return the address
+     * @exception InvalidAgletException
+     *                if the aglet is not valid.
      */
     abstract public String getAddress() throws InvalidAgletException;
 

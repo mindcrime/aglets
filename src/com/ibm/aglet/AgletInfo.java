@@ -61,8 +61,6 @@ final public class AgletInfo implements java.io.Serializable, Cloneable {
      * 
      * @param aid
      *            the aglet identifier.
-     * @param address
-     *            the address where the aglet currently resides.
      * @param classname
      *            the classname of the aglet.
      * @param codebase

@@ -268,7 +268,7 @@ public class MemoryPanel extends JPanel implements ActionListener {
     /**
      * Method to set the update time.
      * 
-     * @param time
+     * @param millis
      *            interval time in milliseconds
      */
     public void setUpdateTime(int millis) {

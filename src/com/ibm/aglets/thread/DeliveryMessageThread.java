@@ -45,7 +45,7 @@ public class DeliveryMessageThread extends Thread {
      * 
      * @param p
      *            the proxy of the agent to use for this thread.
-     * @param message
+     * @param msg
      *            the message to delivery thru the proxy.
      */
     public DeliveryMessageThread(AgletProxy p, Message msg) {

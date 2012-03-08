@@ -194,7 +194,7 @@ public abstract class Slave extends Aglet {
      * master aglet and (2) the Slave's itinerary, and (3) an argument for the
      * local task.
      * 
-     * @param obj
+     * @param object
      *            the initialization argument
      * @exception AgletException
      *                if the initialization fails.

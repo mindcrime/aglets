@@ -77,7 +77,6 @@ final public class Response extends ByteSequence {
      * 
      * @return a hexadecimal string representation of the byte sequence
      * @see com.ibm.atp.auth.ByteSequence#toString
-     * @override com.ibm.atp.auth.ByteSequence#toString
      */
     @Override
     public String toString() {

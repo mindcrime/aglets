@@ -55,7 +55,7 @@ public class Message implements java.io.Serializable {
     /**
      * The types of message that indecates how the message was sent.
      * 
-     * @see Message#getMessageType();
+     * @see Message#getMessageType
      */
     static public final int SYNCHRONOUS = 0;
     static public final int FUTURE = 1;
@@ -484,7 +484,7 @@ public class Message implements java.io.Serializable {
      * 
      * @param name
      *            a name of this argument.
-     * @param d
+     * @param value
      *            a double value of this argument.
      */
     public void setArg(String name, double value) {

@@ -27,7 +27,7 @@ import java.io.StreamCorruptedException;
  * the input stream must be written by an instance of the AgletOutputStream.
  * <p>
  * 
- * This aglet input stream looks into the class loader cache of the AgletLoader
+ * This aglet input stream looks into the class loader cache of the ResourceManager
  * and gets a class loader corresponding to the URL of an origin of the received
  * class. If the class loader is not found in the cache, this stream will
  * creates a new class loader and put it into the cache. After getting the class
@@ -36,7 +36,7 @@ import java.io.StreamCorruptedException;
  * loader will create the class.
  * 
  * @see AgletOutputStream
- * @see AgletLoader
+ * @see ResourceManager
  * @version 1.00 96/06/28
  * @author Gaku Yamamoto
  * @author Mitsuru Oshima
@@ -50,7 +50,7 @@ final class AgletInputStream extends ObjectInputStream {
      * Create a new instance of this class.
      * 
      * @param in
-     *            an input stream containing objests and class data.
+     *            an input stream containing objects and class data.
      * @exception IOException
      *                if can not read data from the input stream.
      * @exception StreamCorruptedException
@@ -84,7 +84,7 @@ final class AgletInputStream extends ObjectInputStream {
     }
 
     /**
-     * Resolve a class specified by classname. This method reads class data from
+     * Resolve a class specified by classinfo. This method reads class data from
      * the input stream and resolves the class by using a class loader
      * corresponding to the origin of the class. If the class is common class,
      * the class will be resolved by super.resolveClass. This method reads class
@@ -92,8 +92,8 @@ final class AgletInputStream extends ObjectInputStream {
      * into the class data cache of the class loader. These super classes will
      * be resolved on demand.
      * 
-     * @param classname
-     *            class name.
+     * @param classinfo
+     *            stream containing class data.
      * @return the resolved class.
      * @exception IOException
      *                if can not read data from the input stream.

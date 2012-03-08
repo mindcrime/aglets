@@ -153,9 +153,16 @@ final public class SharedSecret extends ByteSequence {
      * Constructor creates byte sequence as a copy of given hexadecimal string
      * of encoded bytes as a shared secret (password) for authentication.
      * 
-     * @param str
+     * @param domainName
+     *            TODO document this
+     * @param creatorCert
+     *            TODO document this
+     * @param secret
      *            a string of encoded byte sequence to be copied as a shared
      *            secret
+     * @param signature
+     *            TODO document this
+     * @exception KeyStoreException
      */
     private SharedSecret(String domainName, Certificate creatorCert,
                          String secret, String signature) throws KeyStoreException {
@@ -396,7 +403,7 @@ final public class SharedSecret extends ByteSequence {
      * 
      * @param filename
      *            filename of the shared secret file to be saved
-     * @param secrets
+     * @param secret
      *            the shared secret to be saved
      */
     public synchronized static void save(String filename, SharedSecret secret)
@@ -429,10 +436,10 @@ final public class SharedSecret extends ByteSequence {
     }
 
     /**
-     * Sets signature.
+     * Sets creator.
      * 
-     * @param signature
-     *            signature
+     * @param creator
+     *            creator
      */
     private void setCreator(Certificate creator) {
 	try {
@@ -560,7 +567,6 @@ final public class SharedSecret extends ByteSequence {
      * 
      * @return a string representation of the shared secret
      * @see ByteSequence#toString
-     * @override ByteSequence#toString
      */
     @Override
     public String toString() {

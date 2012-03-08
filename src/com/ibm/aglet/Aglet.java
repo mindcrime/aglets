@@ -187,9 +187,9 @@ public abstract class Aglet implements java.io.Serializable {
      * from its current context. It will return to the context and resume
      * execution after the specified period has elapsed.
      * 
-     * @param millisecounds
-     *            duration of the aglet deactivating. If this is 0, it will be
-     *            activeted at the next startup time.
+     * @param duration
+     *            duration in milliseconds of the aglet deactivating. If this
+     *            is 0, it will be activated at the next startup time.
      * @exception NotSerializableException
      *                if the entire aglet is not serializable.
      * @exception IOException
@@ -282,7 +282,7 @@ public abstract class Aglet implements java.io.Serializable {
      * successful invocation of this method will kill all threads created by the
      * given aglet.
      * 
-     * @see Aglet#onDisposing
+     * @see #onDisposing
      */
     public final void dispose() {
 	this._stub.dispose();
@@ -293,10 +293,10 @@ public abstract class Aglet implements java.io.Serializable {
      * 
      * @exception IllegalMonitorStateException
      *                if the current thread is not the owner of the monitor.
-     * @see Aglet#exitMonitor
-     * @see waitMessage
-     * @see notifyMessage
-     * @see notifyAllMessages
+     * @see #waitMessage
+     * @see #waitMessage(long)
+     * @see #notifyMessage
+     * @see #notifyAllMessages
      */
     public void exitMonitor() {
 	this.getMessageManager().exitMonitor();
@@ -315,7 +315,7 @@ public abstract class Aglet implements java.io.Serializable {
      * Gets the id of this aglet.
      * 
      * @return the <tt>AgletID<tt> object of this aglet
-     * @see aglet.AgletID
+     * @see AgletID
      */
     public final AgletID getAgletID() {
 	return this.getAgletInfo().getAgletID();
@@ -325,7 +325,7 @@ public abstract class Aglet implements java.io.Serializable {
      * Gets the info object of this aglet
      * 
      * @return the <tt>aglet.AgletInfo<tt> object of this aglet
-     * @see aglet.AgletID
+     * @see AgletID
      */
     public final AgletInfo getAgletInfo() {
 	return this._stub.getAgletInfo();
@@ -342,7 +342,7 @@ public abstract class Aglet implements java.io.Serializable {
      * Gets the code base URL of this aglet
      * 
      * @return the <tt>java.net.URL<tt> object of this aglet
-     * @see aglet.AgletID
+     * @see AgletID
      */
     public final URL getCodeBase() {
 	return this.getAgletInfo().getCodeBase();
@@ -403,7 +403,7 @@ public abstract class Aglet implements java.io.Serializable {
     /**
      * Handles the message form outside.
      * 
-     * @param msg
+     * @param message
      *            the message sent to the aglet
      * @return true if the message was handled. Returns false if the message was
      *         not handled. If false is returned, the
@@ -423,9 +423,9 @@ public abstract class Aglet implements java.io.Serializable {
      * 
      * @exception IllegalMonitorStateException
      *                If the current thread is not the owner of the monitor.
-     * @see Aglet#notifyAllMessages
-     * @see waitMessage
-     * @see notifyMessage
+     * @see #notifyMessage
+     * @see #waitMessage
+     * @see #waitMessage(long)
      */
     public void notifyAllMessages() {
 	this.getMessageManager().notifyAllMessages();
@@ -436,9 +436,9 @@ public abstract class Aglet implements java.io.Serializable {
      * 
      * @exception IllegalMonitorStateException
      *                If the current thread is not the owner of the monitor.
-     * @see Aglet#notifyMessage
-     * @see waitMessage
-     * @see notifyAllMessages
+     * @see #notifyAllMessages
+     * @see #waitMessage
+     * @see #waitMessage(long)
      */
     public void notifyMessage() {
 	this.getMessageManager().notifyMessage();
@@ -627,7 +627,7 @@ public abstract class Aglet implements java.io.Serializable {
      * Sets the proxy for the aglet. This cannot be set twice. Called by the
      * system.
      * 
-     * @param proxy
+     * @param stub
      *            the proxy to set
      */
     public synchronized final void setStub(AgletStub stub) {
@@ -642,7 +642,7 @@ public abstract class Aglet implements java.io.Serializable {
      * Sets the text of this Aglet. A way for the aglet to display messages on
      * the viewer window.
      * 
-     * @param message
+     * @param text
      *            the message.
      */
     public final void setText(String text) {
@@ -789,8 +789,8 @@ public abstract class Aglet implements java.io.Serializable {
      * @exception IllegalMonitorStateException
      *                If the current thread is not the owner of the monitor.
      * @see MessageManager#waitMessage
-     * @see notifyMessage
-     * @see notifyAllMessages
+     * @see #notifyMessage
+     * @see #notifyAllMessages
      */
     public void waitMessage() {
 	this.getMessageManager().waitMessage();
@@ -804,8 +804,8 @@ public abstract class Aglet implements java.io.Serializable {
      * @exception IllegalMonitorStateException
      *                If the current thread is not the owner of the monitor.
      * @see MessageManager#waitMessage
-     * @see notifyMessage
-     * @see notifyAllMessages
+     * @see #notifyMessage
+     * @see #notifyAllMessages
      */
     public void waitMessage(long timeout) {
 	this.getMessageManager().waitMessage(timeout);

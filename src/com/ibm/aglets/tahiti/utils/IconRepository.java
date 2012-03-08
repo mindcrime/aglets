@@ -89,9 +89,6 @@ public class IconRepository {
      * @param iconName
      *            the name of the icon requested
      * @return the icon object or null
-     * @author Luca Ferrari <A
-     *         HREF="mailto:cat4hire@users.sourceforge.net">cat4hire
-     * @users.sourceforge.net</A>
      */
     public static synchronized Icon getIcon(String iconName) {
 	if (IconRepository._mySelf == null) {

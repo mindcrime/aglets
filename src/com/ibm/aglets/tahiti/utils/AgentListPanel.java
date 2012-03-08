@@ -32,7 +32,7 @@ public class AgentListPanel extends JPanel {
     private static final long serialVersionUID = -3849702890166914054L;
 
     /**
-     * The jlist that displayes the agents
+     * The JList that displays the agents
      */
     private JList _agentList;
 
@@ -45,7 +45,7 @@ public class AgentListPanel extends JPanel {
 
     /**
      * Default constructor. Creates a ScrollPane and a list model and place the
-     * jlist in this panel.
+     * JList in this panel.
      * 
      */
     public AgentListPanel() {
@@ -301,7 +301,7 @@ public class AgentListPanel extends JPanel {
      * 
      * @param background
      *            the background color
-     * @param foregroung
+     * @param foreground
      *            the foreground color
      */
     public void setColors(Color background, Color foreground) {

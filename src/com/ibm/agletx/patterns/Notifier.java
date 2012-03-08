@@ -271,7 +271,7 @@ public abstract class Notifier extends Aglet {
      * 
      * .
      * 
-     * @param obj
+     * @param object
      *            the initialization argument.
      * @exception AgletException
      *                if the initialization fails.

@@ -160,7 +160,7 @@ public class URIEncoder {
      * Translates a byte sequence into <code>x-www-form-urlencoded</code>
      * format.
      * 
-     * @param A
+     * @param sequence
      *            byte sequence to be translated.
      * @return the translated <code>String</code>.
      */

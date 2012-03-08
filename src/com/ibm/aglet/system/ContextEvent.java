@@ -112,7 +112,7 @@ public class ContextEvent extends AgletEvent {
     /**
      * Provides the text for a state change.
      * 
-     * @return
+     * @return the state change text
      */
     public final String getText() {
 	if (EventType.AGLET_STATE_CHANGED.equals(this.getEventType())) {

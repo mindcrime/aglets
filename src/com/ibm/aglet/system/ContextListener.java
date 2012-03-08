@@ -103,9 +103,9 @@ public interface ContextListener extends EventListener {
     public void contextStarted(ContextEvent ev);
 
     /**
-     * Called when an aglet request to show the document given as URL
+     * Called when an aglet asks the context to show the document given as URL
      * 
-     * @see Aglet#showDocument
+     * @see com.ibm.aglets.tahiti.Tahiti#showDocument
      */
     public void showDocument(ContextEvent ev);
 

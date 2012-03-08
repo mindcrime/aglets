@@ -101,9 +101,9 @@ public interface MessageManager {
      * Exits the current monitor.
      * 
      * @see Aglet#exitMonitor
-     * @see waitMessage
-     * @see notifyMessage
-     * @see notifyAllMessages
+     * @see Aglet#waitMessage
+     * @see Aglet#notifyMessage
+     * @see Aglet#notifyAllMessages
      */
     public void exitMonitor();
 
@@ -113,8 +113,8 @@ public interface MessageManager {
      * @exception IllegalMonitorStateException
      *                If the current thread is not the owner of the monitor.
      * @see Aglet#notifyAllMessages
-     * @see waitMessage
-     * @see notifyMessage
+     * @see Aglet#waitMessage
+     * @see Aglet#notifyMessage
      */
     public void notifyAllMessages();
 
@@ -124,8 +124,8 @@ public interface MessageManager {
      * @exception IllegalMonitorStateException
      *                If the current thread is not the owner of the monitor.
      * @see Aglet#notifyMessage
-     * @see waitMessage
-     * @see notifyAllMessages
+     * @see Aglet#waitMessage
+     * @see Aglet#notifyAllMessages
      */
     public void notifyMessage();
 
@@ -144,8 +144,8 @@ public interface MessageManager {
      * 
      * @exception IllegalMonitorStateException
      *                If the current thread is not the owner of the monitor.
-     * @see notifyMessage
-     * @see notifyAllMessages
+     * @see Aglet#notifyMessage
+     * @see Aglet#notifyAllMessages
      */
     public void waitMessage();
 
@@ -157,8 +157,8 @@ public interface MessageManager {
      * @exception IllegalMonitorStateException
      *                If the current thread is not the owner of the monitor.
      * @see Aglet#waitMessage
-     * @see notifyMessage
-     * @see notifyAllMessages
+     * @see Aglet#notifyMessage
+     * @see Aglet#notifyAllMessages
      */
     public void waitMessage(long timeout);
 }

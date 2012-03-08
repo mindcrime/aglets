@@ -94,7 +94,7 @@ final public class Arguments extends Hashtable {
      * 
      * @param name
      *            a name of this argument.
-     * @param d
+     * @param value
      *            a double value of this argument.
      */
     public Object setArg(String name, double value) {

@@ -46,7 +46,7 @@ ContentBuffer {
     /**
      * Create a new instance
      * 
-     * @param os
+     * @param out
      *            an instance of OutputStream into which the instantiated atp
      *            output stream writes.
      */

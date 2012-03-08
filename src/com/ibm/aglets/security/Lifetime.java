@@ -156,7 +156,7 @@ public final class Lifetime implements Serializable, Cloneable {
     /**
      * Returns whether the lifetime is greater than lifetime.
      * 
-     * @param date
+     * @param lifetime
      *            absolute life time
      * @return true if the lifetime is greater than lifetime, false otherwise
      */
