@@ -1,17 +1,15 @@
 <?xml version="1.0"?>
 
 <!--
-    Build Script for Aglets for Java 2 compatible Aglet
-    Software Development Kit (ASDK)
-    $Revision: 1.14 $ $Date: 2009/07/28 07:04:53 $ $Author: cat4hire $
+    Build Script for Aglets Software Development Kit (ASDK)
 -->
 <project name="Aglets" default="all" basedir=".">
 
   <!-- 
     Build Properties 
   -->
-  <property name="Name" value="aglets"/>
-  <property name="version" value="2.0.2"/>
+  <property name="pkgname" value="aglets"/>
+  <property name="version" value="2.5-gamma"/>
   
   <property name="src.dir" location="."/>
   
@@ -22,8 +20,8 @@
   <!-- Configuration source directory -->
   <property name="cnf.dir" location="../cnf"/>
   
-  <!-- directory for docs -->
-  <property name="doc.dir" location="../doc"/>
+  <!-- directory for API docs -->
+  <property name="doc.api.dir" location="../doc/api/"/>
   
   <!-- Directory holding user aglets. -->
   <property name="public.dir" location="../public"/>
@@ -94,7 +92,7 @@
   -->
   <target name="init" >
     <echo>
-Aglets SDK Build $Revision: 1.14 $ $Date: 2009/07/28 07:04:53 $
+Aglets SDK Build ${version}
     </echo>
     <tstamp/>
     <!-- Check for log4j classes -->
@@ -204,7 +202,7 @@ Aglets SDK Build $Revision: 1.14 $ $Date: 2009/07/28 07:04:53 $
     Build the ASDK jar file
   -->
   <target name="jar" depends="lib">
-    <jar jarfile="${lib.dir}/${Name}-${version}.jar">
+    <jar jarfile="${lib.dir}/${pkgname}-${version}.jar">
          <fileset dir="${lib.classes.dir}">
             <include name="com/ibm/**/*.class"/>
             <include name="org/aglets/log/**/*.class"/>
@@ -214,11 +212,11 @@ Aglets SDK Build $Revision: 1.14 $ $Date: 2009/07/28 07:04:53 $
   </target>
     
   <!-- Build API docs from source code. -->
-  <target name="doc" depends="prepare">
-      <javadoc packagenames="org.aglets.*,com.ibm.*"
-          classpathref="app.classpath"
+  <target name="doc">
+      <javadoc
           sourcepath="${src.dir}"
-          destdir="${doc.dir}"
+          destdir="${doc.api.dir}"
+          classpathref="project.classpath"
           author="true"
           version="true"
           use="true"
@@ -258,12 +256,7 @@ Aglets SDK Build $Revision: 1.14 $ $Date: 2009/07/28 07:04:53 $
         </fileset>
     </delete>
     <delete dir="${public.dir}" />
-    <delete includeEmptyDirs="true">
-        <fileset dir="${doc.dir}">
-            <include name="**/*"/>
-            <exclude name="spec11.html"/>
-        </fileset>
-    </delete>
+    <delete dir="${doc.api.dir}" />
   </target>
         
 </project>
