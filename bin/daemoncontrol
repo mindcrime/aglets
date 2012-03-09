@@ -1,0 +1,13 @@
+#!/bin/sh
+# TahitiDaemonClient startup script
+
+AGLET_HOME="$(dirname "$0")/.."
+
+LOCALCLASSPATH="lib:lib/classes:lib/*:${CLASSPATH}"
+
+cd "${AGLET_HOME}"
+
+java \
+    -classpath "$LOCALCLASSPATH" \
+    TahitiDaemonClient \
+    "$@" \

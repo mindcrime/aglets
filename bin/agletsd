@@ -1,0 +1,18 @@
+#!/bin/sh
+# Aglets Server startup script
+
+AGLET_HOME="$(dirname "$0")/.."
+
+LOCALCLASSPATH="lib:lib/classes:lib/*:${CLASSPATH}"
+
+while true
+do
+    cd "${AGLET_HOME}"
+    java \
+        -Daglets.home='.' \
+        -classpath "$LOCALCLASSPATH" \
+        com.ibm.awb.launcher.Main \
+        -f 'cnf/aglets.props' \
+        "$@" \
+    || exit 0
+done

@@ -1,17 +1,5 @@
-# (mandatory) A path under where aglets is installed.  Set on command 
-# line by agletsd but can be overridden here.
-<<<<<<< HEAD
-<<<<<<< HEAD:cnf/aglets.props
-#aglets.home=/sviluppo/java/eclipseWorkspace/AgletsGIT
-=======
-#aglets.home=d:\\aglets\\aglets1_2
->>>>>>> f24aed22e0d2f8ad26d56ecaf0533004f638065d:cnf/aglets.props
-=======
-#aglets.home=d:\\aglets\\aglets1_2
->>>>>>> 218a26853c9210d659d7703d268e4b377f579a3b
-
 # (optional) A path to the directory under where ".aglets"
-# directory resides.  This is also where your KEYSTORE must be.
+# directory resides.
 # default: $HOME (unix) or %HOME% (win32)
 #user.home=
 
@@ -104,7 +92,7 @@
 
 # (optional) Use secure random seed generation which is provided by JDK.
 #	If this is set to false, aglet server uses a proprietary one,
-#	which is unsecure but fast.
+#	which is insecure but fast.
 # default: true
 #atp.secureseed=true
 
@@ -116,18 +104,17 @@
 # User ID for authorization.  This key must exist in your keystore.
 # See keytool documentation for info on creating entry. (genkey)
 aglets.owner.name=aglet_key
+# Alternative user, same password:
+#aglets.owner.name=anonymous
 
-# Password for above user ID.  Must be same as entered as the key password
-# used with keytool.
+# Password for above user ID.
 aglets.owner.password=aglets
 
-# Keystore password.  Same as used with keytool.
+# Keystore file.
+aglets.keystore.file=cnf/.keystore
+
+# Keystore password.  Same as aglets.owner.password.
 aglets.keystore.password=aglets
 
-<<<<<<< HEAD
 # Logger class for ASDK.
 aglets.logger.class=org.aglets.log.AgletsLogger
-
-=======
->>>>>>> 218a26853c9210d659d7703d268e4b377f579a3b
-
