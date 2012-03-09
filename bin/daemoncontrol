@@ -9,5 +9,5 @@ cd "${AGLET_HOME}"
 
 java \
     -classpath "$LOCALCLASSPATH" \
-    TahitiDaemonClient \
+    com.ibm.aglets.tahiti.TahitiDaemonClient \
     "$@" \
