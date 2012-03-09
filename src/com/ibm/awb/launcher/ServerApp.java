@@ -1,3 +1,4 @@
+package com.ibm.awb.launcher;
 /*
  * @(#)ServerApp.java
  * 
