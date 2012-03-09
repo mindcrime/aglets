@@ -58,19 +58,19 @@
     Top level target.  Builds java files with 
     deprecation off and optimization on.
   -->
-  <target name="all-release" depends="release-flags,prepare,lib,stubs,jar,public,examples,doc"/> 
+  <target name="all-release" depends="release-flags,lib,stubs,jar,public,examples,doc"/> 
   
   <!--
     Top level target.  Builds java files with 
     deprecation on and optimization off.
   -->
-  <target name="all-dev" depends="dev-flags,prepare,lib,stubs,jar,public,doc"/>
+  <target name="all-dev" depends="dev-flags,lib,stubs,jar,public,doc"/>
   
   <!--
     Top level target.  Builds java files with 
     development settings.  No jar or examples.
   -->
-  <target name="dev" depends="dev-flags,prepare,lib,stubs,public"/>
+  <target name="dev" depends="dev-flags,lib,stubs,public"/>
   
   <!-- Set flags for compiler (Dev) -->
   <target name="dev-flags">
@@ -87,47 +87,21 @@
   </target>
   
   <!-- 
-    Initialize build.  Checks for availabiltiy
-    of dependent libraries.
+    Initialize build. Displays a header for the output.
+    Provides a placeholder for any tasks that always need to be carried out.
+    Any target that does not depend on another target and does more than
+    just set some properties should depend on this target.
   -->
   <target name="init" >
     <echo>
 Aglets SDK Build ${version}
     </echo>
-    <tstamp/>
-    <!-- Check for log4j classes -->
-    <available classname="org.apache.log4j.Category" property="log4j.present" classpathref="project.classpath" />
-  </target>
-
-  <!-- 
-    Creates lib.directory tree.  This is
-    not the installation tree.
-  -->
-  <target name="prepare" depends="init">
-      <mkdir dir="${lib.classes.dir}" />
-      <mkdir dir="${public.dir}" />
-  </target>
-  
-  <!-- 
-    If log4j is in project classpath, build the 
-    log4j logger.
-  -->
-  <target name="logger" if="log4j.present">
-    <echo message="Log4j found.  Building logger."/>
-    <javac srcdir="${src.dir}"
-           destdir="${lib.classes.dir}"
-           debug="${debug.flag}"
-           deprecation="${dep.flag}"
-           optimize="${opt.flag}" >
-           
-      <classpath refid="project.classpath"/>
-      <include name="org/aglets/log/log4j/*.java"/>
-    </javac>
   </target>
   
   <!-- Compile the ASDK java files -->
-  <target name="lib" depends="prepare,logger">
-    <javac srcdir="${src.dir}"
+  <target name="lib" depends="init">
+    <mkdir dir="${lib.classes.dir}" />
+  	<javac srcdir="${src.dir}"
            destdir="${lib.classes.dir}"
            debug="${debug.flag}"
            deprecation="${dep.flag}"
@@ -153,7 +127,8 @@ Aglets SDK Build ${version}
 
   
   <!-- Build the helper classes not part of the core. -->
-  <target name="public" depends="prepare">
+  <target name="public" depends="init">
+    <mkdir dir="${public.dir}" />
     <javac srcdir="${src.dir}"
            destdir="${public.dir}"
            debug="${debug.flag}"
@@ -167,7 +142,8 @@ Aglets SDK Build ${version}
   </target>
 
   <!-- Build the example aglets -->
-  <target name="examples" depends="prepare">
+  <target name="examples" depends="init">
+    <mkdir dir="${public.dir}" />
     <javac srcdir="${src.dir}"
            destdir="${public.dir}"
            debug="${debug.flag}"
@@ -183,7 +159,8 @@ Aglets SDK Build ${version}
   </target>
 
   <!-- Somebody's security test -->
-  <target name="test.security" depends="prepare">
+  <target name="test-security" depends="init">
+    <mkdir dir="${lib.classes.dir}" />
     <javac srcdir="${src.dir}"
            destdir="${lib.classes.dir}"
            debug="on"
@@ -212,7 +189,7 @@ Aglets SDK Build ${version}
   </target>
     
   <!-- Build API docs from source code. -->
-  <target name="doc">
+  <target name="doc" depends="init">
       <javadoc
           sourcepath="${src.dir}"
           destdir="${doc.api.dir}"
@@ -225,41 +202,12 @@ Aglets SDK Build ${version}
           doctitle="&lt;h1&gt;Aglets Development Kit&lt;/h1&gt;">
       </javadoc>
   </target>
-
-  
-  <!-- 
-    Cleans the tree for release.
-  -->
-  <target name="tidy" depends="init">
-    <delete dir="${lib.classes.dir}" />
-    <delete dir="${src.dir}/lib" />
-    <delete dir="${src.dir}/cnf" />
-    <delete dir="${src.dir}/scripts" />
-    <delete>
-        <fileset dir=".." defaultexcludes="no" >
-            <include name="**/*~"/>
-        </fileset>
-    </delete>
-  </target>
   
   <!-- Cleans the tree of all generated files. -->
-  <target name="clean-all" depends="tidy">
-    <delete>
-        <fileset dir="../bin">
-            <exclude name="*.in"/>
-            <exclude name="ant*"/>
-            <exclude name="build.xml"/>
-        	<exclude name="credits.txt"/>
-            <exclude name="install*"/>
-            <exclude name="lcp.bat"/>
-        	<exclude name="license.txt"/>
-        </fileset>
-    </delete>
-    <delete dir="${public.dir}" />
+  <target name="clean-all" depends="init">
     <delete dir="${doc.api.dir}" />
+    <delete dir="${lib.classes.dir}" />
+    <delete dir="${public.dir}" />
   </target>
         
 </project>
-
-
-
