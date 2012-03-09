@@ -52,8 +52,10 @@ public class Finger extends SampleAglet {
      * dispatch to a remote aglet server and hopefully return safely. This
      * method is a callback method for the interaction window.
      * 
-     * @param url
-     *            the url of the destination.
+     * @param destinations
+     *            a vector containing the url of the destinations.
+     * @param obj
+     *            the initialization object
      */
     @Override
     protected void createSlave(Vector destinations, Object obj) {

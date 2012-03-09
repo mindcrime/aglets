@@ -69,7 +69,7 @@ class MyDialog extends Frame {
      * 
      * @param ev
      *            the event to be handled
-     * @param arg
+     * @param obj
      *            the extra argument
      */
     @Override

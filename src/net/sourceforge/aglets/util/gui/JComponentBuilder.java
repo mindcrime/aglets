@@ -234,7 +234,7 @@ public class JComponentBuilder {
      *            be set equal to the specified key
      * @param listener
      *            the action listener associated to this button (if there's one)
-     * @return
+     * @return the created button
      */
     public static final JButton createJButton(
                                               String key,

@@ -35,7 +35,7 @@ import com.ibm.maf.MAFAgentSystem;
  * @version 1.00 $Date: 2009/07/28 07:04:53 $
  * @author Mitsuru Oshima
  * @see com.ibm.aglet.system.AgletRuntime
- * @see com.ibm.aglets.Tahiti.Main
+ * @see com.ibm.aglets.tahiti.Main
  */
 public class ServerApp extends ContextAdapter {
 

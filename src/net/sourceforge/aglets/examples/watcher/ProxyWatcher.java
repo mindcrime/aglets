@@ -41,8 +41,8 @@ import com.ibm.aglet.message.Message;
  * 
  * @version 1.00 $Date: 2009/07/28 07:04:53 $
  * @author Mitsuru Oshima
+ * @author Shintaro Kosugi
  * @see net.sourceforge.aglets.examples.watcher.WatcherSlave
- * @updated by Shintaro Kosugi $Date: 98/11/24
  */
 public class ProxyWatcher extends Aglet {
     /**

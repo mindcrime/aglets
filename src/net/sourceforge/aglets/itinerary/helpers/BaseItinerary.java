@@ -297,7 +297,7 @@ public class BaseItinerary implements SimpleItinerary {
      * that is greater than 0 and less than the max size of the destination
      * lists.
      * 
-     * @param the
+     * @param index
      *            index of the destination to be removed.
      * @return true if the destination has been removed, false otherwise.
      */
@@ -356,8 +356,7 @@ public class BaseItinerary implements SimpleItinerary {
     /**
      * Gets the first destination of the itinerary.
      * 
-     * @param the
-     *            first destination stored in this itinerary.
+     * @return first destination stored in this itinerary.
      */
     @Override
     public String getFirstDestination() {

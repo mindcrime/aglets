@@ -140,7 +140,7 @@ class MyDialog extends Frame implements ActionListener, WindowListener {
     /**
      * Handles the window event
      * 
-     * @param ae
+     * @param we
      *            the event to be handled
      */
     @Override

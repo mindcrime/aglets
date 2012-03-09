@@ -86,9 +86,9 @@ public class MessagePanel extends Panel {
     }
 
     /**
-     * Sets aligment
+     * Sets alignment
      * 
-     * @param alignemtn
+     * @param alignment
      */
     public void setAlignment(int alignment) {
 	int t = this.getComponentCount();

@@ -83,8 +83,16 @@ public class Watcher extends SampleAglet {
      * dispatch to a remote aglet server and hopefully stay there successfully.
      * This method is a callback method for the interaction window.
      * 
-     * @param itinerary
+     * @param destination
      *            contains the destination URL.
+     * @param interval
+     *            TODO
+     * @param duration
+     *            TODO
+     * @param stay
+     *            TODO
+     * @param path
+     *            TODO
      */
     protected void go(
                       URL destination,
@@ -114,8 +122,7 @@ public class Watcher extends SampleAglet {
      * Implements the message interface of a receiver. This method is a part of
      * the Messenger usage pattern.
      * 
-     * @Messenger m Messanger aglet that has returened from a slave aglet.
-     * @Object message Message returned.
+     * @param message Message returned.
      */
     private synchronized void message(Arguments message) {
 	int type = ((Integer) message.getArg("type")).intValue();

@@ -51,16 +51,24 @@ final class FingerInfo implements Serializable {
     /**
      * A constructor.
      * 
-     * @param kind
-     *            specify norman notification, expiration, or error exception
-     * @param notifier
-     *            is URL for identifying the sender aglet.
-     * @param number
-     *            is used when Notifier stays at remote server to send multiple
-     *            instances of Notification. It is used for numbering the
-     *            message.
-     * @param message
-     *            an argument Object; contents of the message.
+     * @param hostName
+     *            FQDN of the interrogated host.
+     * @param userName
+     *            the user's account name.
+     * @param homeDirectory
+     *            the path to the user's home directory.
+     * @param workingDirectory
+     *            path to the working directory?
+     * @param architecture
+     *            the host's CPU architecture identifier
+     * @param osName
+     *            the identifier of the operating system running on the host.
+     * @param osVersion 
+     *            the version number of the operating system.
+     * @param javaVersion
+     *            the version of the Java Virtual Machine.
+     * @param localTime
+     *            the local time at the moment of the interrogation
      */
     FingerInfo(String hostName, String userName, String homeDirectory,
 	    String workingDirectory, String architecture, String osName,

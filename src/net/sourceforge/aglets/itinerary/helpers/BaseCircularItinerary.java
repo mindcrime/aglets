@@ -12,7 +12,7 @@ import com.ibm.aglet.Aglet;
  * destination.
  * 
  * @author Luca Ferrari - cat4hire@users.sourceforge.net 1-ott-2005
- * @varsion 1.0
+ * @version 1.0
  */
 public class BaseCircularItinerary extends BaseItinerary implements
 CircularItinerary, Serializable {

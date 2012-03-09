@@ -28,7 +28,7 @@ import com.ibm.aglet.system.Aglets;
  * 
  * @version 1.00 $Date: 2009/07/28 07:04:53 $
  * @author Mitsuru Oshima
- * @see aglet.system.Aglets
+ * @see com.ibm.aglet.system.Aglets
  * @see net.sourceforge.aglets.examples.watcher.ProxyWatcher
  * @see net.sourceforge.aglets.examples.watcher.WatcherSlave
  */

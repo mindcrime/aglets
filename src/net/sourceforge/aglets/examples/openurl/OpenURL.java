@@ -93,7 +93,7 @@ public class OpenURL extends Aglet {
     /**
      * Dispatch the aglet to the destination.
      * 
-     * @param destination
+     * @param dest
      *            a url which specifies the destination
      * @exception when
      *                the aglet is in the invalid state

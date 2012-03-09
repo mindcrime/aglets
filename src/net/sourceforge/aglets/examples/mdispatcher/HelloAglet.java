@@ -30,7 +30,7 @@ import com.ibm.agletx.util.SimpleItinerary;
  * @author Danny B. Lange
  * @author Mitsuru Oshima
  * @see net.sourceforge.aglets.examples.hello.HelloAglet
- * @see examples.examples.MethodDispatcher
+ * @see MethodDispatcher
  */
 public class HelloAglet extends Aglet {
 
