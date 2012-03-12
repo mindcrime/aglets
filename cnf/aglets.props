@@ -117,4 +117,4 @@ aglets.keystore.file=cnf/.keystore
 aglets.keystore.password=aglets
 
 # Logger class for ASDK.
-aglets.logger.class=org.aglets.log.AgletsLogger
+aglets.logger.class=net.sourceforge.aglets.log.AgletsLogger
