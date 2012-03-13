@@ -29,6 +29,9 @@
   <!-- Use Java 2 compiler -->
   <property name="build.compiler" value="modern" />
   
+  <!-- Quiet the warnings of Ant 1.8+ -->
+  <property name="build.sysclasspath" value="last" />
+  
   <!-- 
     Project classpath.  Imports sytem classpath and
     then adds all jar files found in the lib
@@ -101,21 +104,18 @@ Aglets SDK Build ${version}
   <!-- Compile the ASDK java files -->
   <target name="lib" depends="init">
     <mkdir dir="${lib.classes.dir}" />
-  	<javac srcdir="${src.dir}"
+    <javac srcdir="${src.dir}"
            destdir="${lib.classes.dir}"
+           classpathref="project.classpath"
            debug="${debug.flag}"
            deprecation="${dep.flag}"
            optimize="${opt.flag}" >
-           
-      <classpath refid="project.classpath"/>
-      
       <include name="com/ibm/**/*.java"/>
-      <include name="TahitiDaemonClient.java"/>
-      <include name="org/aglets/log/**/*.java"/>
-      
+      <!-- the one below is built by target 'public' -->
       <exclude name="com/ibm/agletx/**/*.java"/>
-      <exclude name="org/aglets/log/log4j/*.java"/>
-      
+      <include name="net/sourceforge/aglets/**/*.java" />
+      <!-- the one below is built by target 'examples' -->
+      <exclude name="net/sourceforge/aglets/examples/**/*.java" />
     </javac>
   </target>
 
@@ -152,26 +152,7 @@ Aglets SDK Build ${version}
       <classpath>
         <path refid="app.classpath"/>
       </classpath>
-      <include name="examples/**/*.java"/>
-      <exclude name="examples/test/security/*.java"/>
-      <exclude name="examples/protection/**/*.java"/>
-    </javac>
-  </target>
-
-  <!-- Somebody's security test -->
-  <target name="test-security" depends="init">
-    <mkdir dir="${lib.classes.dir}" />
-    <javac srcdir="${src.dir}"
-           destdir="${lib.classes.dir}"
-           debug="on"
-           deprecation="on"
-           optimize="off" >
-           
-      <classpath>
-        <path refid="app.classpath"/>
-      </classpath>
-      
-      <include name="examples/test/security/*.java"/>
+      <include name="net/sourceforge/aglets/examples/**/*.java"/>
     </javac>
   </target>
 
@@ -182,8 +163,7 @@ Aglets SDK Build ${version}
     <jar jarfile="${lib.dir}/${pkgname}-${version}.jar">
          <fileset dir="${lib.classes.dir}">
             <include name="com/ibm/**/*.class"/>
-            <include name="org/aglets/log/**/*.class"/>
-            <exclude name="com/ibm/agletx/**/*.class"/>
+            <include name="net/sourceforge/aglets/**/*.class" />
          </fileset>
     </jar>
   </target>
@@ -208,6 +188,7 @@ Aglets SDK Build ${version}
     <delete dir="${doc.api.dir}" />
     <delete dir="${lib.classes.dir}" />
     <delete dir="${public.dir}" />
+    <delete file="${lib.dir}/${pkgname}-${version}.jar" />
   </target>
-        
+
 </project>
