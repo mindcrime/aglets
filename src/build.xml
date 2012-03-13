@@ -9,7 +9,7 @@
     Build Properties 
   -->
   <property name="pkgname" value="aglets"/>
-  <property name="version" value="2.5-gamma"/>
+  <property name="version" value="devel"/>
   
   <property name="src.dir" location="."/>
   
@@ -183,12 +183,32 @@ Aglets SDK Build ${version}
       </javadoc>
   </target>
   
+  <!-- Prepares a binary archive of the ASDK -->
+  <target name="package" depends="clean-all,dev-flags,jar,examples,public,doc">
+    <zip destfile="../${pkgname}-${version}.zip">
+      <zipfileset dir=".." prefix="${pkgname}-${version}">
+       <include name="bin/**" />
+        <include name="cnf/**" />
+        <include name="doc/**" />
+        <include name="img/**" />
+        <include name="lib/**" />
+        <exclude name="lib/classes/**" />
+        <include name="public/**" />
+        <include name="IBM-Public-License.txt" />
+        <include name="README.html" />
+      </zipfileset>
+    </zip>
+    <echo>For a public release, assign an appropriate value to the 'version'
+property in the 'src/build.xml' file and launch 'ant package'.</echo>
+  </target>
+  
   <!-- Cleans the tree of all generated files. -->
   <target name="clean-all" depends="init">
     <delete dir="${doc.api.dir}" />
     <delete dir="${lib.classes.dir}" />
     <delete dir="${public.dir}" />
     <delete file="${lib.dir}/${pkgname}-${version}.jar" />
+    <delete file="../${pkgname}-${version}.zip" />
   </target>
 
 </project>
