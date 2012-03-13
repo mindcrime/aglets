@@ -1020,6 +1020,9 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 
 	String aglets_home = res.getString("aglets.home", null);
 
+	// URL of the example aglets
+	String ex_URL = "file://"+System.getProperty("user.dir") + File.separator+"public" + File.separator;
+
 	//
 	// Default Resources
 	//
@@ -1031,12 +1034,12 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 		// {"aglets.box.userid", mailaddress},
 		{
 		    "aglets.agletsList",
-		    "examples.simple.DisplayAglet "
-		    + "examples.hello.HelloAglet "
-		    + "examples.itinerary.CirculateAglet "
-		    + "examples.mdispatcher.HelloAglet "
-		    + "examples.http.WebServerAglet "
-		    + "examples.talk.TalkMaster" }, };
+		        ex_URL + "net.sourceforge.aglets.examples.simple.DisplayAglet"
+		+ " " + ex_URL + "net.sourceforge.aglets.examples.hello.HelloAglet"
+		+ " " + ex_URL + "net.sourceforge.aglets.examples.itinerary.CirculateAglet"
+		+ " " + ex_URL + "net.sourceforge.aglets.examples.mdispatcher.HelloAglet"
+		+ " " + ex_URL + "net.sourceforge.aglets.examples.http.WebServerAglet"
+		+ " " + ex_URL + "net.sourceforge.aglets.examples.talk.TalkMaster" }, };
 
 	res.setDefaultResources(default_resources);
 
