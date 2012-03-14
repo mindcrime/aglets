@@ -189,7 +189,9 @@ Aglets SDK Build ${version}
   <target name="package" depends="clean-all,dev-flags,jar,examples,public,doc">
     <zip destfile="../${pkgname}-${version}.zip">
       <zipfileset dir=".." prefix="${pkgname}-${version}">
-       <include name="bin/**" />
+        <include name="bin/**" />
+        <exclude name="bin/agletsd" />
+        <exclude name="bin/daemoncontrol" />
         <include name="cnf/**" />
         <include name="doc/**" />
         <include name="img/**" />
@@ -198,6 +200,10 @@ Aglets SDK Build ${version}
         <include name="public/**" />
         <include name="IBM-Public-License.txt" />
         <include name="README.html" />
+      </zipfileset>
+      <zipfileset dir=".." prefix="${pkgname}-${version}" filemode="755">
+        <include name="bin/agletsd" />
+        <include name="bin/daemoncontrol" />
       </zipfileset>
     </zip>
     <echo>For a public release, assign an appropriate value to the 'version'
