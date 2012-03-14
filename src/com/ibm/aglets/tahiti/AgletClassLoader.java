@@ -789,8 +789,8 @@ class AgletClassLoader extends ClassLoader implements ResourceManager {
 	    }
 	    is.close();
 	} catch (IOException ex) {
-	    logger.error("Error loading [" + name + "] resource from ["
-		    + this._codeBase + "]", ex);
+	    logger.debug("Could not load resource [" + name + "] from ["
+		    + this._codeBase + "]");
 	    bytecode = null;
 	} finally {
 	    if (is != null) {
