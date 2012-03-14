@@ -66,7 +66,7 @@ public class AgletListPanel<ITEM> extends JPanel {
 	this.agletsList = new JList(this.listModel);
 	this.agletsList.setBackground(Color.WHITE);
 	this.agletsList.setForeground(Color.BLUE);
-	this.agletsList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+	this.agletsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	this.add(new JScrollPane(this.agletsList), BorderLayout.CENTER);
 	this.border = new TitledBorder(JComponentBuilder.getTitle(this.baseKey));
 	this.border.setTitleColor(Color.BLUE);
