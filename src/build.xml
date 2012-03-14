@@ -154,6 +154,8 @@ Aglets SDK Build ${version}
       </classpath>
       <include name="net/sourceforge/aglets/examples/**/*.java"/>
     </javac>
+    <copy file="${src.dir}/net/sourceforge/aglets/examples/translator/TranslatingAglet.properties"
+      todir="${public.dir}/net/sourceforge/aglets/examples/translator/"/>
   </target>
 
   <!--
