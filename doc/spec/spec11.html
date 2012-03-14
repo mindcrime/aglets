@@ -27,8 +27,7 @@ September, 8th, 1998</DT>
 <B>This is a draft specification, and is therefore subject to change.</B>
 <BR><!--
   The latest version of this draft is available at: <br>
-  <a href=http://sirius.trl.ibm.com:8080/~sirius/index.html>
-  http://sirius.trl.ibm.com:8080/~moshima/ </a> <p>
+  <a href="http://www.research.ibm.com/trl/aglets/">http://www.research.ibm.com/trl/aglets/</a> <p>
 -->
 <UL>
 <LI>
@@ -761,8 +760,8 @@ argument object in the <TT>Aglet.handleMessage()</TT> method.
 Aglets supports the following types of message passing:
 <DL>
 <DT>
-<B>Now-type:</B> <TT><A HREF="http://www.trl.ibm.co.jp/aglets/">AgletProxy.sendMessage(Message
-msg)</A></TT><A HREF="http://www.trl.ibm.co.jp/aglets/"></A></DT>
+<B>Now-type:</B> <TT>AgletProxy.sendMessage(Message
+msg)</A></TT></DT>
 <DD>
 A now-type message is synchronous and blocks the current execution until the
 receiver has completed the handling of the message.</DD>
@@ -1620,7 +1619,7 @@ adopts a request/reply form, it does not lay down any rules for a scheme of
 communication between agents.</DD>
 </DL>
 <CENTER><IMG SRC="images/atp.gif" alt="" VSPACE=10></CENTER>
-See the <A HREF="http://www.trl.ibm.co.jp/aglets/atp/atp.htm">ATP
+See the <A HREF="atp/atp.htm">ATP
 specification</A> for more details.
 <H2>
 HTTP Tunneling via Proxy Servers</H2>
@@ -1869,7 +1868,7 @@ aglet is currently anonymous because code signing is not supported in the
 current Aglets. Thus, the permissions for aglets are defined in terms
 of the aglets' owners and codebase information. For example, the following
 configuration gives the aglets owned by "oshima" that have the codebase
-<tt>"http://truted.com"</tt> read access to local files on "C:\temp",
+<tt>"http://trusted.com"</tt> read access to local files on "C:\temp",
 write access to any property in the context, and permission to dispose of any
 aglet owned by oshima.
 <PRE>

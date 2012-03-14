@@ -1,0 +1,896 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.0b2 (Win95; I) [Netscape]">
+<META http-equiv="Content-Style-Type" content="text/css">
+   <TITLE>Agent Transfer Protocol ATP/0</TITLE>
+</HEAD>
+<BODY>
+<I><FONT SIZE=+3>Agent Transfer Protocol --
+ATP/0.1</FONT></I>
+<BR>
+<BR><I><FONT SIZE=+1><A HREF="http://www.acm.org/~danny">Danny B. Lange</A>
+and&nbsp; Yariv Aridor</FONT></I>&nbsp;
+<BR>
+<BR><I><FONT SIZE=+1><A HREF="http://www.trl.ibm.co.jp/">IBM Tokyo Research
+Laboratory</A></FONT></I>&nbsp;
+<BR>
+<BR><B><I>Draft number : 4</I></B>&nbsp;
+<BR>
+<BR>Last updated: <I>March 19, 1997</I>.&nbsp;
+<H2>
+<BR>
+<A NAME="_Toc359213561"></A>0. Status of this Draft</H2>
+This draft is a working document of the Aglets team at IBM Tokyo Research
+Laboratory. The latest version is available from: <TT><A HREF="http://www.trl.ibm.co.jp/aglets/">http://www.trl.ibm.co.jp/aglets/</A></TT>.&nbsp;
+<BR>
+<BR>Distribution of this document is unlimited.&nbsp;
+<BR>
+<BR><I>This draft has been made available for public review. Any questions,
+comments, and suggestions regarding the content of this draft should be
+directed to </I><TT><A HREF="mailto:aglets@yamato.ibm.co.jp">aglets@yamato.ibm.co.jp</A></TT><I>.</I>&nbsp;
+<H2>
+<A NAME="_Toc359213562"></A>1. Abstract</H2>
+Mobile agent are programs capable of being transferred to remote hosts
+in order to carry out different tasks on behalf of their users. The <B><I>Agent
+Transfer Protocol</I></B> (<B><I>ATP</I></B>) is an application-level protocol
+for distributed agent-based systems. It can be used for transferring mobile
+agents between networked computers.&nbsp;
+<BR>
+<BR>While mobile agents may be programmed in different languages and for a
+variety of vendor specific agent platforms (consisting of virtual machines
+and libraries), ATP offers the opportunity to handle mobility of agents
+in a general and uniform way.&nbsp;
+<BR>
+<BR>ATP/0.1 is implemented in the <I>atp</I>-package as a part of the <B><I>IBM
+Aglets Workbench</I></B> that can be downloaded from: <TT><B><A HREF="http://www.trl.ibm.co.jp/aglets/">http://www.trl.ibm.co.jp/aglets/</A></B>.</TT>&nbsp;
+<H2>
+<BR>
+<A NAME="_Toc359213563"></A>2. Introduction</H2>
+<H3>
+<A NAME="2.1 Purpose of"></A>2.1 Purpose of ATP</H3>
+An agent is a program that carry out a set of operations on behalf of a
+user. It does so with some degree of autonomy to satisfy its user's goals.
+Mobile (transportable) agents have the ability to travel through the network.
+A Mobile agent can halt its execution, move to another host on the network
+while maintaining their state, and resume execution on the destination
+host.&nbsp;
+<BR>
+<BR>Aimed at the Internet, ATP offers a simple and platform independent protocol
+for transferring agents between networked computers. While mobile agents
+may be programmed in many different languages and for a variety of vendor
+specific agent platforms (consisting of virtual machines and libraries),
+ATP offers the opportunity to handle agent mobility in a general and uniform
+way:&nbsp;
+<UL>
+<LI>
+A machine hosting agents has an ATP-based agent service which is a
+component capable of receiving and sending agents from remote hosts via
+the ATP protocol. The agent service is identified by a unique address,
+independent of the specific agent platforms supported by the machine. A
+machine can run multiple agent services.</LI>
+<LI>
+A machine can host different types of agents, provided it supports
+the corresponding agent platforms.</LI>
+<LI>
+Any agent platform should include a handler of ATP messages.</LI>
+<LI>
+An ATP message carries sufficient information to identify the specific
+agent platform (at the receiver host) and calling its ATP handler to handle
+the message.</LI>
+</UL>
+<CENTER><IMG src="Overview.gif" NOSAVE height="420" width="473" alt=""></CENTER>
+<BR><B>Figure 1.</B> <I>An agent host with an ATP-based agent service provides
+a uniform address space for multiple vendor specific agent platforms.</I>&nbsp;
+<BR>
+<BR>Figure 1 shows an example of an agent host machine supporting two agent
+platforms (of vendor A and vendor B) and an ATP-based agent service identified
+by a unique address <TT>atp://john.doe.com</TT>.&nbsp;
+<H3>
+<A NAME="_Toc359213565"></A>2.2 Scope of ATP</H3>
+This document describes a protocol (ATP) that will allow agent services
+on the Internet to support agent mobility, even if these agents are based
+on platforms from different vendors and supported by different programming
+languages. Areas covered by ATP/0.1 are:&nbsp;
+<UL>
+<LI>
+Naming of agent services (See ATP URLs in <A HREF="#4.2 Uniform Resource">section
+4.2</A>)</LI>
+<LI>
+Agent identifiers (See <A HREF="#4.3 Agent Identifier">section 4.3</A>)</LI>
+<LI>
+Agent transportation (See ATP messages in <A HREF="#_Toc359213578">section
+5 </A>)</LI>
+</UL>
+<H3>
+<A NAME="2.3"></A>2.3 Terminology</H3>
+This specification uses the following terms to refer to the entities related
+to ATP communication:&nbsp;
+<UL>
+<LI>
+<I>Agent. A </I>program that carry out a set of operations on behalf
+of a user. It does so with some degree of autonomy to satisfy its user's
+goals.</LI>
+<LI>
+<I>Connection. </I>A transport layer virtual circuit established between
+two programs for the purpose of communication.</LI>
+<LI>
+<I>Message. </I>The basic unit of ATP communication of a byte stream
+matching the syntax defined in <A HREF="#_Toc359213578">section 5</A> and
+transmitted via a connection.</LI>
+<LI>
+<I>Request. </I>An ATP request message, as defined in <A HREF="#_Toc359213579">section
+6</A>.</LI>
+<LI>
+<I>Response. </I>An ATP response message, as defined in <A HREF="#_Toc359213587">section
+7</A>.</LI>
+<LI>
+<I>Message Body. </I>The information transferred as the payload of
+a request or response. Interpretation of the body content is implementation
+specific.&nbsp;</LI>
+<LI>
+<I>Sender. </I>The role of an application/system that establishes connections
+for the purpose of sending requests.</LI>
+<LI>
+<I>Recipient. </I>The role of an application/system that accepts connections
+in order to service requests and to send back responses.</LI>
+<LI>
+<I>Agent Service. </I>A system capable of acting both as sender and
+recipient of agents.</LI>
+<LI>
+<I>Proxy. </I>An intermediary agent service which acts as both a recipient
+and a sender for the purpose of making requests on behalf of other senders.</LI>
+</UL>
+<H3>
+<A NAME="2.4 Overall"></A>2.4 Overall Operation</H3>
+The ATP protocol is based on a request/response paradigm between agent
+services. Agent service <B><I>A</I></B> establishes a connection with agent
+service <B><I>B</I></B>, then sends a request to <B><I>B</I></B> and waits
+for the response. Thus, <B><I>A</I></B> acts as a <I>sender</I> (of the
+request) and <B><I>B</I></B> acts as a <I>recipient</I>.&nbsp;
+<BR>
+<BR>A request includes a request line, specifying the request method, the protocol
+version and the required resource, followed by MIME-like message containing
+request modifiers, sender information and possible content in its body.
+A response include a status line, specifying a success or error code and
+the protocol version, followed by a MIME-like message containing response
+modifiers, sender information and possible content in its body.&nbsp;
+<BR>
+<BR>
+ATP defines four standard request methods for agent services:&nbsp;
+<UL>
+  <LI>Dispatch
+  <LI>Retract
+  <LI>Fetch.
+  <LI>Message
+</UL>
+<H4>
+<A NAME="_Toc359213567"></A>2.4.1 Dispatch an Agent</H4>
+To dispatch an agent from an agent service <B><I>A</I></B> to an agent
+service <B><I>B</I></B>, <B><I>A</I></B> sends a <TT>dispatch</TT> request
+to <B><I>B</I></B>. The agent is contained in the body of the request.
+When <B><I>B</I></B> receives the agent, it will reply to <B><I>A</I></B>
+with a response containing a status code.&nbsp;
+<H4>
+<A NAME="_Toc359213568"></A>2.4.2 Retract an Agent</H4>
+To retract an agent from an agent service <B><I>B </I></B>to<B><I> </I></B>agent
+service <B><I>A</I></B>, the later sends a <TT>retract</TT> request to
+<B><I>B</I></B>. The reply from <B><I>B</I></B> is a response with a status
+code and the specified agent in its body.&nbsp;
+<H4>
+<A NAME="_Toc359213569"></A>2.4.3 Fetch the Class</H4>
+To execute the agent, an agent service <B><I>B</I></B> may need to retrieve
+executable code from the agent's origin, say, an agent service <B><I>A</I></B>.
+To do so, <B><I>B</I></B> sends a <TT>fetch</TT> request to <B><I>A</I></B>.
+The reply from <B><I>A</I></B> is a response with a status code and the
+required executable code in its body.&nbsp;
+<H4>
+<A NAME="2.3.4 Send Remote Message"></A>2.4.4 Send a Message</H4>
+To send a message from an agent in agent service <B><I>A</I></B> to an
+agent in agent system <B><I>B, A</I></B> sends a <TT>message</TT> request
+to <B><I>B</I></B>, containing that message. The reply from <B><I>B</I></B>
+is a response with a status code.&nbsp;
+<H2>
+<A NAME="_Toc359213571"></A>3. Notational Convention</H2>
+This specification uses Extended Backus-Naur Form (EBNF) to describe the
+syntax of the mechanisms in ATP. The use of EBNF in this document includes
+the following constructs:&nbsp;
+<UL>
+<LI>
+<I>Rule: </I>name=definition</LI>
+</UL>
+Rules are consisting of a name part and a definition part separated by
+the equal character. Several basic rules are predefined:&nbsp;<I>Digit</I>=&lt;any US-ASCII digit &quot;0&quot;..&quot;9&quot;&gt;&nbsp;
+<BR>
+<BR>
+<I>Octet</I>=&lt;any 8-bit sequence of data&gt;&nbsp;
+<UL>
+<LI>
+<I>Literal:</I> <B>LITERAL</B></LI>
+</UL>
+Quotation marks surround literal text. Unless stated otherwise, the text
+is case-insensitive. Certain characters and strings are predefined: <B>SP</B>
+represents the space character, <B>CRLF</B> represents a character sequence
+of carriage return (&lt;US-ASCII CR, (13)) followed by line feed (&lt;US-ASCII
+LF, (10)).&nbsp;
+<UL>
+<LI>
+<I>Alternatives: </I>rule1 | rule2</LI>
+</UL>
+Elements separated by a bar are alternatives.&nbsp;
+<UL>
+<LI>
+<I>Optional:</I> [ rule ]</LI>
+</UL>
+Elements enclosed in square brackets are optional.&nbsp;
+<UL>
+<LI>
+<I>Repetition:</I> rule<SUP>*</SUP></LI>
+</UL>
+Elements succeeded by a superscript multiplication sign are repeated zero
+or more times. Superscript addition sign, '<SUP>+</SUP>', is used to denote
+a repetition of <I>one</I> or more times.&nbsp;
+<UL>
+<LI>
+<I>Informal:</I> &lt;Explanation&gt;</LI>
+</UL>
+Informal explanations are enclosed in '&lt;' and '&gt;' brackets.&nbsp;
+<H2>
+<A NAME="_Toc359213572"></A>4. Protocol Parameters</H2>
+ATP messages relies on a number protocol parameters. The syntax and semantics
+of those parameters are described in this section.&nbsp;
+<H3>
+<A NAME="_Toc359213573"></A>4.1 ATP Version</H3>
+ATP uses a &quot;<I>major</I><B>.</B><I>minor</I>&quot; numbering scheme
+to indicate versions of the protocol. The protocol version policy is intended
+to allow the sender to indicate the format of a message and its capacity
+for understanding further ATP communication, rather than the features obtained
+via that communication. The <I>minor</I> number is incremented when the
+changes made to the protocol add features which do not change the general
+message parsing algorithm, but which may add to the message semantics and
+imply additional capabilities of the sender. The <I>major</I> number is
+incremented when the format of a message within the protocol is changed.&nbsp;
+<BR>
+<BR>The version of an ATP message is indicated by an <I>ATP_version</I> field
+in the first line of the message.&nbsp;
+<TABLE>
+<TR>
+<TD WIDTH=590><I>ATP_version </I>= &quot;ATP/&quot; <I>Major </I><B>. </B><I>Minor</I>&nbsp;
+</TD>
+</TR>
+<TR>
+<TD WIDTH=590><I>Major </I>= <I>Digit</I><SUP>+</SUP>&nbsp;
+</TD>
+</TR>
+<TR>
+<TD WIDTH=590><I>Minor </I>= <I>Digit</I><SUP>+</SUP>&nbsp;
+</TD>
+</TR>
+</TABLE>
+Note that the major and minor numbers should be treated as separate integers
+and that each may be incremented higher than a single digit. Thus, &quot;<TT>ATP/1.2</TT>&quot;
+is a lower version than &quot;<TT>ATP/1.23</TT>&quot;, which in turn is
+lower than &quot;<TT>ATP/12.3</TT>&quot;.&nbsp;
+<BR>
+<BR>Applications sending <I>Requests</I> or <I>Responses</I>, as defined by
+this specification, must include an <I>ATP_version</I> of &quot;<TT>ATP/0.1</TT>&quot;.
+Use of this version number indicates that the sending application is compliant
+with this specification.&nbsp;
+<H3>
+<A NAME="4.2 Uniform Resource"></A>4.2 Uniform Resource Identifiers</H3>
+The Uniform Resource Identifier (URI) represents the combination of Uniform
+Resource Locators (URL) and Names (URN). As far as ATP is concerned, a
+URI is a formatted string which identify an agent resource. For information
+on URI syntax and semantics, see RFC 1738 [3] and RFC 1808 [4].&nbsp;
+<H4>
+4.2.1 ATP URL</H4>
+The &quot;atp:&quot; scheme is used to locate agent resources in network
+via the ATP protocol.&nbsp;
+<BR>
+<BR><I>ATP_URL</I> = <I>Service_host</I> [ <I>Agent_resource</I> | <I>Class_resource</I>
+]&nbsp;
+<BR>
+<BR><I>Service_host</I> = &quot;atp://&quot; <I>Host </I>[ : <I>Port </I>]&nbsp;
+<BR>
+<BR><I>Host</I> = &lt;An Internet host domain name or IP address&gt;&nbsp;
+<BR>
+<BR><I>Port</I> = <I>Digit</I>+&nbsp;
+<BR>
+<BR><I>Agent_resource</I> = [<I>Name</I>] &quot;#&quot; <I>Agent_identifier</I>&nbsp;
+<BR>
+<BR><I>Name</I>= &quot;<B>/</B>&quot; &lt;a string&gt;&nbsp;
+<BR>
+<BR><I>Class_resource</I> = Class_path&nbsp;
+<BR>
+<BR><I>Class_path</I> = &lt;A legal absolute path specification&gt;&nbsp;
+<BR>
+<BR>If the port number is not given, port 434 (port reserved for mobile agents)
+is assumed, accordingly to RFC1700 [2]. On certain systems this port number
+is only available for application with system or root privileges. On those
+systems, the suggested port number is 10434.&nbsp;
+<BR>
+<BR>Examples of ATP URLs that identifies agent services are <TT>atp://joe.trl.ibm.com</TT>
+or <TT>atp://joe.trl.ibm.com:10434</TT>.&nbsp;
+<BR>
+<BR>An example of an ATP URL that identifies a specific agent is <TT>atp://joe.trl.ibm.com#2874678383</TT>.
+See <A HREF="#4.3 Agent Identifier">section 4.3</A> for the syntax of an
+agent identifier. The agent resource includes a name field which can be
+used, for example, to distinguish a specific working set of agents running
+in a given agent service. For example, an ATP URL that identifies a specific
+agent (id=2874678383) within danny's agent working set of agents of an
+agent service is: <TT>atp://joe.trl.ibm.com/danny#</TT>2874678383. .&nbsp;
+<BR>
+<BR>The last example is an ATP URL that identifies a file (<TT>agents/classes/Hello.class</TT>)
+from an agent service is: <TT>atp://joe.trl.ibm.com/agents/classes/Hello.class</TT>.&nbsp;
+<H5>
+4.2.1.1. An Absolute URI versus a Relative URI</H5>
+A URI in ATP can be represented by an absolute form or relative to some
+known base URI, depending upon the context of its use. The two forms are
+differentiated by the fact that an absolute URI always begin with the ATP
+scheme name followed by a colon (&quot;<TT>atp</TT>:&quot;). In addition,
+a relative URI may not include the agent service identifier.&nbsp;
+<H3>
+<A NAME="4.3 Agent Identifier"></A>4.3 Agent Identifier</H3>
+An agent is identified by a string of alphanumeric characters.&nbsp;
+<BR>
+<BR><I>Agent_identifier</I> = &lt;an alphanumeric string&gt;&nbsp;
+<H3>
+<A NAME="4.4 ATP Date"></A>4.4 ATP Date</H3>
+In ATP, the date format should follow the IETF [1] standard date syntax.&nbsp;
+<TABLE>
+<TR>
+<TD WIDTH=590><I>ATP_date </I>= &lt; IETF standard date syntax&gt;&nbsp;
+</TD>
+</TR>
+</TABLE>
+&quot;<TT>Sat, 12 Aug 1995 13:30:00 GMT</TT>&quot; is an example of the
+IETF standard date syntax. ATP senders should only send date values in
+this format. However, ATP recipients of date values are encouraged to be
+robust in accepting commonly used date values.&nbsp;
+<H2>
+<A NAME="_Toc359213578"></A>5. ATP Message</H2>
+ATP messages consist of requests and responses. Every request and response
+can be attributed by header fields and a body.&nbsp;
+<TABLE>
+<TR>
+<TD WIDTH=590><I>ATP_message</I> = <I>Request</I> | <I>Response</I>&nbsp;
+</TD>
+</TR>
+<TR>
+<TD WIDTH=590>The format and encoding system of the body of an ATP message
+is defined by the header fields <I>Content_type</I> (see <A HREF="#8.6">section
+8.6</A>) and <I>Content_encoding </I>(see <A HREF="#8.7">section 8.7</A>),<I>
+</I>respectively<I>. </I>The<I> </I>length of the body is specified by
+the <TT>Content-Length </TT>header field.&nbsp;
+<BR>
+<BR><I>Message_body </I>= <I>Octet<SUP>*</SUP></I>&nbsp;
+</TD>
+</TR>
+</TABLE>
+<H2>
+<A NAME="_Toc359213579"></A>6. Request</H2>
+A request message from a sender to a recipient includes the method to be
+applied to the resource, the identity of the resource, and the protocol
+version in use.&nbsp;
+<BR>
+<BR><I>Request</I> = <I>Request_Line </I><B>CRLF </B><I>Header_field<SUP>*</SUP>
+</I><B>CRLF </B>[ <I>Message_body</I> ]&nbsp;
+<TABLE>
+<TR>
+<TD WIDTH=590><I>Request_Line </I>= <I>Method </I><B>SP </B><I>resource_URI
+</I><B>SP </B><I>ATP_version </I><B>CRLF</B>&nbsp;
+</TD>
+</TR>
+</TABLE>
+<H3>
+<A NAME="_Toc359213580"></A>6.1 Method</H3>
+<DL>
+  <DT>The method token indicates the method to be performed on a resource
+at the by the recipient . The set of methods is extensible. If a recipient
+does not understand an extension method, it will respond to the sender
+with status code 401 NOT IMPLEMENTED.
+</DL>
+<TABLE>
+<TR>
+<TD WIDTH=590><I>Method </I>= <B>DISPATCH </B>| <B>RETRACT </B>| <B>FETCH
+| MESSAGE | </B><I>Extension_method</I>&nbsp;
+</TD>
+</TR>
+<TR>
+<TD WIDTH=590><I>Extension_Method </I>= <I>Token</I>&nbsp;
+<BR>
+<BR>(see [] for definition of <I>Token</I>)&nbsp;
+</TD>
+</TR>
+</TABLE>
+<H4>
+<A NAME="_Toc359213581"></A>6.1.1 DISPATCH</H4>
+The <TT>dispatch</TT> method is used to transport an agent from one host
+(the sender) to another host (the recipient) in the network.&nbsp;
+<H4>
+<A NAME="_Toc359213582"></A>6.1.2 RETRACT</H4>
+The <TT>retract</TT> method is used to retrieve an agent from a remote
+host.&nbsp;
+<H4>
+<A NAME="_Toc359213583"></A>6.1.3 FETCH</H4>
+The <TT>fetch</TT> method is used for a host to retrieve the executable
+code required to execute a given agent.&nbsp;
+<H4>
+<A NAME="_Toc359213583"></A>6.1.4 MESSAGE</H4>
+The <TT>message</TT> method is used to forward a message to an agent.&nbsp;
+<H3>
+6.2 Resource URI</H3>
+This URI identifies the resource upon which to apply the request. The form
+of the URI is dependent on the nature of the request and whether a proxy
+server is involved. see section for the missing definitions.&nbsp;
+<BR>
+<BR>Resource_URI = &lt;Relative resource URI&gt; | &lt;Absolute resource URI&gt;&nbsp;
+<H4>
+6.2.1 Relative URI</H4>
+The interpretation of a relative resource URI depends on the related request
+method:&nbsp;
+<H5>
+<B>6.2.1.1. DISPATCH</B></H5>
+The URI identifies a possible resource like a user or a distinguished group
+of agents to whom the agent is dispatched. This resource should be identified
+by a valid name. The validity of the name depends on its specific interpretation.
+The syntax this URI is: [&quot;/&quot; <I>Name</I>]. Examples are : <TT>/joe</TT>
+or <TT>/marchant_agents</TT>&nbsp;
+<H5>
+<B>6.2.1.2. RETRACT</B></H5>
+The URI identifies the agent to be retracted. The syntax for this URI is:
+[ <I>Name</I>] Agent_identifier, where <I>Name</I> can specify a possible
+resource (a user, agent group) to whom the agent belongs. Examples are:
+/<TT>joe#2874678383</TT> and <TT>#2874678383</TT>.&nbsp;
+<H5>
+<B>6.2.1.3. FETCH</B></H5>
+The URI provides the local file path to the requested executable code.
+The syntax for this URI is simply &lt;File path&gt;. An example is <TT>/agents/classes/Hello.class</TT>.&nbsp;
+<H5>
+<B>6.2.1.4. MESSAGE</B></H5>
+The URI identifies the agent who is the receiver of the carried message.
+The syntax for this URI is: [ Name] # Agent_identifier. Examples are: /<TT>joe#2874678383</TT>
+and <TT>#2874678383</TT>.&nbsp;
+<H4>
+6.2.2 Absolute URI</H4>
+An absolute URI is only used when the recipient of the request is a proxy.
+In that case the proxy will use the absolute URI is to forward the request
+message and return the response to the sender.&nbsp;
+<H2>
+<A NAME="_Toc359213587"></A>7. Response</H2>
+After receiving and processing a request message, a recipient replies in
+the form of an ATP response message. The response message includes the
+protocol version in use, the status code, and a reason phrase.&nbsp;
+<BR>
+<BR><I>Response</I> = Status<I>_line </I><B>CRLF </B><I>Header_field<SUP>*</SUP>
+</I><B>CRLF </B>[ <I>Message_body</I> ]&nbsp;
+<TABLE>
+<TR>
+<TD WIDTH=595><I>Status_line</I>= <I>ATP_version </I><B>SP </B><I>Status_code
+</I><B>SP </B><I>Reason_phrase </I><B>CRLF</B>&nbsp;
+</TD>
+</TR>
+</TABLE>
+<H2>
+<A NAME="_Toc359213588"></A>8. Header Fields</H2>
+Header fields are associated with ATP messages. Some are valid only with
+respect to the sender, some only with respect to the recipient, and others
+are valid with respect to both. A header field is a name/value pair.&nbsp;
+<TABLE>
+<TR>
+<TD WIDTH=590><I>Header_field </I>= <I>Name </I><B>: </B>[ <I>Value</I>
+] <B>CRLF</B>&nbsp;
+</TD>
+</TR>
+<TR>
+<TD WIDTH=590><I>Value</I> = &lt;Text, excluding CR/LF&gt;&nbsp;
+</TD>
+</TR>
+</TABLE>
+The table below indicates the usage of header fields for each of the four
+request methods and the response. In this table, <TT>yes</TT> means that
+the corresponding header field should be included in the message and may
+be used by the recipient, while <TT>no</TT> means that it is not included.&nbsp;
+<TABLE border="" BORDERCOLOR="#000000">
+<TR>
+<TD WIDTH=160>
+</TD>
+<TD COLSPAN="4" WIDTH="290"><CENTER><B>Request</B></CENTER>
+</TD>
+<TD WIDTH=84><CENTER><B>Response</B></CENTER>
+</TD>
+</TR>
+<TR>
+<TD WIDTH=160>
+</TD>
+<TD WIDTH=98><CENTER><B>DISPATCH</B></CENTER>
+</TD>
+<TD WIDTH=96><CENTER><B>RETRACT</B></CENTER>
+</TD>
+<TD WIDTH=96><CENTER><B>FETCH</B></CENTER>
+</TD>
+<TD ALIGN=CENTER><B>MESSAGE&nbsp;</B>&nbsp;
+</TD>
+<TD WIDTH=84>
+</TD>
+</TR>
+<TR>
+<TD WIDTH=160><B>Date</B>&nbsp;
+</TD>
+<TD WIDTH=98><CENTER>yes</CENTER>
+</TD>
+<TD WIDTH=96><CENTER>yes</CENTER>
+</TD>
+<TD WIDTH=96><CENTER>yes</CENTER>
+</TD>
+<TD ALIGN=CENTER>yes&nbsp;
+</TD>
+<TD WIDTH=84><CENTER>yes</CENTER>
+</TD>
+</TR>
+<TR>
+<TD WIDTH=160><B>User-Agent</B>&nbsp;
+</TD>
+<TD WIDTH=98><CENTER>yes</CENTER>
+</TD>
+<TD WIDTH=96><CENTER>yes</CENTER>
+</TD>
+<TD WIDTH=96><CENTER>yes</CENTER>
+</TD>
+<TD ALIGN=CENTER>yes&nbsp;
+</TD>
+<TD WIDTH=84><CENTER>yes</CENTER>
+</TD>
+</TR>
+<TR>
+<TD WIDTH=160><B>From</B>&nbsp;
+</TD>
+<TD WIDTH="98"><CENTER>yes</CENTER>
+</TD>
+<TD WIDTH=96><CENTER>yes</CENTER>
+</TD>
+<TD WIDTH=96><CENTER>yes</CENTER>
+</TD>
+<TD ALIGN=CENTER>yes&nbsp;
+</TD>
+<TD WIDTH=84><CENTER>no</CENTER>
+</TD>
+</TR>
+<TR>
+<TD WIDTH=160><B>Agent-System</B>&nbsp;
+</TD>
+<TD WIDTH=98><CENTER>yes</CENTER>
+</TD>
+<TD WIDTH=96><CENTER>yes</CENTER>
+</TD>
+<TD WIDTH=96><CENTER>yes</CENTER>
+</TD>
+<TD ALIGN=CENTER>yes&nbsp;
+</TD>
+<TD WIDTH=84><CENTER>yes</CENTER>
+</TD>
+</TR>
+<TR>
+<TD WIDTH=160><B>Agent-Language</B>&nbsp;
+</TD>
+<TD WIDTH=98><CENTER>yes</CENTER>
+</TD>
+<TD WIDTH=96><CENTER>no</CENTER>
+</TD>
+<TD WIDTH=96><CENTER>yes</CENTER>
+</TD>
+<TD ALIGN=CENTER>yes&nbsp;
+</TD>
+<TD WIDTH=84><CENTER>yes</CENTER>
+</TD>
+</TR>
+<TR>
+<TD WIDTH=160><B>Content-Type</B>&nbsp;
+</TD>
+<TD WIDTH=98><CENTER>yes</CENTER>
+</TD>
+<TD WIDTH=96><CENTER>no</CENTER>
+</TD>
+<TD WIDTH=96><CENTER>no</CENTER>
+</TD>
+<TD ALIGN=CENTER>yes&nbsp;
+</TD>
+<TD WIDTH=84><CENTER>yes</CENTER>
+</TD>
+</TR>
+<TR>
+<TD WIDTH=160><B>Content-Encoding</B>&nbsp;
+</TD>
+<TD WIDTH=98><CENTER>yes</CENTER>
+</TD>
+<TD WIDTH=96><CENTER>no</CENTER>
+</TD>
+<TD WIDTH=96><CENTER>no</CENTER>
+</TD>
+<TD ALIGN=CENTER>yes&nbsp;
+</TD>
+<TD WIDTH=84><CENTER>yes</CENTER>
+</TD>
+</TR>
+<TR>
+<TD WIDTH=160><B>Content-Length</B>&nbsp;
+</TD>
+<TD WIDTH=98><CENTER>yes</CENTER>
+</TD>
+<TD WIDTH=96><CENTER>no</CENTER>
+</TD>
+<TD WIDTH=96><CENTER>no</CENTER>
+</TD>
+<TD ALIGN=CENTER>yes&nbsp;
+</TD>
+<TD WIDTH=84><CENTER>yes</CENTER>
+</TD>
+</TR>
+<TR>
+<TD WIDTH=160><B>Agent-Id</B>&nbsp;
+</TD>
+<TD WIDTH=98><CENTER>yes</CENTER>
+</TD>
+<TD WIDTH=96><CENTER>yes</CENTER>
+</TD>
+<TD WIDTH=96><CENTER>no</CENTER>
+</TD>
+<TD ALIGN=CENTER>yes&nbsp;
+</TD>
+<TD WIDTH=84><CENTER>yes</CENTER>
+</TD>
+</TR>
+</TABLE>
+<H3>
+<A NAME="_Toc359213589"></A>8.1 Date</H3>
+The <B>Date</B> field represents the date and time at which the message
+was originated. This field is valid for both a sender and a receiver. See
+<A HREF="#4.4 ATP Date">section 4.4</A> for the definition of <I>ATP_date</I>.&nbsp;
+<TABLE>
+<TR>
+<TD WIDTH=590><I>Date</I> = &quot;<B>Date:&quot; </B><I>ATP_date</I>&nbsp;
+<BR>
+<BR>An example is :&nbsp;
+<BR>
+<BR>Date:&quot;<TT>Sat, 12 Aug 1995 13:30:00 GMT</TT>&quot;&nbsp;
+</TD>
+</TR>
+</TABLE>
+<H3>
+<A NAME="_Toc359213590"></A>8.2 User-Agent</H3>
+The <B>User-Agent</B> field contains information about the application
+originating a message.&nbsp;
+<TABLE>
+<TR>
+<TD WIDTH=590><I>User-Agent </I>= &quot;<B>User-Agent:</B>&quot; <I>Comment</I>&nbsp;
+</TD>
+</TR>
+<TR>
+<TD WIDTH=590><I>Comment</I> = &lt;Textual description&gt;&nbsp;
+<BR>
+<BR>An example is:&nbsp;
+<BR>
+<BR>User-Agent: Tahiti aglet viewer&nbsp;
+</TD>
+</TR>
+</TABLE>
+<H3>
+<A NAME="_Toc359213592"></A>8.3 From</H3>
+The <TT>From</TT> field in requests contains an Internet email address
+for the human user who controls or owns the requesting sender application.&nbsp;
+<TABLE>
+<TR>
+<TD WIDTH=590><I>From</I> = &quot;<B>From:&quot; </B><I>Mail_address</I>&nbsp;
+</TD>
+</TR>
+<TR>
+<TD WIDTH=590><I>Mail_address </I>= &lt;Normal email address&gt;&nbsp;
+<BR>
+<BR>An example is:&nbsp;
+<BR>
+<BR>From: AgentMaster@trl.ibm.co.jp&nbsp;
+</TD>
+</TR>
+</TABLE>
+<H3>
+<A NAME="_Toc359213593"></A>8.4 Agent-System</H3>
+The <TT>Agent-System</TT> field in requests contains information about
+the agent platform of the originating agent. This information is used to
+call the request handler of a specific agent platform (see <A HREF="#2.1 Purpose of">section
+2.1</A>)&nbsp;
+<TABLE>
+<TR>
+<TD WIDTH=590><I>Agent_system </I>= &quot;<B>Agent-System:&quot; </B><I>Comment&nbsp;</I>&nbsp;
+</TD>
+</TR>
+<TR>
+<TD WIDTH=590><I>Comment</I> = &lt;Textual description&gt;&nbsp;
+<BR>
+<BR>Examples are:&nbsp;
+<BR>
+<BR>Agent-System: ibm.aglets&nbsp;
+<BR>
+<BR>Agent-System: ibm.aglets/Alpha4b&nbsp;
+</TD>
+</TR>
+</TABLE>
+<H3>
+<A NAME="_Toc359213594"></A>8.5 Agent-Language</H3>
+The <TT>Agent-Language</TT> field contains information about the language
+processor or system needed to execute or interpreter a code (transferred
+agent or a fetched class) in the message body.&nbsp;
+<TABLE>
+<TR>
+<TD WIDTH=590><I>Agent_language </I>= &quot;<B>Agent-Language:&quot; </B><I>Comment</I>&nbsp;
+</TD>
+</TR>
+<TR>
+<TD WIDTH=590><I>Comment</I> = &lt;Textual description&gt;&nbsp;
+<BR>
+<BR>An example is:&nbsp;
+<BR>
+<BR>Agent-Language: java&nbsp;
+</TD>
+</TR>
+</TABLE>
+<H3>
+<A NAME="8.6"></A>8.6 Content-Type</H3>
+The <TT>Content-Type</TT> field is used to determine the media type of
+the message body. It can be omitted if the message body is null&nbsp;
+<TABLE>
+<TR>
+<TD WIDTH=590><I>Content_type </I>= &quot;<B>Content-Type:&quot; </B><I>Comment</I>&nbsp;
+</TD>
+</TR>
+<TR>
+<TD WIDTH=590><I>Comment</I> = &lt;Textual description&gt;&nbsp;
+<BR>
+<BR>An example (for a dispatch request) is:&nbsp;
+<BR>
+<BR>Content-Type: x-aglets&nbsp;
+</TD>
+</TR>
+</TABLE>
+<H3>
+<A NAME="8.7"></A>8.7 Content-Encoding</H3>
+The <TT>Content-Encoding</TT> field is used as a modifier to the <TT>Content-Type</TT>
+field. When present, it indicates what coding mechanism has been applied
+to the message body, and thus what decoding mechanism must be applied to
+obtain the original content of that body.&nbsp;
+<TABLE>
+<TR>
+<TD WIDTH=590><I>Content_encoding </I>= &quot;<B>Content-Encoding:&quot;
+</B><I>Comment</I>&nbsp;
+</TD>
+</TR>
+<TR>
+<TD WIDTH=590><I>Comment</I> = &lt;Textual description&gt;&nbsp;
+<BR>
+<BR>An example is:&nbsp;
+<BR>
+<BR>Content-Encoding: gzip&nbsp;
+</TD>
+</TR>
+</TABLE>
+<H3>
+<A NAME="_Toc359213597"></A>8.8 Content-Length</H3>
+The Content-Length field indicates the size of the message body to be transferred,
+regardless of type and encoding.&nbsp;
+<TABLE>
+<TR>
+<TD WIDTH=590><I>Content_length </I>= &quot;<B>Content -Length &quot;</B><I>Length</I>&nbsp;
+</TD>
+</TR>
+<TR>
+<TD WIDTH=590><I>Length</I> = &lt;Decimal number&gt;&nbsp;
+<BR>
+<BR>An example is:&nbsp;
+<BR>
+<BR>Content-Length: 8401&nbsp;
+</TD>
+</TR>
+</TABLE>
+<H3>
+<A NAME="cookie"></A>8.9 Agent-Id</H3>
+The <TT>Agent-Id</TT> field in requests identifies the identifier of the
+agent whom the request refers to. See <A HREF="#4.3 Agent Identifier">section
+4.3</A> for the syntax of an agent identifier. It is also used by a response
+to a retract request to specify the identifier of the retracted agent.&nbsp;
+<BR>
+<BR><I>Agent-Id</I> = &quot;<B>Agent-Id: &quot; </B><I>Agent_identifier</I>&nbsp;
+<BR>
+<BR>Agent-Id: 2874678384&nbsp;
+<H2>
+<A NAME="_Toc359213599"></A>9. Status Code and Reason Phrase</H2>
+The status code is a 3-digit integer result code of the recipient's attempt
+to process the request message. The reason phrase is intended to give a
+short textual description of the status code. The body of the response
+message can be used to give detailed status information.&nbsp;
+<TABLE>
+<TR>
+<TD WIDTH=590><I>Status_code </I>= <I>Digit<SUP>+</SUP></I>&nbsp;
+</TD>
+</TR>
+<TR>
+<TD WIDTH=590><I>Reason_phrase </I>= &lt;Text, excluding CR/LF&gt;&nbsp;
+</TD>
+</TR>
+</TABLE>
+<H3>
+<A NAME="_Toc359213600"></A>9.1 Successful 1xx</H3>
+Response status codes beginning with the digit one (1) indicates that the
+request message was received, understood, and properly processed.&nbsp;
+<H4>
+<A NAME="_Toc359213601"></A>100 OKAY</H4>
+The request has succeeded.&nbsp;
+<H3>
+<A NAME="_Toc359213602"></A>9.2 Redirection 2xx</H3>
+Response status codes beginning with the digit two (2) indicates that further
+action needs to be taken by the sender in order to see the request fulfilled.&nbsp;
+<H4>
+<A NAME="_Toc359213603"></A>200 <B>MOVED</B></H4>
+The requested resource is no longer at the recipient. For example, trying
+to retract an agent which had been already dispatched to another host.
+The body of the response message may contain the new URL of the requested
+resource.&nbsp;
+<H3>
+<A NAME="_Toc359213604"></A>9.3 Sender Error 3xx</H3>
+Response status codes beginning with the digit three (3) indicates that
+the sender apparently has erred.&nbsp;
+<H4>
+<A NAME="_Toc359213605"></A>300 BAD REQUEST</H4>
+The recipient was unable to understand the request due to malformed syntax.&nbsp;
+<H4>
+<A NAME="_Toc359213606"></A>301 FORBIDDEN</H4>
+Although the recipient understood the request message, it is refusing to
+fulfill it. For example, trying to retract an agent which can not be retract
+due to security reasons.&nbsp;
+<H4>
+<A NAME="_Toc359213607"></A>302 NOT FOUND</H4>
+The recipient could not find the requested resource<I>. </I>For example,
+trying to fetch a class which does not exist at the destination host.&nbsp;
+<H3>
+<A NAME="_Toc359213608"></A>9.4 Recipient Error 4xx</H3>
+Response status codes beginning with the digit four (4) indicates that
+the recipient has erred or is unable of performing the request.&nbsp;
+<H4>
+<A NAME="_Toc359213609"></A>400 INTERNAL RECIPIENT ERROR</H4>
+The recipient encountered an unexpected condition which prevented it from
+fulfilling the request. For example, The current ATP version at the recipient
+does not matched with the ATP version specified in the request line.&nbsp;
+<H4>
+<A NAME="_Toc359213610"></A>401 NOT IMPLEMENTED</H4>
+The recipient does not support the functionality required to fulfill the
+request. For example, using a request method which is neither implemented
+nor familiar to the recipient.&nbsp;
+<H4>
+<A NAME="_Toc359213611"></A>402 BAD GATEWAY</H4>
+The recipient, while acting as a gateway or proxy, received an invalid
+response from upstream server.&nbsp;
+<H4>
+<A NAME="_Toc359213612"></A>403 SERVICE UNAVAILABLE</H4>
+The recipient is currently unable to handle the request due to a temporary
+overloading of the recipient. That is, the recipient is busy handling previous
+messages.&nbsp;
+<H3>
+<BR>
+<A NAME="_Toc359213613"></A>10. Acknowledgments</H3>
+This specification is modeled on the HTTP/1.0 specification. Thanks to
+its authors Tim Berners-Lee, Roy Fielding, and Henrik Frystyk.&nbsp;
+<H2>
+References</H2>
+[1] R. Braden.&nbsp; &quot;Requirements for Internet hosts-application
+and support&quot;,&nbsp; STD 3,&nbsp; RFC 1123, IETF,&nbsp; October 1989.&nbsp;
+<BR>
+<BR>[2] J. Reynolds,&nbsp; J. Postel. &quot;Assigned Numbers&quot;, STD2, RFC
+1700,&nbsp; IETF, October 1994.&nbsp;
+<BR>
+<BR>[3] T. Berners-Lee, L. Masinter, M. McCahill. &quot;Uniform Resource Locators
+(URL)&quot;,&nbsp; RFC 1738, CERN, December 1994.&nbsp;
+<BR>
+<BR>[4] R. Fielding. &quot;Relative Uniform Resource Locators&quot;,&nbsp;
+RFC 1808,&nbsp; UC Irvine, June 1995.&nbsp;
+<BR>
+</BODY>
+</HTML>
