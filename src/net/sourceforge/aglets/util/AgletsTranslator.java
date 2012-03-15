@@ -51,7 +51,7 @@ public class AgletsTranslator implements Cloneable {
      * @param localeBaseName
      *            the resource name (e.g., the name of properties file)
      * @param currentLocale
-     *            the locale for which it is required the translation
+     *            the locale for which the translation is required
      */
     private AgletsTranslator(String localeBaseName, Locale currentLocale) {
 	super();
@@ -62,14 +62,8 @@ public class AgletsTranslator implements Cloneable {
 	try {
 	    this.bundle = ResourceBundle.getBundle(this.baseName, currentLocale);
 	} catch (MissingResourceException e) {
-	    // if here the bundle cannot be found with the standard locale, try
-	    // using no locale at all
-	    try {
-		this.bundle = ResourceBundle.getBundle(localeBaseName);
-	    } catch (MissingResourceException ex) {
-		logger.error("Exception caught while trying to build a resource bundle", ex);
-		this.bundle = null;
-	    }
+	    logger.error("Exception caught while trying to build a resource bundle", e);
+	    this.bundle = null;
 	} catch (NullPointerException e) {
 	    logger.error("Exception caught while trying to build a resource bundle", e);
 	    this.bundle = null;
