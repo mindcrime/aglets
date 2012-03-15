@@ -155,30 +155,51 @@ ListSelectionListener {
     }
 
     /**
-     * Adds a new entry to the aglet list and immediatly saves it to the aglet
+     * Adds a new entry to the aglet list and immediately saves it to the aglet
      * resource.
      * 
      */
     protected void addAgletToList() {
-	String name = this.urlField.getText().trim();
+	String urlFieldText = this.urlField.getText().trim();
+	String classFieldText = this.classField.getText().trim();
 
-	if ((name.length() > 0) && (name.charAt(name.length() - 1) != '/')) {
-	    name += '/';
-	}
-	name += this.classField.getText().trim();
-
-	if (name.length() == 0) {
+	// minimal validation for now
+	if ((classFieldText.length() == 0) || (urlFieldText.length() == 0)) {
 	    return;
 	}
 
+	// URI of the code base
+	URI cbUri = null;
+	// string representation of the URI of the aglet's class
+	String itemText = null;
+	try {
+		// parse the entered code base URI 
+		cbUri = new URL(urlFieldText).toURI();
+		// convert complete URI to text via URL form
+		itemText = new URI(
+				cbUri.getScheme(),
+				cbUri.getUserInfo(),
+				cbUri.getHost(),
+				cbUri.getPort(),
+				cbUri.getPath(),
+				classFieldText,
+				cbUri.getFragment()
+				).toURL().toString();
+	} catch (MalformedURLException ex) {
+		return;
+	} catch (URISyntaxException ex) {
+		return;
+	}
+
+	// avoid adding a duplicate
 	int num = this.selectionList.getItemCount();
 
 	for (int i = 0; i < num; i++) {
-	    if (this.selectionList.getItem(i).equals(name)) {
+	    if (this.selectionList.getItem(i).equals(itemText)) {
 		return;
 	    }
 	}
-	this.selectionList.addItem(name);
+	this.selectionList.addItem(itemText);
 	this.updateProperty();
     }
 
@@ -263,15 +284,22 @@ ListSelectionListener {
 		return;
 	}
 
-	URL selectedUrl = null;
 	URI selectedUri = null;
 	String classFieldText = null;
 	String urlFieldText = null;
 	try {
-		selectedUrl = new URL(selectedItem);
-		selectedUri = selectedUrl.toURI();
+		// parse the URI from the user interface
+		selectedUri = new URL(selectedItem).toURI();
 		// derive a URI that omits the query part
-		urlFieldText = selectedUri.resolve(".").toString();
+		urlFieldText = new URI(
+				selectedUri.getScheme(),
+				selectedUri.getUserInfo(),
+				selectedUri.getHost(),
+				selectedUri.getPort(),
+				selectedUri.getPath(),
+				null,
+				selectedUri.getFragment()
+				).toURL().toString();
 		// retrieve just the query part
 		classFieldText = selectedUri.getQuery();
 	} catch (MalformedURLException ex) {

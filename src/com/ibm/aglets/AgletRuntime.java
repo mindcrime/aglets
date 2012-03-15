@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.KeyStore;
@@ -1028,7 +1029,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 	// File system path to the example aglets
 	File examples_dir = new File(aglets_public);
 	if (examples_dir.exists()) {
-		URI examples_dir_uri = examples_dir.toURI();
+		URI ed_uri = examples_dir.toURI();
 
 		String examples_package = "net.sourceforge.aglets.examples";
 		String[] examples_class_suffixes = {
@@ -1039,24 +1040,38 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 				"http.WebServerAglet",
 				"talk.TalkMaster"
 				};
-		URI aglet_uri = null;
-		URL aglet_url = null;
+		// string representation of the URI of the aglet's class
+		String aglet_uri = null;
 		// delimiter between URLs, initially empty for the front of the result string
 		String separator = "";
 		for (String s: examples_class_suffixes) {
-			// create the URI from elements
-			aglet_uri = examples_dir_uri.resolve("?" + examples_package + "." + s);
 			try {
-				aglet_url = aglet_uri.toURL();
+				// create the URI from elements
+				aglet_uri = new URI(
+						ed_uri.getScheme(),
+						ed_uri.getUserInfo(),
+						ed_uri.getHost(),
+						ed_uri.getPort(),
+						ed_uri.getPath(),
+						examples_package + "." + s,
+						ed_uri.getFragment()
+						).toURL().toString();
+				//append separator
 				aglets_list.append(separator);
-				aglets_list.append(aglet_url.toString());
-				// switch separator to actual value
+				// append next list item
+				aglets_list.append(aglet_uri);
+				// switch separator to actual value from the second item onwards
 				separator = " ";
+			} catch (URISyntaxException ex) {
+				// assuming that the manipulations here in code have not ruined
+				// the URL, blame the public directory
+				logger.warn("'Public' aglets directory leads to a URI syntax error: "
+						+ ed_uri.toString());
 			} catch (MalformedURLException e) {
-				// assuming that he manipulations here in code have not ruined
+				// assuming that the manipulations here in code have not ruined
 				// the URL, blame the public directory
 				logger.warn("'Public' aglets directory leads to a malformed URL: "
-						+ examples_dir_uri.toString());
+						+ ed_uri.toString());
 			}
 		}
 	} else {
