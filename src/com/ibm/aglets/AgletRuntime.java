@@ -1091,7 +1091,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 						ed_uri.getPath(),
 						examples_package + "." + s,
 						ed_uri.getFragment()
-						).toURL().toString();
+						).normalize().toURL().toString();
 				// append separator
 				aglets_list.append(separator);
 				// append next list item
@@ -1123,7 +1123,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 					jar_uri.getPath(),
 					"net.sourceforge.aglets.examples.translator.TranslatingAglet",
 					jar_uri.getFragment()
-					).toURL().toString();
+					).normalize().toURL().toString();
 			// append separator
 			aglets_list.append(separator);
 			// append next list item

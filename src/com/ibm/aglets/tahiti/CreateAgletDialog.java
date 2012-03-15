@@ -184,7 +184,7 @@ ListSelectionListener {
 				cbUri.getPath(),
 				classFieldText,
 				cbUri.getFragment()
-				).toURL().toString();
+				).normalize().toURL().toString();
 	} catch (MalformedURLException ex) {
 		return;
 	} catch (URISyntaxException ex) {
@@ -299,7 +299,7 @@ ListSelectionListener {
 				selectedUri.getPath(),
 				null,
 				selectedUri.getFragment()
-				).toURL().toString();
+				).normalize().toURL().toString();
 		// retrieve just the query part
 		classFieldText = selectedUri.getQuery();
 	} catch (MalformedURLException ex) {
