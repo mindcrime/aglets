@@ -20,8 +20,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.util.StringTokenizer;
-
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -245,12 +243,11 @@ ListSelectionListener {
 
 	this.selectionList.removeAllItems();
 
-	StringTokenizer st = new StringTokenizer(lists, " ", false);
+	String[] sa = lists.split(" ");
 
-	while (st.hasMoreTokens()) {
-	    String token = st.nextToken();
-	    this.logger.debug("Adding the item " + token + "to the agent list");
-	    this.selectionList.addItem(token);
+	for (String s: sa) {
+	    this.logger.debug("Adding to the agent list: " + s);
+	    this.selectionList.addItem(s);
 	}
 
     }
