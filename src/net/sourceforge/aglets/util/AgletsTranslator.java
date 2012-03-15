@@ -71,6 +71,32 @@ public class AgletsTranslator implements Cloneable {
     }
 
     /**
+     * Builds this translator object with the specified class object and
+     * locale.
+     * 
+     * @param class
+     *            the class for which the resource bundle is requested
+     * @param currentLocale
+     *            the locale for which the translation is required
+     */
+    private AgletsTranslator(Class<?> callerClass, Locale currentLocale) {
+	super();
+
+	this.baseName = callerClass.getName();
+
+	// build the resource bundle
+	try {
+	    this.bundle = ResourceBundle.getBundle(this.baseName, currentLocale, callerClass.getClassLoader());
+	} catch (MissingResourceException e) {
+	    logger.error("Exception caught while trying to build a resource bundle", e);
+	    this.bundle = null;
+	} catch (NullPointerException e) {
+	    logger.error("Exception caught while trying to build a resource bundle", e);
+	    this.bundle = null;
+	}
+    }
+
+    /**
      * Translates a specific part of text, without arguments (i.e., you have to
      * handle escape characters outside this method). If the bundle has not been
      * created or if the text has no way to be translated (e.g., it is the
@@ -152,6 +178,31 @@ public class AgletsTranslator implements Cloneable {
 	    return translators.get(key);
 	else {
 	    AgletsTranslator translator = new AgletsTranslator(localeBaseName, currentLocale);
+	    translators.put(key, translator);
+	    return translator;
+	}
+    }
+
+    /**
+     * Provides an implementation of the AgletsTranslator. If the translator has
+     * already been loaded, the previous one is returned.
+     * 
+     * @param localeBaseName
+     *            the base name for the translation
+     * @param currentLocale
+     *            the locale
+     * @return the aglets translator
+     */
+    public static AgletsTranslator getInstance(
+                                               Class<?> callerClass,
+                                               Locale currentLocale) {
+	String key = callerClass.getName() + currentLocale.toString();
+
+	// search first in the cache
+	if (translators.containsKey(key))
+	    return translators.get(key);
+	else {
+	    AgletsTranslator translator = new AgletsTranslator(callerClass, currentLocale);
 	    translators.put(key, translator);
 	    return translator;
 	}

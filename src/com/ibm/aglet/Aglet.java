@@ -836,7 +836,7 @@ public abstract class Aglet implements java.io.Serializable {
      */
     protected final AgletsTranslator getTranslator(boolean reinitialize) {
 	if ((this.translator == null) && reinitialize)
-	    this.translator = AgletsTranslator.getInstance(this.getClass().getName(), Locale.getDefault());
+	    this.translator = AgletsTranslator.getInstance(this.getClass(), Locale.getDefault());
 
 	return this.translator;
     }

@@ -17,8 +17,6 @@ public class TranslatingAglet extends Aglet {
     public void run() {
 	System.out.println("Hello, I'm a translating agent...");
 	System.out.println("let me see what translator I've got....");
-	System.out.println("The translator property file should be in a subdirectory that includes my");
-	System.out.println("fully qualified name and should be in the classpath (for instance under the lib directory");
 
 	// get the translator
 	AgletsTranslator translator = this.getTranslator(true);
