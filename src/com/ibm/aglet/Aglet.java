@@ -91,7 +91,7 @@ public abstract class Aglet implements java.io.Serializable {
      * platform, since the agent should be localized to the platform it is
      * running on.
      */
-    private transient AgletsTranslator translator = AgletsTranslator.getInstance(this.getClass().getName(), Locale.getDefault());
+    private transient AgletsTranslator translator = null;
 
     /**
      * The logger associated with this agent.
