@@ -154,8 +154,15 @@ Aglets SDK Build ${version}
       </classpath>
       <include name="net/sourceforge/aglets/examples/**/*.java"/>
     </javac>
+    <!-- TranslatingAglet is special: it has a properties file and comes in a JAR. -->
     <copy file="${src.dir}/net/sourceforge/aglets/examples/translator/TranslatingAglet.properties"
       todir="${public.dir}/net/sourceforge/aglets/examples/translator/"/>
+    <jar jarfile="${public.dir}/translator.jar">
+      <fileset dir="${public.dir}">
+        <include name="net/sourceforge/aglets/examples/translator/*" />
+      </fileset>
+    </jar>
+    <delete dir="${public.dir}/net/sourceforge/aglets/examples/translator/" />
   </target>
 
   <!--

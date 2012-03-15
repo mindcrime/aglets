@@ -1077,6 +1077,9 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 		String aglet_uri = null;
 		// delimiter between URLs, initially empty for the front of the result string
 		String separator = "";
+		// actual value of the separator, to be assigned to 'separator'
+		// when the program is sure that the first element has been appended
+		String actual_separator = " ";
 		for (String s: examples_class_suffixes) {
 			try {
 				// create the URI from elements
@@ -1094,7 +1097,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 				// append next list item
 				aglets_list.append(aglet_uri);
 				// switch separator to actual value from the second item onwards
-				separator = " ";
+				separator = actual_separator;
 			} catch (URISyntaxException ex) {
 				// assuming that the manipulations here in code have not ruined
 				// the URL, blame the public directory
@@ -1106,6 +1109,37 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 				logger.warn("'Public' aglets directory leads to a malformed URL: "
 						+ ed_uri.toString());
 			}
+		}
+		// append to the list of aglets a local one that comes in a JAR file
+		URI jar_uri = null;
+		try {
+			File jar = new File(aglets_public + File.separator + "translator.jar");
+			jar_uri = jar.toURI();
+			String jar_aglet = new URI (
+					jar_uri.getScheme(),
+					jar_uri.getUserInfo(),
+					jar_uri.getHost(),
+					jar_uri.getPort(),
+					jar_uri.getPath(),
+					"net.sourceforge.aglets.examples.translator.TranslatingAglet",
+					jar_uri.getFragment()
+					).toURL().toString();
+			// append separator
+			aglets_list.append(separator);
+			// append next list item
+			aglets_list.append(jar_aglet);
+			// switch separator to actual value in case it hasn't been set yet
+			separator = actual_separator;
+		} catch (URISyntaxException ex) {
+			// assuming that the manipulations here in code have not ruined
+			// the URL, blame the jar file
+			logger.warn("Location of 'public/translator.jar' leads to a URI syntax error: "
+					+ jar_uri.toString());
+		} catch (MalformedURLException e) {
+			// assuming that the manipulations here in code have not ruined
+			// the URL, blame the jar file
+			logger.warn("Location of 'public/translator.jar' leads to a malformed URL: "
+					+ jar_uri.toString());
 		}
 	} else {
 		logger.warn("'Public' directory missing:" + aglets_public);
