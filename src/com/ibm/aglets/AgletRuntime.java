@@ -1141,6 +1141,18 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 			logger.warn("Location of 'public/translator.jar' leads to a malformed URL: "
 					+ jar_uri.toString());
 		}
+		// append to the list of aglets a few stored on a web server
+		// append separator
+		aglets_list.append(separator);
+		// append next list item
+		aglets_list.append("http://aglets.sourceforge.net/aglet_examples"
+				+ "?net.sourceforge.aglets.examples.start.FirstAglet");
+		// append actual separator (regardless of whether 'separator' contains or not
+		// the actual_separator value, here we are certain that the previous value has been appended)
+		aglets_list.append(actual_separator);
+		// append next list item
+		aglets_list.append("http://aglets.sourceforge.net/aglet_examples/translator.jar"
+				+ "?net.sourceforge.aglets.examples.translator.TranslatingAglet");
 	} else {
 		logger.warn("'Public' directory missing:" + aglets_public);
 	}
