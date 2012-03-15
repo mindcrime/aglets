@@ -19,6 +19,10 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -246,7 +250,7 @@ ListSelectionListener {
     }
 
     /**
-     * Manages events from the list.
+     * Manages events from the list. Is called both on mousedown and mouseup.
      * 
      * @param e
      *            the event
@@ -255,23 +259,30 @@ ListSelectionListener {
     public void valueChanged(ListSelectionEvent e) {
 	// get the list selected in the list
 	String selectedItem = this.selectionList.getSelectedItem();
-	if ((selectedItem == null) || (selectedItem.length() == 0))
-	    return;
-
-	// get the pieces of the string to show
-	if (selectedItem.toLowerCase().startsWith("http://")
-		|| selectedItem.toLowerCase().startsWith("https://")
-		|| selectedItem.toLowerCase().startsWith("atps://")
-		|| selectedItem.toLowerCase().startsWith("atp://")
-		|| selectedItem.toLowerCase().startsWith("file://")) {
-	    int delimiter = selectedItem.lastIndexOf('/');
-
-	    this.classField.setText(selectedItem.substring(delimiter + 1));
-	    this.urlField.setText(selectedItem.substring(0, delimiter));
-	} else {
-	    this.classField.setText(selectedItem);
-	    this.urlField.setText("");
+	if ((selectedItem == null) || (selectedItem.length() == 0)) {
+		return;
 	}
+
+	URL selectedUrl = null;
+	URI selectedUri = null;
+	String classFieldText = null;
+	String urlFieldText = null;
+	try {
+		selectedUrl = new URL(selectedItem);
+		selectedUri = selectedUrl.toURI();
+		// derive a URI that omits the query part
+		urlFieldText = selectedUri.resolve(".").toString();
+		// retrieve just the query part
+		classFieldText = selectedUri.getQuery();
+	} catch (MalformedURLException ex) {
+		classFieldText = selectedItem;
+		urlFieldText = null;
+	} catch (URISyntaxException ex) {
+		classFieldText = selectedItem;
+		urlFieldText = null;
+	}
+	this.classField.setText(classFieldText);
+	this.urlField.setText(urlFieldText);
     }
 
 }

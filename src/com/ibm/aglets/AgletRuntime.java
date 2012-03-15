@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.KeyStore;
@@ -1019,27 +1020,59 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 	}
 
 	String aglets_home = res.getString("aglets.home", null);
+	String aglets_public = aglets_home + File.separator + "public";
 
-	// URL of the example aglets
-	String ex_URL = "file://"+System.getProperty("user.dir") + File.separator+"public" + File.separator;
+	// Pre-loaded list of local example aglets 
+	StringBuilder aglets_list = new StringBuilder();
+
+	// File system path to the example aglets
+	File examples_dir = new File(aglets_public);
+	if (examples_dir.exists()) {
+		URI examples_dir_uri = examples_dir.toURI();
+
+		String examples_package = "net.sourceforge.aglets.examples";
+		String[] examples_class_suffixes = {
+				"simple.DisplayAglet",
+				"hello.HelloAglet",
+				"itinerary.CirculateAglet",
+				"mdispatcher.HelloAglet",
+				"http.WebServerAglet",
+				"talk.TalkMaster"
+				};
+		URI aglet_uri = null;
+		URL aglet_url = null;
+		// delimiter between URLs, initially empty for the front of the result string
+		String separator = "";
+		for (String s: examples_class_suffixes) {
+			// create the URI from elements
+			aglet_uri = examples_dir_uri.resolve("?" + examples_package + "." + s);
+			try {
+				aglet_url = aglet_uri.toURL();
+				aglets_list.append(separator);
+				aglets_list.append(aglet_url.toString());
+				// switch separator to actual value
+				separator = " ";
+			} catch (MalformedURLException e) {
+				// assuming that he manipulations here in code have not ruined
+				// the URL, blame the public directory
+				logger.warn("'Public' aglets directory leads to a malformed URL: "
+						+ examples_dir_uri.toString());
+			}
+		}
+	} else {
+		logger.warn("'Public' directory missing:" + aglets_public);
+	}
 
 	//
 	// Default Resources
 	//
 	String default_resources[][] = {
-		{ "aglets.public.root", aglets_home + File.separator + "public" },
+		{ "aglets.public.root", aglets_public },
 		{ "aglets.viewer", DEFAULT_VIEWER },
 		{ "aglets.addressbook", "" },
 
 		// {"aglets.box.userid", mailaddress},
-		{
-		    "aglets.agletsList",
-		        ex_URL + "net.sourceforge.aglets.examples.simple.DisplayAglet"
-		+ " " + ex_URL + "net.sourceforge.aglets.examples.hello.HelloAglet"
-		+ " " + ex_URL + "net.sourceforge.aglets.examples.itinerary.CirculateAglet"
-		+ " " + ex_URL + "net.sourceforge.aglets.examples.mdispatcher.HelloAglet"
-		+ " " + ex_URL + "net.sourceforge.aglets.examples.http.WebServerAglet"
-		+ " " + ex_URL + "net.sourceforge.aglets.examples.talk.TalkMaster" }, };
+		{ "aglets.agletsList", aglets_list.toString() } };
 
 	res.setDefaultResources(default_resources);
 
