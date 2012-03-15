@@ -1030,15 +1030,48 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 	File examples_dir = new File(aglets_public);
 	if (examples_dir.exists()) {
 		URI ed_uri = examples_dir.toURI();
-
+		// Create a list of URIs of example aglets
 		String examples_package = "net.sourceforge.aglets.examples";
 		String[] examples_class_suffixes = {
 				"simple.DisplayAglet",
+				"simple.TimeoutAglet",
+				"simple.VanillaAglet",
 				"hello.HelloAglet",
 				"itinerary.CirculateAglet",
+				"itinerary.VisitingAglet",
+				"itinerary.StationaryAglet",
+				"itinerary.MessengerAglet",
+				"logger.LoggingAgent",
 				"mdispatcher.HelloAglet",
 				"http.WebServerAglet",
-				"talk.TalkMaster"
+				"talk.TalkMaster",
+				"talk.TalkSlave",
+				"events.MobilityEvents",
+				"finder.Finder",
+				"finder.HostCollector",
+				"finder.HostList",
+				"finder.HostTravellor",
+				"finder.Test",
+				"finder.Traveller",
+				"openurl.OpenURL",
+				"patterns.Finger",
+				"patterns.FingerSlave",
+				"patterns.Watcher",
+				"patterns.WatcherNotifier",
+				"patterns.Writer",
+				"patterns.WriterSlave",
+				"protection.ProtectionAglet",
+				"protection.TargetAglet",
+				"simplemasterslave.SimpleMaster",
+				"simplemasterslave.SimpleSlave",
+				"start.FirstAglet",
+				"thread.AgletSleeping",
+				"thread.AgletThread",
+				"thread.ThreadAgent",
+				"thread.ReentrantThreadAgent",
+				"thread.SleepingAgent",
+				"watcher.ProxyWatcher",
+				"watcher.WatcherSlave"
 				};
 		// string representation of the URI of the aglet's class
 		String aglet_uri = null;
@@ -1056,7 +1089,7 @@ final public class AgletRuntime extends com.ibm.aglet.system.AgletRuntime {
 						examples_package + "." + s,
 						ed_uri.getFragment()
 						).toURL().toString();
-				//append separator
+				// append separator
 				aglets_list.append(separator);
 				// append next list item
 				aglets_list.append(aglet_uri);
