@@ -28,6 +28,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import net.sourceforge.aglets.log.AgletsLogger;
+import net.sourceforge.aglets.util.AgletsTranslator;
 
 import com.ibm.aglet.AgletContext;
 import com.ibm.aglet.system.AgletRuntime;
@@ -610,6 +611,7 @@ public class Main {
 	logger.info("Classpath is specified as "
 		+ props.get("aglets.class.path"));
 	logger.info("Real classpath = " + props.getProperty("java.class.path"));
+	logger.info( String.format( "AGLETS_HOME is %s", AgletsTranslator.getAgletsHome() ));
 
 	// aglets.public.root
 	p = props.getProperty("aglets.public.root", null);

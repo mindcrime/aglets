@@ -8,8 +8,9 @@ LOCALCLASSPATH="lib:lib/classes:lib/*:${CLASSPATH}"
 while true
 do
     cd "${AGLET_HOME}"
+    AGLET_HOME=`pwd`
     java \
-        -Daglets.home='.' \
+        -Daglets.home="${AGLET_HOME}" \
         -classpath "$LOCALCLASSPATH" \
         com.ibm.awb.launcher.Main \
         -f 'cnf/aglets.props' \

@@ -582,7 +582,8 @@ public class JComponentBuilder {
 	// try to load the file if specified
 	if (fileName != null) {
 	    try {
-		File file = new File(fileName);
+		File file = getFile( fileName );
+		
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 
 		String line = null;
@@ -603,5 +604,29 @@ public class JComponentBuilder {
 
 	// all done
 	return text;
+    }
+    
+    
+    /**
+     * Utility method to get a file from a file name. The method checks if the file exists, and if not
+     * (in the case the name is relative) tries to get a file in the AGLETS_HOME directory.
+     * @param fileName the name of the file
+     * @return the file object
+     * @throws IOException if the file cannot be accessed
+     */
+    public static final File getFile( String fileName ) throws IOException{
+    	File file = new File(fileName);
+
+    	// if the file does not exist and is a relative file name, try again
+    	// with the AGLETS_HOME path
+    	if( ! file.exists() && ! file.isAbsolute() )
+    		file = new File ( AgletsTranslator.getAgletsHome() + "/" + fileName );
+
+    	
+    	if( ! file.exists() )
+    		throw new IOException( String.format( "The file %s does not exist in the local directory or in the Aglets Home", fileName) );
+
+    	// here the file exists!
+    	return file;
     }
 }

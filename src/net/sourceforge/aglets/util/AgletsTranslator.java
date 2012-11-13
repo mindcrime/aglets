@@ -207,5 +207,13 @@ public class AgletsTranslator implements Cloneable {
 	    return translator;
 	}
     }
+    
+    /**
+     * Provides the current aglets home for the running instance.
+     * @return the aglets home string
+     */
+    public static final String getAgletsHome(){
+    	return System.getProperty( "aglets.home" );
+    }
 
 }
