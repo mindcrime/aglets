@@ -23,45 +23,45 @@ import com.ibm.aglet.message.Message;
 
 // now this is reusable!
 public class Register extends MobilityAdapter {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -494732523153736992L;
-    AgletProxy _finder;
-    Message _msg = new Message("Register");
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -494732523153736992L;
+	AgletProxy _finder;
+	Message _msg = new Message("Register");
 
-    Register(Aglet a, AgletProxy finder, String name) {
-	a.addMobilityListener(this);
-	this._msg.setArg("NAME", name);
-	this._finder = finder;
-	AgletProxy proxy = a.getAgletContext().getAgletProxy(a.getAgletID());
+	Register(final Aglet a, final AgletProxy finder, final String name) {
+		a.addMobilityListener(this);
+		_msg.setArg("NAME", name);
+		_finder = finder;
+		final AgletProxy proxy = a.getAgletContext().getAgletProxy(a.getAgletID());
 
-	this.register(proxy);
-    }
-
-    @Override
-    public void onArrival(MobilityEvent me) {
-	System.out.println(me.getAgletProxy());
-	this.register(me.getAgletProxy());
-    }
-
-    public void register(AgletProxy proxy) {
-	this._msg.setArg("PROXY", proxy);
-	try {
-	    this._finder.sendOnewayMessage(this._msg);
-	} catch (Exception ex) {
-	    ex.printStackTrace();
+		register(proxy);
 	}
-    }
 
-    public void unregister() {
-	Message unreg = new Message("Unregister");
-
-	unreg.setArg("NAME", this._msg.getArg("NAME"));
-	try {
-	    this._finder.sendOnewayMessage(unreg);
-	} catch (Exception ex) {
-	    ex.printStackTrace();
+	@Override
+	public void onArrival(final MobilityEvent me) {
+		System.out.println(me.getAgletProxy());
+		register(me.getAgletProxy());
 	}
-    }
+
+	public void register(final AgletProxy proxy) {
+		_msg.setArg("PROXY", proxy);
+		try {
+			_finder.sendOnewayMessage(_msg);
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public void unregister() {
+		final Message unreg = new Message("Unregister");
+
+		unreg.setArg("NAME", _msg.getArg("NAME"));
+		try {
+			_finder.sendOnewayMessage(unreg);
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 }

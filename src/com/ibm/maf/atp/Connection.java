@@ -24,17 +24,17 @@ import java.io.OutputStream;
  */
 public interface Connection {
 
-    public void close() throws IOException;
+	public void close() throws IOException;
 
-    public String getAuthenticatedSecurityDomain();
+	public String getAuthenticatedSecurityDomain();
 
-    public InputStream getInputStream() throws IOException;
+	public InputStream getInputStream() throws IOException;
 
-    public String getMessage();
+	public String getMessage();
 
-    public OutputStream getOutputStream() throws IOException;
+	public OutputStream getOutputStream() throws IOException;
 
-    public boolean isEstablished();
+	public boolean isEstablished();
 
-    public void sendRequest() throws IOException;
+	public void sendRequest() throws IOException;
 }

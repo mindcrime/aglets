@@ -26,54 +26,54 @@ import sun.audio.ContinuousAudioDataStream;
 
 public class AgletAudioClip implements AudioClip, java.io.Serializable {
 
-    static final long serialVersionUID = -694436981030784266L;
+	static final long serialVersionUID = -694436981030784266L;
 
-    URL url;
-    AudioData data;
-    transient InputStream stream;
+	URL url;
+	AudioData data;
+	transient InputStream stream;
 
-    public AgletAudioClip(URL u, AudioData d) {
-	this.url = u;
-	this.data = d;
-    }
-
-    @Override
-    public int hashCode() {
-	return this.url.hashCode();
-    }
-
-    @Override
-    public synchronized void loop() {
-	this.stop();
-	if (this.data != null) {
-	    this.stream = new ContinuousAudioDataStream(this.data);
-	    AudioPlayer.player.start(this.stream);
+	public AgletAudioClip(final URL u, final AudioData d) {
+		url = u;
+		data = d;
 	}
-    }
 
-    @Override
-    public synchronized void play() {
-	this.stop();
-	if (this.data != null) {
-	    this.stream = new AudioDataStream(this.data);
-	    AudioPlayer.player.start(this.stream);
+	@Override
+	public int hashCode() {
+		return url.hashCode();
 	}
-    }
 
-    @Override
-    public synchronized void stop() {
-	if (this.stream != null) {
-	    try {
-		AudioPlayer.player.stop(this.stream);
-		this.stream.close();
-	    } catch (IOException e) {
-	    }
+	@Override
+	public synchronized void loop() {
+		stop();
+		if (data != null) {
+			stream = new ContinuousAudioDataStream(data);
+			AudioPlayer.player.start(stream);
+		}
 	}
-	return;
-    }
 
-    @Override
-    public String toString() {
-	return this.getClass().toString() + "[" + this.url + "]";
-    }
+	@Override
+	public synchronized void play() {
+		stop();
+		if (data != null) {
+			stream = new AudioDataStream(data);
+			AudioPlayer.player.start(stream);
+		}
+	}
+
+	@Override
+	public synchronized void stop() {
+		if (stream != null) {
+			try {
+				AudioPlayer.player.stop(stream);
+				stream.close();
+			} catch (final IOException e) {
+			}
+		}
+		return;
+	}
+
+	@Override
+	public String toString() {
+		return this.getClass().toString() + "[" + url + "]";
+	}
 }

@@ -7,15 +7,15 @@ import com.ibm.aglets.tahiti.MainWindow;
 
 public class RoleXListener implements ActionListener {
 
-    protected MainWindow mainwindow = null;
+	protected MainWindow mainwindow = null;
 
-    public RoleXListener(MainWindow mainwindow) {
-	super();
-	this.mainwindow = mainwindow;
-    }
+	public RoleXListener(final MainWindow mainwindow) {
+		super();
+		this.mainwindow = mainwindow;
+	}
 
-    @Override
-    public void actionPerformed(ActionEvent event) {
+	@Override
+	public void actionPerformed(final ActionEvent event) {
 
-    }
+	}
 }

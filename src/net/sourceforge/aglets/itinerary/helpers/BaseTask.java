@@ -13,68 +13,68 @@ import net.sourceforge.aglets.itinerary.Task;
  */
 public class BaseTask implements Task, Serializable {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -1304922928844500937L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1304922928844500937L;
 
-    /**
-     * The execution policy for this task.
-     */
-    private int executionPolicy;
+	/**
+	 * The execution policy for this task.
+	 */
+	private final int executionPolicy;
 
-    /**
-     * A description of the task.
-     */
-    private String description = null;
+	/**
+	 * A description of the task.
+	 */
+	private String description = null;
 
-    /**
-     * Constructs the task with the specified policy, that is a value of the
-     * execution as specified in the Task interface.
-     * 
-     * @param policy
-     *            the policy to adopt.
-     */
-    public BaseTask(int policy) {
-	super();
-	this.executionPolicy = policy;
-	this.description = "(No description available)";
-    }
+	/**
+	 * Constructs the task with the specified policy, that is a value of the
+	 * execution as specified in the Task interface.
+	 * 
+	 * @param policy
+	 *            the policy to adopt.
+	 */
+	public BaseTask(final int policy) {
+		super();
+		executionPolicy = policy;
+		description = "(No description available)";
+	}
 
-    /**
-     * Constructs the task with the specified policy and the description.
-     * 
-     * @param policy
-     *            the policy for the task execution.
-     * @param description
-     *            the description of this task.
-     */
-    public BaseTask(int policy, String description) {
-	this(policy);
-	this.description = description;
-    }
+	/**
+	 * Constructs the task with the specified policy and the description.
+	 * 
+	 * @param policy
+	 *            the policy for the task execution.
+	 * @param description
+	 *            the description of this task.
+	 */
+	public BaseTask(final int policy, final String description) {
+		this(policy);
+		this.description = description;
+	}
 
-    /**
-     * Executes nothing!
-     */
-    @Override
-    public void execute() {
+	/**
+	 * Executes nothing!
+	 */
+	@Override
+	public void execute() {
 
-    }
+	}
 
-    /**
-     * Returns the execution type for this task.
-     * 
-     * @return the execution type as specified in the Task interface.
-     */
-    @Override
-    public int getExecutionType() {
-	return this.executionPolicy;
-    }
+	/**
+	 * Returns the execution type for this task.
+	 * 
+	 * @return the execution type as specified in the Task interface.
+	 */
+	@Override
+	public int getExecutionType() {
+		return executionPolicy;
+	}
 
-    @Override
-    public String toString() {
-	return this.description + " (execution policy = "
-	+ this.executionPolicy + ")";
-    }
+	@Override
+	public String toString() {
+		return description + " (execution policy = "
+		+ executionPolicy + ")";
+	}
 }

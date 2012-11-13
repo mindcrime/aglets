@@ -10,9 +10,9 @@ package com.ibm.aglet;
  */
 public class Arguments extends com.ibm.aglet.message.Arguments {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1491120400265782018L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1491120400265782018L;
 
 }

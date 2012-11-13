@@ -19,89 +19,89 @@ import java.io.ObjectInputStream;
 
 public abstract class WeakRef implements Ref {
 
-    /* package */
-    long _ref_count = 0;
-    protected WeakRefTable _table = null;
+	/* package */
+	long _ref_count = 0;
+	protected WeakRefTable _table = null;
 
-    protected WeakRef(WeakRefTable table) {
-	this._table = table;
-    }
-
-    /*
-     * Find new reference if any
-     */
-    abstract protected Ref findRef();
-
-    /*
-     * Find a reference in a table.
-     */
-    abstract protected Ref findRef(ObjectInputStream s)
-    throws IOException,
-    ClassNotFoundException;
-
-    /* package */
-    /* synchronized */
-    @Override
-    public final Ref getRef(VirtualRef vref) {
-	Ref found = this.findRef();
-
-	// this reference must be updated.
-	if (found != null) {
-	    vref.setRef(found);
-	    return found;
+	protected WeakRef(final WeakRefTable table) {
+		_table = table;
 	}
-	return this;
-    }
 
-    /*
-     * Get Reference ID
-     */
-    abstract protected Object getRefID();
+	/*
+	 * Find new reference if any
+	 */
+	abstract protected Ref findRef();
 
-    /*
-     * Called when referenced
-     */
-    /* package */
-    @Override
-    synchronized public final void referenced() {
+	/*
+	 * Find a reference in a table.
+	 */
+	abstract protected Ref findRef(ObjectInputStream s)
+	throws IOException,
+	ClassNotFoundException;
 
-	// System.out.println("-- referenced --");
-	// Thread.dumpStack();
-	this._ref_count++;
-    }
+	/* package */
+	/* synchronized */
+	@Override
+	public final Ref getRef(final VirtualRef vref) {
+		final Ref found = this.findRef();
 
-    /*
-     * Get reference and increment refernce count
-     */
-    /* package */
-    @Override
-    public final void setRef(VirtualRef vref, ObjectInputStream s)
-    throws IOException,
-    ClassNotFoundException {
-
-	// this reference must be already updated.
-	Ref ref = this.findRef(s);
-
-	if (ref != null) {
-	    vref.setRef(ref);
+		// this reference must be updated.
+		if (found != null) {
+			vref.setRef(found);
+			return found;
+		}
+		return this;
 	}
-    }
 
-    @Override
-    public String toString() {
-	return "WeakRef[count=" + this._ref_count + "]";
-    }
+	/*
+	 * Get Reference ID
+	 */
+	abstract protected Object getRefID();
 
-    /*
-     * Called when the proxy unreferenced the ref.
-     */
-    /* package */
-    @Override
-    public/* synchronized */final void unreferenced() {
-	this._table.unreference(this);
-    }
+	/*
+	 * Called when referenced
+	 */
+	/* package */
+	@Override
+	synchronized public final void referenced() {
 
-    protected boolean updateRef(VirtualRef vref) {
-	return vref.getRef() == this;
-    }
+		// System.out.println("-- referenced --");
+		// Thread.dumpStack();
+		_ref_count++;
+	}
+
+	/*
+	 * Get reference and increment refernce count
+	 */
+	/* package */
+	@Override
+	public final void setRef(final VirtualRef vref, final ObjectInputStream s)
+	throws IOException,
+	ClassNotFoundException {
+
+		// this reference must be already updated.
+		final Ref ref = this.findRef(s);
+
+		if (ref != null) {
+			vref.setRef(ref);
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "WeakRef[count=" + _ref_count + "]";
+	}
+
+	/*
+	 * Called when the proxy unreferenced the ref.
+	 */
+	/* package */
+	@Override
+	public/* synchronized */final void unreferenced() {
+		_table.unreference(this);
+	}
+
+	protected boolean updateRef(final VirtualRef vref) {
+		return vref.getRef() == this;
+	}
 }

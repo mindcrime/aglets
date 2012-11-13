@@ -47,382 +47,382 @@ import com.ibm.aglet.message.Message;
  */
 public abstract class AgletRuntime {
 
-    final static String runtimePackagePrefix = "aglet.runtime.packagePrefix";
-    private static AgletsLogger logger = AgletsLogger.getLogger(AgletRuntime.class.getName());
+	final static String runtimePackagePrefix = "aglet.runtime.packagePrefix";
+	private static AgletsLogger logger = AgletsLogger.getLogger(AgletRuntime.class.getName());
 
-    private boolean _secure = true;
-
-    /*
-     * [Preliminary] Exports the specified aglet context. After this successful
-     * invocation, the specified context is visible and accessible from a
-     * remote host, which means that the aglet can be dispatched into and also
-     * the remote operations like listing the aglet proxies residing in the
-     * context are enabled.
-     * 
-     * @param cxt
-     *            the context to export
-     * @exception SecurityException
-     *                if the current execution is not allowed to export an
-     *                AgletContext. abstract public void
-     *                exportAgletContext(AgletContext cxt);
-     */
-
-    /*
-     * [Preliminary] Exports the specified aglet. After this successfull
-     * invocation, the specified aglet is visiable and accessible from a remote
-     * host, which means that the aglet can be receive remote messages from
-     * remote hosts.
-     * 
-     * @param aglet
-     *            the aglet to export
-     * @exception SecurityException
-     *                if the current execution is not allowed to export an Aglet
-     *                abstract public void exportAglet(Aglet aglet);
-     */
-
-    /*
-     * abstract public boolean isGuiAvailable();
-     */
-
-    private static AgletRuntime runtime = null;
-
-    /**
-     * Returns an enumeration of proxies in the context specified by the
-     * contextAddress.
-     * 
-     * @param contextAddress
-     *            abstract public Enumeration getAgletProxies(String
-     *            contextAddress, String authorityName);
-     */
-    /**
-     * Authenticate an user with password. When the password is correct, the
-     * user owns the runtime and returns the owner's certificate.
-     * 
-     * @param username
-     *            username of the user who will own the runtime
-     * @param password
-     *            password of the user
-     * @return the owner's certificate when authentication of the user succeeds
-     */
-    abstract public Certificate authenticateOwner(
-                                                  String username,
-                                                  String password);
-
-    /**
-     * Creates an aglet remotely within the specified context.
-     * 
-     * @param contextAddress
-     *            an address of context.
-     * @param codebase
-     *            an codebase for the aglet.
-     * @param name
-     *            name of aglets' class.
-     * @param init
-     *            an object passed as an initialize argument.
-     * @see Aglet#onCreation
-     * @see AgletContext#createAglet
-     */
-    abstract protected AgletProxy createAglet(
-                                              String contextAddress,
-                                              URL codebase,
-                                              String name,
-                                              Object init) throws IOException;
-
-    /**
-     * Creates an DefaultAgletContext object given by the Framework
-     * implementation with specified name. Hosting multiple contexts is not
-     * supported in alpha5 release.
-     * 
-     * @exception SecurityException
-     *                if the current execution is not allowed to create an
-     *                AgletContext.
-     */
-    abstract public AgletContext createAgletContext(String name);
-
-    /**
-     * Returns the AgletContext which has the specified name.
-     * 
-     * @param name
-     *            the name of the context
-     * @exception SecurityException
-     *                if the current execution is not allowed to acccess the
-     *                AgletContext.
-     */
-    abstract public AgletContext getAgletContext(String name);
-
-    /**
-     * Gets the contexts in the environment.
-     */
-    abstract public AgletContext[] getAgletContexts();
-
-    /**
-     * Returns the proxies in the context specified by the contextAddress.
-     * 
-     * @param contextAddress
-     *            specify context URL with a string.
-     */
-    abstract protected AgletProxy[] getAgletProxies(String contextAddress)
-    throws IOException;
-
-    /**
-     * Obtains the remote proxy for the aglet specified by the context and id.
-     * 
-     * @param contextAddress
-     *            specify context URL with a string.
-     * @param id
-     *            target aglet identifyer.
-     */
-    abstract protected AgletProxy getAgletProxy(
-                                                String contextAddress,
-                                                AgletID id) throws IOException;
-
-    /**
-     * Gets the AgletRuntime object associated with the current Java
-     * application.
-     */
-    synchronized static public AgletRuntime getAgletRuntime() {
-	if (runtime == null) {
-	    init(null);
-	}
-	return runtime;
-    }
-
-    /**
-     * Returns aglets property of the user who owns the runtime. It needs
-     * PropertyPermission for the key of aglets property.
-     * 
-     * @param key
-     *            key of aglets property
-     * @return aglets property of the user who owns the runtime. If the property
-     *         for the key does not exist, return null.
-     * @exception SecurityException
-     *                if PropertyPermission for the key is not give.
-     */
-    abstract public String getAgletsProperty(String key);
-
-    /**
-     * Returns aglets property of the user who owns the runtime. It needs
-     * PropertyPermission for the key of aglets property.
-     * 
-     * @param key
-     *            key of aglets property
-     * @param def
-     *            default value of aglets property
-     * @return aglets property of the user who owns the runtime. If the property
-     *         for the key does not exist, return def.
-     * @exception SecurityException
-     *                if PropertyPermission for the key is not given.
-     */
-    abstract public String getAgletsProperty(String key, String def);
-
-    /**
-     * Returns certificate of the user who owns the runtime.
-     * 
-     * @return Certificate of the user who owns the runtime
-     */
-    abstract public Certificate getOwnerCertificate();
-
-    /**
-     * Returns name of the user who owns the runtime.
-     * 
-     * @return name of the user who owns the runtime
-     */
-    abstract public String getOwnerName();
-
-    /**
-     * Returns property of the user who owns the runtime. It needs
-     * PropertyPermission for the key of specified property, and FilePermission
-     * for the property file.
-     * 
-     * @param prop
-     *            name of properties
-     * @param key
-     *            key of property
-     * @return property of the user who owns the runtime. If the property for
-     *         the key does not exist, return null.
-     * @exception SecurityException
-     *                if PropertyPermission for the key is not given.
-     */
-    abstract public String getProperty(String prop, String key);
-
-    /**
-     * Returns property of the user who owns the runtime. It needs
-     * PropertyPermission for the key of specified property, and FilePermission
-     * for the property file.
-     * 
-     * @param prop
-     *            name of properties
-     * @param key
-     *            key of property
-     * @param def
-     *            default value of property
-     * @return property of the user who owns the runtime. If the property for
-     *         the key does not exist, return def.
-     * @exception SecurityException
-     *                if PropertyPermission for the key is not given.
-     */
-    abstract public String getProperty(String prop, String key, String def);
-
-    /**
-     * Gets an address of the server
-     * 
-     * @return the address of the server
-     */
-    abstract public String getServerAddress();
-
-    /**
-     * Create and initialize a runtime environment with a string array
-     * 
-     * @param args
-     *            string array which is typically given as a argument to
-     *            <tt>main(String args[])</tt> function.
-     */
-    synchronized static public AgletRuntime init(String args[]) {
-	return init(args, null);
-    }
-
-    /**
-     * Create and initialize a runtime environment with a string array
-     * 
-     * @param args
-     *            string array which is typically given as a argument to
-     *            <tt>main(String args[])</tt> function.
-     * @param loader
-     *            a classloader used to load a class of the implementation.
-     */
-    synchronized static public AgletRuntime init(
-                                                 String args[],
-                                                 ClassLoader loader) {
-	if (runtime != null) {
-	    throw new IllegalAccessError("Already Initialized");
+	/**
+	 * Gets the AgletRuntime object associated with the current Java
+	 * application.
+	 */
+	synchronized static public AgletRuntime getAgletRuntime() {
+		if (runtime == null) {
+			init(null);
+		}
+		return runtime;
 	}
 
-	String packagePrefix = "com.ibm.aglets";
+	/*
+	 * [Preliminary] Exports the specified aglet context. After this successful
+	 * invocation, the specified context is visible and accessible from a
+	 * remote host, which means that the aglet can be dispatched into and also
+	 * the remote operations like listing the aglet proxies residing in the
+	 * context are enabled.
+	 * 
+	 * @param cxt
+	 *            the context to export
+	 * @exception SecurityException
+	 *                if the current execution is not allowed to export an
+	 *                AgletContext. abstract public void
+	 *                exportAgletContext(AgletContext cxt);
+	 */
 
-	try {
-	    packagePrefix = System.getProperty(runtimePackagePrefix, "com.ibm.aglets");
-	} catch (SecurityException e) {
+	/*
+	 * [Preliminary] Exports the specified aglet. After this successfull
+	 * invocation, the specified aglet is visiable and accessible from a remote
+	 * host, which means that the aglet can be receive remote messages from
+	 * remote hosts.
+	 * 
+	 * @param aglet
+	 *            the aglet to export
+	 * @exception SecurityException
+	 *                if the current execution is not allowed to export an Aglet
+	 *                abstract public void exportAglet(Aglet aglet);
+	 */
 
-	    // for Fiji
+	/*
+	 * abstract public boolean isGuiAvailable();
+	 */
+
+	/**
+	 * Create and initialize a runtime environment with a string array
+	 * 
+	 * @param args
+	 *            string array which is typically given as a argument to
+	 *            <tt>main(String args[])</tt> function.
+	 */
+	synchronized static public AgletRuntime init(final String args[]) {
+		return init(args, null);
 	}
 
-	String classname = packagePrefix + ".AgletRuntime";
+	/**
+	 * Create and initialize a runtime environment with a string array
+	 * 
+	 * @param args
+	 *            string array which is typically given as a argument to
+	 *            <tt>main(String args[])</tt> function.
+	 * @param loader
+	 *            a classloader used to load a class of the implementation.
+	 */
+	synchronized static public AgletRuntime init(
+	                                             final String args[],
+	                                             final ClassLoader loader) {
+		if (runtime != null) {
+			throw new IllegalAccessError("Already Initialized");
+		}
 
-	try {
-	    Class clazz = null;
+		String packagePrefix = "com.ibm.aglets";
 
-	    if (loader != null) {
-		clazz = loader.loadClass(classname);
-	    } else {
-		clazz = Class.forName(classname);
-	    }
+		try {
+			packagePrefix = System.getProperty(runtimePackagePrefix, "com.ibm.aglets");
+		} catch (final SecurityException e) {
 
-	    Object obj = clazz.newInstance();
+			// for Fiji
+		}
 
-	    if (obj instanceof AgletRuntime) {
-		runtime = (AgletRuntime) obj;
-	    } else {
-		logger.error("[ \"" + classname + "\" is not Runtime]");
-	    }
-	} catch (ClassNotFoundException ex) {
-	    logger.error("[ The class \"" + classname + "\" not found]");
-	} catch (Exception ex) {
-	    logger.error("[ An instance of \"" + classname
-		    + "\" cannot be created]");
+		final String classname = packagePrefix + ".AgletRuntime";
+
+		try {
+			Class clazz = null;
+
+			if (loader != null) {
+				clazz = loader.loadClass(classname);
+			} else {
+				clazz = Class.forName(classname);
+			}
+
+			final Object obj = clazz.newInstance();
+
+			if (obj instanceof AgletRuntime) {
+				runtime = (AgletRuntime) obj;
+			} else {
+				logger.error("[ \"" + classname + "\" is not Runtime]");
+			}
+		} catch (final ClassNotFoundException ex) {
+			logger.error("[ The class \"" + classname + "\" not found]");
+		} catch (final Exception ex) {
+			logger.error("[ An instance of \"" + classname
+					+ "\" cannot be created]");
+		}
+
+		runtime.initialize(args);
+		return runtime;
 	}
 
-	runtime.initialize(args);
-	return runtime;
-    }
+	private boolean _secure = true;
 
-    /**
-     * Initializes an AgletRuntime object with the given array of string. This
-     * is typically an argument of <tt>main(String args[])</tt> function.
-     * 
-     * @param args
-     *            arguments used to initialize
-     * @exception IllegalAccessException
-     *                if the instance has been already initialized.
-     */
-    abstract protected void initialize(String args[]);
+	private static AgletRuntime runtime = null;
 
-    /**
-     * Returns security.
-     * 
-     * @return True if the runtime is working with security
-     */
-    public boolean isSecure() {
-	return this._secure;
-    }
+	/**
+	 * Returns an enumeration of proxies in the context specified by the
+	 * contextAddress.
+	 * 
+	 * @param contextAddress
+	 *            abstract public Enumeration getAgletProxies(String
+	 *            contextAddress, String authorityName);
+	 */
+	/**
+	 * Authenticate an user with password. When the password is correct, the
+	 * user owns the runtime and returns the owner's certificate.
+	 * 
+	 * @param username
+	 *            username of the user who will own the runtime
+	 * @param password
+	 *            password of the user
+	 * @return the owner's certificate when authentication of the user succeeds
+	 */
+	abstract public Certificate authenticateOwner(
+	                                              String username,
+	                                              String password);
 
-    /**
-     * Kill the specified aglet. This aglet have to be a local aglet in this
-     * runtime.
-     * 
-     * @param proxy
-     *            the aglet proxy object to kill.
-     */
-    abstract public void killAglet(AgletProxy proxy)
-    throws InvalidAgletException;
+	/**
+	 * Creates an aglet remotely within the specified context.
+	 * 
+	 * @param contextAddress
+	 *            an address of context.
+	 * @param codebase
+	 *            an codebase for the aglet.
+	 * @param name
+	 *            name of aglets' class.
+	 * @param init
+	 *            an object passed as an initialize argument.
+	 * @see Aglet#onCreation
+	 * @see AgletContext#createAglet
+	 */
+	abstract protected AgletProxy createAglet(
+	                                          String contextAddress,
+	                                          URL codebase,
+	                                          String name,
+	                                          Object init) throws IOException;
 
-    /**
-     * Removes the specified aglet context from the runtime environment. It is
-     * also removed from export list if it's exported.
-     * 
-     * @param cxt
-     *            the context to remove
-     */
-    abstract public void removeAgletContext(AgletContext cxt);
+	/**
+	 * Creates an DefaultAgletContext object given by the Framework
+	 * implementation with specified name. Hosting multiple contexts is not
+	 * supported in alpha5 release.
+	 * 
+	 * @exception SecurityException
+	 *                if the current execution is not allowed to create an
+	 *                AgletContext.
+	 */
+	abstract public AgletContext createAgletContext(String name);
 
-    /**
-     * Sets aglets property of the user who owns the runtime. It needs
-     * PropertyPermission for the key of aglets property, and FilePermission for
-     * the aglets property file.
-     * 
-     * @param key
-     *            key of aglets property
-     * @param value
-     *            value of specified aglets property
-     * @exception SecurityException
-     *                if permissions for the key are not given.
-     */
-    abstract public void setAgletsProperty(String key, String value);
+	/**
+	 * Returns the AgletContext which has the specified name.
+	 * 
+	 * @param name
+	 *            the name of the context
+	 * @exception SecurityException
+	 *                if the current execution is not allowed to acccess the
+	 *                AgletContext.
+	 */
+	abstract public AgletContext getAgletContext(String name);
 
-    /**
-     * Save property of the user who owns the runtime. It needs
-     * PropertyPermission for the key of property, and FilePermission for the
-     * property file.
-     * 
-     * @param prop
-     *            name of properties
-     * @param key
-     *            key of property
-     * @param value
-     *            value of specified property
-     * @exception SecurityException
-     *                if permissions for the key are not given.
-     */
-    abstract public void setProperty(String prop, String key, String value);
+	/**
+	 * Gets the contexts in the environment.
+	 */
+	abstract public AgletContext[] getAgletContexts();
 
-    /**
-     * Sets secure.
-     * 
-     * @param secure
-     *            true if the runtime is working with security
-     */
-    protected void setSecure(boolean secure) {
-	this._secure = secure;
-    }
+	/**
+	 * Returns the proxies in the context specified by the contextAddress.
+	 * 
+	 * @param contextAddress
+	 *            specify context URL with a string.
+	 */
+	abstract protected AgletProxy[] getAgletProxies(String contextAddress)
+	throws IOException;
 
-    /**
-     * Shutdown all contexts in the runtime
-     */
-    abstract public void shutdown();
+	/**
+	 * Obtains the remote proxy for the aglet specified by the context and id.
+	 * 
+	 * @param contextAddress
+	 *            specify context URL with a string.
+	 * @param id
+	 *            target aglet identifyer.
+	 */
+	abstract protected AgletProxy getAgletProxy(
+	                                            String contextAddress,
+	                                            AgletID id) throws IOException;
 
-    /**
-     * Shutdown all contexts in the current runtime with the specific message
-     * object. This messag object is delivered to all aglets in all contexts
-     * before all aglets are killed.
-     */
-    abstract public void shutdown(Message msg);
+	/**
+	 * Returns aglets property of the user who owns the runtime. It needs
+	 * PropertyPermission for the key of aglets property.
+	 * 
+	 * @param key
+	 *            key of aglets property
+	 * @return aglets property of the user who owns the runtime. If the property
+	 *         for the key does not exist, return null.
+	 * @exception SecurityException
+	 *                if PropertyPermission for the key is not give.
+	 */
+	abstract public String getAgletsProperty(String key);
+
+	/**
+	 * Returns aglets property of the user who owns the runtime. It needs
+	 * PropertyPermission for the key of aglets property.
+	 * 
+	 * @param key
+	 *            key of aglets property
+	 * @param def
+	 *            default value of aglets property
+	 * @return aglets property of the user who owns the runtime. If the property
+	 *         for the key does not exist, return def.
+	 * @exception SecurityException
+	 *                if PropertyPermission for the key is not given.
+	 */
+	abstract public String getAgletsProperty(String key, String def);
+
+	/**
+	 * Returns certificate of the user who owns the runtime.
+	 * 
+	 * @return Certificate of the user who owns the runtime
+	 */
+	abstract public Certificate getOwnerCertificate();
+
+	/**
+	 * Returns name of the user who owns the runtime.
+	 * 
+	 * @return name of the user who owns the runtime
+	 */
+	abstract public String getOwnerName();
+
+	/**
+	 * Returns property of the user who owns the runtime. It needs
+	 * PropertyPermission for the key of specified property, and FilePermission
+	 * for the property file.
+	 * 
+	 * @param prop
+	 *            name of properties
+	 * @param key
+	 *            key of property
+	 * @return property of the user who owns the runtime. If the property for
+	 *         the key does not exist, return null.
+	 * @exception SecurityException
+	 *                if PropertyPermission for the key is not given.
+	 */
+	abstract public String getProperty(String prop, String key);
+
+	/**
+	 * Returns property of the user who owns the runtime. It needs
+	 * PropertyPermission for the key of specified property, and FilePermission
+	 * for the property file.
+	 * 
+	 * @param prop
+	 *            name of properties
+	 * @param key
+	 *            key of property
+	 * @param def
+	 *            default value of property
+	 * @return property of the user who owns the runtime. If the property for
+	 *         the key does not exist, return def.
+	 * @exception SecurityException
+	 *                if PropertyPermission for the key is not given.
+	 */
+	abstract public String getProperty(String prop, String key, String def);
+
+	/**
+	 * Gets an address of the server
+	 * 
+	 * @return the address of the server
+	 */
+	abstract public String getServerAddress();
+
+	/**
+	 * Initializes an AgletRuntime object with the given array of string. This
+	 * is typically an argument of <tt>main(String args[])</tt> function.
+	 * 
+	 * @param args
+	 *            arguments used to initialize
+	 * @exception IllegalAccessException
+	 *                if the instance has been already initialized.
+	 */
+	abstract protected void initialize(String args[]);
+
+	/**
+	 * Returns security.
+	 * 
+	 * @return True if the runtime is working with security
+	 */
+	public boolean isSecure() {
+		return _secure;
+	}
+
+	/**
+	 * Kill the specified aglet. This aglet have to be a local aglet in this
+	 * runtime.
+	 * 
+	 * @param proxy
+	 *            the aglet proxy object to kill.
+	 */
+	abstract public void killAglet(AgletProxy proxy)
+	throws InvalidAgletException;
+
+	/**
+	 * Removes the specified aglet context from the runtime environment. It is
+	 * also removed from export list if it's exported.
+	 * 
+	 * @param cxt
+	 *            the context to remove
+	 */
+	abstract public void removeAgletContext(AgletContext cxt);
+
+	/**
+	 * Sets aglets property of the user who owns the runtime. It needs
+	 * PropertyPermission for the key of aglets property, and FilePermission for
+	 * the aglets property file.
+	 * 
+	 * @param key
+	 *            key of aglets property
+	 * @param value
+	 *            value of specified aglets property
+	 * @exception SecurityException
+	 *                if permissions for the key are not given.
+	 */
+	abstract public void setAgletsProperty(String key, String value);
+
+	/**
+	 * Save property of the user who owns the runtime. It needs
+	 * PropertyPermission for the key of property, and FilePermission for the
+	 * property file.
+	 * 
+	 * @param prop
+	 *            name of properties
+	 * @param key
+	 *            key of property
+	 * @param value
+	 *            value of specified property
+	 * @exception SecurityException
+	 *                if permissions for the key are not given.
+	 */
+	abstract public void setProperty(String prop, String key, String value);
+
+	/**
+	 * Sets secure.
+	 * 
+	 * @param secure
+	 *            true if the runtime is working with security
+	 */
+	protected void setSecure(final boolean secure) {
+		_secure = secure;
+	}
+
+	/**
+	 * Shutdown all contexts in the runtime
+	 */
+	abstract public void shutdown();
+
+	/**
+	 * Shutdown all contexts in the current runtime with the specific message
+	 * object. This messag object is delivered to all aglets in all contexts
+	 * before all aglets are killed.
+	 */
+	abstract public void shutdown(Message msg);
 }

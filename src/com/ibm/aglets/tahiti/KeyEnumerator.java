@@ -20,61 +20,61 @@ import java.security.PrivilegedAction;
 import java.util.Enumeration;
 
 class KeyEnumerator implements Enumeration {
-    int i = 0;
-    String filelist[] = null;
-    String spool_dir = null;
+	int i = 0;
+	String filelist[] = null;
+	String spool_dir = null;
 
-    KeyEnumerator(String dir) {
-	this.spool_dir = dir;
-	this.filelist = null;
-	try {
-	    final String fSpoolDir = this.spool_dir;
+	KeyEnumerator(final String dir) {
+		spool_dir = dir;
+		filelist = null;
+		try {
+			final String fSpoolDir = spool_dir;
 
-	    this.filelist = (String[]) AccessController.doPrivileged(new PrivilegedAction() {
-		@Override
-		public Object run() {
-		    return new File(fSpoolDir).list();
+			filelist = (String[]) AccessController.doPrivileged(new PrivilegedAction() {
+				@Override
+				public Object run() {
+					return new File(fSpoolDir).list();
+				}
+			});
+		} catch (final Exception ex) {
+			ex.printStackTrace();
 		}
-	    });
-	} catch (Exception ex) {
-	    ex.printStackTrace();
-	}
 
-	// to make sure that str point to a directory.
-	if (this.spool_dir.charAt(this.spool_dir.length() - 1) != File.separatorChar) {
-	    this.spool_dir += File.separator;
-	}
-    }
-
-    @Override
-    public boolean hasMoreElements() {
-	if (this.filelist == null) {
-	    return false;
-	}
-	try {
-	    final KeyEnumerator fThis = this;
-	    final String fSpoolDir = this.spool_dir;
-	    final String[] fFilelist = this.filelist;
-
-	    AccessController.doPrivileged(new PrivilegedAction() {
-		@Override
-		public Object run() {
-		    while ((fFilelist.length > fThis.i)
-			    && (new File(fSpoolDir
-				    + fFilelist[KeyEnumerator.this.i]).isFile() == false)) {
-			fThis.i++;
-		    }
-		    return null;
+		// to make sure that str point to a directory.
+		if (spool_dir.charAt(spool_dir.length() - 1) != File.separatorChar) {
+			spool_dir += File.separator;
 		}
-	    });
-	} catch (Exception ex) {
-	    ex.printStackTrace();
 	}
-	return this.filelist.length > this.i;
-    }
 
-    @Override
-    public Object nextElement() {
-	return ((this.filelist == null) ? null : this.filelist[this.i++]);
-    }
+	@Override
+	public boolean hasMoreElements() {
+		if (filelist == null) {
+			return false;
+		}
+		try {
+			final KeyEnumerator fThis = this;
+			final String fSpoolDir = spool_dir;
+			final String[] fFilelist = filelist;
+
+			AccessController.doPrivileged(new PrivilegedAction() {
+				@Override
+				public Object run() {
+					while ((fFilelist.length > fThis.i)
+							&& (new File(fSpoolDir
+									+ fFilelist[i]).isFile() == false)) {
+						fThis.i++;
+					}
+					return null;
+				}
+			});
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+		return filelist.length > i;
+	}
+
+	@Override
+	public Object nextElement() {
+		return ((filelist == null) ? null : filelist[i++]);
+	}
 }

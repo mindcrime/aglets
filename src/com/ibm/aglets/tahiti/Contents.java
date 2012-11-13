@@ -15,16 +15,16 @@ package com.ibm.aglets.tahiti;
  */
 
 interface Contents {
-    public void addElements(String[] elems);
+	public void addElements(String[] elems);
 
-    public void addElements(String[] elems, int idx);
+	public void addElements(String[] elems, int idx);
 
-    public void moveToLast(int idx);
+	public void moveToLast(int idx);
 
-    public void moveToTop(int idx);
+	public void moveToTop(int idx);
 
-    public void removeElements(int idx);
+	public void removeElements(int idx);
 
-    // public void removeAllElements();
-    public void replaceElements(String[] elems, int idx);
+	// public void removeAllElements();
+	public void replaceElements(String[] elems, int idx);
 }

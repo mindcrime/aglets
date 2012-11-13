@@ -38,143 +38,143 @@ import com.ibm.aglet.message.Message;
 
 public class HostList extends Aglet implements PersistencyListener,
 MobilityListener {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 7039028428575317796L;
-    Hashtable hostList;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7039028428575317796L;
+	Hashtable hostList;
 
-    public void appendList(Hashtable list) {
-	for (Enumeration e = list.keys(); e.hasMoreElements();) {
-	    Object key = e.nextElement();
+	public void appendList(final Hashtable list) {
+		for (final Enumeration e = list.keys(); e.hasMoreElements();) {
+			final Object key = e.nextElement();
 
-	    if (list.get(key) instanceof String) {
-		if (this.hostList.get(key) == null) {
-		    System.out.println("new: " + key);
-		    this.hostList.put(key, "new");
+			if (list.get(key) instanceof String) {
+				if (hostList.get(key) == null) {
+					System.out.println("new: " + key);
+					hostList.put(key, "new");
+				} else {
+
+					// System.out.println("key: " + key + " value: " +
+					// hostList.get(key));
+				}
+			}
+		}
+	}
+
+	@Override
+	public boolean handleMessage(final Message msg) {
+		if (msg.sameKind("dialog")) {
+			try {
+				int i = 0;
+
+				System.out.println("HostList -- begin");
+				for (final Enumeration e = hostList.keys(); e.hasMoreElements();) {
+					System.out.println(i++ + ": " + e.nextElement());
+				}
+				System.out.println("HostList -- end");
+			} catch (final Exception ex) {
+				ex.printStackTrace();
+			}
+			return true;
+		} else if (msg.sameKind("register")) {
+			if (msg.getArg() instanceof String) {
+				hostList.put(msg.getArg(), "running");
+			}
+			return true;
+		} else if (msg.sameKind("append")) {
+			if (msg.getArg() instanceof Hashtable) {
+				appendList((Hashtable) msg.getArg());
+			}
+			return true;
+		} else if (msg.sameKind("getlist")) {
+			msg.sendReply(hostList);
+			return true;
+		} else if (msg.sameKind("shutdown")) {
+			try {
+				deactivate(0);
+			} catch (final Exception e) {
+			}
+			return true;
+		} else if (msg.sameKind("dispose")) {
+			dispose();
+			return true;
 		} else {
-
-		    // System.out.println("key: " + key + " value: " +
-		    // hostList.get(key));
 		}
-	    }
+		return true;
 	}
-    }
 
-    @Override
-    public boolean handleMessage(Message msg) {
-	if (msg.sameKind("dialog")) {
-	    try {
-		int i = 0;
+	@Override
+	public void onActivation(final PersistencyEvent event) {
+		final AgletContext ac = getAgletContext();
+		final AgletProxy proxy = getProxy();
+		AgletProxy ap;
 
-		System.out.println("HostList -- begin");
-		for (Enumeration e = this.hostList.keys(); e.hasMoreElements();) {
-		    System.out.println(i++ + ": " + e.nextElement());
+		// check if another HostList registration
+		ap = (AgletProxy) ac.getProperty("hostlist");
+		if ((ap != null) && (ap.isValid())) {
+			try {
+				ap.sendMessage(new Message("append", hostList));
+			} catch (final Exception e) {
+				System.out.println(e);
+			}
+			dispose();
+		} else {
+			ac.setProperty("hostlist", proxy);
 		}
-		System.out.println("HostList -- end");
-	    } catch (Exception ex) {
-		ex.printStackTrace();
-	    }
-	    return true;
-	} else if (msg.sameKind("register")) {
-	    if (msg.getArg() instanceof String) {
-		this.hostList.put(msg.getArg(), "running");
-	    }
-	    return true;
-	} else if (msg.sameKind("append")) {
-	    if (msg.getArg() instanceof Hashtable) {
-		this.appendList((Hashtable) msg.getArg());
-	    }
-	    return true;
-	} else if (msg.sameKind("getlist")) {
-	    msg.sendReply(this.hostList);
-	    return true;
-	} else if (msg.sameKind("shutdown")) {
-	    try {
-		this.deactivate(0);
-	    } catch (Exception e) {
-	    }
-	    return true;
-	} else if (msg.sameKind("dispose")) {
-	    this.dispose();
-	    return true;
-	} else {
 	}
-	return true;
-    }
 
-    @Override
-    public void onActivation(PersistencyEvent event) {
-	AgletContext ac = this.getAgletContext();
-	AgletProxy proxy = this.getProxy();
-	AgletProxy ap;
-
-	// check if another HostList registration
-	ap = (AgletProxy) ac.getProperty("hostlist");
-	if ((ap != null) && (ap.isValid())) {
-	    try {
-		ap.sendMessage(new Message("append", this.hostList));
-	    } catch (Exception e) {
-		System.out.println(e);
-	    }
-	    this.dispose();
-	} else {
-	    ac.setProperty("hostlist", proxy);
+	@Override
+	public void onArrival(final MobilityEvent event) {
+		dispose();
 	}
-    }
 
-    @Override
-    public void onArrival(MobilityEvent event) {
-	this.dispose();
-    }
+	@Override
+	public void onCreation(final Object init) {
+		final AgletContext ac = getAgletContext();
+		final AgletProxy proxy = getProxy();
+		AgletProxy ap;
 
-    @Override
-    public void onCreation(Object init) {
-	AgletContext ac = this.getAgletContext();
-	AgletProxy proxy = this.getProxy();
-	AgletProxy ap;
+		addMobilityListener(this);
+		addPersistencyListener(this);
 
-	this.addMobilityListener(this);
-	this.addPersistencyListener(this);
+		// check if another HostList registration
+		ap = (AgletProxy) ac.getProperty("hostlist");
+		if ((ap != null) && (ap.isValid())) {
+			if (init instanceof Hashtable) {
+				try {
+					ap.sendMessage(new Message("append", init));
+				} catch (final Exception e) {
+					System.out.println(e);
+				}
+			}
+			dispose();
+		} else {
+			ac.setProperty("hostlist", proxy);
 
-	// check if another HostList registration
-	ap = (AgletProxy) ac.getProperty("hostlist");
-	if ((ap != null) && (ap.isValid())) {
-	    if (init instanceof Hashtable) {
-		try {
-		    ap.sendMessage(new Message("append", init));
-		} catch (Exception e) {
-		    System.out.println(e);
+			if (init instanceof Hashtable) {
+				hostList = (Hashtable) ((Hashtable) init).clone();
+			} else {
+				hostList = new Hashtable();
+			}
+			hostList.put(ac.getHostingURL().toString(), "running");
 		}
-	    }
-	    this.dispose();
-	} else {
-	    ac.setProperty("hostlist", proxy);
-
-	    if (init instanceof Hashtable) {
-		this.hostList = (Hashtable) ((Hashtable) init).clone();
-	    } else {
-		this.hostList = new Hashtable();
-	    }
-	    this.hostList.put(ac.getHostingURL().toString(), "running");
 	}
-    }
 
-    @Override
-    public void onDeactivating(PersistencyEvent event) {
+	@Override
+	public void onDeactivating(final PersistencyEvent event) {
 
-	// unregistration
-	this.getAgletContext().setProperty("hostlist", null);
-    }
+		// unregistration
+		getAgletContext().setProperty("hostlist", null);
+	}
 
-    @Override
-    public void onDispatching(MobilityEvent event) {
-    }
+	@Override
+	public void onDispatching(final MobilityEvent event) {
+	}
 
-    public void onRetraction(MobilityEvent event) {
-    }
+	public void onRetraction(final MobilityEvent event) {
+	}
 
-    @Override
-    public void onReverting(MobilityEvent event) {
-    }
+	@Override
+	public void onReverting(final MobilityEvent event) {
+	}
 }

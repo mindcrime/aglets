@@ -19,42 +19,42 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class LogWriter extends OutputStream {
-    private TextArea _log = null;
+	private TextArea _log = null;
 
-    public LogWriter(TextArea f) {
-	this._log = f;
-    }
-
-    @Override
-    public void close() throws IOException {
-
-	// _log.dispose();
-    }
-
-    @Override
-    public void flush() throws IOException {
-    }
-
-    @Override
-    public void write(byte[] b) throws IOException {
-	synchronized (this) {
-	    this._log.append(new String(b));
+	public LogWriter(final TextArea f) {
+		_log = f;
 	}
-    }
 
-    @Override
-    public void write(byte[] b, int off, int len) throws IOException {
-	synchronized (this) {
-	    this._log.append(new String(b, off, len));
+	@Override
+	public void close() throws IOException {
+
+		// _log.dispose();
 	}
-    }
 
-    @Override
-    public void write(int c) throws IOException {
-	synchronized (this) {
-	    char[] b = { (char) c };
-
-	    this._log.append(new String(b));
+	@Override
+	public void flush() throws IOException {
 	}
-    }
+
+	@Override
+	public void write(final byte[] b) throws IOException {
+		synchronized (this) {
+			_log.append(new String(b));
+		}
+	}
+
+	@Override
+	public void write(final byte[] b, final int off, final int len) throws IOException {
+		synchronized (this) {
+			_log.append(new String(b, off, len));
+		}
+	}
+
+	@Override
+	public void write(final int c) throws IOException {
+		synchronized (this) {
+			final char[] b = { (char) c };
+
+			_log.append(new String(b));
+		}
+	}
 }

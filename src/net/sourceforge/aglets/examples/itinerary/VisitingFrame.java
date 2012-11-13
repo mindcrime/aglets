@@ -30,112 +30,112 @@ import java.util.Vector;
 import com.ibm.aglet.util.AddressChooser;
 
 class VisitingFrame extends Frame implements WindowListener, ActionListener {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 7145013172086931418L;
-    VisitingAglet aglet;
-    List list = new List(10, false);
-    AddressChooser address = new AddressChooser(15);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7145013172086931418L;
+	VisitingAglet aglet;
+	List list = new List(10, false);
+	AddressChooser address = new AddressChooser(15);
 
-    VisitingFrame(VisitingAglet a) {
-	this.aglet = a;
+	VisitingFrame(final VisitingAglet a) {
+		aglet = a;
 
-	this.addWindowListener(this);
+		addWindowListener(this);
 
-	this.setLayout(new BorderLayout());
-	this.add("Center", this.list);
+		setLayout(new BorderLayout());
+		this.add("Center", list);
 
-	Panel p = new Panel();
+		Panel p = new Panel();
 
-	p.setLayout(new FlowLayout());
-	p.add(this.address);
-	Button ad = new Button("Add");
-	Button remove = new Button("Remove");
+		p.setLayout(new FlowLayout());
+		p.add(address);
+		final Button ad = new Button("Add");
+		final Button remove = new Button("Remove");
 
-	ad.addActionListener(this);
-	remove.addActionListener(this);
-	p.add(ad);
-	p.add(remove);
-	this.add("North", p);
+		ad.addActionListener(this);
+		remove.addActionListener(this);
+		p.add(ad);
+		p.add(remove);
+		this.add("North", p);
 
-	p = new Panel();
-	p.setLayout(new FlowLayout());
-	Button start = new Button("Start!");
+		p = new Panel();
+		p.setLayout(new FlowLayout());
+		final Button start = new Button("Start!");
 
-	start.addActionListener(this);
-	p.add(start);
-	this.add("South", p);
+		start.addActionListener(this);
+		p.add(start);
+		this.add("South", p);
 
-	this.update();
-    }
-
-    /**
-     * Handles the action event
-     * 
-     * @param ae
-     *            the event to be handled
-     */
-    @Override
-    public void actionPerformed(ActionEvent ae) {
-	if ("Add".equals(ae.getActionCommand())) {
-	    this.aglet.addresses.addElement(this.address.getAddress());
-	    this.update();
-	} else if ("Remove".equals(ae.getActionCommand())) {
-	    int i = this.list.getSelectedIndex();
-
-	    if (i >= 0) {
-		this.aglet.addresses.removeElementAt(i);
-		this.list.remove(i);
-	    }
-	} else if ("Start!".equals(ae.getActionCommand())) {
-	    this.aglet.start();
+		this.update();
 	}
-    }
 
-    private void update() {
-	this.list.removeAll();
-	Vector addrs = this.aglet.addresses;
-	int size = addrs.size();
+	/**
+	 * Handles the action event
+	 * 
+	 * @param ae
+	 *            the event to be handled
+	 */
+	@Override
+	public void actionPerformed(final ActionEvent ae) {
+		if ("Add".equals(ae.getActionCommand())) {
+			aglet.addresses.addElement(address.getAddress());
+			this.update();
+		} else if ("Remove".equals(ae.getActionCommand())) {
+			final int i = list.getSelectedIndex();
 
-	for (int i = 0; i < size; i++) {
-	    this.list.add((String) addrs.elementAt(i));
+			if (i >= 0) {
+				aglet.addresses.removeElementAt(i);
+				list.remove(i);
+			}
+		} else if ("Start!".equals(ae.getActionCommand())) {
+			aglet.start();
+		}
 	}
-    }
 
-    @Override
-    public void windowActivated(WindowEvent we) {
-    }
+	private void update() {
+		list.removeAll();
+		final Vector addrs = aglet.addresses;
+		final int size = addrs.size();
 
-    @Override
-    public void windowClosed(WindowEvent we) {
-    }
+		for (int i = 0; i < size; i++) {
+			list.add((String) addrs.elementAt(i));
+		}
+	}
 
-    /**
-     * Handles the window event
-     * 
-     * @param we
-     *            the event to be handled
-     */
+	@Override
+	public void windowActivated(final WindowEvent we) {
+	}
 
-    @Override
-    public void windowClosing(WindowEvent we) {
-	this.dispose();
-    }
+	@Override
+	public void windowClosed(final WindowEvent we) {
+	}
 
-    @Override
-    public void windowDeactivated(WindowEvent we) {
-    }
+	/**
+	 * Handles the window event
+	 * 
+	 * @param we
+	 *            the event to be handled
+	 */
 
-    @Override
-    public void windowDeiconified(WindowEvent we) {
-    }
+	@Override
+	public void windowClosing(final WindowEvent we) {
+		dispose();
+	}
 
-    @Override
-    public void windowIconified(WindowEvent we) {
-    }
+	@Override
+	public void windowDeactivated(final WindowEvent we) {
+	}
 
-    @Override
-    public void windowOpened(WindowEvent we) {
-    }
+	@Override
+	public void windowDeiconified(final WindowEvent we) {
+	}
+
+	@Override
+	public void windowIconified(final WindowEvent we) {
+	}
+
+	@Override
+	public void windowOpened(final WindowEvent we) {
+	}
 }

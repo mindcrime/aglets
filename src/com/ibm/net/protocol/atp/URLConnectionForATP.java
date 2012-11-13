@@ -36,131 +36,131 @@ import com.ibm.maf.MAFAgentSystem;
 
 public class URLConnectionForATP extends URLConnection {
 
-    protected static boolean verbose = false;
+	protected static boolean verbose = false;
 
-    static AgentProfile agent_profile = null;
+	static AgentProfile agent_profile = null;
 
-    /*
-     * 
-     */
-    static {
-	Resource res = Resource.getResourceFor("aglets");
+	/*
+	 * 
+	 */
+	static {
+		final Resource res = Resource.getResourceFor("aglets");
 
-	verbose = res.getBoolean("aglets.verbose", false);
+		verbose = res.getBoolean("aglets.verbose", false);
 
-	short major = Aglet.MAJOR_VERSION;
-	short minor = Aglet.MINOR_VERSION;
+		final short major = Aglet.MAJOR_VERSION;
+		final short minor = Aglet.MINOR_VERSION;
 
-	agent_profile = new AgentProfile(major, // Java
-		major, // Aglets
-		"Aglets", major, // major,
-		minor, // minor,
-		major, // serialization,
-		null);
-    }
-
-    /*
-     * 
-     */
-    private InputStream _inputStream = null;
-
-    // MAFAgentSystem_ATP agentsystem;
-    MAFAgentSystem agentsystem;
-    Properties request_properties = new Properties();
-
-    /*
-     * Header field
-     */
-    private Properties headers = new Properties();
-
-    /**
-     * Create a new instance of this class.
-     * 
-     * @param url
-     *            a destination URL to which the application connects. The
-     *            protocol is "atp".
-     */
-    public URLConnectionForATP(URL url) throws IOException {
-	super(url);
-    }
-
-    /**
-     * Make a comminucation link with the destination.
-     * 
-     * @exception IOException
-     *                if can not make a communication link.
-     */
-    @Override
-    synchronized public void connect() throws IOException {
-	if (this.connected) {
-	    return;
-	}
-	this.agentsystem = MAFAgentSystem.getMAFAgentSystem(this.url.toString());
-
-	// MAFAgentSystem_ATPClient.getMAFAgentSystem_ATP(url.toString());
-	if (this.agentsystem == null) {
-	    throw new IOException("ConnectionFailed");
-	}
-	this.connected = true;
-    }
-
-    @Override
-    public String getHeaderField(String key) {
-	return this.headers.getProperty(key.toLowerCase());
-    }
-
-    public String getHeaderField(String key, String defValue) {
-	String ret = this.getHeaderField(key);
-
-	return ret == null ? defValue : ret;
-    }
-
-    /**
-     * Get an input stream of the communication link.
-     * 
-     * @return an input stream.
-     * @exception IOException
-     *                if the communication link has a problem.
-     */
-    @Override
-    synchronized public InputStream getInputStream() throws IOException {
-	if (this._inputStream != null) {
-	    return this._inputStream;
-	}
-	this.connect();
-	if (!this.connected) {
-	    return null;
+		agent_profile = new AgentProfile(major, // Java
+				major, // Aglets
+				"Aglets", major, // major,
+				minor, // minor,
+				major, // serialization,
+				null);
 	}
 
-	try {
-	    byte result[][] = this.agentsystem.fetch_class(null, this.url.toString(), agent_profile);
+	/*
+	 * 
+	 */
+	private final InputStream _inputStream = null;
 
-	    if ((result != null) && (result.length == 1)) {
-		this.headers.put("content-length", String.valueOf(result[0].length));
-		return new ByteArrayInputStream(result[0]);
-	    } else {
-		throw new IOException(this.url.toString());
-	    }
-	} catch (Exception ex) {
-	    ex.printStackTrace();
-	    throw new IOException(ex.getClass().getName() + ":"
-		    + ex.getMessage());
+	// MAFAgentSystem_ATP agentsystem;
+	MAFAgentSystem agentsystem;
+	Properties request_properties = new Properties();
+
+	/*
+	 * Header field
+	 */
+	private final Properties headers = new Properties();
+
+	/**
+	 * Create a new instance of this class.
+	 * 
+	 * @param url
+	 *            a destination URL to which the application connects. The
+	 *            protocol is "atp".
+	 */
+	public URLConnectionForATP(final URL url) throws IOException {
+		super(url);
 	}
-    }
 
-    @Override
-    public String getRequestProperty(String key) {
-	return this.request_properties.getProperty(key);
-    }
+	/**
+	 * Make a comminucation link with the destination.
+	 * 
+	 * @exception IOException
+	 *                if can not make a communication link.
+	 */
+	@Override
+	synchronized public void connect() throws IOException {
+		if (connected) {
+			return;
+		}
+		agentsystem = MAFAgentSystem.getMAFAgentSystem(url.toString());
 
-    /*
-     * Sets request parameters
-     */
-    @Override
-    public void setRequestProperty(String key, String value) {
-	if (this.connected) {
-	    throw new IllegalAccessError("Already connected");
+		// MAFAgentSystem_ATPClient.getMAFAgentSystem_ATP(url.toString());
+		if (agentsystem == null) {
+			throw new IOException("ConnectionFailed");
+		}
+		connected = true;
 	}
-	this.request_properties.put(key, value);
-    }
+
+	@Override
+	public String getHeaderField(final String key) {
+		return headers.getProperty(key.toLowerCase());
+	}
+
+	public String getHeaderField(final String key, final String defValue) {
+		final String ret = this.getHeaderField(key);
+
+		return ret == null ? defValue : ret;
+	}
+
+	/**
+	 * Get an input stream of the communication link.
+	 * 
+	 * @return an input stream.
+	 * @exception IOException
+	 *                if the communication link has a problem.
+	 */
+	@Override
+	synchronized public InputStream getInputStream() throws IOException {
+		if (_inputStream != null) {
+			return _inputStream;
+		}
+		connect();
+		if (!connected) {
+			return null;
+		}
+
+		try {
+			final byte result[][] = agentsystem.fetch_class(null, url.toString(), agent_profile);
+
+			if ((result != null) && (result.length == 1)) {
+				headers.put("content-length", String.valueOf(result[0].length));
+				return new ByteArrayInputStream(result[0]);
+			} else {
+				throw new IOException(url.toString());
+			}
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+			throw new IOException(ex.getClass().getName() + ":"
+					+ ex.getMessage());
+		}
+	}
+
+	@Override
+	public String getRequestProperty(final String key) {
+		return request_properties.getProperty(key);
+	}
+
+	/*
+	 * Sets request parameters
+	 */
+	@Override
+	public void setRequestProperty(final String key, final String value) {
+		if (connected) {
+			throw new IllegalAccessError("Already connected");
+		}
+		request_properties.put(key, value);
+	}
 }

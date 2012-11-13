@@ -20,16 +20,16 @@ import com.ibm.agletx.patterns.Slave;
 
 public class SimpleSlave extends Slave {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 6336242854344614275L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6336242854344614275L;
 
-    @Override
-    protected void doJob() throws AgletException {
-    }
+	@Override
+	protected void doJob() throws AgletException {
+	}
 
-    @Override
-    protected void initializeJob() {
-    }
+	@Override
+	protected void initializeJob() {
+	}
 }

@@ -23,77 +23,77 @@ import com.ibm.awb.misc.JarArchive;
 import com.ibm.maf.ClassName;
 
 class JarAgletClassLoader extends AgletClassLoader {
-    JarArchive _jar = null;
+	private static URL checkAndTrim(final URL codeBase) throws java.io.IOException {
+		String f = codeBase.getFile();
 
-    /*
-     * synchronized public boolean match(DigestTable table) { return
-     * _jar.getDigestTable().match(table, false); }
-     * 
-     * synchronized public boolean matchAndImport(DigestTable table) { return
-     * _digest_table.match(table, false); }
-     */
-    JarAgletClassLoader(String name, Certificate cert)
-    throws java.io.IOException {
-	this(new URL(name), cert);
-    }
-
-    JarAgletClassLoader(URL codebase, Certificate cert)
-    throws java.io.IOException {
-	super(checkAndTrim(codebase), cert);
-	this._jar = new com.ibm.awb.misc.JarArchive(codebase.openStream());
-
-	// _digest_table = _jar.getDigestTable();
-	Archive.Entry ae[] = this._jar.entries();
-
-	this._digest_table = new DigestTable(ae.length);
-	for (Entry element : ae) {
-	    this._digest_table.setDigest(element.name(), element.digest());
+		if ((f != null) && f.toLowerCase().endsWith(".jar")) {
+			System.out.println(f);
+			f = f.substring(0, f.lastIndexOf('/') + 1);
+			System.out.println(f);
+			return new URL(codeBase, f);
+		}
+		return codeBase;
 	}
-    }
 
-    private static URL checkAndTrim(URL codeBase) throws java.io.IOException {
-	String f = codeBase.getFile();
+	static boolean isJarFile(final URL codebase) {
+		final String f = codebase.getFile();
 
-	if ((f != null) && f.toLowerCase().endsWith(".jar")) {
-	    System.out.println(f);
-	    f = f.substring(0, f.lastIndexOf('/') + 1);
-	    System.out.println(f);
-	    return new URL(codeBase, f);
+		return (f != null) && f.toLowerCase().endsWith(".jar");
 	}
-	return codeBase;
-    }
 
-    @Override
-    public Archive getArchive(ClassName[] t) {
-	if (this.match(t)) {
-	    return this._jar;
-	} else {
-	    return null;
+	JarArchive _jar = null;
+
+	/*
+	 * synchronized public boolean match(DigestTable table) { return
+	 * _jar.getDigestTable().match(table, false); }
+	 * 
+	 * synchronized public boolean matchAndImport(DigestTable table) { return
+	 * _digest_table.match(table, false); }
+	 */
+	JarAgletClassLoader(final String name, final Certificate cert)
+	throws java.io.IOException {
+		this(new URL(name), cert);
 	}
-    }
 
-    @Override
-    synchronized protected byte[] getResourceAsByteArray(String filename) {
-	return this._jar.getResourceAsByteArray(filename);
-    }
+	JarAgletClassLoader(final URL codebase, final Certificate cert)
+	throws java.io.IOException {
+		super(checkAndTrim(codebase), cert);
+		_jar = new com.ibm.awb.misc.JarArchive(codebase.openStream());
 
-    /* overritten */
-    @Override
-    public void importArchive(Archive a) {
-	Archive.Entry ae[] = a.entries();
+		// _digest_table = _jar.getDigestTable();
+		final Archive.Entry ae[] = _jar.entries();
 
-	for (Entry element : ae) {
-	    long digest = this._digest_table.getDigest(element.name());
-
-	    if (digest == 0) {
-		throw new RuntimeException("Cannot Add JarArchive!");
-	    }
+		_digest_table = new DigestTable(ae.length);
+		for (final Entry element : ae) {
+			_digest_table.setDigest(element.name(), element.digest());
+		}
 	}
-    }
 
-    static boolean isJarFile(URL codebase) {
-	String f = codebase.getFile();
+	@Override
+	public Archive getArchive(final ClassName[] t) {
+		if (match(t)) {
+			return _jar;
+		} else {
+			return null;
+		}
+	}
 
-	return (f != null) && f.toLowerCase().endsWith(".jar");
-    }
+	@Override
+	synchronized protected byte[] getResourceAsByteArray(final String filename) {
+		return _jar.getResourceAsByteArray(filename);
+	}
+
+	/* overritten */
+	@Override
+	public void importArchive(final Archive a) {
+		final Archive.Entry ae[] = a.entries();
+
+		for (final Entry element : ae) {
+			final long digest = _digest_table.getDigest(element.name());
+
+			if (digest == 0) {
+				throw new RuntimeException("Cannot Add JarArchive!");
+			}
+		}
+	}
 }

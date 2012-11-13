@@ -37,55 +37,55 @@ import java.util.Vector;
  * @author ONO Kouichi
  */
 public class Protections extends PermissionCollection implements Serializable {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -2786264259022840099L;
-    private Vector pset = new Vector();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2786264259022840099L;
+	private final Vector pset = new Vector();
 
-    public Protections() {
-	super();
-    }
-
-    @Override
-    synchronized public void add(Permission p) {
-	if (p == null) {
-	    return;
+	public Protections() {
+		super();
 	}
-	if (this.isReadOnly()) {
-	    throw new SecurityException("attempt to add a Protection to a readonly Protections object");
-	}
-	if (p instanceof Protection) {
-	    this.pset.addElement(p);
-	}
-    }
 
-    @Override
-    public Enumeration elements() {
-	return this.pset.elements();
-    }
-
-    @Override
-    public boolean implies(Permission p) {
-	if (p instanceof com.ibm.aglet.security.AgletProtection) {
-	    for (Enumeration e = this.pset.elements(); e.hasMoreElements();) {
-		Permission t = (Permission) e.nextElement();
-		if (t instanceof com.ibm.aglet.security.AgletProtection) {
-		    if (!t.implies(p)) {
-			return false;
-		    }
+	@Override
+	synchronized public void add(final Permission p) {
+		if (p == null) {
+			return;
 		}
-	    }
-	} else {
-	    for (Enumeration e = this.pset.elements(); e.hasMoreElements();) {
-		Permission t = (Permission) e.nextElement();
-		if (t instanceof com.ibm.aglet.security.MessageProtection) {
-		    if (!t.implies(p)) {
-			return false;
-		    }
+		if (isReadOnly()) {
+			throw new SecurityException("attempt to add a Protection to a readonly Protections object");
 		}
-	    }
+		if (p instanceof Protection) {
+			pset.addElement(p);
+		}
 	}
-	return true;
-    }
+
+	@Override
+	public Enumeration elements() {
+		return pset.elements();
+	}
+
+	@Override
+	public boolean implies(final Permission p) {
+		if (p instanceof com.ibm.aglet.security.AgletProtection) {
+			for (final Enumeration e = pset.elements(); e.hasMoreElements();) {
+				final Permission t = (Permission) e.nextElement();
+				if (t instanceof com.ibm.aglet.security.AgletProtection) {
+					if (!t.implies(p)) {
+						return false;
+					}
+				}
+			}
+		} else {
+			for (final Enumeration e = pset.elements(); e.hasMoreElements();) {
+				final Permission t = (Permission) e.nextElement();
+				if (t instanceof com.ibm.aglet.security.MessageProtection) {
+					if (!t.implies(p)) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
 }

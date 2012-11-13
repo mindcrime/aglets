@@ -75,439 +75,439 @@ import com.ibm.aglets.MessageManagerImpl;
  * 07/ago/07
  */
 public final class AgletThread extends Thread {
-    private boolean valid = true;
-    private boolean start = false;
-    private boolean loop_started = false;
+	private boolean valid = true;
+	private boolean start = false;
+	private boolean loop_started = false;
 
-    private MessageManagerImpl messageManager = null;
-    private MessageImpl message = null;
+	private MessageManagerImpl messageManager = null;
+	private MessageImpl message = null;
 
-    /**
-     * A counter about the number of created threads.
-     */
-    private static int count = 1; // counts the number of thread created.
+	/**
+	 * A counter about the number of created threads.
+	 */
+	private static int count = 1; // counts the number of thread created.
 
-    /**
-     * The logger of this class of thread(s).
-     */
-    private static AgletsLogger logger = AgletsLogger.getLogger("com.ibm.aglets.thread.AgletThread");
+	/**
+	 * The logger of this class of thread(s).
+	 */
+	private static AgletsLogger logger = AgletsLogger.getLogger("com.ibm.aglets.thread.AgletThread");
 
-    /**
-     * The number of messages this thread has handled, just for a little
-     * statistic count.
-     */
-    private int messageHandled = 0;
+	public static MessageImpl getCurrentMessage() {
+		final Thread t = Thread.currentThread();
 
-    /**
-     * Indicates if the thread is processing or not the current message.
-     */
-    private boolean processing = false;
-
-    /**
-     * Indicates if the something external to this thread is going to change the
-     * message to handle.
-     */
-    private boolean changing = false;
-
-    /**
-     * This flag indicates if the thread is managing a reentrant message.
-     */
-    private boolean reentrant = false;
-
-    /**
-     * Builds a thread knowing only the group. Used from the thread factory.
-     * 
-     * @param group
-     *            the thread group.
-     */
-    public AgletThread(ThreadGroup group) {
-	super(group, "AgletThread num.:" + (count++));
-	this.messageManager = null;
-	this.setPriority(group.getMaxPriority());
-    }
-
-    public AgletThread(ThreadGroup group, MessageManager m) {
-	super(group, "No." + (count++) + ']');
-	this.messageManager = (MessageManagerImpl) m;
-	this.setPriority(group.getMaxPriority());
-    }
-
-    public static MessageImpl getCurrentMessage() {
-	Thread t = Thread.currentThread();
-
-	if (t instanceof AgletThread) {
-	    AgletThread at = (AgletThread) t;
-	    return at.getMessage();
-	}
-	return null;
-    }
-
-    /**
-     * This method is called each time a message must be processed. The idea is
-     * that this method should be called thru the proxy chain, and from this
-     * method the thread must be started/restarted and should process the
-     * message itself. Please note that this method is called within the
-     * sender's thread stack, and the message must be processed within the
-     * receiver thread stack.
-     * 
-     * @param msg
-     *            the message to process.
-     */
-    public void handleMessage(MessageImpl msg) {
-	// check if the message is valid
-	if (msg == null)
-	    return;
-
-	logger.debug("Handling a message => " + msg);
-
-	// set the message to use
-	this.setMessage(msg);
-
-    }
-
-    synchronized public void invalidate() {
-
-	// Debug.check();
-	if (this.valid) {
-	    this.valid = false;
-	    this.start = true;
-	    this.notifyAll();
+		if (t instanceof AgletThread) {
+			final AgletThread at = (AgletThread) t;
+			return at.getMessage();
+		}
+		return null;
 	}
 
-	// Debug.check();
-    }
+	/**
+	 * The number of messages this thread has handled, just for a little
+	 * statistic count.
+	 */
+	private int messageHandled = 0;
 
-    /**
-     * The execution cycle of this thread. The thread will continue to process
-     * messages until it gets no more messages, and then it will suspend itself
-     * waiting for a new message to come.
-     */
-    @Override
-    public void run() {
-	// if the loop of handing messages is already started return, so thus
-	// no more than one run call can be done.
-	if (this.loop_started) {
-	    // to assure that aglet cannot call run on this thread.
-	    return;
+	/**
+	 * Indicates if the thread is processing or not the current message.
+	 */
+	private boolean processing = false;
+
+	/**
+	 * Indicates if the something external to this thread is going to change the
+	 * message to handle.
+	 */
+	private boolean changing = false;
+
+	/**
+	 * This flag indicates if the thread is managing a reentrant message.
+	 */
+	private boolean reentrant = false;
+
+	/**
+	 * Builds a thread knowing only the group. Used from the thread factory.
+	 * 
+	 * @param group
+	 *            the thread group.
+	 */
+	public AgletThread(final ThreadGroup group) {
+		super(group, "AgletThread num.:" + (count++));
+		messageManager = null;
+		setPriority(group.getMaxPriority());
 	}
 
-	// set this thread as "started to handle messages"
-	this.loop_started = true;
-	this.start = false;
+	public AgletThread(final ThreadGroup group, final MessageManager m) {
+		super(group, "No." + (count++) + ']');
+		messageManager = (MessageManagerImpl) m;
+		setPriority(group.getMaxPriority());
+	}
 
-	// get the reference of the agent behind the message manager
-	if (this.messageManager == null)
-	    return; // the message manager is not valid!
+	/**
+	 * Gets back the message.
+	 * 
+	 * @return the message
+	 */
+	protected synchronized MessageImpl getMessage() {
+		return message;
+	}
 
-	try {
-	    while (this.valid) {
+	/**
+	 * Gets back the messageManager.
+	 * 
+	 * @return the messageManager
+	 */
+	protected synchronized MessageManagerImpl getMessageManager() {
+		return messageManager;
+	}
+
+	/**
+	 * This method is called each time a message must be processed. The idea is
+	 * that this method should be called thru the proxy chain, and from this
+	 * method the thread must be started/restarted and should process the
+	 * message itself. Please note that this method is called within the
+	 * sender's thread stack, and the message must be processed within the
+	 * receiver thread stack.
+	 * 
+	 * @param msg
+	 *            the message to process.
+	 */
+	public void handleMessage(final MessageImpl msg) {
+		// check if the message is valid
+		if (msg == null)
+			return;
+
+		logger.debug("Handling a message => " + msg);
+
+		// set the message to use
+		setMessage(msg);
+
+	}
+
+	synchronized public void invalidate() {
+
+		// Debug.check();
+		if (valid) {
+			valid = false;
+			start = true;
+			notifyAll();
+		}
+
+		// Debug.check();
+	}
+
+	/**
+	 * Gets back the changing.
+	 * 
+	 * @return the changing
+	 */
+	protected synchronized boolean isChanging() {
+		return changing;
+	}
+
+	/**
+	 * Used to understand if the current thread is processing a message or not,
+	 * and thus if it is safe to change the message this thread is handling.
+	 * 
+	 * @return the processing
+	 */
+	protected synchronized boolean isProcessing() {
+		return processing;
+	}
+
+	/**
+	 * Gets back the reentrant flag.
+	 * 
+	 * @return the reentrant
+	 */
+	public synchronized boolean isReentrant() {
+		return reentrant;
+	}
+
+	/**
+	 * The execution cycle of this thread. The thread will continue to process
+	 * messages until it gets no more messages, and then it will suspend itself
+	 * waiting for a new message to come.
+	 */
+	@Override
+	public void run() {
+		// if the loop of handing messages is already started return, so thus
+		// no more than one run call can be done.
+		if (loop_started) {
+			// to assure that aglet cannot call run on this thread.
+			return;
+		}
+
+		// set this thread as "started to handle messages"
+		loop_started = true;
+		start = false;
+
+		// get the reference of the agent behind the message manager
+		if (messageManager == null)
+			return; // the message manager is not valid!
+
 		try {
+			while (valid) {
+				try {
 
-		    logger.debug("AgletThread is starting processing");
-		    this.setReentrant(false); // if the process is here and is
-		    // re-entrant now I'm processing
-		    // a re-entrant message, thus
-		    // after this I have to suspend
-		    // myself.
-		    this.setProcessing(true);
-		    // get the right reference to the aglet behind the current
-		    // message manager. This must be done each time in the cycle
-		    // because
-		    // the thread could be suspended or the message manager
-		    // could be changed
-		    // if the thread has passed thru the pool.
-		    MessageManagerImpl manager = this.getMessageManager();
-		    logger.debug("The message manager is " + manager
-			    + ", the message is " + this.message);
-		    LocalAgletRef ref = manager.getAgletRef();
-		    this.message.handle(ref); // handle the message
-		    this.messageHandled++; // increment the number of messages
-		    // handled by this thread
+					logger.debug("AgletThread is starting processing");
+					setReentrant(false); // if the process is here and is
+					// re-entrant now I'm processing
+					// a re-entrant message, thus
+					// after this I have to suspend
+					// myself.
+					setProcessing(true);
+					// get the right reference to the aglet behind the current
+					// message manager. This must be done each time in the cycle
+					// because
+					// the thread could be suspended or the message manager
+					// could be changed
+					// if the thread has passed thru the pool.
+					final MessageManagerImpl manager = getMessageManager();
+					logger.debug("The message manager is " + manager
+							+ ", the message is " + message);
+					final LocalAgletRef ref = manager.getAgletRef();
+					message.handle(ref); // handle the message
+					messageHandled++; // increment the number of messages
+					// handled by this thread
 
-		    synchronized (this) {
-			if (!this.isReentrant()) {
-			    this.message = null; // invalidate the message so to
-			    // not repeat the handling
-			    logger.debug("AgletThread has invalidate the message just processed (no reentrant find!)");
+					synchronized (this) {
+						if (!isReentrant()) {
+							message = null; // invalidate the message so to
+							// not repeat the handling
+							logger.debug("AgletThread has invalidate the message just processed (no reentrant find!)");
+						}
+					}
+
+					setProcessing(false);
+					logger.debug("AgletThread finished processing a message");
+
+				} catch (final RuntimeException ex) {
+					logger.error("Exception caught while processing a message", ex);
+					valid = false;
+					throw ex;
+				} catch (final Error ex) {
+					logger.error("Error caught while processing a message");
+					valid = false;
+					throw ex;
+				} catch (final InvalidAgletException ex) {
+					logger.error("Exception caught while processing a message", ex);
+					valid = false;
+					start = true;
+				} finally {
+
+					// if the thread is valid, i.e., it has not been stopped
+					// then invoke special methods on the message manager to
+					// process
+					// another message (thus once the thread has been activated
+					// all messages are processed)
+					// or to process another message (if present) and to push
+					// back the thread in the pool.
+					if (valid && (!isReentrant())) {
+						// push the thread back into the pool...
+						logger.debug("The thread is going to be pushed back in the pool...");
+						messageManager.pushThreadAndExitMonitorIfOwner(this);
+					} else {
+						// process one more message...
+						messageManager.exitMonitorIfOwner();
+					}
+				}
+
+				// here the message has been processed, thus I can suspend
+				// myself
+				// waiting for a new message to process
+				synchronized (this) {
+
+					while (valid && (message == null)
+							&& (!isReentrant())) {
+						try {
+							logger.debug("Thread suspending waiting for a next message...");
+							this.wait();
+						} catch (final InterruptedException ex) {
+							logger.error("Exception caught while waiting for an incoming message", ex);
+						}
+					}
+
+				}
+
 			}
-		    }
-
-		    this.setProcessing(false);
-		    logger.debug("AgletThread finished processing a message");
-
-		} catch (RuntimeException ex) {
-		    logger.error("Exception caught while processing a message", ex);
-		    this.valid = false;
-		    throw ex;
-		} catch (Error ex) {
-		    logger.error("Error caught while processing a message");
-		    this.valid = false;
-		    throw ex;
-		} catch (InvalidAgletException ex) {
-		    logger.error("Exception caught while processing a message", ex);
-		    this.valid = false;
-		    this.start = true;
 		} finally {
+			// messageManager.removeThread(this);
+			message = null;
 
-		    // if the thread is valid, i.e., it has not been stopped
-		    // then invoke special methods on the message manager to
-		    // process
-		    // another message (thus once the thread has been activated
-		    // all messages are processed)
-		    // or to process another message (if present) and to push
-		    // back the thread in the pool.
-		    if (this.valid && (!this.isReentrant())) {
-			// push the thread back into the pool...
-			logger.debug("The thread is going to be pushed back in the pool...");
-			this.messageManager.pushThreadAndExitMonitorIfOwner(this);
-		    } else {
-			// process one more message...
-			this.messageManager.exitMonitorIfOwner();
-		    }
+			// Debug.end();
 		}
+	}
 
-		// here the message has been processed, thus I can suspend
-		// myself
-		// waiting for a new message to process
-		synchronized (this) {
-
-		    while (this.valid && (this.message == null)
-			    && (!this.isReentrant())) {
-			try {
-			    logger.debug("Thread suspending waiting for a next message...");
-			    this.wait();
-			} catch (InterruptedException ex) {
-			    logger.error("Exception caught while waiting for an incoming message", ex);
+	/**
+	 * Sets the changing value.
+	 * 
+	 * @param changing
+	 *            the changing to set
+	 */
+	protected synchronized void setChanging(final boolean changing) {
+		// if the thread is already processing a message I must wait
+		try {
+			while (isAlive() && isProcessing()
+					&& (!isReentrant())) {
+				logger.debug("Thread waiting to set the changing flag...");
+				this.wait();
 			}
-		    }
 
+			this.changing = changing;
+
+			// resume suspended threads
+			notifyAll();
+
+		} catch (final InterruptedException e) {
+			logger.error("Exception caught while set the changing status", e);
 		}
 
-	    }
-	} finally {
-	    // messageManager.removeThread(this);
-	    this.message = null;
-
-	    // Debug.end();
-	}
-    }
-
-    /**
-     * Provides a printable version of this thread and its state.
-     */
-    @Override
-    public String toString() {
-	StringBuffer buffer = new StringBuffer(100);
-
-	buffer.append("[" + this.getClass().getName() + "] ");
-	buffer.append("Thread number ");
-	buffer.append(count);
-
-	if (this.messageManager != null) {
-	    buffer.append("\n\tMessageManager: )");
-	    buffer.append(this.messageManager);
+		this.changing = changing;
 	}
 
-	if (this.message != null) {
-	    buffer.append("\n\tMessage: ");
-	    buffer.append(this.message);
+	/**
+	 * Sets the message value.
+	 * 
+	 * @param message
+	 *            the message to set
+	 */
+	protected synchronized void setMessage(final MessageImpl message) {
+		try {
+			// first of all check if the thread is alive and is already
+			// processing
+			// a message, in such case wait until it has finished of processing
+			// the message, then change it.
+
+			while (isAlive() && isProcessing()
+					&& (!isReentrant())) {
+				logger.debug("Thread waiting to set the message to process...");
+				this.wait(); // suspend myself until the current message has
+				// been processed
+			}
+
+			// substitute the message
+			setChanging(true);
+			logger.debug("Setting the message " + message
+					+ " for the current thread");
+			this.message = message;
+			start = true;
+
+			// no more changing the message to handle
+			setChanging(false);
+
+			// is the thread running?
+			if (!isAlive())
+				start();
+
+			// resume suspended threads
+			notifyAll();
+
+		} catch (final InterruptedException e) {
+			logger.error("Exception caught while trying to set a new message to process.", e);
+		}
 	}
 
-	buffer.append("\n\t\tvalid: " + this.valid);
-	buffer.append("\n\t\tmessageHandled: " + this.messageHandled);
-	buffer.append("\n\t\tstart: " + this.start);
-	buffer.append("\n");
+	/**
+	 * Sets the messageManager value.
+	 * 
+	 * @param messageManager
+	 *            the messageManager to set
+	 */
+	protected synchronized void setMessageManager(
+	                                              final MessageManagerImpl messageManager) {
+		try {
+			// first of all check if the thread is alive and is already
+			// processing
+			// a message, in such case wait until it has finished of processing
+			// the message, then change it.
 
-	return buffer.toString();
+			while (isAlive() && isProcessing()) {
+				this.wait(); // suspend myself until the current message has
+				// been processed
+			}
 
-    }
+			// substitute the message
+			setChanging(true);
+			this.messageManager = messageManager;
+			start = true;
 
-    /**
-     * Gets back the message.
-     * 
-     * @return the message
-     */
-    protected synchronized MessageImpl getMessage() {
-	return this.message;
-    }
+			// no more changing the message to handle
+			setChanging(false);
 
-    /**
-     * Sets the message value.
-     * 
-     * @param message
-     *            the message to set
-     */
-    protected synchronized void setMessage(MessageImpl message) {
-	try {
-	    // first of all check if the thread is alive and is already
-	    // processing
-	    // a message, in such case wait until it has finished of processing
-	    // the message, then change it.
+			// resume suspended threads
+			notifyAll();
 
-	    while (this.isAlive() && this.isProcessing()
-		    && (!this.isReentrant())) {
-		logger.debug("Thread waiting to set the message to process...");
-		this.wait(); // suspend myself until the current message has
-		// been processed
-	    }
-
-	    // substitute the message
-	    this.setChanging(true);
-	    logger.debug("Setting the message " + message
-		    + " for the current thread");
-	    this.message = message;
-	    this.start = true;
-
-	    // no more changing the message to handle
-	    this.setChanging(false);
-
-	    // is the thread running?
-	    if (!this.isAlive())
-		this.start();
-
-	    // resume suspended threads
-	    this.notifyAll();
-
-	} catch (InterruptedException e) {
-	    logger.error("Exception caught while trying to set a new message to process.", e);
-	}
-    }
-
-    /**
-     * Gets back the messageManager.
-     * 
-     * @return the messageManager
-     */
-    protected synchronized MessageManagerImpl getMessageManager() {
-	return this.messageManager;
-    }
-
-    /**
-     * Sets the messageManager value.
-     * 
-     * @param messageManager
-     *            the messageManager to set
-     */
-    protected synchronized void setMessageManager(
-                                                  MessageManagerImpl messageManager) {
-	try {
-	    // first of all check if the thread is alive and is already
-	    // processing
-	    // a message, in such case wait until it has finished of processing
-	    // the message, then change it.
-
-	    while (this.isAlive() && this.isProcessing()) {
-		this.wait(); // suspend myself until the current message has
-		// been processed
-	    }
-
-	    // substitute the message
-	    this.setChanging(true);
-	    this.messageManager = messageManager;
-	    this.start = true;
-
-	    // no more changing the message to handle
-	    this.setChanging(false);
-
-	    // resume suspended threads
-	    this.notifyAll();
-
-	} catch (InterruptedException e) {
-	    logger.error("Exception caught while trying to set a new messageManager.", e);
-	}
-    }
-
-    /**
-     * Used to understand if the current thread is processing a message or not,
-     * and thus if it is safe to change the message this thread is handling.
-     * 
-     * @return the processing
-     */
-    protected synchronized boolean isProcessing() {
-	return this.processing;
-    }
-
-    /**
-     * Sets the processing value.
-     * 
-     * @param processing
-     *            the processing to set
-     */
-    protected synchronized void setProcessing(boolean processing) {
-	// check if the thread is already changing the current message,
-	// thus I need to suspend and to wait, otherwise proceed
-	try {
-	    while (this.isAlive() && this.isChanging()) {
-		logger.debug("Thread waiting to set the processing flag...");
-		this.wait();
-	    }
-
-	    this.processing = processing;
-
-	    // resume suspended threads
-	    this.notifyAll();
-
-	} catch (InterruptedException e) {
-	    logger.error("Exception caught while set processing value", e);
-	}
-    }
-
-    /**
-     * Gets back the changing.
-     * 
-     * @return the changing
-     */
-    protected synchronized boolean isChanging() {
-	return this.changing;
-    }
-
-    /**
-     * Sets the changing value.
-     * 
-     * @param changing
-     *            the changing to set
-     */
-    protected synchronized void setChanging(boolean changing) {
-	// if the thread is already processing a message I must wait
-	try {
-	    while (this.isAlive() && this.isProcessing()
-		    && (!this.isReentrant())) {
-		logger.debug("Thread waiting to set the changing flag...");
-		this.wait();
-	    }
-
-	    this.changing = changing;
-
-	    // resume suspended threads
-	    this.notifyAll();
-
-	} catch (InterruptedException e) {
-	    logger.error("Exception caught while set the changing status", e);
+		} catch (final InterruptedException e) {
+			logger.error("Exception caught while trying to set a new messageManager.", e);
+		}
 	}
 
-	this.changing = changing;
-    }
+	/**
+	 * Sets the processing value.
+	 * 
+	 * @param processing
+	 *            the processing to set
+	 */
+	protected synchronized void setProcessing(final boolean processing) {
+		// check if the thread is already changing the current message,
+		// thus I need to suspend and to wait, otherwise proceed
+		try {
+			while (isAlive() && isChanging()) {
+				logger.debug("Thread waiting to set the processing flag...");
+				this.wait();
+			}
 
-    /**
-     * Gets back the reentrant flag.
-     * 
-     * @return the reentrant
-     */
-    public synchronized boolean isReentrant() {
-	return this.reentrant;
-    }
+			this.processing = processing;
 
-    /**
-     * Sets the reentrant value. A re-entrant thread is a thread that must
-     * process another message sent from the same thread itself to the same
-     * agent.
-     * 
-     * @param reentrant
-     *            the reentrant to set
-     */
-    public synchronized void setReentrant(boolean reentrant) {
-	logger.debug("This aglet thread will process one more re-entrant message!");
-	this.reentrant = reentrant;
-    }
+			// resume suspended threads
+			notifyAll();
+
+		} catch (final InterruptedException e) {
+			logger.error("Exception caught while set processing value", e);
+		}
+	}
+
+	/**
+	 * Sets the reentrant value. A re-entrant thread is a thread that must
+	 * process another message sent from the same thread itself to the same
+	 * agent.
+	 * 
+	 * @param reentrant
+	 *            the reentrant to set
+	 */
+	public synchronized void setReentrant(final boolean reentrant) {
+		logger.debug("This aglet thread will process one more re-entrant message!");
+		this.reentrant = reentrant;
+	}
+
+	/**
+	 * Provides a printable version of this thread and its state.
+	 */
+	@Override
+	public String toString() {
+		final StringBuffer buffer = new StringBuffer(100);
+
+		buffer.append("[" + this.getClass().getName() + "] ");
+		buffer.append("Thread number ");
+		buffer.append(count);
+
+		if (messageManager != null) {
+			buffer.append("\n\tMessageManager: )");
+			buffer.append(messageManager);
+		}
+
+		if (message != null) {
+			buffer.append("\n\tMessage: ");
+			buffer.append(message);
+		}
+
+		buffer.append("\n\t\tvalid: " + valid);
+		buffer.append("\n\t\tmessageHandled: " + messageHandled);
+		buffer.append("\n\t\tstart: " + start);
+		buffer.append("\n");
+
+		return buffer.toString();
+
+	}
 
 }

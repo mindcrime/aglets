@@ -33,39 +33,39 @@ import com.ibm.aglet.AgletProxy;
  */
 public class CloneEvent extends AgletEvent {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 5794430523051887230L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5794430523051887230L;
 
-    /**
-     * Constructs the clone event object with the specified id and aglet
-     */
-    @Deprecated
-    public CloneEvent(int id, AgletProxy aglet) {
-	super(aglet, id);
-    }
+	/**
+	 * Constructs the clone event object with the specified id and aglet
+	 */
+	@Deprecated
+	public CloneEvent(final int id, final AgletProxy aglet) {
+		super(aglet, id);
+	}
 
-    /**
-     * Creates the event of the specified type.
-     * 
-     * @param id
-     * @param proxy
-     * @param type
-     */
-    public CloneEvent(int id, AgletProxy proxy, EventType type) {
-	super(proxy, id, type);
-    }
+	/**
+	 * Creates the event of the specified type.
+	 * 
+	 * @param id
+	 * @param proxy
+	 * @param type
+	 */
+	public CloneEvent(final int id, final AgletProxy proxy, final EventType type) {
+		super(proxy, id, type);
+	}
 
-    /**
-     * Returns the aglet proxy which is the source of the event.
-     */
-    public AgletProxy getAgletProxy() {
-	return (AgletProxy) this.source;
-    }
+	/**
+	 * Returns the aglet proxy which is the source of the event.
+	 */
+	public AgletProxy getAgletProxy() {
+		return (AgletProxy) source;
+	}
 
-    @Override
-    public String toString() {
-	return "CloneEvent[" + this.getEventType().toString() + "]";
-    }
+	@Override
+	public String toString() {
+		return "CloneEvent[" + getEventType().toString() + "]";
+	}
 }

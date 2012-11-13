@@ -27,77 +27,77 @@ import java.awt.Rectangle;
  * @author      Yariv Aridor
  */
 class BorderPanel extends GridBagPanel {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -6644105225459161966L;
-    private String _title = null;
-    private FontMetrics _fm = null;
-    private Rectangle _titleBounds = null;
-    boolean _raised = false;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6644105225459161966L;
+	private String _title = null;
+	private FontMetrics _fm = null;
+	private Rectangle _titleBounds = null;
+	boolean _raised = false;
 
-    BorderPanel() {
-	this(null, false);
-    }
-
-    BorderPanel(String title) {
-	this(title, false);
-    }
-
-    BorderPanel(String title, boolean raised) {
-	super();
-	this._title = title;
-	this._raised = raised;
-    }
-
-    public Insets bottomInsets() {
-	return new Insets(0, 5, 5, 5);
-    }
-
-    public Insets middleInsets() {
-	return new Insets(0, 5, 0, 5);
-    }
-
-    @Override
-    public void paint(Graphics g) {
-	if ((this._fm == null) && (this._title != null)) {
-	    Container c = this.getParent();
-
-	    this._fm = c.getFontMetrics(c.getFont());
-	    this._titleBounds = new Rectangle(20, 0, this._fm.stringWidth(this._title), this._fm.getHeight());
+	BorderPanel() {
+		this(null, false);
 	}
-	Dimension size = this.getSize();
-	int y = this._fm.getHeight() / 2;
 
-	g.setColor(this.getBackground());
-	g.draw3DRect(0, y, size.width - 1, size.height - y - 1, this._raised);
-	g.draw3DRect(1, y + 1, size.width - 3, size.height - y - 3, !this._raised);
-
-	if (this._title != null) {
-	    g.fillRect(this._titleBounds.x, this._titleBounds.y, this._titleBounds.width, this._titleBounds.height);
-	    g.setColor(Color.black);
-	    g.drawString(this._title, 5, this._fm.getAscent()
-		    + this._fm.getLeading());
+	BorderPanel(final String title) {
+		this(title, false);
 	}
-    }
 
-    public Insets topInsets() {
-	if (this._fm == null) {
-	    if (this.getFont() == null) {
-		java.awt.Component c = this.getParent();
+	BorderPanel(final String title, final boolean raised) {
+		super();
+		_title = title;
+		_raised = raised;
+	}
 
-		while ((c instanceof java.awt.Window) == false) {
-		    c = c.getParent();
+	public Insets bottomInsets() {
+		return new Insets(0, 5, 5, 5);
+	}
+
+	public Insets middleInsets() {
+		return new Insets(0, 5, 0, 5);
+	}
+
+	@Override
+	public void paint(final Graphics g) {
+		if ((_fm == null) && (_title != null)) {
+			final Container c = getParent();
+
+			_fm = c.getFontMetrics(c.getFont());
+			_titleBounds = new Rectangle(20, 0, _fm.stringWidth(_title), _fm.getHeight());
 		}
+		final Dimension size = this.getSize();
+		final int y = _fm.getHeight() / 2;
 
-		// if (c.getPeer() == null) {
-		if (c.isDisplayable() == false) {
-		    c.addNotify();
+		g.setColor(getBackground());
+		g.draw3DRect(0, y, size.width - 1, size.height - y - 1, _raised);
+		g.draw3DRect(1, y + 1, size.width - 3, size.height - y - 3, !_raised);
+
+		if (_title != null) {
+			g.fillRect(_titleBounds.x, _titleBounds.y, _titleBounds.width, _titleBounds.height);
+			g.setColor(Color.black);
+			g.drawString(_title, 5, _fm.getAscent()
+					+ _fm.getLeading());
 		}
-	    }
-	    this._fm = this.getFontMetrics(this.getFont());
-	    this._titleBounds = new Rectangle(5, 0, this._fm.stringWidth(this._title), this._fm.getHeight());
 	}
-	return new Insets(this._fm.getHeight(), 5, 0, 5);
-    }
+
+	public Insets topInsets() {
+		if (_fm == null) {
+			if (getFont() == null) {
+				java.awt.Component c = getParent();
+
+				while ((c instanceof java.awt.Window) == false) {
+					c = c.getParent();
+				}
+
+				// if (c.getPeer() == null) {
+					if (c.isDisplayable() == false) {
+						c.addNotify();
+					}
+			}
+			_fm = getFontMetrics(getFont());
+			_titleBounds = new Rectangle(5, 0, _fm.stringWidth(_title), _fm.getHeight());
+		}
+		return new Insets(_fm.getHeight(), 5, 0, 5);
+	}
 }

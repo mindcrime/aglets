@@ -79,123 +79,123 @@ import com.ibm.aglet.message.Message;
 
 public class MessengerItinerary extends SeqItinerary {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 3585313769250709545L;
-    private Message msg = null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3585313769250709545L;
+	private Message msg = null;
 
-    /**
-     * Construct a MessengerItinerary object with a specified owner aglet The
-     * message should be explicitly set by the <tt>setMessage()</tt>
-     * 
-     * @param aglet
-     *            the owner aglet
-     */
-    public MessengerItinerary(Aglet aglet) {
-	this(aglet, (Message) null);
-    }
-
-    /**
-     * Construct a MessengerItinerary object with the specified owner aglet and
-     * a message to broadcast.
-     * 
-     * @param aglet
-     *            the owner aglet
-     * @param msg
-     *            the message to be broadcasted
-     */
-    public MessengerItinerary(Aglet aglet, Message msg) {
-	super(aglet);
-	this.msg = msg;
-    }
-
-    /**
-     * Construct a MessengerItinerary object with the specified owner aglet and
-     * a message to broadcast.
-     * 
-     * @param aglet
-     *            the owner aglet
-     * @param msg
-     *            the message to br broadcasted
-     */
-    public MessengerItinerary(Aglet aglet, String msg) {
-	this(aglet, new Message(msg));
-    }
-
-    /**
-     * Add a new item [address, aglet id] to the itinerary.
-     * 
-     * @param address
-     *            the address of the aglet.
-     * @param id
-     *            the id of the aglet.
-     */
-    public synchronized void addAglet(String address, AgletID id) {
-	this.addTask(address, new MessengerTask(id));
-    }
-
-    /**
-     * Return the URI of the aglet at the specified index. The URI is
-     * represented as <address> + '#' + <aglet id>.
-     * 
-     * @param index
-     *            the specified index.
-     */
-    public synchronized URL getAgletAt(int index) throws IOException {
-	return new URL(this.getAddressAt(index) + "/#"
-		+ ((MessengerTask) this.getTaskAt(index)).getAgletID());
-    }
-
-    /**
-     * Return the enumeration of all the aglets to receive the broadcast message
-     */
-    public Enumeration getAglets() {
-	Vector v = new Vector();
-
-	for (int i = 0; i < this.size(); i++) {
-	    AgletID id = ((MessengerTask) this.getTaskAt(i)).getAgletID();
-
-	    v.addElement(id);
+	/**
+	 * Construct a MessengerItinerary object with a specified owner aglet The
+	 * message should be explicitly set by the <tt>setMessage()</tt>
+	 * 
+	 * @param aglet
+	 *            the owner aglet
+	 */
+	public MessengerItinerary(final Aglet aglet) {
+		this(aglet, (Message) null);
 	}
-	return v.elements();
-    }
 
-    /**
-     * Return the message to be broadcast.
-     * 
-     */
-    Message getMessage() {
-	return this.msg;
-    }
+	/**
+	 * Construct a MessengerItinerary object with the specified owner aglet and
+	 * a message to broadcast.
+	 * 
+	 * @param aglet
+	 *            the owner aglet
+	 * @param msg
+	 *            the message to be broadcasted
+	 */
+	public MessengerItinerary(final Aglet aglet, final Message msg) {
+		super(aglet);
+		this.msg = msg;
+	}
 
-    /**
-     * Remove an aglet from the plan at a specific index.
-     * 
-     * @param index
-     *            the index to remove.
-     */
-    public synchronized void removeAglet(int index) {
-	this.removeTaskAt(index);
-    }
+	/**
+	 * Construct a MessengerItinerary object with the specified owner aglet and
+	 * a message to broadcast.
+	 * 
+	 * @param aglet
+	 *            the owner aglet
+	 * @param msg
+	 *            the message to br broadcasted
+	 */
+	public MessengerItinerary(final Aglet aglet, final String msg) {
+		this(aglet, new Message(msg));
+	}
 
-    /**
-     * Set the message to be broadcast
-     * 
-     * @param msg
-     *            the message
-     */
-    public void setMessage(Message msg) {
-	this.msg = msg;
-    }
+	/**
+	 * Add a new item [address, aglet id] to the itinerary.
+	 * 
+	 * @param address
+	 *            the address of the aglet.
+	 * @param id
+	 *            the id of the aglet.
+	 */
+	public synchronized void addAglet(final String address, final AgletID id) {
+		addTask(address, new MessengerTask(id));
+	}
 
-    /**
-     * Set the message to be broadcast
-     * 
-     * @param msg
-     *            the message
-     */
-    public void setMessage(String msg) {
-	this.msg = new Message(msg, null);
-    }
+	/**
+	 * Return the URI of the aglet at the specified index. The URI is
+	 * represented as <address> + '#' + <aglet id>.
+	 * 
+	 * @param index
+	 *            the specified index.
+	 */
+	public synchronized URL getAgletAt(final int index) throws IOException {
+		return new URL(getAddressAt(index) + "/#"
+				+ ((MessengerTask) getTaskAt(index)).getAgletID());
+	}
+
+	/**
+	 * Return the enumeration of all the aglets to receive the broadcast message
+	 */
+	public Enumeration getAglets() {
+		final Vector v = new Vector();
+
+		for (int i = 0; i < size(); i++) {
+			final AgletID id = ((MessengerTask) getTaskAt(i)).getAgletID();
+
+			v.addElement(id);
+		}
+		return v.elements();
+	}
+
+	/**
+	 * Return the message to be broadcast.
+	 * 
+	 */
+	Message getMessage() {
+		return msg;
+	}
+
+	/**
+	 * Remove an aglet from the plan at a specific index.
+	 * 
+	 * @param index
+	 *            the index to remove.
+	 */
+	public synchronized void removeAglet(final int index) {
+		removeTaskAt(index);
+	}
+
+	/**
+	 * Set the message to be broadcast
+	 * 
+	 * @param msg
+	 *            the message
+	 */
+	public void setMessage(final Message msg) {
+		this.msg = msg;
+	}
+
+	/**
+	 * Set the message to be broadcast
+	 * 
+	 * @param msg
+	 *            the message
+	 */
+	public void setMessage(final String msg) {
+		this.msg = new Message(msg, null);
+	}
 }

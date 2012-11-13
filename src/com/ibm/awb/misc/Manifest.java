@@ -25,69 +25,69 @@ import sun.net.www.MessageHeader;
 
 public class Manifest implements java.io.Serializable {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 2955273033902072906L;
-    private Hashtable sections = new Hashtable();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2955273033902072906L;
+	private final Hashtable sections = new Hashtable();
 
-    public Manifest(InputStream in) throws IOException {
-	sun.tools.jar.Manifest m = new sun.tools.jar.Manifest(in, false);
-	Enumeration e = m.entries();
+	public Manifest(final InputStream in) throws IOException {
+		final sun.tools.jar.Manifest m = new sun.tools.jar.Manifest(in, false);
+		final Enumeration e = m.entries();
 
-	while (e.hasMoreElements()) {
-	    MessageHeader mh = (MessageHeader) e.nextElement();
+		while (e.hasMoreElements()) {
+			final MessageHeader mh = (MessageHeader) e.nextElement();
 
-	    Hashtable h = new Hashtable();
+			final Hashtable h = new Hashtable();
 
-	    for (int i = 0; true; i++) {
-		String k = mh.getKey(i);
-		String v = mh.getValue(i);
+			for (int i = 0; true; i++) {
+				final String k = mh.getKey(i);
+				final String v = mh.getValue(i);
 
-		if (k == null) {
-		    break;
-		} else if (k.equalsIgnoreCase("name")) {
-		    this.sections.put(v, h);
-		} else if (k.equalsIgnoreCase("manifest-version")) {
+				if (k == null) {
+					break;
+				} else if (k.equalsIgnoreCase("name")) {
+					sections.put(v, h);
+				} else if (k.equalsIgnoreCase("manifest-version")) {
+				}
+				h.put(k.toUpperCase(), v);
+			}
 		}
-		h.put(k.toUpperCase(), v);
-	    }
 	}
-    }
 
-    public boolean contains(String name) {
-	return this.sections.get(name) != null;
-    }
-
-    /*
-     * public DigestTable getDigestTable() { return null; }
-     */
-
-    public String[] getDependencies(String name) {
-	Hashtable h = (Hashtable) this.sections.get(name);
-
-	if (h != null) {
-	    String s = (String) h.get("DEPENDS-ON");
-	    StringTokenizer st = new StringTokenizer(s, " ,");
-	    Vector v = new Vector();
-
-	    while (st.hasMoreTokens()) {
-		v.addElement(st.nextToken());
-	    }
-	    String ret[] = new String[v.size()];
-
-	    v.copyInto(ret);
-	    return ret;
+	public boolean contains(final String name) {
+		return sections.get(name) != null;
 	}
-	return null;
-    }
 
-    public boolean isAglet(String classname) {
-	Hashtable h = (Hashtable) this.sections.get(classname);
+	/*
+	 * public DigestTable getDigestTable() { return null; }
+	 */
 
-	if (h != null) {
-	    return h.get("AGLETS") != null;
+	public String[] getDependencies(final String name) {
+		final Hashtable h = (Hashtable) sections.get(name);
+
+		if (h != null) {
+			final String s = (String) h.get("DEPENDS-ON");
+			final StringTokenizer st = new StringTokenizer(s, " ,");
+			final Vector v = new Vector();
+
+			while (st.hasMoreTokens()) {
+				v.addElement(st.nextToken());
+			}
+			final String ret[] = new String[v.size()];
+
+			v.copyInto(ret);
+			return ret;
+		}
+		return null;
 	}
-	return false;
-    }
+
+	public boolean isAglet(final String classname) {
+		final Hashtable h = (Hashtable) sections.get(classname);
+
+		if (h != null) {
+			return h.get("AGLETS") != null;
+		}
+		return false;
+	}
 }

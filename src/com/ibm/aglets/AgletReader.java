@@ -32,61 +32,61 @@ import com.ibm.awb.misc.Archive;
  * @author ONO Kouichi
  */
 final class AgletReader {
-    private InputStream _is = null;
-    private ObjectInputStream _ois = null;
+	private InputStream _is = null;
+	private ObjectInputStream _ois = null;
 
-    /*
-     * 
-     */
-    AgletReader(byte[] agent) throws IOException {
-	this._is = new ByteArrayInputStream(agent);
-	this._ois = new ObjectInputStream(this._is);
-    }
-
-    void readAglet(LocalAgletRef ref)
-    throws IOException,
-    ClassNotFoundException {
-	ref.resourceManager.setResourceManagerContext();
-
-	Archive a = (Archive) this._ois.readObject();
-
-	ref.resourceManager.importArchive(a);
-
-	AgletInputStream ais = new AgletInputStream(this._is, ref.resourceManager);
-
-	try {
-
-	    //
-	    // MessageManager
-	    //
-	    ref.setMessageManager((MessageManagerImpl) ais.readObject());
-
-	    //
-	    // Aglet
-	    //
-	    ref.setAglet((Aglet) ais.readObject());
-
-	} finally {
-	    ref.resourceManager.unsetResourceManagerContext();
+	/*
+	 * 
+	 */
+	AgletReader(final byte[] agent) throws IOException {
+		_is = new ByteArrayInputStream(agent);
+		_ois = new ObjectInputStream(_is);
 	}
-    }
 
-    void readInfo(LocalAgletRef ref) throws IOException, ClassNotFoundException {
-	ref.info = (AgletInfo) this._ois.readObject();
+	void readAglet(final LocalAgletRef ref)
+	throws IOException,
+	ClassNotFoundException {
+		ref.resourceManager.setResourceManagerContext();
 
-	// # //
-	// # // Allowance
-	// # //
-	// # ref.allowance = (Allowance)_ois.readObject();
+		final Archive a = (Archive) _ois.readObject();
 
-	//
-	// Protections
-	//
-	ref.protections = (Protections) this._ois.readObject();
+		ref.resourceManager.importArchive(a);
 
-	//
-	// secure/unsecure
-	//
-	ref.setSecurity(this._ois.readBoolean());
-    }
+		final AgletInputStream ais = new AgletInputStream(_is, ref.resourceManager);
+
+		try {
+
+			//
+			// MessageManager
+			//
+			ref.setMessageManager((MessageManagerImpl) ais.readObject());
+
+			//
+			// Aglet
+			//
+			ref.setAglet((Aglet) ais.readObject());
+
+		} finally {
+			ref.resourceManager.unsetResourceManagerContext();
+		}
+	}
+
+	void readInfo(final LocalAgletRef ref) throws IOException, ClassNotFoundException {
+		ref.info = (AgletInfo) _ois.readObject();
+
+		// # //
+		// # // Allowance
+		// # //
+		// # ref.allowance = (Allowance)_ois.readObject();
+
+		//
+		// Protections
+		//
+		ref.protections = (Protections) _ois.readObject();
+
+		//
+		// secure/unsecure
+		//
+		ref.setSecurity(_ois.readBoolean());
+	}
 }

@@ -72,97 +72,97 @@ import com.ibm.aglet.message.Message;
 public class AlternateItinerary extends MobilityAdapter implements
 java.io.Serializable {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -6259222370792813718L;
-    private Aglet aglet;
-    private Vector hosts = new Vector();
-    private Message next;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6259222370792813718L;
+	private final Aglet aglet;
+	private final Vector hosts = new Vector();
+	private Message next;
 
-    public AlternateItinerary(Aglet aglet) {
-	this.aglet = aglet;
-	aglet.addMobilityListener(this);
-    }
-
-    public void addAlternate(String address) {
-	this.hosts.addElement(address);
-    }
-
-    /**
-     * Go to one available destination
-     * 
-     * @exception IOException
-     *                if dispatch failed due to communication problems
-     * @exception AgletException
-     *                if dispatch failed due to aglet specific problems.
-     */
-    public void go() throws java.io.IOException {
-	this.go((Message) null);
-    }
-
-    /**
-     * Go to one available destination where the message is processed
-     * 
-     * @param msg
-     *            the message being sent to the aglet at the destination
-     * @exception IOException
-     *                if dispatch failed due to communication problems
-     * @exception AgletException
-     *                if dispatch failed due to aglet specific problems.
-     */
-    public void go(Message msg) throws java.io.IOException {
-	this.next = msg;
-	for (Enumeration e = this.hosts.elements(); e.hasMoreElements();) {
-	    try {
-		this.aglet.dispatch(new URL((String) e.nextElement()));
-	    } catch (MalformedURLException ex) {
-		continue;
-	    } catch (ServerNotFoundException ex) {
-		continue;
-	    } catch (IOException ex) {
-		continue;
-	    } catch (RequestRefusedException ex) {
-		continue;
-	    } catch (SecurityException ex) { // can never be dispatched.
-		throw ex;
-	    }
+	public AlternateItinerary(final Aglet aglet) {
+		this.aglet = aglet;
+		aglet.addMobilityListener(this);
 	}
-	throw new ServerNotFoundException("dispatched failed for all alternative destinations");
-    }
 
-    /**
-     * Go to one available destination where the message is processed
-     * 
-     * @param msg
-     *            the message being sent to the aglet at the destination
-     * @exception IOException
-     *                if dispatch failed due to communication problems
-     * @exception AgletException
-     *                if dispatch failed due to aglet specific problems.
-     */
-    public void go(String msg) throws java.io.IOException {
-	this.go(new Message(msg, null));
-    }
-
-    /**
-     * This is not normally used by aglets programmers.
-     * 
-     * @param ev
-     *            a mobility event
-     */
-    @Override
-    public void onArrival(MobilityEvent ev) {
-	try {
-	    if (this.next != null) {
-		ev.getAgletProxy().sendAsyncMessage(this.next);
-	    }
-	} catch (Exception ex) {
-	    ex.printStackTrace();
+	public void addAlternate(final String address) {
+		hosts.addElement(address);
 	}
-    }
 
-    public void removeAlternate(String address) {
-	this.hosts.removeElement(address);
-    }
+	/**
+	 * Go to one available destination
+	 * 
+	 * @exception IOException
+	 *                if dispatch failed due to communication problems
+	 * @exception AgletException
+	 *                if dispatch failed due to aglet specific problems.
+	 */
+	public void go() throws java.io.IOException {
+		this.go((Message) null);
+	}
+
+	/**
+	 * Go to one available destination where the message is processed
+	 * 
+	 * @param msg
+	 *            the message being sent to the aglet at the destination
+	 * @exception IOException
+	 *                if dispatch failed due to communication problems
+	 * @exception AgletException
+	 *                if dispatch failed due to aglet specific problems.
+	 */
+	public void go(final Message msg) throws java.io.IOException {
+		next = msg;
+		for (final Enumeration e = hosts.elements(); e.hasMoreElements();) {
+			try {
+				aglet.dispatch(new URL((String) e.nextElement()));
+			} catch (final MalformedURLException ex) {
+				continue;
+			} catch (final ServerNotFoundException ex) {
+				continue;
+			} catch (final IOException ex) {
+				continue;
+			} catch (final RequestRefusedException ex) {
+				continue;
+			} catch (final SecurityException ex) { // can never be dispatched.
+				throw ex;
+			}
+		}
+		throw new ServerNotFoundException("dispatched failed for all alternative destinations");
+	}
+
+	/**
+	 * Go to one available destination where the message is processed
+	 * 
+	 * @param msg
+	 *            the message being sent to the aglet at the destination
+	 * @exception IOException
+	 *                if dispatch failed due to communication problems
+	 * @exception AgletException
+	 *                if dispatch failed due to aglet specific problems.
+	 */
+	public void go(final String msg) throws java.io.IOException {
+		this.go(new Message(msg, null));
+	}
+
+	/**
+	 * This is not normally used by aglets programmers.
+	 * 
+	 * @param ev
+	 *            a mobility event
+	 */
+	@Override
+	public void onArrival(final MobilityEvent ev) {
+		try {
+			if (next != null) {
+				ev.getAgletProxy().sendAsyncMessage(next);
+			}
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public void removeAlternate(final String address) {
+		hosts.removeElement(address);
+	}
 }

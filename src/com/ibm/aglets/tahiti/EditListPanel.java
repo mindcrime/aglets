@@ -26,129 +26,129 @@ import java.util.Vector;
 
 class EditListPanel extends GridBagPanel implements ItemListener,
 ActionListener {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 6991045036719636071L;
-    private static final String LABEL_ADD = "add";
-    private static final String LABEL_REMOVE = "remove";
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6991045036719636071L;
+	private static final String LABEL_ADD = "add";
+	private static final String LABEL_REMOVE = "remove";
 
-    private Button _add = new Button(LABEL_ADD);
-    private Button _remove = new Button(LABEL_REMOVE);
-    private List _list;
-    private Editor _editor;
+	private final Button _add = new Button(LABEL_ADD);
+	private final Button _remove = new Button(LABEL_REMOVE);
+	private final List _list;
+	private final Editor _editor;
 
-    EditListPanel(String title, List list, Editor editor) {
-	this._list = list;
-	this._editor = editor;
+	EditListPanel(final String title, final List list, final Editor editor) {
+		_list = list;
+		_editor = editor;
 
-	GridBagConstraints cns = new GridBagConstraints();
+		final GridBagConstraints cns = new GridBagConstraints();
 
-	cns.weightx = 0.0;
-	cns.weighty = 0.0;
-	cns.fill = GridBagConstraints.NONE;
-	cns.anchor = GridBagConstraints.WEST;
-	cns.ipadx = cns.ipady = 2;
+		cns.weightx = 0.0;
+		cns.weighty = 0.0;
+		cns.fill = GridBagConstraints.NONE;
+		cns.anchor = GridBagConstraints.WEST;
+		cns.ipadx = cns.ipady = 2;
 
-	this.setConstraints(cns);
+		setConstraints(cns);
 
-	if ((title != null) && !title.equals("")) {
-	    this.add(new Label(title), 1, 0.0);
+		if ((title != null) && !title.equals("")) {
+			this.add(new Label(title), 1, 0.0);
+		}
+		this.add(_add, 1, 0.0);
+		this.add(_remove, GridBagConstraints.REMAINDER, 1.0);
+		cns.weightx = 1.0;
+		cns.weighty = 1.0;
+		cns.fill = GridBagConstraints.BOTH;
+		cns.anchor = GridBagConstraints.CENTER;
+		this.add(_list, GridBagConstraints.REMAINDER, 1.0);
+
+		_add.setActionCommand(LABEL_ADD);
+		_add.addActionListener(this);
+		_remove.setActionCommand(LABEL_REMOVE);
+		_remove.addActionListener(this);
+		_list.addItemListener(this);
 	}
-	this.add(this._add, 1, 0.0);
-	this.add(this._remove, GridBagConstraints.REMAINDER, 1.0);
-	cns.weightx = 1.0;
-	cns.weighty = 1.0;
-	cns.fill = GridBagConstraints.BOTH;
-	cns.anchor = GridBagConstraints.CENTER;
-	this.add(this._list, GridBagConstraints.REMAINDER, 1.0);
 
-	this._add.setActionCommand(LABEL_ADD);
-	this._add.addActionListener(this);
-	this._remove.setActionCommand(LABEL_REMOVE);
-	this._remove.addActionListener(this);
-	this._list.addItemListener(this);
-    }
+	@Override
+	public void actionPerformed(final ActionEvent ev) {
+		final String cmd = ev.getActionCommand();
 
-    @Override
-    public void actionPerformed(ActionEvent ev) {
-	String cmd = ev.getActionCommand();
-
-	if (LABEL_ADD.equals(cmd)) {
-	    this.addItemFromEditorIntoList();
-	} else if (LABEL_REMOVE.equals(cmd)
-		&& (this._list.getSelectedIndex() >= 0)) {
-	    this.removeItemFromList();
+		if (LABEL_ADD.equals(cmd)) {
+			addItemFromEditorIntoList();
+		} else if (LABEL_REMOVE.equals(cmd)
+				&& (_list.getSelectedIndex() >= 0)) {
+			removeItemFromList();
+		}
 	}
-    }
 
-    private void addItemFromEditorIntoList() {
-	this.addItemIntoList(this._editor.getText().trim());
-    }
-
-    protected void addItemIntoList(String item) {
-	if (!this.hasItem(item)) {
-	    this._list.add(item);
-	    this.selectItem(item);
+	private void addItemFromEditorIntoList() {
+		this.addItemIntoList(_editor.getText().trim());
 	}
-    }
 
-    void addItemIntoList(Vector args) {
-	this.addItemIntoList(EditorPanel.toText(args));
-    }
-
-    protected int getSelectedIndex() {
-	return this._list.getSelectedIndex();
-    }
-
-    protected String getSelectedItem() {
-	final int idx = this.getSelectedIndex();
-
-	if (idx < 0) {
-	    return null;
+	protected void addItemIntoList(final String item) {
+		if (!hasItem(item)) {
+			_list.add(item);
+			selectItem(item);
+		}
 	}
-	return this._list.getItem(idx);
-    }
 
-    private boolean hasItem(String text) {
-	String[] items = this._list.getItems();
-	int i = 0;
-
-	for (i = 0; i < items.length; i++) {
-	    if (text.equals(items[i])) {
-		return true;
-	    }
+	void addItemIntoList(final Vector args) {
+		this.addItemIntoList(EditorPanel.toText(args));
 	}
-	return false;
-    }
 
-    @Override
-    public void itemStateChanged(ItemEvent ev) {
-	if (this._list.getSelectedIndex() >= 0) {
-	    this._remove.setEnabled(true);
-	    this._editor.setText(this._list.getSelectedItem());
-	} else {
-	    this._remove.setEnabled(false);
-	    this._editor.setText("");
+	protected int getSelectedIndex() {
+		return _list.getSelectedIndex();
 	}
-    }
 
-    protected void removeItemFromList() {
-	this._list.remove(this._list.getSelectedIndex());
-    }
+	protected String getSelectedItem() {
+		final int idx = getSelectedIndex();
 
-    public void selectItem(String text) {
-	String[] items = this._list.getItems();
-	int i = 0;
+		if (idx < 0) {
+			return null;
+		}
+		return _list.getItem(idx);
+	}
 
-	for (i = 0; i < items.length; i++) {
-	    if (text.equals(items[i])) {
-		this._list.select(i);
-		this._remove.setEnabled(true);
-		this._editor.setText(this._list.getSelectedItem());
+	private boolean hasItem(final String text) {
+		final String[] items = _list.getItems();
+		int i = 0;
+
+		for (i = 0; i < items.length; i++) {
+			if (text.equals(items[i])) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public void itemStateChanged(final ItemEvent ev) {
+		if (_list.getSelectedIndex() >= 0) {
+			_remove.setEnabled(true);
+			_editor.setText(_list.getSelectedItem());
+		} else {
+			_remove.setEnabled(false);
+			_editor.setText("");
+		}
+	}
+
+	protected void removeItemFromList() {
+		_list.remove(_list.getSelectedIndex());
+	}
+
+	public void selectItem(final String text) {
+		final String[] items = _list.getItems();
+		int i = 0;
+
+		for (i = 0; i < items.length; i++) {
+			if (text.equals(items[i])) {
+				_list.select(i);
+				_remove.setEnabled(true);
+				_editor.setText(_list.getSelectedItem());
+				return;
+			}
+		}
 		return;
-	    }
 	}
-	return;
-    }
 }

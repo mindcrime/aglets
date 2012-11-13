@@ -17,62 +17,62 @@ import com.ibm.aglets.MessageManagerImpl;
  */
 public class TestAgletThreadPool extends TestCase {
 
-    private AgletThreadPool pool = null;
+	private AgletThreadPool pool = null;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see junit.framework.TestCase#setUp()
-     */
-    @Override
-    protected void setUp() throws Exception {
-	super.setUp();
-	// get a new instance of the thread pool
-	this.pool = AgletThreadPool.getInstance();
-    }
-
-    /**
-     * Test method for
-     * {@link com.ibm.aglets.thread.AgletThreadPool#pop(com.ibm.aglet.message.MessageManager)}
-     * .
-     */
-    public void testPop() {
-	try {
-	    // check if I can get at least maxPoolSize threads!
-	    int i = 0;
-	    for (i = 0; i < this.pool.getMaxPoolSize(); i++) {
-		Thread t1 = this.pool.pop(new MessageManagerImpl(null));
-		assertNotNull(t1); // never be null
-		assertTrue((t1 instanceof AgletThread)); // should be an aglet
-		// thread
-	    }
-
-	} catch (AgletException e) {
-	    throw new RuntimeException(e);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see junit.framework.TestCase#setUp()
+	 */
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		// get a new instance of the thread pool
+		pool = AgletThreadPool.getInstance();
 	}
 
-    }
+	/**
+	 * Test method for
+	 * {@link com.ibm.aglets.thread.AgletThreadPool#pop(com.ibm.aglet.message.MessageManager)}
+	 * .
+	 */
+	public void testPop() {
+		try {
+			// check if I can get at least maxPoolSize threads!
+			int i = 0;
+			for (i = 0; i < pool.getMaxPoolSize(); i++) {
+				final Thread t1 = pool.pop(new MessageManagerImpl(null));
+				assertNotNull(t1); // never be null
+				assertTrue((t1 instanceof AgletThread)); // should be an aglet
+				// thread
+			}
 
-    /**
-     * Test method for
-     * {@link com.ibm.aglets.thread.AgletThreadPool#push(com.ibm.aglets.thread.AgletThread)}
-     * .
-     */
-    public void testPush() {
-	try {
-	    AgletThread t = new AgletThread(this.pool.getThreadGroup());
-	    this.pool.push(t);
-	    assertTrue(this.pool.contains(t)); // the pool should contain the
-	    // thread now
-	} catch (AgletException e) {
-	    throw new RuntimeException(e);
+		} catch (final AgletException e) {
+			throw new RuntimeException(e);
+		}
+
 	}
 
-	try {
-	    AgletThread t2 = new AgletThread(new ThreadGroup("Test_thread_group"));
-	    this.pool.push(t2); // should now work
-	} catch (AgletException e) {
+	/**
+	 * Test method for
+	 * {@link com.ibm.aglets.thread.AgletThreadPool#push(com.ibm.aglets.thread.AgletThread)}
+	 * .
+	 */
+	public void testPush() {
+		try {
+			final AgletThread t = new AgletThread(pool.getThreadGroup());
+			pool.push(t);
+			assertTrue(pool.contains(t)); // the pool should contain the
+			// thread now
+		} catch (final AgletException e) {
+			throw new RuntimeException(e);
+		}
+
+		try {
+			final AgletThread t2 = new AgletThread(new ThreadGroup("Test_thread_group"));
+			pool.push(t2); // should now work
+		} catch (final AgletException e) {
+		}
 	}
-    }
 
 }

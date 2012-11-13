@@ -15,14 +15,14 @@ package com.ibm.aglets.tahiti;
  */
 
 abstract class PermissionEditor extends PermissionPanel implements Editor {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -3594477053931804574L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3594477053931804574L;
 
-    @Override
-    abstract public String getText();
+	@Override
+	abstract public String getText();
 
-    @Override
-    abstract public void setText(String text);
+	@Override
+	abstract public void setText(String text);
 }

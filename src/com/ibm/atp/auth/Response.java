@@ -24,62 +24,62 @@ import com.ibm.awb.misc.Hexadecimal;
  * @author ONO Kouichi
  */
 final public class Response extends ByteSequence {
-    /**
-     * serial version UID
-     */
-    static final long serialVersionUID = 6004557419567685224L;
+	/**
+	 * serial version UID
+	 */
+	static final long serialVersionUID = 6004557419567685224L;
 
-    /**
-     * Constructor creates byte sequence as a copy of given byte sequence as a
-     * response of authentication.
-     * 
-     * @param response
-     *            a byte sequence to be copied as a response
-     */
-    public Response(byte[] response) {
-	super(response);
-    }
+	/**
+	 * Constructor creates byte sequence as a copy of given byte sequence as a
+	 * response of authentication.
+	 * 
+	 * @param response
+	 *            a byte sequence to be copied as a response
+	 */
+	public Response(final byte[] response) {
+		super(response);
+	}
 
-    /**
-     * Constructor creates byte sequence as a copy of given byte sequence as a
-     * response of authentication.
-     * 
-     * @param response
-     *            a byte sequence to be copied as a response
-     */
-    public Response(Response response) {
-	this(response.response());
-    }
+	/**
+	 * Constructor creates byte sequence as a copy of given byte sequence as a
+	 * response of authentication.
+	 * 
+	 * @param response
+	 *            a byte sequence to be copied as a response
+	 */
+	public Response(final Response response) {
+		this(response.response());
+	}
 
-    /**
-     * Constructor creates byte sequence as a copy of given hexadecimal string
-     * of encoded bytes as a response of authentication.
-     * 
-     * @param str
-     *            a string of encoded byte sequence to be copied as a response
-     */
-    public Response(String str) {
-	super(0, str, null);
-    }
+	/**
+	 * Constructor creates byte sequence as a copy of given hexadecimal string
+	 * of encoded bytes as a response of authentication.
+	 * 
+	 * @param str
+	 *            a string of encoded byte sequence to be copied as a response
+	 */
+	public Response(final String str) {
+		super(0, str, null);
+	}
 
-    /**
-     * Returns current byte sequence as a response of authentication.
-     * 
-     * @return current byte sequence as a response of authentication.
-     */
-    final public byte[] response() {
-	return this.sequence();
-    }
+	/**
+	 * Returns current byte sequence as a response of authentication.
+	 * 
+	 * @return current byte sequence as a response of authentication.
+	 */
+	final public byte[] response() {
+		return sequence();
+	}
 
-    /**
-     * Returns a hexadecimal string representation of the byte sequence. The
-     * series of hexadecimal strings are the contents of byte sequence.
-     * 
-     * @return a hexadecimal string representation of the byte sequence
-     * @see com.ibm.atp.auth.ByteSequence#toString
-     */
-    @Override
-    public String toString() {
-	return Hexadecimal.valueOf(this.response());
-    }
+	/**
+	 * Returns a hexadecimal string representation of the byte sequence. The
+	 * series of hexadecimal strings are the contents of byte sequence.
+	 * 
+	 * @return a hexadecimal string representation of the byte sequence
+	 * @see com.ibm.atp.auth.ByteSequence#toString
+	 */
+	@Override
+	public String toString() {
+		return Hexadecimal.valueOf(response());
+	}
 }

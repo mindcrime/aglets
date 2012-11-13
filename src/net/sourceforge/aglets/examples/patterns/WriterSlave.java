@@ -33,51 +33,51 @@ import com.ibm.agletx.patterns.Slave;
 
 public class WriterSlave extends Slave {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 8630541103850357287L;
-    // time (in secs) of showing the message window.
-    private final int SHOW_TIME = 10;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8630541103850357287L;
+	// time (in secs) of showing the message window.
+	private final int SHOW_TIME = 10;
 
-    @Override
-    protected void doJob() throws AgletException {
-	WriterSlaveWindow win = null;
+	@Override
+	protected void doJob() throws AgletException {
+		WriterSlaveWindow win = null;
 
-	try {
-	    Arguments args = (Arguments) this.ARGUMENT;
-	    String from = new String((String) (args.getArg("user")) + "@"
-		    + new URL(this.getOrigin()).getHost());
+		try {
+			final Arguments args = (Arguments) ARGUMENT;
+			final String from = new String((String) (args.getArg("user")) + "@"
+					+ new URL(getOrigin()).getHost());
 
-	    win = new WriterSlaveWindow(this, (String) (args.getArg("msg")), from);
-	} catch (Exception e) {
-	    e.printStackTrace();
-	    throw new AgletException("unable to create a remote message window");
+			win = new WriterSlaveWindow(this, (String) (args.getArg("msg")), from);
+		} catch (final Exception e) {
+			e.printStackTrace();
+			throw new AgletException("unable to create a remote message window");
+		}
+		this.suspend();
+		win.dispose();
+		setResult("returned"
+				+ ((RESULT != null) ? ":" + (String) RESULT : "."));
 	}
-	this.suspend();
-	win.dispose();
-	this.setResult("returned"
-		+ ((this.RESULT != null) ? ":" + (String) this.RESULT : "."));
-    }
 
-    @Override
-    protected void initializeJob() {
-	this.RESULT = null;
-    }
-
-    void setResult(String text) {
-	this.RESULT = text;
-    }
-
-    public synchronized void suspend() {
-	try {
-	    this.wait(this.SHOW_TIME * 1000);
-	} catch (Exception ex) {
-	    ex.printStackTrace();
+	@Override
+	protected void initializeJob() {
+		RESULT = null;
 	}
-    }
 
-    public synchronized void wakeup() {
-	this.notify();
-    }
+	void setResult(final String text) {
+		RESULT = text;
+	}
+
+	public synchronized void suspend() {
+		try {
+			this.wait(SHOW_TIME * 1000);
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public synchronized void wakeup() {
+		notify();
+	}
 }

@@ -24,76 +24,76 @@ import com.ibm.agletx.patterns.Meeting;
 
 public final class StationaryAglet extends Aglet implements MobilityListener {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 4884771624206640655L;
-    private Meeting meeting = null;
-    boolean dispatched = false;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4884771624206640655L;
+	private Meeting meeting = null;
+	boolean dispatched = false;
 
-    public StationaryAglet() {
-    }
-
-    @Override
-    public boolean handleMessage(Message msg) {
-	if (msg.sameKind("dispose")) {
-	    try {
-		this.dispose();
-		return true;
-	    } catch (Exception ex) {
-		ex.printStackTrace();
-	    }
-	} else if ((this.meeting != null)
-		&& (msg.sameKind(this.meeting.getID()))) {
-	    this.meet((AgletID) (msg.getArg()));
-	    msg.sendReply(this.getAgletID());
-	    this.dispose();
-	    return true;
+	public StationaryAglet() {
 	}
-	return false;
-    }
 
-    private void meet(AgletID id) {
-	this.print("[" + this.getAgletID() + "] I met with VisitingAglet [id="
-		+ id + "]");
-    }
-
-    @Override
-    public void onArrival(MobilityEvent ev) {
-	this.print("on Arrival");
-	this.dispatched = true;
-	try {
-	    this.meeting.ready(this);
-	} catch (Exception ex) {
-	    ex.printStackTrace();
+	@Override
+	public boolean handleMessage(final Message msg) {
+		if (msg.sameKind("dispose")) {
+			try {
+				dispose();
+				return true;
+			} catch (final Exception ex) {
+				ex.printStackTrace();
+			}
+		} else if ((meeting != null)
+				&& (msg.sameKind(meeting.getID()))) {
+			meet((AgletID) (msg.getArg()));
+			msg.sendReply(getAgletID());
+			dispose();
+			return true;
+		}
+		return false;
 	}
-    }
 
-    @Override
-    public void onCreation(Object ini) {
-	this.print("created!");
-	this.addMobilityListener(this);
-	this.meeting = (Meeting) ini;
-    }
-
-    @Override
-    public void onDispatching(MobilityEvent ev) {
-	if (this.dispatched) {
-	    throw new SecurityException("Don't try to move me!!");
+	private void meet(final AgletID id) {
+		print("[" + getAgletID() + "] I met with VisitingAglet [id="
+				+ id + "]");
 	}
-    }
 
-    @Override
-    public void onDisposing() {
-	this.print("disposed!!");
-    }
+	@Override
+	public void onArrival(final MobilityEvent ev) {
+		print("on Arrival");
+		dispatched = true;
+		try {
+			meeting.ready(this);
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 
-    @Override
-    public void onReverting(MobilityEvent ev) {
-	throw new SecurityException();
-    }
+	@Override
+	public void onCreation(final Object ini) {
+		print("created!");
+		addMobilityListener(this);
+		meeting = (Meeting) ini;
+	}
 
-    private void print(String txt) {
-	System.out.println(">>>StationaryAglet:" + txt);
-    }
+	@Override
+	public void onDispatching(final MobilityEvent ev) {
+		if (dispatched) {
+			throw new SecurityException("Don't try to move me!!");
+		}
+	}
+
+	@Override
+	public void onDisposing() {
+		print("disposed!!");
+	}
+
+	@Override
+	public void onReverting(final MobilityEvent ev) {
+		throw new SecurityException();
+	}
+
+	private void print(final String txt) {
+		System.out.println(">>>StationaryAglet:" + txt);
+	}
 }

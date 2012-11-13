@@ -14,52 +14,52 @@ import java.security.cert.Certificate;
  */
 public class LoginData {
 
-    /**
-     * The current username the user is running the Tahiti instance.
-     */
-    private static String username = null;
+	/**
+	 * The current username the user is running the Tahiti instance.
+	 */
+	private static String username = null;
 
-    /**
-     * The current certificate associated to the user.
-     */
-    private static Certificate certificate = null;
+	/**
+	 * The current certificate associated to the user.
+	 */
+	private static Certificate certificate = null;
 
-    /**
-     * Gets back the username.
-     * 
-     * @return the username
-     */
-    public static synchronized final String getUsername() {
-	return username;
-    }
+	/**
+	 * Gets back the certificate.
+	 * 
+	 * @return the certificate
+	 */
+	public static synchronized final Certificate getCertificate() {
+		return certificate;
+	}
 
-    /**
-     * Sets the username value.
-     * 
-     * @param username
-     *            the username to set
-     */
-    static synchronized final void setUsername(String username) {
-	LoginData.username = username;
-    }
+	/**
+	 * Gets back the username.
+	 * 
+	 * @return the username
+	 */
+	public static synchronized final String getUsername() {
+		return username;
+	}
 
-    /**
-     * Gets back the certificate.
-     * 
-     * @return the certificate
-     */
-    public static synchronized final Certificate getCertificate() {
-	return certificate;
-    }
+	/**
+	 * Sets the certificate value.
+	 * 
+	 * @param certificate
+	 *            the certificate to set
+	 */
+	static synchronized final void setCertificate(final Certificate certificate) {
+		LoginData.certificate = certificate;
+	}
 
-    /**
-     * Sets the certificate value.
-     * 
-     * @param certificate
-     *            the certificate to set
-     */
-    static synchronized final void setCertificate(Certificate certificate) {
-	LoginData.certificate = certificate;
-    }
+	/**
+	 * Sets the username value.
+	 * 
+	 * @param username
+	 *            the username to set
+	 */
+	static synchronized final void setUsername(final String username) {
+		LoginData.username = username;
+	}
 
 }

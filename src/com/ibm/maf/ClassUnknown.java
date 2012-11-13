@@ -23,17 +23,17 @@ package com.ibm.maf;
 
 public final class ClassUnknown extends MAFException {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -1862741292374671849L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1862741292374671849L;
 
-    // constructor
-    public ClassUnknown() {
-	super();
-    }
+	// constructor
+	public ClassUnknown() {
+		super();
+	}
 
-    public ClassUnknown(String msg) {
-	super(msg);
-    }
+	public ClassUnknown(final String msg) {
+		super(msg);
+	}
 }

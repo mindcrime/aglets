@@ -21,26 +21,26 @@ import com.ibm.aglet.message.Message;
 
 class MessengerTask extends Task {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -1963644597621257467L;
-    private AgletID id = null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1963644597621257467L;
+	private AgletID id = null;
 
-    public MessengerTask(AgletID id) {
-	this.id = id;
-    }
+	public MessengerTask(final AgletID id) {
+		this.id = id;
+	}
 
-    @Override
-    public void execute(SeqItinerary itin) throws Exception {
-	AgletContext ctx = itin.getOwnerAglet().getAglet().getAgletContext();
-	AgletProxy p = ctx.getAgletProxy(this.id);
-	Message msg = ((MessengerItinerary) itin).getMessage();
+	@Override
+	public void execute(final SeqItinerary itin) throws Exception {
+		final AgletContext ctx = itin.getOwnerAglet().getAglet().getAgletContext();
+		final AgletProxy p = ctx.getAgletProxy(id);
+		final Message msg = ((MessengerItinerary) itin).getMessage();
 
-	p.sendAsyncMessage(msg);
-    }
+		p.sendAsyncMessage(msg);
+	}
 
-    public AgletID getAgletID() {
-	return this.id;
-    }
+	public AgletID getAgletID() {
+		return id;
+	}
 }

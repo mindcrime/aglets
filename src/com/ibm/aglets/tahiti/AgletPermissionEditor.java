@@ -16,14 +16,14 @@ package com.ibm.aglets.tahiti;
 
 class AgletPermissionEditor extends GeneralPermissionEditor {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 8840569320471780934L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8840569320471780934L;
 
-    // possible actions are "dispatch", "dispose", "deactivate", "activate",
-    // "clone", and "retract"
-    AgletPermissionEditor() {
-	super();
-    }
+	// possible actions are "dispatch", "dispose", "deactivate", "activate",
+	// "clone", and "retract"
+	AgletPermissionEditor() {
+		super();
+	}
 }

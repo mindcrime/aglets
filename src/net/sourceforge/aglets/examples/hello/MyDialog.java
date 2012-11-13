@@ -38,156 +38,156 @@ import com.ibm.aglet.util.AddressChooser;
  */
 class MyDialog extends Frame implements WindowListener, ActionListener {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 2216352320901385314L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2216352320901385314L;
 
-    /*
-     * The aglet a user interacts with.
-     */
-    private HelloAglet aglet = null;
+	/*
+	 * The aglet a user interacts with.
+	 */
+	private HelloAglet aglet = null;
 
-    /*
-     * UI Components
-     */
-    private AddressChooser dest = new AddressChooser();
-    private TextField msg = new TextField(18);
-    private Button go = new Button("GO!");
-    private Button send = new Button("Send CLONE!");
-    private Button close = new Button("CLOSE");
+	/*
+	 * UI Components
+	 */
+	private final AddressChooser dest = new AddressChooser();
+	private final TextField msg = new TextField(18);
+	private final Button go = new Button("GO!");
+	private final Button send = new Button("Send CLONE!");
+	private final Button close = new Button("CLOSE");
 
-    /*
-     * Constructs the dialog window
-     * 
-     * @param aglet The aglet the user interacts with.
-     */
-    MyDialog(HelloAglet aglet) {
-	this.aglet = aglet;
-	this.layoutComponents();
+	/*
+	 * Constructs the dialog window
+	 * 
+	 * @param aglet The aglet the user interacts with.
+	 */
+	MyDialog(final HelloAglet aglet) {
+		this.aglet = aglet;
+		layoutComponents();
 
-	this.addWindowListener(this);
-	this.go.addActionListener(this);
-	this.send.addActionListener(this);
-	this.close.addActionListener(this);
-    }
-
-    /**
-     * Handles the action event
-     * 
-     * @param ae
-     *            the event to be handled
-     */
-    @Override
-    public void actionPerformed(ActionEvent ae) {
-
-	// execute "GO!" command
-	if ("GO!".equals(ae.getActionCommand())) {
-	    this.aglet.setMessage(this.msg.getText());
-	    try {
-		AgletProxy p = this.aglet.getProxy();
-
-		p.sendOnewayMessage(new Message("startTrip", this.dest.getAddress()));
-	    } catch (Exception e) {
-		e.printStackTrace();
-	    }
+		addWindowListener(this);
+		go.addActionListener(this);
+		send.addActionListener(this);
+		close.addActionListener(this);
 	}
 
-	// execute "Send CLONE!" command
-	else if ("Send CLONE!".equals(ae.getActionCommand())) {
-	    this.aglet.message = this.msg.getText();
-	    try {
-		AgletProxy p = (AgletProxy) this.aglet.clone();
+	/**
+	 * Handles the action event
+	 * 
+	 * @param ae
+	 *            the event to be handled
+	 */
+	@Override
+	public void actionPerformed(final ActionEvent ae) {
 
-		p.sendOnewayMessage(new Message("startTrip", this.dest.getAddress()));
-	    } catch (Exception e) {
-		e.printStackTrace();
-	    }
+		// execute "GO!" command
+		if ("GO!".equals(ae.getActionCommand())) {
+			aglet.setMessage(msg.getText());
+			try {
+				final AgletProxy p = aglet.getProxy();
+
+				p.sendOnewayMessage(new Message("startTrip", dest.getAddress()));
+			} catch (final Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// execute "Send CLONE!" command
+		else if ("Send CLONE!".equals(ae.getActionCommand())) {
+			aglet.message = msg.getText();
+			try {
+				final AgletProxy p = (AgletProxy) aglet.clone();
+
+				p.sendOnewayMessage(new Message("startTrip", dest.getAddress()));
+			} catch (final Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		// execute "CLOSE" command
+		else if ("CLOSE".equals(ae.getActionCommand())) {
+			setVisible(false);
+		}
 	}
 
-	// execute "CLOSE" command
-	else if ("CLOSE".equals(ae.getActionCommand())) {
-	    this.setVisible(false);
+	/*
+	 * Layouts all components
+	 */
+	private void layoutComponents() {
+		msg.setText(aglet.message);
+
+		// Layouts components
+		final GridBagLayout grid = new GridBagLayout();
+		final GridBagConstraints cns = new GridBagConstraints();
+
+		setLayout(grid);
+
+		cns.weightx = 0.5;
+		cns.ipadx = cns.ipady = 5;
+		cns.fill = GridBagConstraints.HORIZONTAL;
+		cns.insets = new Insets(5, 5, 5, 5);
+
+		cns.weightx = 1.0;
+		cns.gridwidth = GridBagConstraints.REMAINDER;
+		grid.setConstraints(dest, cns);
+		this.add(dest);
+
+		cns.gridwidth = GridBagConstraints.REMAINDER;
+		cns.fill = GridBagConstraints.BOTH;
+		cns.weightx = 1.0;
+		cns.weighty = 1.0;
+		cns.gridheight = 2;
+		grid.setConstraints(msg, cns);
+		this.add(msg);
+
+		cns.weighty = 0.0;
+		cns.fill = GridBagConstraints.NONE;
+		cns.gridheight = 1;
+
+		final Panel p = new Panel();
+
+		grid.setConstraints(p, cns);
+		this.add(p);
+		p.setLayout(new FlowLayout());
+		p.add(go);
+		p.add(send);
+		p.add(close);
 	}
-    }
 
-    /*
-     * Layouts all components
-     */
-    private void layoutComponents() {
-	this.msg.setText(this.aglet.message);
+	@Override
+	public void windowActivated(final WindowEvent we) {
+	}
 
-	// Layouts components
-	GridBagLayout grid = new GridBagLayout();
-	GridBagConstraints cns = new GridBagConstraints();
+	@Override
+	public void windowClosed(final WindowEvent we) {
+	}
 
-	this.setLayout(grid);
+	/**
+	 * Handles the window event
+	 * 
+	 * @param we
+	 *            the event to be handled
+	 */
 
-	cns.weightx = 0.5;
-	cns.ipadx = cns.ipady = 5;
-	cns.fill = GridBagConstraints.HORIZONTAL;
-	cns.insets = new Insets(5, 5, 5, 5);
+	@Override
+	public void windowClosing(final WindowEvent we) {
+		dispose();
+	}
 
-	cns.weightx = 1.0;
-	cns.gridwidth = GridBagConstraints.REMAINDER;
-	grid.setConstraints(this.dest, cns);
-	this.add(this.dest);
+	@Override
+	public void windowDeactivated(final WindowEvent we) {
+	}
 
-	cns.gridwidth = GridBagConstraints.REMAINDER;
-	cns.fill = GridBagConstraints.BOTH;
-	cns.weightx = 1.0;
-	cns.weighty = 1.0;
-	cns.gridheight = 2;
-	grid.setConstraints(this.msg, cns);
-	this.add(this.msg);
+	@Override
+	public void windowDeiconified(final WindowEvent we) {
+	}
 
-	cns.weighty = 0.0;
-	cns.fill = GridBagConstraints.NONE;
-	cns.gridheight = 1;
+	@Override
+	public void windowIconified(final WindowEvent we) {
+	}
 
-	Panel p = new Panel();
-
-	grid.setConstraints(p, cns);
-	this.add(p);
-	p.setLayout(new FlowLayout());
-	p.add(this.go);
-	p.add(this.send);
-	p.add(this.close);
-    }
-
-    @Override
-    public void windowActivated(WindowEvent we) {
-    }
-
-    @Override
-    public void windowClosed(WindowEvent we) {
-    }
-
-    /**
-     * Handles the window event
-     * 
-     * @param we
-     *            the event to be handled
-     */
-
-    @Override
-    public void windowClosing(WindowEvent we) {
-	this.dispose();
-    }
-
-    @Override
-    public void windowDeactivated(WindowEvent we) {
-    }
-
-    @Override
-    public void windowDeiconified(WindowEvent we) {
-    }
-
-    @Override
-    public void windowIconified(WindowEvent we) {
-    }
-
-    @Override
-    public void windowOpened(WindowEvent we) {
-    }
+	@Override
+	public void windowOpened(final WindowEvent we) {
+	}
 }

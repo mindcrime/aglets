@@ -32,190 +32,190 @@ import com.ibm.aglet.system.ContextListener;
 public final class ListenerList extends java.util.LinkedList<ContextListener>
 implements ContextListener {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 4801520071583607074L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4801520071583607074L;
 
-    /**
-     * Notifies all listeners than the aglet has been activated.
-     */
-    @Override
-    public synchronized void agletActivated(ContextEvent event) {
-	Iterator listener = this.iterator();
-	while ((listener != null) && listener.hasNext()) {
-	    ((ContextListener) listener.next()).agletActivated(event);
+	/**
+	 * Notifies all listeners than the aglet has been activated.
+	 */
+	@Override
+	public synchronized void agletActivated(final ContextEvent event) {
+		final Iterator listener = iterator();
+		while ((listener != null) && listener.hasNext()) {
+			((ContextListener) listener.next()).agletActivated(event);
 
-	}
-    }
-
-    /**
-     * Notifies all listeners than an aglet has arrived.
-     */
-    @Override
-    public synchronized void agletArrived(ContextEvent event) {
-	Iterator listener = this.iterator();
-	while ((listener != null) && listener.hasNext()) {
-	    ((ContextListener) listener.next()).agletArrived(event);
-
-	}
-    }
-
-    /**
-     * Notifies all listeners than an aglet has been cloned.
-     */
-    @Override
-    public synchronized void agletCloned(ContextEvent event) {
-	Iterator listener = this.iterator();
-	while ((listener != null) && listener.hasNext()) {
-	    ((ContextListener) listener.next()).agletCloned(event);
-
-	}
-    }
-
-    /**
-     * Notifies all listeners than an aglet has been created.
-     */
-    @Override
-    public synchronized void agletCreated(ContextEvent event) {
-	Iterator listener = this.iterator();
-	while ((listener != null) && listener.hasNext()) {
-	    ((ContextListener) listener.next()).agletCreated(event);
-
-	}
-    }
-
-    /**
-     * Notifies all listeners than the aglet has been deactivated.
-     */
-    @Override
-    public synchronized void agletDeactivated(ContextEvent event) {
-	Iterator listener = this.iterator();
-	while ((listener != null) && listener.hasNext()) {
-	    ((ContextListener) listener.next()).agletDeactivated(event);
-
+		}
 	}
 
-    }
+	/**
+	 * Notifies all listeners than an aglet has arrived.
+	 */
+	@Override
+	public synchronized void agletArrived(final ContextEvent event) {
+		final Iterator listener = iterator();
+		while ((listener != null) && listener.hasNext()) {
+			((ContextListener) listener.next()).agletArrived(event);
 
-    /**
-     * Notifies all listeners than an aglet has been dispatched.
-     */
-    @Override
-    public synchronized void agletDispatched(ContextEvent event) {
-	Iterator listener = this.iterator();
-	while ((listener != null) && listener.hasNext()) {
-	    ((ContextListener) listener.next()).agletDispatched(event);
+		}
+	}
+
+	/**
+	 * Notifies all listeners than an aglet has been cloned.
+	 */
+	@Override
+	public synchronized void agletCloned(final ContextEvent event) {
+		final Iterator listener = iterator();
+		while ((listener != null) && listener.hasNext()) {
+			((ContextListener) listener.next()).agletCloned(event);
+
+		}
+	}
+
+	/**
+	 * Notifies all listeners than an aglet has been created.
+	 */
+	@Override
+	public synchronized void agletCreated(final ContextEvent event) {
+		final Iterator listener = iterator();
+		while ((listener != null) && listener.hasNext()) {
+			((ContextListener) listener.next()).agletCreated(event);
+
+		}
+	}
+
+	/**
+	 * Notifies all listeners than the aglet has been deactivated.
+	 */
+	@Override
+	public synchronized void agletDeactivated(final ContextEvent event) {
+		final Iterator listener = iterator();
+		while ((listener != null) && listener.hasNext()) {
+			((ContextListener) listener.next()).agletDeactivated(event);
+
+		}
 
 	}
 
-    }
+	/**
+	 * Notifies all listeners than an aglet has been dispatched.
+	 */
+	@Override
+	public synchronized void agletDispatched(final ContextEvent event) {
+		final Iterator listener = iterator();
+		while ((listener != null) && listener.hasNext()) {
+			((ContextListener) listener.next()).agletDispatched(event);
 
-    /**
-     * Notifies all listeners than an aglet has been disposed.
-     */
-    @Override
-    public synchronized void agletDisposed(ContextEvent event) {
-	Iterator listener = this.iterator();
-	while ((listener != null) && listener.hasNext()) {
-	    ((ContextListener) listener.next()).agletDisposed(event);
-
-	}
-    }
-
-    /**
-     * Notifies all listeners than an aglet has been resumed.
-     */
-    @Override
-    public synchronized void agletResumed(ContextEvent event) {
-	Iterator listener = this.iterator();
-	while ((listener != null) && listener.hasNext()) {
-	    ((ContextListener) listener.next()).agletResumed(event);
+		}
 
 	}
-    }
 
-    /**
-     * Notifies all listeners than an aglet has been called home.
-     */
-    @Override
-    public void agletReverted(ContextEvent event) {
-	Iterator listener = this.iterator();
-	while ((listener != null) && listener.hasNext()) {
-	    ((ContextListener) listener.next()).agletReverted(event);
+	/**
+	 * Notifies all listeners than an aglet has been disposed.
+	 */
+	@Override
+	public synchronized void agletDisposed(final ContextEvent event) {
+		final Iterator listener = iterator();
+		while ((listener != null) && listener.hasNext()) {
+			((ContextListener) listener.next()).agletDisposed(event);
 
+		}
 	}
-    }
 
-    /**
-     * Notifies all listeners than the state of the agent has changed.
-     */
-    @Override
-    public synchronized void agletStateChanged(ContextEvent event) {
-	Iterator listener = this.iterator();
-	while ((listener != null) && listener.hasNext()) {
-	    ((ContextListener) listener.next()).agletStateChanged(event);
+	/**
+	 * Notifies all listeners than an aglet has been resumed.
+	 */
+	@Override
+	public synchronized void agletResumed(final ContextEvent event) {
+		final Iterator listener = iterator();
+		while ((listener != null) && listener.hasNext()) {
+			((ContextListener) listener.next()).agletResumed(event);
 
+		}
 	}
-    }
 
-    /**
-     * Notifies all listeners than the state of the agent has been suspended.
-     */
-    @Override
-    public synchronized void agletSuspended(ContextEvent event) {
-	Iterator listener = this.iterator();
-	while ((listener != null) && listener.hasNext()) {
-	    ((ContextListener) listener.next()).agletSuspended(event);
+	/**
+	 * Notifies all listeners than an aglet has been called home.
+	 */
+	@Override
+	public void agletReverted(final ContextEvent event) {
+		final Iterator listener = iterator();
+		while ((listener != null) && listener.hasNext()) {
+			((ContextListener) listener.next()).agletReverted(event);
 
+		}
 	}
-    }
 
-    /**
-     * Notifies all listeners that the context has been shut down.
-     */
-    @Override
-    public synchronized void contextShutdown(ContextEvent event) {
-	Iterator listener = this.iterator();
-	while ((listener != null) && listener.hasNext()) {
-	    ((ContextListener) listener.next()).contextShutdown(event);
+	/**
+	 * Notifies all listeners than the state of the agent has changed.
+	 */
+	@Override
+	public synchronized void agletStateChanged(final ContextEvent event) {
+		final Iterator listener = iterator();
+		while ((listener != null) && listener.hasNext()) {
+			((ContextListener) listener.next()).agletStateChanged(event);
 
+		}
 	}
-    }
 
-    /**
-     * Notifies all listeners that the context has been started.
-     */
-    @Override
-    public synchronized void contextStarted(ContextEvent event) {
-	Iterator listener = this.iterator();
-	while ((listener != null) && listener.hasNext()) {
-	    ((ContextListener) listener.next()).contextStarted(event);
+	/**
+	 * Notifies all listeners than the state of the agent has been suspended.
+	 */
+	@Override
+	public synchronized void agletSuspended(final ContextEvent event) {
+		final Iterator listener = iterator();
+		while ((listener != null) && listener.hasNext()) {
+			((ContextListener) listener.next()).agletSuspended(event);
 
+		}
 	}
-    }
 
-    /**
-     * Notifies of a show document call.
-     */
-    @Override
-    public synchronized void showDocument(ContextEvent event) {
-	Iterator listener = this.iterator();
-	while ((listener != null) && listener.hasNext()) {
-	    ((ContextListener) listener.next()).showDocument(event);
+	/**
+	 * Notifies all listeners that the context has been shut down.
+	 */
+	@Override
+	public synchronized void contextShutdown(final ContextEvent event) {
+		final Iterator listener = iterator();
+		while ((listener != null) && listener.hasNext()) {
+			((ContextListener) listener.next()).contextShutdown(event);
 
+		}
 	}
-    }
 
-    /**
-     * Notifies of a show message call.
-     */
-    @Override
-    public synchronized void showMessage(ContextEvent event) {
-	Iterator listener = this.iterator();
-	while ((listener != null) && listener.hasNext()) {
-	    ((ContextListener) listener.next()).showMessage(event);
+	/**
+	 * Notifies all listeners that the context has been started.
+	 */
+	@Override
+	public synchronized void contextStarted(final ContextEvent event) {
+		final Iterator listener = iterator();
+		while ((listener != null) && listener.hasNext()) {
+			((ContextListener) listener.next()).contextStarted(event);
 
+		}
 	}
-    }
+
+	/**
+	 * Notifies of a show document call.
+	 */
+	@Override
+	public synchronized void showDocument(final ContextEvent event) {
+		final Iterator listener = iterator();
+		while ((listener != null) && listener.hasNext()) {
+			((ContextListener) listener.next()).showDocument(event);
+
+		}
+	}
+
+	/**
+	 * Notifies of a show message call.
+	 */
+	@Override
+	public synchronized void showMessage(final ContextEvent event) {
+		final Iterator listener = iterator();
+		while ((listener != null) && listener.hasNext()) {
+			((ContextListener) listener.next()).showMessage(event);
+
+		}
+	}
 }

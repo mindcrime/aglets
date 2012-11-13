@@ -35,119 +35,119 @@ import com.ibm.aglet.util.AddressChooser;
  */
 class MyDialog extends Frame {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -6406573118418144535L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6406573118418144535L;
 
-    /*
-     * The aglet a user interacts with.
-     */
-    private OpenURL aglet = null;
+	/*
+	 * The aglet a user interacts with.
+	 */
+	private OpenURL aglet = null;
 
-    /*
-     * UI Components
-     */
-    private AddressChooser dest = new AddressChooser();
-    private TextField msg = new TextField(15);
-    private Button go = new Button("GO!");
-    private Button open = new Button("Open!");
-    private Button close = new Button("CLOSE");
+	/*
+	 * UI Components
+	 */
+	private final AddressChooser dest = new AddressChooser();
+	private final TextField msg = new TextField(15);
+	private final Button go = new Button("GO!");
+	private final Button open = new Button("Open!");
+	private final Button close = new Button("CLOSE");
 
-    /*
-     * Constructs the dialog window
-     * 
-     * @param aglet The aglet the user interacts with.
-     */
-    MyDialog(OpenURL aglet) {
-	this.aglet = aglet;
-	this.layoutComponents();
-    }
-
-    /**
-     * Handles the action
-     * 
-     * @param ev
-     *            the event to be handled
-     * @param obj
-     *            the extra argument
-     */
-    @Override
-    public boolean action(Event ev, Object obj) {
-	if (ev.target == this.open) {
-	    try {
-		this.aglet.getAgletContext().showDocument(new URL(this.msg.getText()));
-	    } catch (IOException ex) {
-		ex.printStackTrace();
-	    }
+	/*
+	 * Constructs the dialog window
+	 * 
+	 * @param aglet The aglet the user interacts with.
+	 */
+	MyDialog(final OpenURL aglet) {
+		this.aglet = aglet;
+		layoutComponents();
 	}
-	if (ev.target == this.go) {
-	    this.aglet.url = this.msg.getText();
-	    this.aglet.goDestination(this.dest.getAddress());
-	} else if (ev.target == this.close) {
-	    this.setVisible(false);
-	} else {
-	    return false;
+
+	/**
+	 * Handles the action
+	 * 
+	 * @param ev
+	 *            the event to be handled
+	 * @param obj
+	 *            the extra argument
+	 */
+	@Override
+	public boolean action(final Event ev, final Object obj) {
+		if (ev.target == open) {
+			try {
+				aglet.getAgletContext().showDocument(new URL(msg.getText()));
+			} catch (final IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		if (ev.target == go) {
+			aglet.url = msg.getText();
+			aglet.goDestination(dest.getAddress());
+		} else if (ev.target == close) {
+			setVisible(false);
+		} else {
+			return false;
+		}
+		return true;
 	}
-	return true;
-    }
 
-    /**
-     * Handles the events
-     * 
-     * @param ev
-     *            the event to be handled
-     */
-    @Override
-    public boolean handleEvent(Event ev) {
-	if (ev.id == Event.WINDOW_DESTROY) {
-	    this.setVisible(false);
-	    return true;
+	/**
+	 * Handles the events
+	 * 
+	 * @param ev
+	 *            the event to be handled
+	 */
+	@Override
+	public boolean handleEvent(final Event ev) {
+		if (ev.id == Event.WINDOW_DESTROY) {
+			setVisible(false);
+			return true;
+		}
+		return super.handleEvent(ev);
 	}
-	return super.handleEvent(ev);
-    }
 
-    /*
-     * Layouts all components
-     */
-    private void layoutComponents() {
-	this.msg.setText(this.aglet.url);
+	/*
+	 * Layouts all components
+	 */
+	private void layoutComponents() {
+		msg.setText(aglet.url);
 
-	// Layouts components
-	GridBagLayout grid = new GridBagLayout();
-	GridBagConstraints cns = new GridBagConstraints();
+		// Layouts components
+		final GridBagLayout grid = new GridBagLayout();
+		final GridBagConstraints cns = new GridBagConstraints();
 
-	this.setLayout(grid);
+		setLayout(grid);
 
-	cns.weightx = 0.5;
-	cns.ipadx = cns.ipady = 5;
-	cns.fill = GridBagConstraints.HORIZONTAL;
-	cns.insets = new Insets(5, 5, 5, 5);
+		cns.weightx = 0.5;
+		cns.ipadx = cns.ipady = 5;
+		cns.fill = GridBagConstraints.HORIZONTAL;
+		cns.insets = new Insets(5, 5, 5, 5);
 
-	cns.weightx = 1.0;
-	cns.gridwidth = GridBagConstraints.REMAINDER;
-	grid.setConstraints(this.dest, cns);
-	this.add(this.dest);
+		cns.weightx = 1.0;
+		cns.gridwidth = GridBagConstraints.REMAINDER;
+		grid.setConstraints(dest, cns);
+		this.add(dest);
 
-	cns.gridwidth = GridBagConstraints.REMAINDER;
-	cns.fill = GridBagConstraints.BOTH;
-	cns.weightx = 1.0;
-	cns.weighty = 1.0;
-	cns.gridheight = 2;
-	grid.setConstraints(this.msg, cns);
-	this.add(this.msg);
+		cns.gridwidth = GridBagConstraints.REMAINDER;
+		cns.fill = GridBagConstraints.BOTH;
+		cns.weightx = 1.0;
+		cns.weighty = 1.0;
+		cns.gridheight = 2;
+		grid.setConstraints(msg, cns);
+		this.add(msg);
 
-	cns.weighty = 0.0;
-	cns.fill = GridBagConstraints.NONE;
-	cns.gridheight = 1;
+		cns.weighty = 0.0;
+		cns.fill = GridBagConstraints.NONE;
+		cns.gridheight = 1;
 
-	Panel p = new Panel();
+		final Panel p = new Panel();
 
-	grid.setConstraints(p, cns);
-	this.add(p);
-	p.setLayout(new FlowLayout());
-	p.add(this.go);
-	p.add(this.open);
-	p.add(this.close);
-    }
+		grid.setConstraints(p, cns);
+		this.add(p);
+		p.setLayout(new FlowLayout());
+		p.add(go);
+		p.add(open);
+		p.add(close);
+	}
 }

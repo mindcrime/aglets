@@ -45,166 +45,166 @@ import com.ibm.awb.misc.Resource;
 final class DispatchAgletDialog extends TahitiDialog implements ActionListener,
 ItemListener {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -7705281778334775710L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7705281778334775710L;
 
-    /*
-     * The proxy to be dispatched.
-     */
-    private AgletProxy proxy = null;
+	/*
+	 * The proxy to be dispatched.
+	 */
+	private AgletProxy proxy = null;
 
-    private JTextField remoteURL = null;
-    private AgletListPanel<URL> urlList = null;
-    private JButton addURL = null;
-    private JButton removeURL = null;
+	private JTextField remoteURL = null;
+	private AgletListPanel<URL> urlList = null;
+	private JButton addURL = null;
+	private JButton removeURL = null;
 
-    /*
-     * Constructs a new Aglet dispatch dialog.
-     */
-    DispatchAgletDialog(MainWindow parent, AgletProxy proxy) {
-	super(parent);
+	/*
+	 * Constructs a new Aglet dispatch dialog.
+	 */
+	DispatchAgletDialog(final MainWindow parent, final AgletProxy proxy) {
+		super(parent);
 
-	// store the proxy to dispatch
-	this.proxy = proxy;
+		// store the proxy to dispatch
+		this.proxy = proxy;
 
-	// create components
-	this.remoteURL = JComponentBuilder.createJTextField(40, "atp://", this.baseKey
-		+ ".remoteURL");
-	this.addURL = JComponentBuilder.createJButton(this.baseKey + ".addURL", GUICommandStrings.ADD_COMMAND, this);
-	this.removeURL = JComponentBuilder.createJButton(this.baseKey
-		+ ".removeURL", GUICommandStrings.REMOVE_COMMAND, this);
-	this.urlList = new AgletListPanel<URL>();
+		// create components
+		remoteURL = JComponentBuilder.createJTextField(40, "atp://", baseKey
+				+ ".remoteURL");
+		addURL = JComponentBuilder.createJButton(baseKey + ".addURL", GUICommandStrings.ADD_COMMAND, this);
+		removeURL = JComponentBuilder.createJButton(baseKey
+				+ ".removeURL", GUICommandStrings.REMOVE_COMMAND, this);
+		urlList = new AgletListPanel<URL>();
 
-	// create the north panel
-	JPanel northPanel = new JPanel();
-	northPanel.setLayout(new BorderLayout());
-	JPanel northPanel1 = new JPanel();
-	northPanel1.setLayout(new FlowLayout(FlowLayout.RIGHT));
-	JLabel label = JComponentBuilder.createJLabel(this.baseKey + ".URL");
-	northPanel1.add(label);
-	northPanel1.add(this.remoteURL);
-	northPanel.add(northPanel1, BorderLayout.NORTH);
-	JPanel northPanel2 = new JPanel();
-	northPanel2.setLayout(new FlowLayout(FlowLayout.RIGHT));
-	northPanel2.add(this.addURL);
-	northPanel2.add(this.removeURL);
-	northPanel.add(northPanel2, BorderLayout.SOUTH);
-	this.add(northPanel, BorderLayout.NORTH);
+		// create the north panel
+		final JPanel northPanel = new JPanel();
+		northPanel.setLayout(new BorderLayout());
+		final JPanel northPanel1 = new JPanel();
+		northPanel1.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		final JLabel label = JComponentBuilder.createJLabel(baseKey + ".URL");
+		northPanel1.add(label);
+		northPanel1.add(remoteURL);
+		northPanel.add(northPanel1, BorderLayout.NORTH);
+		final JPanel northPanel2 = new JPanel();
+		northPanel2.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		northPanel2.add(addURL);
+		northPanel2.add(removeURL);
+		northPanel.add(northPanel2, BorderLayout.SOUTH);
+		this.add(northPanel, BorderLayout.NORTH);
 
-	// the center panel will be the agent list
-	this.urlList.setTitleBorder(this.translator.translate(this.baseKey
-		+ ".URL.title"));
-	this.add(this.urlList, BorderLayout.CENTER);
+		// the center panel will be the agent list
+		urlList.setTitleBorder(translator.translate(baseKey
+				+ ".URL.title"));
+		this.add(urlList, BorderLayout.CENTER);
 
-	this.pack();
-
-    }
-
-    /*
-     * Creates an Aglet dispatch dialog.
-     */
-    @Override
-    public void actionPerformed(ActionEvent event) {
-	if (event == null)
-	    return;
-
-	String command = event.getActionCommand();
-
-	try {
-	    if (GUICommandStrings.ADD_COMMAND.equals(command)) {
-		URL url = new URL(this.remoteURL.getText());
-		this.urlList.addItem(url);
-	    } else if (GUICommandStrings.REMOVE_COMMAND.equals(command)) {
-		URL url = new URL(this.remoteURL.getText());
-		this.urlList.removeItem(url);
-	    } else if (GUICommandStrings.OK_COMMAND.equals(command)) {
-		this.setVisible(false);
-		this.getMainWindow().dispatchAglet(this.proxy, new URL(this.remoteURL.getText()));
-		this.dispose();
-	    } else
-		super.actionPerformed(event);
-
-	} catch (MalformedURLException e) {
-	    this.logger.error("Exception caught while converting a string to an url", e);
-	    JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
-		    + ".error.URL"), this.translator.translate(this.baseKey
-			    + ".error.URL.title"), JOptionPane.ERROR_MESSAGE);
+		pack();
 
 	}
 
-    }
+	/*
+	 * Creates an Aglet dispatch dialog.
+	 */
+	@Override
+	public void actionPerformed(final ActionEvent event) {
+		if (event == null)
+			return;
 
-    /*
-     * Adds an item to the list
-     */
-    protected final void addURL() {
-	try {
-	    String url = this.remoteURL.getText();
+		final String command = event.getActionCommand();
 
-	    // check if the url is valid
-	    if ((url == null) || (url.length() == 0))
-		return;
-	    else
-		this.urlList.addItem(new URL(url));
-	} catch (MalformedURLException e) {
-	    this.logger.error("Exception caught while converting a string to an url", e);
-	    JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
-		    + ".error.URL"), this.translator.translate(this.baseKey
-			    + ".error.URL.title"), JOptionPane.ERROR_MESSAGE);
+		try {
+			if (GUICommandStrings.ADD_COMMAND.equals(command)) {
+				final URL url = new URL(remoteURL.getText());
+				urlList.addItem(url);
+			} else if (GUICommandStrings.REMOVE_COMMAND.equals(command)) {
+				final URL url = new URL(remoteURL.getText());
+				urlList.removeItem(url);
+			} else if (GUICommandStrings.OK_COMMAND.equals(command)) {
+				setVisible(false);
+				getMainWindow().dispatchAglet(proxy, new URL(remoteURL.getText()));
+				dispose();
+			} else
+				super.actionPerformed(event);
+
+		} catch (final MalformedURLException e) {
+			logger.error("Exception caught while converting a string to an url", e);
+			JOptionPane.showMessageDialog(this, translator.translate(baseKey
+					+ ".error.URL"), translator.translate(baseKey
+							+ ".error.URL.title"), JOptionPane.ERROR_MESSAGE);
+
+		}
+
 	}
-    }
 
-    // Handles list box selections.
-    //
-    @Override
-    public void itemStateChanged(ItemEvent event) {
-	if (event == null)
-	    return;
+	/*
+	 * Adds an item to the list
+	 */
+	protected final void addURL() {
+		try {
+			final String url = remoteURL.getText();
 
-	this.remoteURL.setText(this.urlList.getSelectedItem().toString());
-
-    }
-
-    /*
-     * Delete an item from the list
-     */
-    protected final void removeURL() {
-	try {
-	    String url = this.remoteURL.getText();
-
-	    // check if the url is valid
-	    if ((url == null) || (url.length() == 0))
-		return;
-	    else
-		this.urlList.removeItem(new URL(url));
-	} catch (MalformedURLException e) {
-	    this.logger.error("Exception caught while converting a string to an url", e);
-	    JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
-		    + ".error.URL"), this.translator.translate(this.baseKey
-			    + ".error.URL.title"), JOptionPane.ERROR_MESSAGE);
+			// check if the url is valid
+			if ((url == null) || (url.length() == 0))
+				return;
+			else
+				urlList.addItem(new URL(url));
+		} catch (final MalformedURLException e) {
+			logger.error("Exception caught while converting a string to an url", e);
+			JOptionPane.showMessageDialog(this, translator.translate(baseKey
+					+ ".error.URL"), translator.translate(baseKey
+							+ ".error.URL.title"), JOptionPane.ERROR_MESSAGE);
+		}
 	}
-    }
 
-    @Override
-    public void dispose() {
-	this.storeURLList();
-	super.dispose();
-    }
-
-    private void storeURLList() {
-	synchronized (this.urlList) {
-	    int num = this.urlList.getItemCount();
-	    String addressList = "";
-
-	    for (int i = 0; i < num; i++) {
-		addressList += (this.urlList.getItem(i).toString() + " ");
-	    }
-	    Resource res = Resource.getResourceFor("aglets");
-
-	    res.setResource("aglets.addressbook", addressList);
-	    res.save("Tahiti");
+	@Override
+	public void dispose() {
+		storeURLList();
+		super.dispose();
 	}
-    }
+
+	// Handles list box selections.
+	//
+	@Override
+	public void itemStateChanged(final ItemEvent event) {
+		if (event == null)
+			return;
+
+		remoteURL.setText(urlList.getSelectedItem().toString());
+
+	}
+
+	/*
+	 * Delete an item from the list
+	 */
+	protected final void removeURL() {
+		try {
+			final String url = remoteURL.getText();
+
+			// check if the url is valid
+			if ((url == null) || (url.length() == 0))
+				return;
+			else
+				urlList.removeItem(new URL(url));
+		} catch (final MalformedURLException e) {
+			logger.error("Exception caught while converting a string to an url", e);
+			JOptionPane.showMessageDialog(this, translator.translate(baseKey
+					+ ".error.URL"), translator.translate(baseKey
+							+ ".error.URL.title"), JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private void storeURLList() {
+		synchronized (urlList) {
+			final int num = urlList.getItemCount();
+			String addressList = "";
+
+			for (int i = 0; i < num; i++) {
+				addressList += (urlList.getItem(i).toString() + " ");
+			}
+			final Resource res = Resource.getResourceFor("aglets");
+
+			res.setResource("aglets.addressbook", addressList);
+			res.save("Tahiti");
+		}
+	}
 }

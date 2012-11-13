@@ -18,40 +18,40 @@ import net.sourceforge.aglets.rolex.descriptors.OperationDescriptor;
  */
 public interface RolexAgent {
 
-    /**
-     * Performs a single operation starting from its descriptor.
-     * 
-     * @return the return value of the operation execution.
-     * @throws RolexException
-     *             if the operation cannot be executed or if the operation
-     *             execution raises an exception
-     */
-    public Object act(OperationDescriptor operation) throws RolexException;
+	/**
+	 * Performs a single operation starting from its descriptor.
+	 * 
+	 * @return the return value of the operation execution.
+	 * @throws RolexException
+	 *             if the operation cannot be executed or if the operation
+	 *             execution raises an exception
+	 */
+	public Object act(OperationDescriptor operation) throws RolexException;
 
-    public String getRoleClass(String intf);
+	public String getRoleClass(String intf);
 
-    /**
-     * Add interface-class couple to records of agent
-     * 
-     * @param intf
-     *            String interface's name of role
-     * @param roleclass
-     *            String class's name of role
-     * @return boolean return if the operation has been termined succesfully
-     */
-    public boolean storeRoleInformation(String intf, String roleclass);
+	/**
+	 * Remove interface-class couple to records of agent It's not necessary to
+	 * pass the class name because the interface is the key of hashtable
+	 * 
+	 * @param intf
+	 *            String interface's name of role
+	 * @param roleclass
+	 *            String class's name of role
+	 * @return boolean return if the operation has been termined succesfully
+	 */
 
-    /**
-     * Remove interface-class couple to records of agent It's not necessary to
-     * pass the class name because the interface is the key of hashtable
-     * 
-     * @param intf
-     *            String interface's name of role
-     * @param roleclass
-     *            String class's name of role
-     * @return boolean return if the operation has been termined succesfully
-     */
+	public boolean removeRoleInformation(String intf);
 
-    public boolean removeRoleInformation(String intf);
+	/**
+	 * Add interface-class couple to records of agent
+	 * 
+	 * @param intf
+	 *            String interface's name of role
+	 * @param roleclass
+	 *            String class's name of role
+	 * @return boolean return if the operation has been termined succesfully
+	 */
+	public boolean storeRoleInformation(String intf, String roleclass);
 
 }

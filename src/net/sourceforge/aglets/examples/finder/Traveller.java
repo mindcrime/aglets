@@ -19,23 +19,23 @@ import com.ibm.aglet.Aglet;
 import com.ibm.aglet.AgletProxy;
 
 public class Traveller extends Aglet {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 7660259734565493722L;
-    Register register = null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7660259734565493722L;
+	Register register = null;
 
-    @Override
-    public void onCreation(Object o) {
+	@Override
+	public void onCreation(final Object o) {
 
-	// get the default finder..
-	AgletProxy finder = (AgletProxy) this.getAgletContext().getProperty("finder");
+		// get the default finder..
+		final AgletProxy finder = (AgletProxy) getAgletContext().getProperty("finder");
 
-	this.register = new Register(this, finder, "Traveller");
-    }
+		register = new Register(this, finder, "Traveller");
+	}
 
-    @Override
-    public void onDisposing() {
-	this.register.unregister();
-    }
+	@Override
+	public void onDisposing() {
+		register.unregister();
+	}
 }

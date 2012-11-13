@@ -19,143 +19,143 @@ import com.ibm.aglet.message.Message;
  */
 public class DeliveryMessageThread extends Thread {
 
-    /**
-     * A counter of the number of delivery threads.
-     */
-    protected static int counter = 1;
+	/**
+	 * A counter of the number of delivery threads.
+	 */
+	protected static int counter = 1;
 
-    /**
-     * The proxy to which send a message.
-     */
-    private AgletProxy proxy = null;
+	/**
+	 * The proxy to which send a message.
+	 */
+	private AgletProxy proxy = null;
 
-    /**
-     * The message to deliver.
-     */
-    private Message message = null;
+	/**
+	 * The message to deliver.
+	 */
+	private Message message = null;
 
-    /**
-     * Indicates if this thread has been started or not.
-     */
-    private boolean started = false;
+	/**
+	 * Indicates if this thread has been started or not.
+	 */
+	private boolean started = false;
 
-    /**
-     * Constructs the thread. It does not start the thread! This means you have
-     * to manually deliver the message thru the deliverMessage method.
-     * 
-     * @param p
-     *            the proxy of the agent to use for this thread.
-     * @param msg
-     *            the message to delivery thru the proxy.
-     */
-    public DeliveryMessageThread(AgletProxy p, Message msg) {
-	super("Delivery Message Thread " + DeliveryMessageThread.counter);
+	/**
+	 * Constructs the thread. It does not start the thread! This means you have
+	 * to manually deliver the message thru the deliverMessage method.
+	 * 
+	 * @param p
+	 *            the proxy of the agent to use for this thread.
+	 * @param msg
+	 *            the message to delivery thru the proxy.
+	 */
+	public DeliveryMessageThread(final AgletProxy p, final Message msg) {
+		super("Delivery Message Thread " + DeliveryMessageThread.counter);
 
-	this.setDaemon(true); // keep this thread as a daemon in order to not
-	// interfere with the virtual machine threads
-	DeliveryMessageThread.counter++;
-	this.proxy = p;
-	this.message = msg;
-    }
+		setDaemon(true); // keep this thread as a daemon in order to not
+		// interfere with the virtual machine threads
+		DeliveryMessageThread.counter++;
+		proxy = p;
+		message = msg;
+	}
 
-    /**
-     * Builds the delivery message and delivers immediatly the message if
-     * specified.
-     * 
-     * @param p
-     *            the proxy to which the message has to be sent
-     * @param msg
-     *            the message to send
-     * @param deliveryImmediatly
-     *            true if the message must be delivered immediatly
-     */
-    public DeliveryMessageThread(AgletProxy p, Message msg,
-                                 boolean deliveryImmediatly) {
-	this(p, msg);
-	if (deliveryImmediatly)
-	    this.deliverMessage();
-    }
+	/**
+	 * Builds the delivery message and delivers immediatly the message if
+	 * specified.
+	 * 
+	 * @param p
+	 *            the proxy to which the message has to be sent
+	 * @param msg
+	 *            the message to send
+	 * @param deliveryImmediatly
+	 *            true if the message must be delivered immediatly
+	 */
+	public DeliveryMessageThread(final AgletProxy p, final Message msg,
+	                             final boolean deliveryImmediatly) {
+		this(p, msg);
+		if (deliveryImmediatly)
+			this.deliverMessage();
+	}
 
-    @Override
-    public void run() {
-	// check if the thread has started, to avoid calling this method
-	// directly
-	if (!this.started)
-	    return;
-
-	// deliver the current message to the proxy
-	while (this.started) {
-	    try {
-		// deliver the message if any
-		if ((this.proxy != null) && (this.message != null))
-		    this.proxy.sendMessage(this.message);
-
-		// reset the proxy and the message thus to use this thread in
-		// the future
-		this.proxy = null;
-		this.message = null;
-
-		// now reinsert myself in the pool and wait
-		synchronized (this) {
-		    AgletThreadPool.getInstance().pushDeliveryMessageThread(this);
-		    this.wait();
+	/**
+	 * Deliver the current message.
+	 */
+	public final synchronized void deliverMessage() {
+		if (!started) {
+			started = true;
+			start();
 		}
-
-	    } catch (Exception e) {
-		System.err.println("Exception in DeliveryMessageThread!");
-		e.printStackTrace();
-	    }
+		notifyAll();
 	}
-    }
 
-    /**
-     * Deliver a specific message to the specific agent.
-     * 
-     * @param p
-     *            the proxy of the agent to deliver to
-     * @param m
-     *            the message to deliver.
-     * @param deliverNow
-     *            true if the message must be delivered immediatly, false if the
-     *            message must wait until deliverMessage is called on this
-     *            thread.
-     */
-    public final synchronized void deliverMessage(
-                                                  AgletProxy p,
-                                                  Message m,
-                                                  boolean deliverNow) {
-	this.message = m;
-	this.proxy = p;
-	if (deliverNow)
-	    this.deliverMessage();
-    }
-
-    /**
-     * Delivers the current message.
-     */
-    public final synchronized void deliverMessage(AgletProxy p, Message m) {
-	this.message = m;
-	this.proxy = p;
-	this.deliverMessage();
-    }
-
-    /**
-     * Deliver the current message.
-     */
-    public final synchronized void deliverMessage() {
-	if (!this.started) {
-	    this.started = true;
-	    this.start();
+	/**
+	 * Delivers the current message.
+	 */
+	public final synchronized void deliverMessage(final AgletProxy p, final Message m) {
+		message = m;
+		proxy = p;
+		this.deliverMessage();
 	}
-	this.notifyAll();
-    }
 
-    /**
-     * Stops the current thread, so that it can be destroyed.
-     */
-    public final synchronized void stopDelivery() {
-	this.started = false;
-	this.notifyAll();
-    }
+	/**
+	 * Deliver a specific message to the specific agent.
+	 * 
+	 * @param p
+	 *            the proxy of the agent to deliver to
+	 * @param m
+	 *            the message to deliver.
+	 * @param deliverNow
+	 *            true if the message must be delivered immediatly, false if the
+	 *            message must wait until deliverMessage is called on this
+	 *            thread.
+	 */
+	public final synchronized void deliverMessage(
+	                                              final AgletProxy p,
+	                                              final Message m,
+	                                              final boolean deliverNow) {
+		message = m;
+		proxy = p;
+		if (deliverNow)
+			this.deliverMessage();
+	}
+
+	@Override
+	public void run() {
+		// check if the thread has started, to avoid calling this method
+		// directly
+		if (!started)
+			return;
+
+		// deliver the current message to the proxy
+		while (started) {
+			try {
+				// deliver the message if any
+				if ((proxy != null) && (message != null))
+					proxy.sendMessage(message);
+
+				// reset the proxy and the message thus to use this thread in
+				// the future
+				proxy = null;
+				message = null;
+
+				// now reinsert myself in the pool and wait
+				synchronized (this) {
+					AgletThreadPool.getInstance().pushDeliveryMessageThread(this);
+					this.wait();
+				}
+
+			} catch (final Exception e) {
+				System.err.println("Exception in DeliveryMessageThread!");
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * Stops the current thread, so that it can be destroyed.
+	 */
+	public final synchronized void stopDelivery() {
+		started = false;
+		notifyAll();
+	}
 
 }

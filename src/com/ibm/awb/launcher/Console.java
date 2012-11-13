@@ -25,55 +25,55 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class Console extends Frame implements ActionListener {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -3813053602916153118L;
-    private Button _clear_button = new Button("Clear");
-    private Button _close_button = new Button("Close");
-    private TextArea _log_text_area = new TextArea(15, 82);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3813053602916153118L;
+	private final Button _clear_button = new Button("Clear");
+	private final Button _close_button = new Button("Close");
+	private final TextArea _log_text_area = new TextArea(15, 82);
 
-    public Console() {
-	super("Aglets Daemon Console");
+	public Console() {
+		super("Aglets Daemon Console");
 
-	this.redirect();
+		redirect();
 
-	this.add("Center", this._log_text_area);
-	Panel p = new Panel();
+		this.add("Center", _log_text_area);
+		final Panel p = new Panel();
 
-	p.setLayout(new BorderLayout());
-	p.add("West", this._clear_button);
-	p.add("East", this._close_button);
-	this.add("South", p);
-	this.pack();
+		p.setLayout(new BorderLayout());
+		p.add("West", _clear_button);
+		p.add("East", _close_button);
+		this.add("South", p);
+		pack();
 
-	this._clear_button.addActionListener(this);
-	this._close_button.addActionListener(this);
+		_clear_button.addActionListener(this);
+		_close_button.addActionListener(this);
 
-	this.addWindowListener(new WindowAdapter() {
-	    @Override
-	    public void windowClosing(WindowEvent ev) {
-		Console.this.setVisible(false);
-	    }
-	});
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent ev) {
-	if (this._close_button.getActionCommand().equals(ev.getActionCommand())) {
-	    this.setVisible(false);
-	} else if (this._clear_button.getActionCommand().equals(ev.getActionCommand())) {
-
-	    // String str = _log_text_area.getText();
-	    this._log_text_area.setText("");
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(final WindowEvent ev) {
+				Console.this.setVisible(false);
+			}
+		});
 	}
-    }
 
-    public void redirect() {
-	LogWriter lw = new LogWriter(this._log_text_area);
-	java.io.PrintStream ps = new java.io.PrintStream(lw);
+	@Override
+	public void actionPerformed(final ActionEvent ev) {
+		if (_close_button.getActionCommand().equals(ev.getActionCommand())) {
+			setVisible(false);
+		} else if (_clear_button.getActionCommand().equals(ev.getActionCommand())) {
 
-	System.setOut(ps);
-	System.setErr(ps);
-    }
+			// String str = _log_text_area.getText();
+			_log_text_area.setText("");
+		}
+	}
+
+	public void redirect() {
+		final LogWriter lw = new LogWriter(_log_text_area);
+		final java.io.PrintStream ps = new java.io.PrintStream(lw);
+
+		System.setOut(ps);
+		System.setErr(ps);
+	}
 }

@@ -19,30 +19,30 @@ import java.util.Vector;
  */
 
 public class StringList implements Enumeration {
-    private Vector _list = new Vector();
-    private int _index = 0;
+	private final Vector _list = new Vector();
+	private final int _index = 0;
 
-    public final void addString(String str) {
-	this._list.addElement(str);
-    }
-
-    @Override
-    public boolean hasMoreElements() {
-	return this._index < this._list.size();
-    }
-
-    @Override
-    public Object nextElement() {
-	if (!this.hasMoreElements()) {
-	    throw new NoSuchElementException("no more elements.");
+	public final void addString(final String str) {
+		_list.addElement(str);
 	}
-	Object obj = null;
 
-	try {
-	    obj = this._list.elementAt(this._index);
-	} catch (Exception excpt) {
-	    throw new NoSuchElementException(excpt.getMessage());
+	@Override
+	public boolean hasMoreElements() {
+		return _index < _list.size();
 	}
-	return obj;
-    }
+
+	@Override
+	public Object nextElement() {
+		if (!hasMoreElements()) {
+			throw new NoSuchElementException("no more elements.");
+		}
+		Object obj = null;
+
+		try {
+			obj = _list.elementAt(_index);
+		} catch (final Exception excpt) {
+			throw new NoSuchElementException(excpt.getMessage());
+		}
+		return obj;
+	}
 }

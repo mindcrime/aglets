@@ -31,71 +31,71 @@ import com.ibm.atp.ContentBuffer;
 final class HttpResponseOutputStream extends ByteArrayOutputStream implements
 ContentBuffer {
 
-    /**
-     * A separator in the message's header.
-     */
-    public static final String CRLF = "\r\n";
+	/**
+	 * A separator in the message's header.
+	 */
+	public static final String CRLF = "\r\n";
 
-    /**
-     * An output stream into which ATP messages is written. An atp output stream
-     * writes ATP messages into it.
-     */
-    private OutputStream _out = null;
-    private boolean content_sent = false;
+	/**
+	 * An output stream into which ATP messages is written. An atp output stream
+	 * writes ATP messages into it.
+	 */
+	private OutputStream _out = null;
+	private boolean content_sent = false;
 
-    /**
-     * Create a new instance
-     * 
-     * @param out
-     *            an instance of OutputStream into which the instantiated atp
-     *            output stream writes.
-     */
-    public HttpResponseOutputStream(OutputStream out) {
-	this._out = out;
-    }
-
-    @Override
-    public void close() throws IOException {
-	this.content_sent = true;
-	this.flush();
-    }
-
-    /*
-     * Flush the stream.
-     */
-    @Override
-    public void flush() throws IOException {
-	if (this.content_sent) {
-	    this._out.write(this.buf, 0, this.count);
-	    this._out.flush();
-	    this.reset();
-	}
-    }
-
-    /*
-     * Sends the content
-     */
-    @Override
-    public void sendContent() throws IOException {
-	synchronized (this) {
-	    if (this.content_sent) {
-		throw new IllegalAccessError("content already sent");
-	    }
-	    this.content_sent = true;
+	/**
+	 * Create a new instance
+	 * 
+	 * @param out
+	 *            an instance of OutputStream into which the instantiated atp
+	 *            output stream writes.
+	 */
+	public HttpResponseOutputStream(final OutputStream out) {
+		_out = out;
 	}
 
-	PrintStream p = new PrintStream(this._out);
-
-	p.print("HTTP/1.0 200 OKAY" + CRLF);
-	p.print("Content-type: application/x-atp" + CRLF);
-	p.print("Content-Length:" + this.count + CRLF);
-	p.print(CRLF);
-	this._out.write(this.buf, 0, this.count);
-	this._out.flush();
-	this.reset();
-
-	if (this._out instanceof ContentBuffer) {
-	    ((ContentBuffer) this._out).sendContent();
+	@Override
+	public void close() throws IOException {
+		content_sent = true;
+		flush();
 	}
-    }
+
+	/*
+	 * Flush the stream.
+	 */
+	@Override
+	public void flush() throws IOException {
+		if (content_sent) {
+			_out.write(buf, 0, count);
+			_out.flush();
+			reset();
+		}
+	}
+
+	/*
+	 * Sends the content
+	 */
+	@Override
+	public void sendContent() throws IOException {
+		synchronized (this) {
+			if (content_sent) {
+				throw new IllegalAccessError("content already sent");
+			}
+			content_sent = true;
+		}
+
+		final PrintStream p = new PrintStream(_out);
+
+		p.print("HTTP/1.0 200 OKAY" + CRLF);
+		p.print("Content-type: application/x-atp" + CRLF);
+		p.print("Content-Length:" + count + CRLF);
+		p.print(CRLF);
+		_out.write(buf, 0, count);
+		_out.flush();
+		reset();
+
+		if (_out instanceof ContentBuffer) {
+			((ContentBuffer) _out).sendContent();
+		}
+	}
 }

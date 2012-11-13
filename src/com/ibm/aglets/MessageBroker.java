@@ -39,285 +39,285 @@ import com.ibm.maf.NotHandled;
  */
 final class MessageBroker {
 
-    static Hashtable replies = new Hashtable();
-    static Hashtable rms = new Hashtable();
+	static Hashtable replies = new Hashtable();
+	static Hashtable rms = new Hashtable();
 
-    static void delegateMessage(Ticket ticket, Name name, Message msg)
-    throws InvalidAgletException {
-	try {
-	    MAFAgentSystem maf = MAFAgentSystem.getMAFAgentSystem(ticket);
-	    ResourceManager rm = getCurrentResourceManager();
-
-	    synchronized (msg) {
-		if (((msg instanceof MessageImpl) == false)
-			|| (((MessageImpl) msg).isDelegatable() == false)) {
-		    throw new IllegalArgumentException("The message cannot be delegated");
-		}
-
-		MessageImpl origin = (MessageImpl) msg;
-		origin.clone();
-
-		FutureReplyImpl future = origin.future;
-		byte msg_bytes[] = MessageOutputStream.toByteArray(rm, msg);
-
-		MAFAgentSystem local = MAFAgentSystem.getLocalMAFAgentSystem();
-		long return_id = maf.receive_future_message(name, msg_bytes, local);
-
-		waitFutureReply(future, rm, new Long(return_id));
-
-		//
-		// okay
-		//
-		origin.disable(); // disable the message
-	    }
-
-	    /*
-	     * MAF Exceptions
-	     */
-	} catch (AgentNotFound ex) {
-	    throw new InvalidAgletException(toMessage(ex));
-
-	} catch (ClassUnknown ex) {
-	    throw new InvalidAgletException(toMessage(ex));
-
-	} catch (DeserializationFailed ex) {
-	    throw new InvalidAgletException(toMessage(ex));
-
-	} catch (UnknownHostException ex) {
-	    throw new InvalidAgletException(toMessage(ex));
-
-	} catch (IOException ex) {
-	    throw new InvalidAgletException(toMessage(ex));
-
-	} catch (MAFExtendedException ex) {
-	    throw new InvalidAgletException(toMessage(ex));
-
-	}
-    }
-
-    static private String getContextName(Ticket ticket) {
-	if (ticket == null) {
-	    return null;
-	}
-
-	String name = ticket.getFile();
-
-	if ((name == null) || (name.length() == 0)) {
-	    return "";
-	}
-
-	// cut off "/servlet"
-	if (name.startsWith("/servlet")) {
-	    name = name.substring(9); // cut off "/servlet/"
-	    int i = name.indexOf('/', 1);
-
-	    if (i > 0) {
-		name = name.substring(i);
-	    } else {
-		return "";
-	    }
-	}
-
-	// cut off "/aglets"
-	if (name.startsWith("/aglets")) {
-	    name = name.substring(7);
-	}
-	int i = name.indexOf('/', 1);
-
-	if (i > 0) {
-	    name = name.substring(name.charAt(0) == '/' ? 1 : 0, i);
-	} else {
-	    name = name.substring(name.charAt(0) == '/' ? 1 : 0);
-	}
-	if (name.equals("default") || name.equals("cxt")) { // legacy
-	    name = "";
-	}
-	return name;
-    }
-
-    private static ResourceManager getCurrentResourceManager() {
-
-	// REMIND. This should be obtained from context.
-	ResourceManagerFactory rm_factory = AgletRuntime.getDefaultResourceManagerFactory();
-
-	return rm_factory.getCurrentResourceManager();
-    }
-
-    static FutureReplyImpl getFutureReply(Long return_id) {
-	return (FutureReplyImpl) replies.get(return_id);
-    }
-
-    static ResourceManager getResourceManager(Long return_id) {
-	ResourceManager rm;
-
-	synchronized (MessageBroker.class) {
-	    while ((rm = (ResourceManager) rms.get(return_id)) == null) {
+	static void delegateMessage(final Ticket ticket, final Name name, final Message msg)
+	throws InvalidAgletException {
 		try {
-		    MessageBroker.class.wait();
-		} catch (InterruptedException ex) {
-		    ex.printStackTrace();
+			final MAFAgentSystem maf = MAFAgentSystem.getMAFAgentSystem(ticket);
+			final ResourceManager rm = getCurrentResourceManager();
 
-		    // correct?
-		    return null;
+			synchronized (msg) {
+				if (((msg instanceof MessageImpl) == false)
+						|| (((MessageImpl) msg).isDelegatable() == false)) {
+					throw new IllegalArgumentException("The message cannot be delegated");
+				}
+
+				final MessageImpl origin = (MessageImpl) msg;
+				origin.clone();
+
+				final FutureReplyImpl future = origin.future;
+				final byte msg_bytes[] = MessageOutputStream.toByteArray(rm, msg);
+
+				final MAFAgentSystem local = MAFAgentSystem.getLocalMAFAgentSystem();
+				final long return_id = maf.receive_future_message(name, msg_bytes, local);
+
+				waitFutureReply(future, rm, new Long(return_id));
+
+				//
+				// okay
+				//
+				origin.disable(); // disable the message
+			}
+
+			/*
+			 * MAF Exceptions
+			 */
+		} catch (final AgentNotFound ex) {
+			throw new InvalidAgletException(toMessage(ex));
+
+		} catch (final ClassUnknown ex) {
+			throw new InvalidAgletException(toMessage(ex));
+
+		} catch (final DeserializationFailed ex) {
+			throw new InvalidAgletException(toMessage(ex));
+
+		} catch (final UnknownHostException ex) {
+			throw new InvalidAgletException(toMessage(ex));
+
+		} catch (final IOException ex) {
+			throw new InvalidAgletException(toMessage(ex));
+
+		} catch (final MAFExtendedException ex) {
+			throw new InvalidAgletException(toMessage(ex));
+
 		}
-	    }
 	}
-	return rm;
-    }
 
-    static FutureReplyImpl sendFutureMessage(
-                                             Ticket ticket,
-                                             Name name,
-                                             Message msg)
-    throws InvalidAgletException {
-	try {
-	    MAFAgentSystem maf = MAFAgentSystem.getMAFAgentSystem(ticket);
-	    ResourceManager rm = getCurrentResourceManager();
+	static private String getContextName(final Ticket ticket) {
+		if (ticket == null) {
+			return null;
+		}
 
-	    byte msg_bytes[] = MessageOutputStream.toByteArray(rm, msg);
-	    MAFAgentSystem local = MAFAgentSystem.getLocalMAFAgentSystem();
+		String name = ticket.getFile();
 
-	    long return_id = maf.receive_future_message(name, msg_bytes, local);
+		if ((name == null) || (name.length() == 0)) {
+			return "";
+		}
 
-	    FutureReplyImpl reply = new FutureReplyImpl();
+		// cut off "/servlet"
+		if (name.startsWith("/servlet")) {
+			name = name.substring(9); // cut off "/servlet/"
+			final int i = name.indexOf('/', 1);
 
-	    waitFutureReply(reply, rm, new Long(return_id));
-	    return reply;
+			if (i > 0) {
+				name = name.substring(i);
+			} else {
+				return "";
+			}
+		}
 
-	} catch (UnknownHostException ex) {
-	    throw new InvalidAgletException(toMessage(ex));
+		// cut off "/aglets"
+		if (name.startsWith("/aglets")) {
+			name = name.substring(7);
+		}
+		final int i = name.indexOf('/', 1);
 
-	} catch (IOException ex) {
-	    ex.printStackTrace();
-	    throw new InvalidAgletException(toMessage(ex));
-
-	    /*
-	     * MAF Exceptions
-	     */
-
-	} catch (AgentNotFound ex) {
-	    throw new InvalidAgletException(toMessage(ex));
-
-	} catch (ClassUnknown ex) {
-	    throw new InvalidAgletException(toMessage(ex));
-
-	} catch (DeserializationFailed ex) {
-	    throw new InvalidAgletException(toMessage(ex));
-
-	} catch (MAFExtendedException ex) {
-	    throw new InvalidAgletException(toMessage(ex));
+		if (i > 0) {
+			name = name.substring(name.charAt(0) == '/' ? 1 : 0, i);
+		} else {
+			name = name.substring(name.charAt(0) == '/' ? 1 : 0);
+		}
+		if (name.equals("default") || name.equals("cxt")) { // legacy
+			name = "";
+		}
+		return name;
 	}
-    }
 
-    static Object sendMessage(Ticket ticket, Name name, Message msg)
-    throws InvalidAgletException,
-    MessageException,
-    NotHandledException {
+	private static ResourceManager getCurrentResourceManager() {
 
-	try {
-	    MAFAgentSystem maf = MAFAgentSystem.getMAFAgentSystem(ticket);
-	    ResourceManager rm = getCurrentResourceManager();
+		// REMIND. This should be obtained from context.
+		final ResourceManagerFactory rm_factory = AgletRuntime.getDefaultResourceManagerFactory();
 
-	    if (name == null) {
-
-		// String cname = ticket.getContextName();
-		String cname = getContextName(ticket);
-
-		name = new Name("".getBytes(), cname.getBytes(), MAFUtil.AGENT_SYSTEM_TYPE_AGLETS);
-	    }
-
-	    byte msg_bytes[] = MessageOutputStream.toByteArray(rm, msg);
-
-	    byte ret_bytes[] = maf.receive_message(name, msg_bytes);
-
-	    return MessageInputStream.toObject(rm, ret_bytes);
-
-	} catch (OptionalDataException ex) {
-	    ex.printStackTrace();
-	    throw new NotHandledException(toMessage(ex));
-
-	} catch (ClassNotFoundException ex) {
-	    ex.printStackTrace();
-	    throw new NotHandledException(toMessage(ex));
-
-	} catch (UnknownHostException ex) {
-	    throw new InvalidAgletException(toMessage(ex));
-
-	} catch (IOException ex) {
-	    ex.printStackTrace();
-	    throw new NotHandledException(toMessage(ex));
-
-	    /*
-	     * MAF Exceptions
-	     */
-
-	} catch (AgentNotFound ex) {
-	    throw new InvalidAgletException(toMessage(ex));
-
-	} catch (NotHandled ex) {
-	    throw new NotHandledException(toMessage(ex));
-
-	} catch (MessageEx ex) {
-	    throw new MessageException(ex.getException(), ex.getMessage());
-
-	} catch (ClassUnknown ex) {
-	    throw new NotHandledException(toMessage(ex));
-
-	} catch (DeserializationFailed ex) {
-	    throw new NotHandledException(toMessage(ex));
-
-	} catch (MAFExtendedException ex) {
-	    throw new NotHandledException(toMessage(ex));
+		return rm_factory.getCurrentResourceManager();
 	}
-    }
 
-    static void sendOnewayMessage(Ticket ticket, Name name, Message msg)
-    throws InvalidAgletException {
-	try {
-	    MAFAgentSystem maf = MAFAgentSystem.getMAFAgentSystem(ticket);
-	    ResourceManager rm = getCurrentResourceManager();
-
-	    byte msg_bytes[] = MessageOutputStream.toByteArray(rm, msg);
-
-	    maf.receive_oneway_message(name, msg_bytes);
-
-	} catch (UnknownHostException ex) {
-	    throw new InvalidAgletException(toMessage(ex));
-
-	} catch (IOException ex) {
-	    ex.printStackTrace();
-	    throw new InvalidAgletException(toMessage(ex));
-
-	    /*
-	     * MAFExceptions
-	     */
-
-	} catch (AgentNotFound ex) {
-	    throw new InvalidAgletException(toMessage(ex));
-
-	} catch (ClassUnknown ex) {
-	    throw new InvalidAgletException(toMessage(ex));
-
-	} catch (DeserializationFailed ex) {
-	    throw new InvalidAgletException(toMessage(ex));
-
-	} catch (MAFExtendedException ex) {
-	    throw new InvalidAgletException(toMessage(ex));
+	static FutureReplyImpl getFutureReply(final Long return_id) {
+		return (FutureReplyImpl) replies.get(return_id);
 	}
-    }
 
-    static String toMessage(Exception ex) {
-	return ex.getClass().getName() + ':' + ex.getMessage();
-    }
+	static ResourceManager getResourceManager(final Long return_id) {
+		ResourceManager rm;
 
-    static public void waitFutureReply(
-                                       FutureReplyImpl reply,
-                                       ResourceManager rm,
-                                       Long return_id) {
-	synchronized (MessageBroker.class) {
-	    replies.put(return_id, reply);
-	    rms.put(return_id, rm);
-	    MessageBroker.class.notify();
+		synchronized (MessageBroker.class) {
+			while ((rm = (ResourceManager) rms.get(return_id)) == null) {
+				try {
+					MessageBroker.class.wait();
+				} catch (final InterruptedException ex) {
+					ex.printStackTrace();
+
+					// correct?
+					return null;
+				}
+			}
+		}
+		return rm;
 	}
-    }
+
+	static FutureReplyImpl sendFutureMessage(
+	                                         final Ticket ticket,
+	                                         final Name name,
+	                                         final Message msg)
+	throws InvalidAgletException {
+		try {
+			final MAFAgentSystem maf = MAFAgentSystem.getMAFAgentSystem(ticket);
+			final ResourceManager rm = getCurrentResourceManager();
+
+			final byte msg_bytes[] = MessageOutputStream.toByteArray(rm, msg);
+			final MAFAgentSystem local = MAFAgentSystem.getLocalMAFAgentSystem();
+
+			final long return_id = maf.receive_future_message(name, msg_bytes, local);
+
+			final FutureReplyImpl reply = new FutureReplyImpl();
+
+			waitFutureReply(reply, rm, new Long(return_id));
+			return reply;
+
+		} catch (final UnknownHostException ex) {
+			throw new InvalidAgletException(toMessage(ex));
+
+		} catch (final IOException ex) {
+			ex.printStackTrace();
+			throw new InvalidAgletException(toMessage(ex));
+
+			/*
+			 * MAF Exceptions
+			 */
+
+		} catch (final AgentNotFound ex) {
+			throw new InvalidAgletException(toMessage(ex));
+
+		} catch (final ClassUnknown ex) {
+			throw new InvalidAgletException(toMessage(ex));
+
+		} catch (final DeserializationFailed ex) {
+			throw new InvalidAgletException(toMessage(ex));
+
+		} catch (final MAFExtendedException ex) {
+			throw new InvalidAgletException(toMessage(ex));
+		}
+	}
+
+	static Object sendMessage(final Ticket ticket, Name name, final Message msg)
+	throws InvalidAgletException,
+	MessageException,
+	NotHandledException {
+
+		try {
+			final MAFAgentSystem maf = MAFAgentSystem.getMAFAgentSystem(ticket);
+			final ResourceManager rm = getCurrentResourceManager();
+
+			if (name == null) {
+
+				// String cname = ticket.getContextName();
+				final String cname = getContextName(ticket);
+
+				name = new Name("".getBytes(), cname.getBytes(), MAFUtil.AGENT_SYSTEM_TYPE_AGLETS);
+			}
+
+			final byte msg_bytes[] = MessageOutputStream.toByteArray(rm, msg);
+
+			final byte ret_bytes[] = maf.receive_message(name, msg_bytes);
+
+			return MessageInputStream.toObject(rm, ret_bytes);
+
+		} catch (final OptionalDataException ex) {
+			ex.printStackTrace();
+			throw new NotHandledException(toMessage(ex));
+
+		} catch (final ClassNotFoundException ex) {
+			ex.printStackTrace();
+			throw new NotHandledException(toMessage(ex));
+
+		} catch (final UnknownHostException ex) {
+			throw new InvalidAgletException(toMessage(ex));
+
+		} catch (final IOException ex) {
+			ex.printStackTrace();
+			throw new NotHandledException(toMessage(ex));
+
+			/*
+			 * MAF Exceptions
+			 */
+
+		} catch (final AgentNotFound ex) {
+			throw new InvalidAgletException(toMessage(ex));
+
+		} catch (final NotHandled ex) {
+			throw new NotHandledException(toMessage(ex));
+
+		} catch (final MessageEx ex) {
+			throw new MessageException(ex.getException(), ex.getMessage());
+
+		} catch (final ClassUnknown ex) {
+			throw new NotHandledException(toMessage(ex));
+
+		} catch (final DeserializationFailed ex) {
+			throw new NotHandledException(toMessage(ex));
+
+		} catch (final MAFExtendedException ex) {
+			throw new NotHandledException(toMessage(ex));
+		}
+	}
+
+	static void sendOnewayMessage(final Ticket ticket, final Name name, final Message msg)
+	throws InvalidAgletException {
+		try {
+			final MAFAgentSystem maf = MAFAgentSystem.getMAFAgentSystem(ticket);
+			final ResourceManager rm = getCurrentResourceManager();
+
+			final byte msg_bytes[] = MessageOutputStream.toByteArray(rm, msg);
+
+			maf.receive_oneway_message(name, msg_bytes);
+
+		} catch (final UnknownHostException ex) {
+			throw new InvalidAgletException(toMessage(ex));
+
+		} catch (final IOException ex) {
+			ex.printStackTrace();
+			throw new InvalidAgletException(toMessage(ex));
+
+			/*
+			 * MAFExceptions
+			 */
+
+		} catch (final AgentNotFound ex) {
+			throw new InvalidAgletException(toMessage(ex));
+
+		} catch (final ClassUnknown ex) {
+			throw new InvalidAgletException(toMessage(ex));
+
+		} catch (final DeserializationFailed ex) {
+			throw new InvalidAgletException(toMessage(ex));
+
+		} catch (final MAFExtendedException ex) {
+			throw new InvalidAgletException(toMessage(ex));
+		}
+	}
+
+	static String toMessage(final Exception ex) {
+		return ex.getClass().getName() + ':' + ex.getMessage();
+	}
+
+	static public void waitFutureReply(
+	                                   final FutureReplyImpl reply,
+	                                   final ResourceManager rm,
+	                                   final Long return_id) {
+		synchronized (MessageBroker.class) {
+			replies.put(return_id, reply);
+			rms.put(return_id, rm);
+			MessageBroker.class.notify();
+		}
+	}
 }

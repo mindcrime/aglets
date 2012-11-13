@@ -39,152 +39,152 @@ import com.ibm.aglet.message.Message;
  */
 
 public class HostTravellor extends Aglet implements MobilityListener {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -4633387421654812204L;
-    Hashtable hostList;
-    Vector visitOrder = new Vector();
-    int nextVisit = 0;
-    int count = 0;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4633387421654812204L;
+	Hashtable hostList;
+	Vector visitOrder = new Vector();
+	int nextVisit = 0;
+	int count = 0;
 
-    public void appendList(Hashtable list) {
-	for (Enumeration e = list.keys(); e.hasMoreElements();) {
-	    Object key = e.nextElement();
+	public void appendList(final Hashtable list) {
+		for (final Enumeration e = list.keys(); e.hasMoreElements();) {
+			final Object key = e.nextElement();
 
-	    if (this.hostList.get(key) == null) {
-		this.hostList.put(key, "new");
-	    }
+			if (hostList.get(key) == null) {
+				hostList.put(key, "new");
+			}
+		}
 	}
-    }
 
-    public void goNext() {
-	String next = "";
+	public void goNext() {
+		String next = "";
 
-	try {
-	    while (true) {
 		try {
-		    if (this.nextVisit >= this.visitOrder.size()) {
-			this.nextVisit = 0;
-			this.count++;
-			this.setText("reset");
-			Thread.sleep(5000);
-		    }
+			while (true) {
+				try {
+					if (nextVisit >= visitOrder.size()) {
+						nextVisit = 0;
+						count++;
+						setText("reset");
+						Thread.sleep(5000);
+					}
 
-		    next = (String) this.visitOrder.elementAt(this.nextVisit);
-		    this.setText(this.count + "> goto: " + next);
-		    Thread.sleep(2000);
+					next = (String) visitOrder.elementAt(nextVisit);
+					setText(count + "> goto: " + next);
+					Thread.sleep(2000);
 
-		    this.dispatch(new URL((String) this.visitOrder.elementAt(this.nextVisit++)));
-		} catch (Exception e) {
-		    System.out.println("dispatch to " + next + " failed");
+					this.dispatch(new URL((String) visitOrder.elementAt(nextVisit++)));
+				} catch (final Exception e) {
+					System.out.println("dispatch to " + next + " failed");
+				}
+			}
+		} catch (final Exception e) {
+			System.out.println(e);
 		}
-	    }
-	} catch (Exception e) {
-	    System.out.println(e);
 	}
-    }
 
-    @Override
-    public boolean handleMessage(Message msg) {
-	if (msg.sameKind("dialog")) {
-	    try {
-		int i = 0;
+	@Override
+	public boolean handleMessage(final Message msg) {
+		if (msg.sameKind("dialog")) {
+			try {
+				int i = 0;
 
-		System.out.println("HostList -- begin");
-		for (Enumeration e = this.hostList.keys(); e.hasMoreElements();) {
-		    System.out.println(i++ + ": " + e.nextElement());
+				System.out.println("HostList -- begin");
+				for (final Enumeration e = hostList.keys(); e.hasMoreElements();) {
+					System.out.println(i++ + ": " + e.nextElement());
+				}
+				System.out.println("HostList -- end");
+			} catch (final Exception ex) {
+				ex.printStackTrace();
+			}
+			return true;
+		} else if (msg.sameKind("shutdown")) {
+			try {
+				deactivate(0);
+			} catch (final Exception e) {
+			}
+			return true;
+		} else {
 		}
-		System.out.println("HostList -- end");
-	    } catch (Exception ex) {
-		ex.printStackTrace();
-	    }
-	    return true;
-	} else if (msg.sameKind("shutdown")) {
-	    try {
-		this.deactivate(0);
-	    } catch (Exception e) {
-	    }
-	    return true;
-	} else {
+		return true;
 	}
-	return true;
-    }
 
-    @Override
-    public void onArrival(MobilityEvent event) {
-	AgletProxy ap = (AgletProxy) this.getAgletContext().getProperty("hostlist");
+	@Override
+	public void onArrival(final MobilityEvent event) {
+		AgletProxy ap = (AgletProxy) getAgletContext().getProperty("hostlist");
 
-	this.hostList.put(this.getAgletContext().getHostingURL().toString(), "running");
+		hostList.put(getAgletContext().getHostingURL().toString(), "running");
 
-	try {
-	    if ((ap == null) || !ap.isValid()) {
-		ap = this.getAgletContext().createAglet(this.getCodeBase(), "examples.finder.HostList", this.hostList);
-	    } else {
-		ap.sendMessage(new Message("append", this.hostList));
-		Hashtable list = (Hashtable) ap.sendMessage(new Message("getlist"));
+		try {
+			if ((ap == null) || !ap.isValid()) {
+				ap = getAgletContext().createAglet(getCodeBase(), "examples.finder.HostList", hostList);
+			} else {
+				ap.sendMessage(new Message("append", hostList));
+				final Hashtable list = (Hashtable) ap.sendMessage(new Message("getlist"));
 
-		if (list != null) {
-		    this.appendList(list);
-		    this.setVisitOrder();
+				if (list != null) {
+					appendList(list);
+					setVisitOrder();
+				}
+			}
+
+			// go next
+			goNext();
+		} catch (final Exception e) {
+			System.out.println(e);
 		}
-	    }
-
-	    // go next
-	    this.goNext();
-	} catch (Exception e) {
-	    System.out.println(e);
 	}
-    }
 
-    @Override
-    public void onCreation(Object init) {
-	this.hostList = new Hashtable();
-	AgletProxy ap = (AgletProxy) this.getAgletContext().getProperty("hostlist");
+	@Override
+	public void onCreation(final Object init) {
+		hostList = new Hashtable();
+		AgletProxy ap = (AgletProxy) getAgletContext().getProperty("hostlist");
 
-	this.hostList.put(this.getAgletContext().getHostingURL().toString(), "running");
-	this.addMobilityListener(this);
+		hostList.put(getAgletContext().getHostingURL().toString(), "running");
+		addMobilityListener(this);
 
-	try {
-	    if ((ap == null) || !ap.isValid()) {
-		ap = this.getAgletContext().createAglet(this.getCodeBase(), "examples.finder.HostList", this.hostList);
-	    }
+		try {
+			if ((ap == null) || !ap.isValid()) {
+				ap = getAgletContext().createAglet(getCodeBase(), "examples.finder.HostList", hostList);
+			}
 
-	    Hashtable list = (Hashtable) ap.sendMessage(new Message("getlist"));
+			final Hashtable list = (Hashtable) ap.sendMessage(new Message("getlist"));
 
-	    if (list != null) {
-		this.appendList(list);
-	    }
+			if (list != null) {
+				appendList(list);
+			}
 
-	    // go next
-	    this.setVisitOrder();
-	    this.goNext();
-	} catch (Exception e) {
-	    System.out.println(e);
-	}
-    }
-
-    @Override
-    public void onDispatching(MobilityEvent event) {
-    }
-
-    public void onRetraction(MobilityEvent event) {
-    }
-
-    @Override
-    public void onReverting(MobilityEvent event) {
-    }
-
-    public void setVisitOrder() {
-	for (Enumeration e = this.hostList.keys(); e.hasMoreElements();) {
-	    Object key = e.nextElement();
-
-	    if (key instanceof String) {
-		if (this.visitOrder.indexOf(key) == -1) {
-		    this.visitOrder.addElement(key);
-		    System.out.println("add: " + key);
+			// go next
+			setVisitOrder();
+			goNext();
+		} catch (final Exception e) {
+			System.out.println(e);
 		}
-	    }
 	}
-    }
+
+	@Override
+	public void onDispatching(final MobilityEvent event) {
+	}
+
+	public void onRetraction(final MobilityEvent event) {
+	}
+
+	@Override
+	public void onReverting(final MobilityEvent event) {
+	}
+
+	public void setVisitOrder() {
+		for (final Enumeration e = hostList.keys(); e.hasMoreElements();) {
+			final Object key = e.nextElement();
+
+			if (key instanceof String) {
+				if (visitOrder.indexOf(key) == -1) {
+					visitOrder.addElement(key);
+					System.out.println("add: " + key);
+				}
+			}
+		}
+	}
 }

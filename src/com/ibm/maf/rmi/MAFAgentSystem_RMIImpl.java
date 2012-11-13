@@ -43,302 +43,302 @@ import com.ibm.maf.TerminateFailed;
 public class MAFAgentSystem_RMIImpl extends UnicastRemoteObject implements
 MAFAgentSystem_RMI {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 3020214045093753722L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3020214045093753722L;
 
-    MAFAgentSystem maf = null;
-
-    static Hashtable to_rmi = new Hashtable();
-
-    static Hashtable locals = new Hashtable();
-
-    public MAFAgentSystem_RMIImpl(MAFAgentSystem __maf) throws RemoteException {
-	this.maf = __maf;
-	to_rmi.put(__maf, this);
-
-	try {
-	    java.net.URL u = new java.net.URL(__maf.getAddress());
-	    String addr = u.getHost() + ":"
-	    + (u.getPort() == -1 ? 1099 : u.getPort());
-
-	    locals.put(addr, __maf);
-	} catch (Exception ex) {
-	    ex.printStackTrace();
+	static MAFAgentSystem_RMI find_rmi_agentsystem(final MAFAgentSystem __maf) {
+		if (__maf == null) {
+			return null;
+		}
+		return (MAFAgentSystem_RMI) to_rmi.get(__maf);
 	}
-    }
 
-    @Override
-    public Name create_agent(
-                             Name agent_name,
-                             AgentProfile agent_profile,
-                             byte[] agent,
-                             String place_name,
-                             Object[] arguments,
-                             ClassName[] class_names,
-                             String code_base,
-                             MAFAgentSystem_RMI rmi_class_provider)
-    throws RemoteException {
-	try {
-	    MAFAgentSystem class_provider = to_maf_agentsystem(rmi_class_provider);
-
-	    return this.maf.create_agent(agent_name, agent_profile, agent, place_name, arguments, class_names, code_base, class_provider);
-	} catch (ClassUnknown ex) {
-	    throw new RemoteException("Remote:", ex);
-	} catch (DeserializationFailed ex) {
-	    throw new RemoteException("Remote:", ex);
-	} catch (ArgumentInvalid ex) {
-	    throw new RemoteException("Remote:", ex);
-	} catch (MAFExtendedException ex) {
-	    throw new RemoteException("Remote:", ex);
+	static MAFAgentSystem getLocalAgentSystem(final String address) {
+		return (MAFAgentSystem) locals.get(address);
 	}
-    }
 
-    @Override
-    public byte[][] fetch_class(
-                                ClassName[] class_name_list,
-                                String code_base,
-                                AgentProfile agent_profile)
-    throws RemoteException {
-	try {
-	    return this.maf.fetch_class(class_name_list, code_base, agent_profile);
-	} catch (ClassUnknown ex) {
-	    throw new RemoteException("Remote:", ex);
-	} catch (MAFExtendedException ex) {
-	    throw new RemoteException("Remote:", ex);
+	static private MAFAgentSystem to_maf_agentsystem(final MAFAgentSystem_RMI __rmi) {
+		if (__rmi instanceof MAFAgentSystem_RMIImpl) {
+			return ((MAFAgentSystem_RMIImpl) __rmi).maf;
+		} else {
+			return MAFAgentSystem_RMIClient.find_maf_agentsystem(__rmi, null);
+		}
 	}
-    }
 
-    @Override
-    public String find_nearby_agent_system_of_profile(AgentProfile profile)
-    throws RemoteException {
-	try {
-	    return this.maf.find_nearby_agent_system_of_profile(profile);
-	} catch (EntryNotFound ex) {
-	    throw new RemoteException("Remote:", ex);
+	MAFAgentSystem maf = null;
+
+	static Hashtable to_rmi = new Hashtable();
+
+	static Hashtable locals = new Hashtable();
+
+	public MAFAgentSystem_RMIImpl(final MAFAgentSystem __maf) throws RemoteException {
+		maf = __maf;
+		to_rmi.put(__maf, this);
+
+		try {
+			final java.net.URL u = new java.net.URL(__maf.getAddress());
+			final String addr = u.getHost() + ":"
+			+ (u.getPort() == -1 ? 1099 : u.getPort());
+
+			locals.put(addr, __maf);
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
 	}
-    }
 
-    static MAFAgentSystem_RMI find_rmi_agentsystem(MAFAgentSystem __maf) {
-	if (__maf == null) {
-	    return null;
+	@Override
+	public Name create_agent(
+	                         final Name agent_name,
+	                         final AgentProfile agent_profile,
+	                         final byte[] agent,
+	                         final String place_name,
+	                         final Object[] arguments,
+	                         final ClassName[] class_names,
+	                         final String code_base,
+	                         final MAFAgentSystem_RMI rmi_class_provider)
+	throws RemoteException {
+		try {
+			final MAFAgentSystem class_provider = to_maf_agentsystem(rmi_class_provider);
+
+			return maf.create_agent(agent_name, agent_profile, agent, place_name, arguments, class_names, code_base, class_provider);
+		} catch (final ClassUnknown ex) {
+			throw new RemoteException("Remote:", ex);
+		} catch (final DeserializationFailed ex) {
+			throw new RemoteException("Remote:", ex);
+		} catch (final ArgumentInvalid ex) {
+			throw new RemoteException("Remote:", ex);
+		} catch (final MAFExtendedException ex) {
+			throw new RemoteException("Remote:", ex);
+		}
 	}
-	return (MAFAgentSystem_RMI) to_rmi.get(__maf);
-    }
 
-    @Override
-    public AgentStatus get_agent_status(Name agent_name) throws RemoteException {
-	try {
-	    return this.maf.get_agent_status(agent_name);
-	} catch (AgentNotFound ex) {
-	    throw new RemoteException("Remote:", ex);
+	@Override
+	public byte[][] fetch_class(
+	                            final ClassName[] class_name_list,
+	                            final String code_base,
+	                            final AgentProfile agent_profile)
+	throws RemoteException {
+		try {
+			return maf.fetch_class(class_name_list, code_base, agent_profile);
+		} catch (final ClassUnknown ex) {
+			throw new RemoteException("Remote:", ex);
+		} catch (final MAFExtendedException ex) {
+			throw new RemoteException("Remote:", ex);
+		}
 	}
-    }
 
-    @Override
-    public AgentSystemInfo get_agent_system_info() throws RemoteException {
-	return this.maf.get_agent_system_info();
-    }
-
-    @Override
-    public AuthInfo get_authinfo(Name agent_name) throws RemoteException {
-	try {
-	    return this.maf.get_authinfo(agent_name);
-	} catch (AgentNotFound ex) {
-	    throw new RemoteException("Remote:", ex);
+	@Override
+	public String find_nearby_agent_system_of_profile(final AgentProfile profile)
+	throws RemoteException {
+		try {
+			return maf.find_nearby_agent_system_of_profile(profile);
+		} catch (final EntryNotFound ex) {
+			throw new RemoteException("Remote:", ex);
+		}
 	}
-    }
 
-    @Override
-    public MAFFinder get_MAFFinder() throws RemoteException {
-	return null;
-    }
-
-    static MAFAgentSystem getLocalAgentSystem(String address) {
-	return (MAFAgentSystem) locals.get(address);
-    }
-
-    @Override
-    public Name[] list_all_agents() throws RemoteException {
-	return this.maf.list_all_agents();
-    }
-
-    @Override
-    public Name[] list_all_agents_of_authority(byte[] authority)
-    throws RemoteException {
-	return this.maf.list_all_agents_of_authority(authority);
-    }
-
-    @Override
-    public String[] list_all_places() throws RemoteException {
-	return this.maf.list_all_places();
-    }
-
-    @Override
-    public void receive_agent(
-                              Name agent_name,
-                              AgentProfile agent_profile,
-                              byte[] agent,
-                              String place_name,
-                              ClassName[] class_names,
-                              String code_base,
-                              MAFAgentSystem_RMI rmi_class_sender)
-    throws RemoteException {
-	try {
-	    MAFAgentSystem class_sender = to_maf_agentsystem(rmi_class_sender);
-
-	    this.maf.receive_agent(agent_name, agent_profile, agent, place_name, class_names, code_base, class_sender);
-	} catch (ClassUnknown ex) {
-	    throw new RemoteException("Remote:", ex);
-	} catch (DeserializationFailed ex) {
-	    throw new RemoteException("Remote:", ex);
-	} catch (MAFExtendedException ex) {
-	    throw new RemoteException("Remote:", ex);
+	@Override
+	public AgentStatus get_agent_status(final Name agent_name) throws RemoteException {
+		try {
+			return maf.get_agent_status(agent_name);
+		} catch (final AgentNotFound ex) {
+			throw new RemoteException("Remote:", ex);
+		}
 	}
-    }
 
-    @Override
-    public long receive_future_message(
-                                       Name agent_name,
-                                       byte[] msg,
-                                       MAFAgentSystem_RMI message_sender)
-    throws RemoteException {
-	try {
-	    MAFAgentSystem maf_message_sender = to_maf_agentsystem(message_sender);
-
-	    return this.maf.receive_future_message(agent_name, msg, maf_message_sender);
-	} catch (AgentNotFound ex) {
-	    throw new RemoteException("Remote:", ex);
-
-	} catch (ClassUnknown ex) {
-	    throw new RemoteException("Remote:", ex);
-	} catch (DeserializationFailed ex) {
-	    throw new RemoteException("Remote:", ex);
-
-	} catch (MAFExtendedException ex) {
-	    throw new RemoteException("Remote:", ex);
+	@Override
+	public AgentSystemInfo get_agent_system_info() throws RemoteException {
+		return maf.get_agent_system_info();
 	}
-    }
 
-    @Override
-    public void receive_future_reply(long return_id, byte[] reply)
-    throws RemoteException {
-	try {
-	    this.maf.receive_future_reply(return_id, reply);
-	} catch (EntryNotFound ex) {
-	    throw new RemoteException("Remote:", ex);
-
-	} catch (ClassUnknown ex) {
-	    throw new RemoteException("Remote:", ex);
-	} catch (DeserializationFailed ex) {
-	    throw new RemoteException("Remote:", ex);
-
-	} catch (MAFExtendedException ex) {
-	    throw new RemoteException("Remote:", ex);
+	@Override
+	public AuthInfo get_authinfo(final Name agent_name) throws RemoteException {
+		try {
+			return maf.get_authinfo(agent_name);
+		} catch (final AgentNotFound ex) {
+			throw new RemoteException("Remote:", ex);
+		}
 	}
-    }
 
-    /**
-     * Messaging
-     */
-    @Override
-    public byte[] receive_message(Name agent_name, byte[] msg)
-    throws RemoteException {
-	try {
-	    return this.maf.receive_message(agent_name, msg);
-	} catch (AgentNotFound ex) {
-	    throw new RemoteException("Remote:", ex);
-	} catch (NotHandled ex) {
-	    throw new RemoteException("Remote:", ex);
-	} catch (MessageEx ex) {
-	    throw new RemoteException("Remote:", ex);
-
-	} catch (ClassUnknown ex) {
-	    throw new RemoteException("Remote:", ex);
-	} catch (DeserializationFailed ex) {
-	    throw new RemoteException("Remote:", ex);
-
-	} catch (MAFExtendedException ex) {
-	    throw new RemoteException("Remote:", ex);
+	@Override
+	public MAFFinder get_MAFFinder() throws RemoteException {
+		return null;
 	}
-    }
 
-    @Override
-    public void receive_oneway_message(Name agent_name, byte[] msg)
-    throws RemoteException {
-	try {
-	    this.maf.receive_oneway_message(agent_name, msg);
-	} catch (AgentNotFound ex) {
-	    throw new RemoteException("Remote:", ex);
-
-	} catch (ClassUnknown ex) {
-	    throw new RemoteException("Remote:", ex);
-	} catch (DeserializationFailed ex) {
-	    throw new RemoteException("Remote:", ex);
-
-	} catch (MAFExtendedException ex) {
-	    throw new RemoteException("Remote:", ex);
+	@Override
+	public Name[] list_all_agents() throws RemoteException {
+		return maf.list_all_agents();
 	}
-    }
 
-    @Override
-    public void resume_agent(Name agent_name) throws RemoteException {
-	try {
-	    this.maf.resume_agent(agent_name);
-	} catch (AgentNotFound ex) {
-	    throw new RemoteException("Remote:", ex);
-	} catch (ResumeFailed ex) {
-	    throw new RemoteException("Remote:", ex);
-	} catch (AgentIsRunning ex) {
-	    throw new RemoteException("Remote:", ex);
+	@Override
+	public Name[] list_all_agents_of_authority(final byte[] authority)
+	throws RemoteException {
+		return maf.list_all_agents_of_authority(authority);
 	}
-    }
 
-    /*
-     * Aglets Sepcific
-     */
-    @Override
-    public byte[] retract_agent(Name agent_name) throws RemoteException {
-	try {
-	    return this.maf.retract_agent(agent_name);
-	} catch (AgentNotFound ex) {
-	    throw new RemoteException("Remote:", ex);
-
-	} catch (MAFExtendedException ex) {
-	    throw new RemoteException("Remote:", ex);
+	@Override
+	public String[] list_all_places() throws RemoteException {
+		return maf.list_all_places();
 	}
-    }
 
-    @Override
-    public void suspend_agent(Name agent_name) throws RemoteException {
-	try {
-	    this.maf.suspend_agent(agent_name);
-	} catch (AgentNotFound ex) {
-	    throw new RemoteException("Remote:", ex);
-	} catch (SuspendFailed ex) {
-	    throw new RemoteException("Remote:", ex);
-	} catch (AgentIsSuspended ex) {
-	    throw new RemoteException("Remote:", ex);
-	}
-    }
+	@Override
+	public void receive_agent(
+	                          final Name agent_name,
+	                          final AgentProfile agent_profile,
+	                          final byte[] agent,
+	                          final String place_name,
+	                          final ClassName[] class_names,
+	                          final String code_base,
+	                          final MAFAgentSystem_RMI rmi_class_sender)
+	throws RemoteException {
+		try {
+			final MAFAgentSystem class_sender = to_maf_agentsystem(rmi_class_sender);
 
-    @Override
-    public void terminate_agent(Name agent_name) throws RemoteException {
-	try {
-	    this.maf.terminate_agent(agent_name);
-	} catch (TerminateFailed ex) {
-	    throw new RemoteException("Remote:", ex);
-	} catch (AgentNotFound ex) {
-	    throw new RemoteException("Remote:", ex);
+			maf.receive_agent(agent_name, agent_profile, agent, place_name, class_names, code_base, class_sender);
+		} catch (final ClassUnknown ex) {
+			throw new RemoteException("Remote:", ex);
+		} catch (final DeserializationFailed ex) {
+			throw new RemoteException("Remote:", ex);
+		} catch (final MAFExtendedException ex) {
+			throw new RemoteException("Remote:", ex);
+		}
 	}
-    }
 
-    static private MAFAgentSystem to_maf_agentsystem(MAFAgentSystem_RMI __rmi) {
-	if (__rmi instanceof MAFAgentSystem_RMIImpl) {
-	    return ((MAFAgentSystem_RMIImpl) __rmi).maf;
-	} else {
-	    return MAFAgentSystem_RMIClient.find_maf_agentsystem(__rmi, null);
+	@Override
+	public long receive_future_message(
+	                                   final Name agent_name,
+	                                   final byte[] msg,
+	                                   final MAFAgentSystem_RMI message_sender)
+	throws RemoteException {
+		try {
+			final MAFAgentSystem maf_message_sender = to_maf_agentsystem(message_sender);
+
+			return maf.receive_future_message(agent_name, msg, maf_message_sender);
+		} catch (final AgentNotFound ex) {
+			throw new RemoteException("Remote:", ex);
+
+		} catch (final ClassUnknown ex) {
+			throw new RemoteException("Remote:", ex);
+		} catch (final DeserializationFailed ex) {
+			throw new RemoteException("Remote:", ex);
+
+		} catch (final MAFExtendedException ex) {
+			throw new RemoteException("Remote:", ex);
+		}
 	}
-    }
+
+	@Override
+	public void receive_future_reply(final long return_id, final byte[] reply)
+	throws RemoteException {
+		try {
+			maf.receive_future_reply(return_id, reply);
+		} catch (final EntryNotFound ex) {
+			throw new RemoteException("Remote:", ex);
+
+		} catch (final ClassUnknown ex) {
+			throw new RemoteException("Remote:", ex);
+		} catch (final DeserializationFailed ex) {
+			throw new RemoteException("Remote:", ex);
+
+		} catch (final MAFExtendedException ex) {
+			throw new RemoteException("Remote:", ex);
+		}
+	}
+
+	/**
+	 * Messaging
+	 */
+	@Override
+	public byte[] receive_message(final Name agent_name, final byte[] msg)
+	throws RemoteException {
+		try {
+			return maf.receive_message(agent_name, msg);
+		} catch (final AgentNotFound ex) {
+			throw new RemoteException("Remote:", ex);
+		} catch (final NotHandled ex) {
+			throw new RemoteException("Remote:", ex);
+		} catch (final MessageEx ex) {
+			throw new RemoteException("Remote:", ex);
+
+		} catch (final ClassUnknown ex) {
+			throw new RemoteException("Remote:", ex);
+		} catch (final DeserializationFailed ex) {
+			throw new RemoteException("Remote:", ex);
+
+		} catch (final MAFExtendedException ex) {
+			throw new RemoteException("Remote:", ex);
+		}
+	}
+
+	@Override
+	public void receive_oneway_message(final Name agent_name, final byte[] msg)
+	throws RemoteException {
+		try {
+			maf.receive_oneway_message(agent_name, msg);
+		} catch (final AgentNotFound ex) {
+			throw new RemoteException("Remote:", ex);
+
+		} catch (final ClassUnknown ex) {
+			throw new RemoteException("Remote:", ex);
+		} catch (final DeserializationFailed ex) {
+			throw new RemoteException("Remote:", ex);
+
+		} catch (final MAFExtendedException ex) {
+			throw new RemoteException("Remote:", ex);
+		}
+	}
+
+	@Override
+	public void resume_agent(final Name agent_name) throws RemoteException {
+		try {
+			maf.resume_agent(agent_name);
+		} catch (final AgentNotFound ex) {
+			throw new RemoteException("Remote:", ex);
+		} catch (final ResumeFailed ex) {
+			throw new RemoteException("Remote:", ex);
+		} catch (final AgentIsRunning ex) {
+			throw new RemoteException("Remote:", ex);
+		}
+	}
+
+	/*
+	 * Aglets Sepcific
+	 */
+	@Override
+	public byte[] retract_agent(final Name agent_name) throws RemoteException {
+		try {
+			return maf.retract_agent(agent_name);
+		} catch (final AgentNotFound ex) {
+			throw new RemoteException("Remote:", ex);
+
+		} catch (final MAFExtendedException ex) {
+			throw new RemoteException("Remote:", ex);
+		}
+	}
+
+	@Override
+	public void suspend_agent(final Name agent_name) throws RemoteException {
+		try {
+			maf.suspend_agent(agent_name);
+		} catch (final AgentNotFound ex) {
+			throw new RemoteException("Remote:", ex);
+		} catch (final SuspendFailed ex) {
+			throw new RemoteException("Remote:", ex);
+		} catch (final AgentIsSuspended ex) {
+			throw new RemoteException("Remote:", ex);
+		}
+	}
+
+	@Override
+	public void terminate_agent(final Name agent_name) throws RemoteException {
+		try {
+			maf.terminate_agent(agent_name);
+		} catch (final TerminateFailed ex) {
+			throw new RemoteException("Remote:", ex);
+		} catch (final AgentNotFound ex) {
+			throw new RemoteException("Remote:", ex);
+		}
+	}
 }

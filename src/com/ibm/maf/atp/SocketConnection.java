@@ -34,108 +34,108 @@ import com.ibm.awb.misc.Resource;
  */
 class SocketConnection implements Connection {
 
-    private static int BUFFSIZE = 2048;
-    private Socket _socket;
-    private boolean established = false;
-    private boolean output_type = false;
-    private Authentication auth = null;
-    private String message = null;
+	private static int BUFFSIZE = 2048;
+	private final Socket _socket;
+	private boolean established = false;
+	private boolean output_type = false;
+	private Authentication auth = null;
+	private String message = null;
 
-    static {
-	Resource res = Resource.getResourceFor("atp");
+	static {
+		final Resource res = Resource.getResourceFor("atp");
 
-	BUFFSIZE = res.getInteger("atp.buffersize", 2048);
-    }
-
-    SocketConnection(URL url, int defaultPort) throws IOException {
-	int port = url.getPort();
-
-	if (port == -1) {
-	    port = defaultPort;
+		BUFFSIZE = res.getInteger("atp.buffersize", 2048);
 	}
-	this._socket = new Socket(url.getHost(), port);
 
-	Resource res = Resource.getResourceFor("atp");
-	boolean authentication = res.getBoolean("atp.authentication", false);
+	SocketConnection(final URL url, final int defaultPort) throws IOException {
+		int port = url.getPort();
 
-	if (authentication) {
-	    DataInput di = new DataInputStream(this._socket.getInputStream());
+		if (port == -1) {
+			port = defaultPort;
+		}
+		_socket = new Socket(url.getHost(), port);
 
-	    // auth = new Authentication(Auth.FIRST_TURN, _socket);
-	    this.auth = new Authentication(Auth.FIRST_TURN, di, this._socket);
-	    boolean authenticated = true;
+		final Resource res = Resource.getResourceFor("atp");
+		final boolean authentication = res.getBoolean("atp.authentication", false);
 
-	    try {
-		authenticated = this.auth.authenticate();
-	    } catch (AuthenticationProtocolException excpt) {
+		if (authentication) {
+			final DataInput di = new DataInputStream(_socket.getInputStream());
 
-		// protocol error
-		System.err.println(excpt);
-	    } catch (IOException excpt) {
+			// auth = new Authentication(Auth.FIRST_TURN, _socket);
+			auth = new Authentication(Auth.FIRST_TURN, di, _socket);
+			boolean authenticated = true;
 
-		// protocol error
-		System.err.println(excpt);
-	    }
-	    if (authenticated && this.auth.isAuthenticatedMyself()
-		    && this.auth.isAuthenticatedOpponent()) {
+			try {
+				authenticated = auth.authenticate();
+			} catch (final AuthenticationProtocolException excpt) {
 
-		// connection is established
-		this.established = true;
-	    } else {
-		this.close();
-		this.message = "Authentication failed";
-	    }
-	} else {
+				// protocol error
+				System.err.println(excpt);
+			} catch (final IOException excpt) {
 
-	    // connection is established
-	    this.established = true;
+				// protocol error
+				System.err.println(excpt);
+			}
+			if (authenticated && auth.isAuthenticatedMyself()
+					&& auth.isAuthenticatedOpponent()) {
+
+				// connection is established
+				established = true;
+			} else {
+				close();
+				message = "Authentication failed";
+			}
+		} else {
+
+			// connection is established
+			established = true;
+		}
 	}
-    }
 
-    @Override
-    public void close() throws IOException {
-	this._socket.close();
+	@Override
+	public void close() throws IOException {
+		_socket.close();
 
-	// connection is NOT established
-	this.established = false;
-	this.message = "Socket closed";
-    }
-
-    @Override
-    public String getAuthenticatedSecurityDomain() {
-	if (!this.established || (this.auth == null)) {
-	    return null;
+		// connection is NOT established
+		established = false;
+		message = "Socket closed";
 	}
-	return this.auth.getSelectedDomainName();
-    }
 
-    @Override
-    public InputStream getInputStream() throws IOException {
-	return new BufferedInputStream(this._socket.getInputStream(), BUFFSIZE);
-    }
-
-    @Override
-    public String getMessage() {
-	return this.message;
-    }
-
-    @Override
-    public OutputStream getOutputStream() throws IOException {
-	this.output_type = true;
-
-	// return new BufferedOutputStream(_socket.getOutputStream(),BUFFSIZE);
-	return this._socket.getOutputStream();
-    }
-
-    @Override
-    public boolean isEstablished() {
-	return this.established;
-    }
-
-    @Override
-    public void sendRequest() throws IOException {
-	if (this.output_type) {
-	    this._socket.getOutputStream().flush();
+	@Override
+	public String getAuthenticatedSecurityDomain() {
+		if (!established || (auth == null)) {
+			return null;
+		}
+		return auth.getSelectedDomainName();
 	}
-    }
+
+	@Override
+	public InputStream getInputStream() throws IOException {
+		return new BufferedInputStream(_socket.getInputStream(), BUFFSIZE);
+	}
+
+	@Override
+	public String getMessage() {
+		return message;
+	}
+
+	@Override
+	public OutputStream getOutputStream() throws IOException {
+		output_type = true;
+
+		// return new BufferedOutputStream(_socket.getOutputStream(),BUFFSIZE);
+		return _socket.getOutputStream();
+	}
+
+	@Override
+	public boolean isEstablished() {
+		return established;
+	}
+
+	@Override
+	public void sendRequest() throws IOException {
+		if (output_type) {
+			_socket.getOutputStream().flush();
+		}
+	}
 }

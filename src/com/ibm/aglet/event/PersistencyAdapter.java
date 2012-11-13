@@ -33,22 +33,22 @@ package com.ibm.aglet.event;
  */
 public class PersistencyAdapter implements PersistencyListener {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 2939231421320230922L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2939231421320230922L;
 
-    /**
-     * Invoked just after the aglet was activated.
-     */
-    @Override
-    public void onActivation(PersistencyEvent event) {
-    }
+	/**
+	 * Invoked just after the aglet was activated.
+	 */
+	@Override
+	public void onActivation(final PersistencyEvent event) {
+	}
 
-    /**
-     * Invoked when an aglet is attempted to deactivate.
-     */
-    @Override
-    public void onDeactivating(PersistencyEvent event) {
-    }
+	/**
+	 * Invoked when an aglet is attempted to deactivate.
+	 */
+	@Override
+	public void onDeactivating(final PersistencyEvent event) {
+	}
 }

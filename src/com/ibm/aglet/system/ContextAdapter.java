@@ -32,81 +32,81 @@ package com.ibm.aglet.system;
  * @author Misturu Oshima
  */
 public class ContextAdapter implements ContextListener {
-    @Override
-    public void agletActivated(ContextEvent ev) {
-	this.agletAdded(ev);
-    }
+	@Override
+	public void agletActivated(final ContextEvent ev) {
+		agletAdded(ev);
+	}
 
-    /**
-     */
-    public void agletAdded(ContextEvent ev) {
-    }
+	/**
+	 */
+	public void agletAdded(final ContextEvent ev) {
+	}
 
-    @Override
-    public void agletArrived(ContextEvent ev) {
-	this.agletAdded(ev);
-    }
+	@Override
+	public void agletArrived(final ContextEvent ev) {
+		agletAdded(ev);
+	}
 
-    @Override
-    public void agletCloned(ContextEvent ev) {
-	this.agletAdded(ev);
-    }
+	@Override
+	public void agletCloned(final ContextEvent ev) {
+		agletAdded(ev);
+	}
 
-    @Override
-    public void agletCreated(ContextEvent ev) {
-	this.agletAdded(ev);
-    }
+	@Override
+	public void agletCreated(final ContextEvent ev) {
+		agletAdded(ev);
+	}
 
-    @Override
-    public void agletDeactivated(ContextEvent ev) {
-	this.agletRemoved(ev);
-    }
+	@Override
+	public void agletDeactivated(final ContextEvent ev) {
+		agletRemoved(ev);
+	}
 
-    @Override
-    public void agletDispatched(ContextEvent ev) {
-	this.agletRemoved(ev);
-    }
+	@Override
+	public void agletDispatched(final ContextEvent ev) {
+		agletRemoved(ev);
+	}
 
-    @Override
-    public void agletDisposed(ContextEvent ev) {
-	this.agletRemoved(ev);
-    }
+	@Override
+	public void agletDisposed(final ContextEvent ev) {
+		agletRemoved(ev);
+	}
 
-    public void agletRemoved(ContextEvent ev) {
-    }
+	public void agletRemoved(final ContextEvent ev) {
+	}
 
-    @Override
-    public void agletResumed(ContextEvent ev) {
-	this.agletAdded(ev);
-    }
+	@Override
+	public void agletResumed(final ContextEvent ev) {
+		agletAdded(ev);
+	}
 
-    @Override
-    public void agletReverted(ContextEvent ev) {
-	this.agletRemoved(ev);
-    }
+	@Override
+	public void agletReverted(final ContextEvent ev) {
+		agletRemoved(ev);
+	}
 
-    @Override
-    public void agletStateChanged(ContextEvent ev) {
-    }
+	@Override
+	public void agletStateChanged(final ContextEvent ev) {
+	}
 
-    @Override
-    public void agletSuspended(ContextEvent ev) {
-	this.agletRemoved(ev);
-    }
+	@Override
+	public void agletSuspended(final ContextEvent ev) {
+		agletRemoved(ev);
+	}
 
-    @Override
-    public void contextShutdown(ContextEvent ev) {
-    }
+	@Override
+	public void contextShutdown(final ContextEvent ev) {
+	}
 
-    @Override
-    public void contextStarted(ContextEvent ev) {
-    }
+	@Override
+	public void contextStarted(final ContextEvent ev) {
+	}
 
-    @Override
-    public void showDocument(ContextEvent ev) {
-    }
+	@Override
+	public void showDocument(final ContextEvent ev) {
+	}
 
-    @Override
-    public void showMessage(ContextEvent ev) {
-    }
+	@Override
+	public void showMessage(final ContextEvent ev) {
+	}
 }

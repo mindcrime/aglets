@@ -29,107 +29,107 @@ import java.util.Date;
 
 final class FingerInfo implements Serializable {
 
-    // Private variables
-    //
+	// Private variables
+	//
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -858635235655798471L;
-    private String _hostName;
-    private String _userName;
-    private String _homeDirectory;
-    private String _workingDirectory;
-    private String _architecture;
-    private String _osName;
-    private String _osVersion;
-    private String _javaVersion;
-    private Date _localTime;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -858635235655798471L;
+	private final String _hostName;
+	private final String _userName;
+	private final String _homeDirectory;
+	private final String _workingDirectory;
+	private final String _architecture;
+	private final String _osName;
+	private final String _osVersion;
+	private final String _javaVersion;
+	private final Date _localTime;
 
-    // Public methods
-    //
-    /**
-     * A constructor.
-     * 
-     * @param hostName
-     *            FQDN of the interrogated host.
-     * @param userName
-     *            the user's account name.
-     * @param homeDirectory
-     *            the path to the user's home directory.
-     * @param workingDirectory
-     *            path to the working directory?
-     * @param architecture
-     *            the host's CPU architecture identifier
-     * @param osName
-     *            the identifier of the operating system running on the host.
-     * @param osVersion 
-     *            the version number of the operating system.
-     * @param javaVersion
-     *            the version of the Java Virtual Machine.
-     * @param localTime
-     *            the local time at the moment of the interrogation
-     */
-    FingerInfo(String hostName, String userName, String homeDirectory,
-	    String workingDirectory, String architecture, String osName,
-	    String osVersion, String javaVersion, Date localTime) {
-	this._hostName = hostName;
-	this._userName = userName;
-	this._homeDirectory = homeDirectory;
-	this._workingDirectory = workingDirectory;
-	this._architecture = architecture;
-	this._osName = osName;
-	this._osVersion = osVersion;
-	this._javaVersion = javaVersion;
-	this._localTime = localTime;
-    }
+	// Public methods
+	//
+	/**
+	 * A constructor.
+	 * 
+	 * @param hostName
+	 *            FQDN of the interrogated host.
+	 * @param userName
+	 *            the user's account name.
+	 * @param homeDirectory
+	 *            the path to the user's home directory.
+	 * @param workingDirectory
+	 *            path to the working directory?
+	 * @param architecture
+	 *            the host's CPU architecture identifier
+	 * @param osName
+	 *            the identifier of the operating system running on the host.
+	 * @param osVersion 
+	 *            the version number of the operating system.
+	 * @param javaVersion
+	 *            the version of the Java Virtual Machine.
+	 * @param localTime
+	 *            the local time at the moment of the interrogation
+	 */
+	FingerInfo(final String hostName, final String userName, final String homeDirectory,
+			final String workingDirectory, final String architecture, final String osName,
+			final String osVersion, final String javaVersion, final Date localTime) {
+		_hostName = hostName;
+		_userName = userName;
+		_homeDirectory = homeDirectory;
+		_workingDirectory = workingDirectory;
+		_architecture = architecture;
+		_osName = osName;
+		_osVersion = osVersion;
+		_javaVersion = javaVersion;
+		_localTime = localTime;
+	}
 
-    String getArchitecture() {
-	return this._architecture;
-    }
+	String getArchitecture() {
+		return _architecture;
+	}
 
-    String getHomeDirectory() {
-	return this._homeDirectory;
-    }
+	String getHomeDirectory() {
+		return _homeDirectory;
+	}
 
-    String getHostName() {
-	return this._hostName;
-    }
+	String getHostName() {
+		return _hostName;
+	}
 
-    String getJavaVersion() {
-	return this._javaVersion;
-    }
+	String getJavaVersion() {
+		return _javaVersion;
+	}
 
-    Date getLocalTime() {
-	return this._localTime;
-    }
+	Date getLocalTime() {
+		return _localTime;
+	}
 
-    String getOsName() {
-	return this._osName;
-    }
+	String getOsName() {
+		return _osName;
+	}
 
-    String getOsVersion() {
-	return this._osVersion;
-    }
+	String getOsVersion() {
+		return _osVersion;
+	}
 
-    String getUserName() {
-	return this._userName;
-    }
+	String getUserName() {
+		return _userName;
+	}
 
-    String getWorkingDirectory() {
-	return this._workingDirectory;
-    }
+	String getWorkingDirectory() {
+		return _workingDirectory;
+	}
 
-    String toTextBlock() {
-	String str = "Host Name: " + this._hostName + "\n" + "User Name: "
-	+ this._userName + "\n" + "Home Directory: "
-	+ this._homeDirectory + "\n" + "Working Directory: "
-	+ this._workingDirectory + "\n" + "Machine Architecture: "
-	+ this._architecture + "\n" + "OS Name: " + this._osName + "\n"
-	+ "OS Version: " + this._osVersion + "\n" + "Java Version: "
-	+ this._javaVersion + "\n" + "Local Time: "
-	+ this._localTime.toString();
+	String toTextBlock() {
+		final String str = "Host Name: " + _hostName + "\n" + "User Name: "
+		+ _userName + "\n" + "Home Directory: "
+		+ _homeDirectory + "\n" + "Working Directory: "
+		+ _workingDirectory + "\n" + "Machine Architecture: "
+		+ _architecture + "\n" + "OS Name: " + _osName + "\n"
+		+ "OS Version: " + _osVersion + "\n" + "Java Version: "
+		+ _javaVersion + "\n" + "Local Time: "
+		+ _localTime.toString();
 
-	return str;
-    }
+		return str;
+	}
 }

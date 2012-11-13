@@ -33,138 +33,138 @@ import com.ibm.awb.misc.Resource;
 final public class ContentOutputStream extends ByteArrayOutputStream implements
 ContentBuffer {
 
-    /**
-     * A separator in the message's header.
-     */
-    public static final String CRLF = "\r\n";
+	/**
+	 * A separator in the message's header.
+	 */
+	public static final String CRLF = "\r\n";
 
-    /**
-     * An output stream into which ATP messages is written. An atp output stream
-     * writes ATP messages into it.
-     */
-    protected OutputStream _out = null;
-    private boolean content_started = false;
-    private boolean content_sent = false;
+	/**
+	 * An output stream into which ATP messages is written. An atp output stream
+	 * writes ATP messages into it.
+	 */
+	protected OutputStream _out = null;
+	private boolean content_started = false;
+	private boolean content_sent = false;
 
-    private static int BUFFSIZE = 2048;
+	private static int BUFFSIZE = 2048;
 
-    int wrote = 0;
-    byte buffer[];
+	int wrote = 0;
+	byte buffer[];
 
-    static {
-	Resource res = Resource.getResourceFor("atp");
+	static {
+		final Resource res = Resource.getResourceFor("atp");
 
-	BUFFSIZE = res.getInteger("atp.buffersize", 2048);
-    }
-
-    /**
-     * Create a new instance of ContentOutputStream.
-     * 
-     * @param os
-     *            an instance of OutputStream into which the instantiated atp
-     *            output stream writes.
-     */
-    public ContentOutputStream(OutputStream os) {
-	this(os, false);
-    }
-
-    public ContentOutputStream(OutputStream os, boolean started) {
-	super(4096);
-	this._out = os;
-	this.buffer = new byte[BUFFSIZE];
-	this.wrote = 0;
-	this.content_started = started;
-    }
-
-    /**
-     * Close the stream. This automatically flushe if the request has not been
-     * sent.
-     */
-    @Override
-    synchronized public void close() throws IOException {
-	this.content_sent = true;
-	this.flush();
-	this._out.close();
-    }
-
-    @Override
-    public void flush() throws IOException {
-	if (this.content_sent) {
-	    this._out.write(this.buf, 0, this.count);
-	    this._out.flush();
-	    this.reset();
-	}
-    }
-
-    @Override
-    synchronized public void sendContent() throws IOException {
-	if (this.content_sent) {
-	    throw new IOException("Content has been already sent");
-	}
-	this.content_sent = true;
-
-	// _out.flush();
-	// _out = _tmp;
-
-	String cl = CRLF;
-
-	if (this.count != 0) {
-	    cl = "Content-Length:" + String.valueOf(this.count) + CRLF + CRLF;
-	} else {
-
-	    // length unknown
-	}
-	byte ab[] = cl.getBytes();
-
-	if (this.wrote + ab.length < BUFFSIZE) {
-
-	    // store
-	    System.arraycopy(ab, 0, this.buffer, this.wrote, ab.length);
-	    this.wrote += ab.length;
-	} else {
-
-	    // flush()
-	    this._out.write(this.buffer, 0, this.wrote);
-	    this.wrote = 0;
-
-	    // write
-	    this._out.write(ab, 0, ab.length);
+		BUFFSIZE = res.getInteger("atp.buffersize", 2048);
 	}
 
-	if (this.wrote + this.count < BUFFSIZE) {
-	    System.arraycopy(this.buf, 0, this.buffer, this.wrote, this.count);
-	    this.wrote += this.count;
-	    this._out.write(this.buffer, 0, this.wrote);
-	} else {
-	    this._out.write(this.buffer, 0, this.wrote);
-	    this._out.write(this.buf, 0, this.count);
-	}
-	this.wrote = 0;
-
-	this._out.flush();
-	this.reset();
-
-	if (this._out instanceof ContentBuffer) {
-	    ((ContentBuffer) this._out).sendContent();
-	}
-    }
-
-    synchronized public void startContent() throws IOException {
-	if (this.content_started) {
-	    throw new IOException("Content has been already started");
-	}
-	this.content_started = true;
-
-	if (this.count < BUFFSIZE) {
-
-	    // store
-	    System.arraycopy(this.buf, 0, this.buffer, 0, this.count);
-	    this.wrote = this.count;
-	} else {
-	    this._out.write(this.buf, 0, this.count);
-	    this.wrote = 0;
+	/**
+	 * Create a new instance of ContentOutputStream.
+	 * 
+	 * @param os
+	 *            an instance of OutputStream into which the instantiated atp
+	 *            output stream writes.
+	 */
+	public ContentOutputStream(final OutputStream os) {
+		this(os, false);
 	}
 
-	this.reset();
-    }
+	public ContentOutputStream(final OutputStream os, final boolean started) {
+		super(4096);
+		_out = os;
+		buffer = new byte[BUFFSIZE];
+		wrote = 0;
+		content_started = started;
+	}
+
+	/**
+	 * Close the stream. This automatically flushe if the request has not been
+	 * sent.
+	 */
+	@Override
+	synchronized public void close() throws IOException {
+		content_sent = true;
+		flush();
+		_out.close();
+	}
+
+	@Override
+	public void flush() throws IOException {
+		if (content_sent) {
+			_out.write(buf, 0, count);
+			_out.flush();
+			reset();
+		}
+	}
+
+	@Override
+	synchronized public void sendContent() throws IOException {
+		if (content_sent) {
+			throw new IOException("Content has been already sent");
+		}
+		content_sent = true;
+
+		// _out.flush();
+		// _out = _tmp;
+
+		String cl = CRLF;
+
+		if (count != 0) {
+			cl = "Content-Length:" + String.valueOf(count) + CRLF + CRLF;
+		} else {
+
+			// length unknown
+		}
+		final byte ab[] = cl.getBytes();
+
+		if (wrote + ab.length < BUFFSIZE) {
+
+			// store
+			System.arraycopy(ab, 0, buffer, wrote, ab.length);
+			wrote += ab.length;
+		} else {
+
+			// flush()
+			_out.write(buffer, 0, wrote);
+			wrote = 0;
+
+			// write
+			_out.write(ab, 0, ab.length);
+		}
+
+		if (wrote + count < BUFFSIZE) {
+			System.arraycopy(buf, 0, buffer, wrote, count);
+			wrote += count;
+			_out.write(buffer, 0, wrote);
+		} else {
+			_out.write(buffer, 0, wrote);
+			_out.write(buf, 0, count);
+		}
+		wrote = 0;
+
+		_out.flush();
+		reset();
+
+		if (_out instanceof ContentBuffer) {
+			((ContentBuffer) _out).sendContent();
+		}
+	}
+
+	synchronized public void startContent() throws IOException {
+		if (content_started) {
+			throw new IOException("Content has been already started");
+		}
+		content_started = true;
+
+		if (count < BUFFSIZE) {
+
+			// store
+			System.arraycopy(buf, 0, buffer, 0, count);
+			wrote = count;
+		} else {
+			_out.write(buf, 0, count);
+			wrote = 0;
+		}
+
+		reset();
+	}
 }

@@ -19,152 +19,152 @@ import java.awt.ItemSelectable;
 import java.awt.TextField;
 
 class MultiListEditable extends MultiList implements ItemSelectable {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -7048653078325472820L;
-    TextField[] _textFields = null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7048653078325472820L;
+	TextField[] _textFields = null;
 
-    MultiListEditable(int rows, double[] weight) {
-	super(rows, weight);
-	this._textFields = new TextField[this._cols];
-	this.createTextFields(weight);
-    }
-
-    MultiListEditable(int rows, double[] weight, String[] labels) {
-	super(rows, weight, labels);
-	this._textFields = new TextField[this._cols];
-	this.createTextFields(weight);
-    }
-
-    MultiListEditable(int rows, int[] width) {
-	super(rows, width.length);
-	this._textFields = new TextField[this._cols];
-	this.createTextFields(width);
-    }
-
-    MultiListEditable(int rows, int[] width, double[] weight) {
-	super(rows, weight);
-	this._textFields = new TextField[this._cols];
-	this.createTextFields(weight, width);
-    }
-
-    MultiListEditable(int rows, int[] width, double[] weight, String[] labels) {
-	super(rows, weight, labels);
-	this._textFields = new TextField[this._cols];
-	this.createTextFields(weight, width);
-    }
-
-    MultiListEditable(int rows, int[] width, String[] labels) {
-	super(rows, labels);
-	this._textFields = new TextField[this._cols];
-	this.createTextFields(width);
-    }
-
-    MultiListEditable(int rows, String[] labels) {
-	super(rows, labels);
-	this._textFields = new TextField[this._cols];
-	this.createTextFields();
-    }
-
-    MultiListEditable(int rows, int cols) {
-	super(rows, cols);
-	this._textFields = new TextField[this._cols];
-	this.createTextFields();
-    }
-
-    public synchronized void addItemsInTextFields() {
-	final int num = this.getItemCount();
-	String[] items = new String[num];
-	int i = 0;
-
-	for (i = 0; i < num; i++) {
-	    items[i] = this._textFields[i].getText();
+	MultiListEditable(final int rows, final double[] weight) {
+		super(rows, weight);
+		_textFields = new TextField[_cols];
+		this.createTextFields(weight);
 	}
-	this.addItems(items);
-    }
 
-    public void createTextFields() {
-	GridBagConstraints cnt = this.createConstraints();
-
-	cnt.fill = GridBagConstraints.HORIZONTAL;
-	cnt.anchor = GridBagConstraints.WEST;
-
-	int i = 0;
-
-	for (i = 0; i < this._cols; i++) {
-	    TextField textField = new TextField();
-
-	    this._textFields[i] = textField;
-	    if (i == this._cols - 1) {
-		cnt.gridwidth = GridBagConstraints.REMAINDER;
-	    } else {
-		cnt.gridwidth = GridBagConstraints.RELATIVE;
-	    }
-	    this._layout.setConstraints(textField, cnt);
-	    this.add(textField);
+	MultiListEditable(final int rows, final double[] weight, final String[] labels) {
+		super(rows, weight, labels);
+		_textFields = new TextField[_cols];
+		this.createTextFields(weight);
 	}
-	this.nextComponents();
-    }
 
-    public void createTextFields(double[] weight) {
-	GridBagConstraints cnt = this.createConstraints();
-
-	cnt.gridy = this._line;
-	cnt.fill = GridBagConstraints.HORIZONTAL;
-	cnt.anchor = GridBagConstraints.WEST;
-
-	int i = 0;
-
-	for (i = 0; i < this._cols; i++) {
-	    TextField textField = new TextField();
-
-	    this._textFields[i] = textField;
-	    cnt.weightx = weight[i];
-	    this._layout.setConstraints(textField, cnt);
-	    this.add(textField);
+	MultiListEditable(final int rows, final int cols) {
+		super(rows, cols);
+		_textFields = new TextField[_cols];
+		this.createTextFields();
 	}
-	this.nextComponents();
-    }
 
-    public void createTextFields(double[] weight, int[] width) {
-	GridBagConstraints cnt = this.createConstraints();
-
-	cnt.gridy = this._line;
-	cnt.anchor = GridBagConstraints.WEST;
-
-	int i = 0;
-
-	for (i = 0; i < this._cols; i++) {
-	    TextField textField = new TextField(width[i]);
-
-	    this._textFields[i] = textField;
-	    cnt.weightx = weight[i];
-	    this._layout.setConstraints(textField, cnt);
-	    this.add(textField);
+	MultiListEditable(final int rows, final int[] width) {
+		super(rows, width.length);
+		_textFields = new TextField[_cols];
+		this.createTextFields(width);
 	}
-	this.nextComponents();
-    }
 
-    public void createTextFields(int[] width) {
-	GridBagConstraints cnt = this.createConstraints();
-
-	cnt.anchor = GridBagConstraints.WEST;
-
-	int i = 0;
-
-	for (i = 0; i < this._cols; i++) {
-	    TextField textField = new TextField(width[i]);
-
-	    this._textFields[i] = textField;
-	    if (i == this._cols - 1) {
-		cnt.gridwidth = GridBagConstraints.REMAINDER;
-	    } else {
-		cnt.gridwidth = GridBagConstraints.RELATIVE;
-	    }
-	    this._layout.setConstraints(textField, cnt);
-	    this.add(textField);
+	MultiListEditable(final int rows, final int[] width, final double[] weight) {
+		super(rows, weight);
+		_textFields = new TextField[_cols];
+		this.createTextFields(weight, width);
 	}
-	this.nextComponents();
-    }
+
+	MultiListEditable(final int rows, final int[] width, final double[] weight, final String[] labels) {
+		super(rows, weight, labels);
+		_textFields = new TextField[_cols];
+		this.createTextFields(weight, width);
+	}
+
+	MultiListEditable(final int rows, final int[] width, final String[] labels) {
+		super(rows, labels);
+		_textFields = new TextField[_cols];
+		this.createTextFields(width);
+	}
+
+	MultiListEditable(final int rows, final String[] labels) {
+		super(rows, labels);
+		_textFields = new TextField[_cols];
+		this.createTextFields();
+	}
+
+	public synchronized void addItemsInTextFields() {
+		final int num = getItemCount();
+		final String[] items = new String[num];
+		int i = 0;
+
+		for (i = 0; i < num; i++) {
+			items[i] = _textFields[i].getText();
+		}
+		this.addItems(items);
+	}
+
+	public void createTextFields() {
+		final GridBagConstraints cnt = createConstraints();
+
+		cnt.fill = GridBagConstraints.HORIZONTAL;
+		cnt.anchor = GridBagConstraints.WEST;
+
+		int i = 0;
+
+		for (i = 0; i < _cols; i++) {
+			final TextField textField = new TextField();
+
+			_textFields[i] = textField;
+			if (i == _cols - 1) {
+				cnt.gridwidth = GridBagConstraints.REMAINDER;
+			} else {
+				cnt.gridwidth = GridBagConstraints.RELATIVE;
+			}
+			_layout.setConstraints(textField, cnt);
+			this.add(textField);
+		}
+		nextComponents();
+	}
+
+	public void createTextFields(final double[] weight) {
+		final GridBagConstraints cnt = createConstraints();
+
+		cnt.gridy = _line;
+		cnt.fill = GridBagConstraints.HORIZONTAL;
+		cnt.anchor = GridBagConstraints.WEST;
+
+		int i = 0;
+
+		for (i = 0; i < _cols; i++) {
+			final TextField textField = new TextField();
+
+			_textFields[i] = textField;
+			cnt.weightx = weight[i];
+			_layout.setConstraints(textField, cnt);
+			this.add(textField);
+		}
+		nextComponents();
+	}
+
+	public void createTextFields(final double[] weight, final int[] width) {
+		final GridBagConstraints cnt = createConstraints();
+
+		cnt.gridy = _line;
+		cnt.anchor = GridBagConstraints.WEST;
+
+		int i = 0;
+
+		for (i = 0; i < _cols; i++) {
+			final TextField textField = new TextField(width[i]);
+
+			_textFields[i] = textField;
+			cnt.weightx = weight[i];
+			_layout.setConstraints(textField, cnt);
+			this.add(textField);
+		}
+		nextComponents();
+	}
+
+	public void createTextFields(final int[] width) {
+		final GridBagConstraints cnt = createConstraints();
+
+		cnt.anchor = GridBagConstraints.WEST;
+
+		int i = 0;
+
+		for (i = 0; i < _cols; i++) {
+			final TextField textField = new TextField(width[i]);
+
+			_textFields[i] = textField;
+			if (i == _cols - 1) {
+				cnt.gridwidth = GridBagConstraints.REMAINDER;
+			} else {
+				cnt.gridwidth = GridBagConstraints.RELATIVE;
+			}
+			_layout.setConstraints(textField, cnt);
+			this.add(textField);
+		}
+		nextComponents();
+	}
 }

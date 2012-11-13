@@ -70,99 +70,99 @@ import com.ibm.aglet.message.Message;
 public class SimpleItinerary extends MobilityAdapter implements
 java.io.Externalizable {
 
-    static final long serialVersionUID = -5696240265720297145L;
+	static final long serialVersionUID = -5696240265720297145L;
 
-    private Aglet aglet;
-    private Message next;
-    private Hashtable plan = new Hashtable();
+	private Aglet aglet;
+	private Message next;
+	private Hashtable plan = new Hashtable();
 
-    /**
-     * For Manual Serialization
-     */
-    public SimpleItinerary() {
-    }
-
-    /**
-     * Constructs a SimpleItinerary with the specified owner aglet.
-     * 
-     * @param aglet
-     *            the owner of this itinerary.
-     */
-    public SimpleItinerary(Aglet aglet) {
-	this.aglet = aglet;
-	aglet.addMobilityListener(this);
-    }
-
-    /**
-     * Goes to the destination given by name and the message processed at the
-     * destination.
-     * 
-     * @param address
-     *            the address of the destination
-     * @param msg
-     *            the message being sent to the aglet at the destination
-     * @exception IOException
-     *                if dispatch completely failed
-     * @exception AgletException
-     *                if dispatch completely failed
-     */
-    public void go(String address, Message msg)
-    throws java.io.IOException,
-    AgletException {
-	this.next = msg;
-	this.aglet.dispatch(new URL(address));
-    }
-
-    /**
-     * Goes to the destination given by name and the message processed at the
-     * destination.
-     * 
-     * @param address
-     *            the address of the destination
-     * @param msg
-     *            the message being sent to the aglet at the destination
-     * @exception IOException
-     *                if dispatch completely failed
-     * @exception AgletException
-     *                if dispatch completely failed
-     */
-    public void go(String address, String msg)
-    throws java.io.IOException,
-    AgletException {
-	this.go(address, new Message(msg));
-    }
-
-    /**
-     * This is not normally used by aglets programmers.
-     * 
-     * @param ev
-     *            a mobility event
-     */
-    @Override
-    public void onArrival(MobilityEvent ev) {
-	try {
-	    if (this.next != null) {
-		ev.getAgletProxy().sendAsyncMessage(this.next);
-	    }
-	} catch (Exception ex) {
-	    ex.printStackTrace();
+	/**
+	 * For Manual Serialization
+	 */
+	public SimpleItinerary() {
 	}
-    }
 
-    @Override
-    public void readExternal(java.io.ObjectInput in)
-    throws java.io.IOException,
-    ClassNotFoundException {
-	this.aglet = (Aglet) in.readObject();
-	this.next = (Message) in.readObject();
-	this.plan = (Hashtable) in.readObject();
-    }
+	/**
+	 * Constructs a SimpleItinerary with the specified owner aglet.
+	 * 
+	 * @param aglet
+	 *            the owner of this itinerary.
+	 */
+	public SimpleItinerary(final Aglet aglet) {
+		this.aglet = aglet;
+		aglet.addMobilityListener(this);
+	}
 
-    @Override
-    public void writeExternal(java.io.ObjectOutput oo)
-    throws java.io.IOException {
-	oo.writeObject(this.aglet);
-	oo.writeObject(this.next);
-	oo.writeObject(this.plan);
-    }
+	/**
+	 * Goes to the destination given by name and the message processed at the
+	 * destination.
+	 * 
+	 * @param address
+	 *            the address of the destination
+	 * @param msg
+	 *            the message being sent to the aglet at the destination
+	 * @exception IOException
+	 *                if dispatch completely failed
+	 * @exception AgletException
+	 *                if dispatch completely failed
+	 */
+	public void go(final String address, final Message msg)
+	throws java.io.IOException,
+	AgletException {
+		next = msg;
+		aglet.dispatch(new URL(address));
+	}
+
+	/**
+	 * Goes to the destination given by name and the message processed at the
+	 * destination.
+	 * 
+	 * @param address
+	 *            the address of the destination
+	 * @param msg
+	 *            the message being sent to the aglet at the destination
+	 * @exception IOException
+	 *                if dispatch completely failed
+	 * @exception AgletException
+	 *                if dispatch completely failed
+	 */
+	public void go(final String address, final String msg)
+	throws java.io.IOException,
+	AgletException {
+		this.go(address, new Message(msg));
+	}
+
+	/**
+	 * This is not normally used by aglets programmers.
+	 * 
+	 * @param ev
+	 *            a mobility event
+	 */
+	@Override
+	public void onArrival(final MobilityEvent ev) {
+		try {
+			if (next != null) {
+				ev.getAgletProxy().sendAsyncMessage(next);
+			}
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	@Override
+	public void readExternal(final java.io.ObjectInput in)
+	throws java.io.IOException,
+	ClassNotFoundException {
+		aglet = (Aglet) in.readObject();
+		next = (Message) in.readObject();
+		plan = (Hashtable) in.readObject();
+	}
+
+	@Override
+	public void writeExternal(final java.io.ObjectOutput oo)
+	throws java.io.IOException {
+		oo.writeObject(aglet);
+		oo.writeObject(next);
+		oo.writeObject(plan);
+	}
 }

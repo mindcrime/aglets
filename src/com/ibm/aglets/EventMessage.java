@@ -18,30 +18,30 @@ import com.ibm.aglet.InvalidAgletException;
 import com.ibm.aglet.event.AgletEvent;
 
 final class EventMessage extends MessageImpl {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -3560452166103973047L;
-    AgletEvent event;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3560452166103973047L;
+	AgletEvent event;
 
-    EventMessage(AgletEvent ev) {
-	super();
-	this.future = new FutureReplyImpl();
-	this.event = ev;
-    }
+	EventMessage(final AgletEvent ev) {
+		super();
+		future = new FutureReplyImpl();
+		event = ev;
+	}
 
-    @Override
-    public final void handle(LocalAgletRef ref) throws InvalidAgletException {
-	ref.dispatchEvent(this.event);
-    }
+	@Override
+	public final void handle(final LocalAgletRef ref) throws InvalidAgletException {
+		ref.dispatchEvent(event);
+	}
 
-    @Override
-    boolean isDelegatable() {
-	return false;
-    }
+	@Override
+	boolean isDelegatable() {
+		return false;
+	}
 
-    @Override
-    public String toString() {
-	return "[EventMessage evet = " + this.event + ']';
-    }
+	@Override
+	public String toString() {
+		return "[EventMessage evet = " + event + ']';
+	}
 }

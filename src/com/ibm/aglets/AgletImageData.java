@@ -26,43 +26,43 @@ import java.net.URL;
 public class AgletImageData implements com.ibm.aglet.util.ImageData,
 java.io.Serializable {
 
-    static final long serialVersionUID = 5393039055419095915L;
+	static final long serialVersionUID = 5393039055419095915L;
 
-    URL url;
-    byte buf[];
-    String type;
+	URL url;
+	byte buf[];
+	String type;
 
-    public AgletImageData(URL u, byte[] b, String t) {
-	this.url = u;
-	this.buf = b;
-	this.type = t;
-    }
+	public AgletImageData(final URL u, final byte[] b, final String t) {
+		url = u;
+		buf = b;
+		type = t;
+	}
 
-    @Override
-    public ImageProducer getImageProducer() {
-	return new ByteArrayImageSource(this.buf, this.type);
-    }
+	@Override
+	public ImageProducer getImageProducer() {
+		return new ByteArrayImageSource(buf, type);
+	}
 
-    @Override
-    public int hashCode() {
-	return this.url.hashCode();
-    }
+	@Override
+	public int hashCode() {
+		return url.hashCode();
+	}
 
-    /*
-     * To support manual serialization public AgletImageData() { }
-     * 
-     * public void writeExternal(ObjectOutput out) throws IOException {
-     * out.writeObject(externalURLForm); out.writeObject(buf);
-     * out.writeObject(type); }
-     * 
-     * public void readExternal(ObjectInput in) throws IOException { try {
-     * externalURLForm = (String)in.readObject(); buf = (byte[])in.readObject();
-     * type = (String)in.readObject(); } catch (ClassNotFoundException ex) {
-     * throw new IOException(ex.getMessage()); } }
-     */
+	/*
+	 * To support manual serialization public AgletImageData() { }
+	 * 
+	 * public void writeExternal(ObjectOutput out) throws IOException {
+	 * out.writeObject(externalURLForm); out.writeObject(buf);
+	 * out.writeObject(type); }
+	 * 
+	 * public void readExternal(ObjectInput in) throws IOException { try {
+	 * externalURLForm = (String)in.readObject(); buf = (byte[])in.readObject();
+	 * type = (String)in.readObject(); } catch (ClassNotFoundException ex) {
+	 * throw new IOException(ex.getMessage()); } }
+	 */
 
-    @Override
-    public void writeTo(OutputStream out) throws IOException {
-	out.write(this.buf);
-    }
+	@Override
+	public void writeTo(final OutputStream out) throws IOException {
+		out.write(buf);
+	}
 }

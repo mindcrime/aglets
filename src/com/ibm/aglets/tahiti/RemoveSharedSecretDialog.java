@@ -27,114 +27,114 @@ import com.ibm.atp.auth.SharedSecrets;
  */
 public class RemoveSharedSecretDialog extends TahitiDialog {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -5592252588199141821L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5592252588199141821L;
 
-    /**
-     * The text field where the user must specify the password.
-     */
-    private JPasswordField passwordField = null;
+	/**
+	 * The text field where the user must specify the password.
+	 */
+	private JPasswordField passwordField = null;
 
-    /**
-     * The list of available domains.
-     */
-    private AgletListPanel<String> domainList = null;
+	/**
+	 * The list of available domains.
+	 */
+	private AgletListPanel<String> domainList = null;
 
-    public RemoveSharedSecretDialog(JFrame parentFrame) {
-	super(parentFrame);
+	public RemoveSharedSecretDialog(final JFrame parentFrame) {
+		super(parentFrame);
 
-	// create gui components
-	JLabel label = JComponentBuilder.createJLabel(this.baseKey
-		+ ".infoLabel");
-	this.contentPanel.add(label, BorderLayout.NORTH);
+		// create gui components
+		JLabel label = JComponentBuilder.createJLabel(baseKey
+				+ ".infoLabel");
+		contentPanel.add(label, BorderLayout.NORTH);
 
-	JPanel centerPanel = new JPanel();
-	centerPanel.setLayout(new FlowLayout());
-	label = JComponentBuilder.createJLabel(this.baseKey + ".domainLabel");
-	centerPanel.add(label);
-	this.domainList = new AgletListPanel<String>();
-	this.domainList.setTitleBorder(this.translator.translate(this.baseKey
-		+ ".domainLabel"));
-	centerPanel.add(this.domainList);
-	this.fillDomainList();
-	this.contentPanel.add(centerPanel, BorderLayout.CENTER);
+		final JPanel centerPanel = new JPanel();
+		centerPanel.setLayout(new FlowLayout());
+		label = JComponentBuilder.createJLabel(baseKey + ".domainLabel");
+		centerPanel.add(label);
+		domainList = new AgletListPanel<String>();
+		domainList.setTitleBorder(translator.translate(baseKey
+				+ ".domainLabel"));
+		centerPanel.add(domainList);
+		fillDomainList();
+		contentPanel.add(centerPanel, BorderLayout.CENTER);
 
-	JPanel southPanel = new JPanel();
-	southPanel.setLayout(new FlowLayout());
-	label = JComponentBuilder.createJLabel(this.baseKey + ".passwordLabel");
-	this.passwordField = JComponentBuilder.createJPasswordField(20);
-	southPanel.add(label);
-	southPanel.add(this.passwordField);
-	this.contentPanel.add(southPanel, BorderLayout.SOUTH);
+		final JPanel southPanel = new JPanel();
+		southPanel.setLayout(new FlowLayout());
+		label = JComponentBuilder.createJLabel(baseKey + ".passwordLabel");
+		passwordField = JComponentBuilder.createJPasswordField(20);
+		southPanel.add(label);
+		southPanel.add(passwordField);
+		contentPanel.add(southPanel, BorderLayout.SOUTH);
 
-	this.pack();
-
-    }
-
-    /**
-     * Iterates on the domain list and adds each domain name (as a string) to
-     * the list.
-     * 
-     */
-    private void fillDomainList() {
-	SharedSecrets allSecrets = SharedSecrets.getSharedSecrets();
-
-	if (allSecrets == null)
-	    return;
-
-	for (Enumeration enumer = allSecrets.getDomainNames(); (enumer != null)
-	&& enumer.hasMoreElements();) {
-	    String currentDomain = (String) enumer.nextElement();
-	    this.domainList.addItem(currentDomain);
-	}
-
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent event) {
-	if (event == null)
-	    return;
-
-	String command = event.getActionCommand();
-
-	if (GUICommandStrings.OK_COMMAND.equals(command)) {
-	    // the user wants to remove the shared secret
-	    String domain = this.domainList.getSelectedItem();
-	    String password = new String(this.passwordField.getPassword());
-
-	    SharedSecrets allSecrets = SharedSecrets.getSharedSecrets();
-	    SharedSecret selectedSecret = allSecrets.getSharedSecret(domain);
-
-	    // check if this exists
-	    if (selectedSecret == null) {
-		JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
-			+ ".sharedSecretNotExists"), this.translator.translate(this.baseKey
-				+ ".sharedSecretNotExists.title"), JOptionPane.ERROR_MESSAGE);
-		return;
-
-	    }
-
-	    // check if the user can be authenticated
-	    AgletRuntime runTime = AgletRuntime.getAgletRuntime();
-	    String username = runTime.getOwnerName();
-	    if (runTime.authenticateOwner(username, password) == null) {
-		JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
-			+ ".authError"), this.translator.translate(this.baseKey
-				+ ".authError.title"), JOptionPane.ERROR_MESSAGE);
-		return;
-
-	    }
-
-	    // ok, now delete the shared secret
-	    allSecrets.removeSharedSecret(domain);
-	    allSecrets.save();
+		pack();
 
 	}
 
-	// leave the superclass to manage the events
-	super.actionPerformed(event);
-    }
+	@Override
+	public void actionPerformed(final ActionEvent event) {
+		if (event == null)
+			return;
+
+		final String command = event.getActionCommand();
+
+		if (GUICommandStrings.OK_COMMAND.equals(command)) {
+			// the user wants to remove the shared secret
+			final String domain = domainList.getSelectedItem();
+			final String password = new String(passwordField.getPassword());
+
+			final SharedSecrets allSecrets = SharedSecrets.getSharedSecrets();
+			final SharedSecret selectedSecret = allSecrets.getSharedSecret(domain);
+
+			// check if this exists
+			if (selectedSecret == null) {
+				JOptionPane.showMessageDialog(this, translator.translate(baseKey
+						+ ".sharedSecretNotExists"), translator.translate(baseKey
+								+ ".sharedSecretNotExists.title"), JOptionPane.ERROR_MESSAGE);
+				return;
+
+			}
+
+			// check if the user can be authenticated
+			final AgletRuntime runTime = AgletRuntime.getAgletRuntime();
+			final String username = runTime.getOwnerName();
+			if (runTime.authenticateOwner(username, password) == null) {
+				JOptionPane.showMessageDialog(this, translator.translate(baseKey
+						+ ".authError"), translator.translate(baseKey
+								+ ".authError.title"), JOptionPane.ERROR_MESSAGE);
+				return;
+
+			}
+
+			// ok, now delete the shared secret
+			allSecrets.removeSharedSecret(domain);
+			allSecrets.save();
+
+		}
+
+		// leave the superclass to manage the events
+		super.actionPerformed(event);
+	}
+
+	/**
+	 * Iterates on the domain list and adds each domain name (as a string) to
+	 * the list.
+	 * 
+	 */
+	private void fillDomainList() {
+		final SharedSecrets allSecrets = SharedSecrets.getSharedSecrets();
+
+		if (allSecrets == null)
+			return;
+
+		for (final Enumeration enumer = allSecrets.getDomainNames(); (enumer != null)
+		&& enumer.hasMoreElements();) {
+			final String currentDomain = (String) enumer.nextElement();
+			domainList.addItem(currentDomain);
+		}
+
+	}
 
 }

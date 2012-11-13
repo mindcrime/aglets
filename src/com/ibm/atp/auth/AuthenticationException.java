@@ -22,26 +22,26 @@ package com.ibm.atp.auth;
  * @author ONO Kouichi
  */
 public class AuthenticationException extends Exception {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 154613877253129357L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 154613877253129357L;
 
-    /**
-     * Default Constructor shows stack trace.
-     */
-    public AuthenticationException() {
-	this.printStackTrace();
-    }
+	/**
+	 * Default Constructor shows stack trace.
+	 */
+	public AuthenticationException() {
+		this.printStackTrace();
+	}
 
-    /**
-     * Constructor shows stack trace with the specified detailed message.
-     * 
-     * @param msg
-     *            the detailed message
-     */
-    public AuthenticationException(String msg) {
-	super(msg);
-	this.printStackTrace();
-    }
+	/**
+	 * Constructor shows stack trace with the specified detailed message.
+	 * 
+	 * @param msg
+	 *            the detailed message
+	 */
+	public AuthenticationException(final String msg) {
+		super(msg);
+		this.printStackTrace();
+	}
 }

@@ -11,12 +11,12 @@ package net.sourceforge.aglets.itinerary;
  */
 public interface CircularItinerary extends Itinerary {
 
-    /**
-     * Provides information about the number of loops the agent has already
-     * completed over this itinerary.
-     * 
-     * @return the number of loop (0 if the agent has not yet completed the
-     *         first trip).
-     */
-    public int getLoopCount();
+	/**
+	 * Provides information about the number of loops the agent has already
+	 * completed over this itinerary.
+	 * 
+	 * @return the number of loop (0 if the agent has not yet completed the
+	 *         first trip).
+	 */
+	public int getLoopCount();
 }

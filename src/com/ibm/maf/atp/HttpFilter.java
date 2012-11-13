@@ -27,49 +27,49 @@ import java.util.Hashtable;
  */
 final class HttpFilter {
 
-    static void readHttpHeaders(InputStream in, Hashtable headers)
-    throws IOException {
+	static void readHttpHeaders(final InputStream in, final Hashtable headers)
+	throws IOException {
 
-	// -in.mark(8192);
-	// -BufferedReader r = new BufferedReader(new InputStreamReader(in));
-	// -String line = r.readLine();
-	// -in.reset();
-	DataInputStream r = new DataInputStream(in);
-	String line = r.readLine();
+		// -in.mark(8192);
+		// -BufferedReader r = new BufferedReader(new InputStreamReader(in));
+		// -String line = r.readLine();
+		// -in.reset();
+		final DataInputStream r = new DataInputStream(in);
+		final String line = r.readLine();
 
-	// BufferedReader r = new BufferedReader(new InputStreamReader(in));
-	// String line = r.readLine();
-	//
-	int index = line.indexOf(' ');
-	String method = line.substring(0, index);
-	int index2 = line.indexOf(' ', index + 1);
-	String uri = line.substring(index + 1, index2);
-	String protocol = line.substring(index2 + 1);
+		// BufferedReader r = new BufferedReader(new InputStreamReader(in));
+		// String line = r.readLine();
+		//
+		int index = line.indexOf(' ');
+		final String method = line.substring(0, index);
+		final int index2 = line.indexOf(' ', index + 1);
+		final String uri = line.substring(index + 1, index2);
+		final String protocol = line.substring(index2 + 1);
 
-	//
-	headers.put("requestline", line);
-	headers.put("method", method);
-	headers.put("requesturi", uri);
-	headers.put("protocol", protocol);
+		//
+		headers.put("requestline", line);
+		headers.put("method", method);
+		headers.put("requesturi", uri);
+		headers.put("protocol", protocol);
 
-	//
-	while (true) {
-	    String field = r.readLine();
+		//
+		while (true) {
+			final String field = r.readLine();
 
-	    try {
-		if (field.length() == 0) {
-		    break;
+			try {
+				if (field.length() == 0) {
+					break;
+				}
+				index = field.indexOf(':');
+				String key = field.substring(0, index);
+				String value = field.substring(index + 1);
+
+				key = key.toLowerCase().trim();
+				value = value.trim();
+				headers.put(key, value);
+			} catch (final Exception e) {
+				throw new IOException(e.getMessage());
+			}
 		}
-		index = field.indexOf(':');
-		String key = field.substring(0, index);
-		String value = field.substring(index + 1);
-
-		key = key.toLowerCase().trim();
-		value = value.trim();
-		headers.put(key, value);
-	    } catch (Exception e) {
-		throw new IOException(e.getMessage());
-	    }
 	}
-    }
 }

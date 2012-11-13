@@ -43,144 +43,144 @@ import com.ibm.agletx.util.SimpleItinerary;
  */
 public class HelloAglet extends Aglet {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 2002488031899463408L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2002488031899463408L;
 
-    /*
-     * UI to interact with a user this will be automatically disposed when the
-     * aglet is disposed
-     */
-    transient Frame my_dialog = null; // not serialized
+	/*
+	 * UI to interact with a user this will be automatically disposed when the
+	 * aglet is disposed
+	 */
+	transient Frame my_dialog = null; // not serialized
 
-    /*
-     * message
-     */
-    String message = null;
+	/*
+	 * message
+	 */
+	String message = null;
 
-    /*
-     * home address represented as a string
-     */
-    String home = null;
+	/*
+	 * home address represented as a string
+	 */
+	String home = null;
 
-    /*
-     * Itinerary
-     */
-    SimpleItinerary itinerary = null;
+	/*
+	 * Itinerary
+	 */
+	SimpleItinerary itinerary = null;
 
-    /*
-     * Reports arrival home and disappears
-     */
-    public void atHome(Message msg) {
-	this.setText("I'm back."); // greetings
-	this.waitMessage(2 * 1000); // show message, 2 seconds
-	this.dispose(); // dispose it self
-    }
-
-    protected void createGUI() {
-	this.my_dialog = new MyDialog(this);
-
-	this.my_dialog.pack();
-	this.my_dialog.setSize(this.my_dialog.getPreferredSize());
-	this.my_dialog.setVisible(true);
-    }
-
-    /**
-     * Creates and shows the dialog window. This aglet keeps the reference to
-     * the instance of the Dialog to avoid opening multiple dialog windows.
-     */
-    public void dialog(Message msg) {
-
-	// check and create a dialog box
-	if (this.my_dialog == null) {
-	    this.my_dialog = new MyDialog(this);
-	    this.my_dialog.pack();
-	    this.my_dialog.setSize(this.my_dialog.getPreferredSize());
+	/*
+	 * Reports arrival home and disappears
+	 */
+	public void atHome(final Message msg) {
+		setText("I'm back."); // greetings
+		this.waitMessage(2 * 1000); // show message, 2 seconds
+		dispose(); // dispose it self
 	}
 
-	// show the dialog box
-	this.my_dialog.setVisible(true);
-    }
+	protected void createGUI() {
+		my_dialog = new MyDialog(this);
 
-    /*
-     * Handles the message
-     * 
-     * @param msg the message sent
-     */
-    @Override
-    public boolean handleMessage(Message msg) {
-	if (msg.sameKind("atHome")) {
-	    this.atHome(msg);
-	} else if (msg.sameKind("startTrip")) {
-	    this.startTrip(msg);
-	} else if (msg.sameKind("sayHello")) {
-	    this.sayHello(msg);
-	} else if (msg.sameKind("dialog")) {
-	    this.dialog(msg);
-	} else {
-	    return false;
+		my_dialog.pack();
+		my_dialog.setSize(my_dialog.getPreferredSize());
+		my_dialog.setVisible(true);
 	}
-	return true;
-    }
 
-    /*
-     * Initializes the aglet. Only called the very first time this aglet is
-     * created.
-     */
-    @Override
-    public void onCreation(Object init) {
-	this.setMessage("Hello World!"); // default message
+	/**
+	 * Creates and shows the dialog window. This aglet keeps the reference to
+	 * the instance of the Dialog to avoid opening multiple dialog windows.
+	 */
+	public void dialog(final Message msg) {
 
-	// Create GUI to control this Aglet
-	this.createGUI();
-	this.itinerary = new SimpleItinerary(this);
+		// check and create a dialog box
+		if (my_dialog == null) {
+			my_dialog = new MyDialog(this);
+			my_dialog.pack();
+			my_dialog.setSize(my_dialog.getPreferredSize());
+		}
 
-	// Initialize the variable.
-	this.home = this.getAgletContext().getHostingURL().toString();
-    }
-
-    /*
-     * Say hello!
-     */
-    public void sayHello(Message msg) {
-	this.setText(this.message); // greetings
-	this.waitMessage(5 * 1000); // show message, 5 seconds
-
-	// try back home
-	try {
-	    this.setText("I'll go back to.. " + this.home);
-	    this.waitMessage(1000); // 1 second
-
-	    // Go back home and Send "atHome" message to owner this
-	    this.itinerary.go(this.home, "atHome");
-	} catch (Exception ex) {
-	    ex.printStackTrace();
+		// show the dialog box
+		my_dialog.setVisible(true);
 	}
-    }
 
-    /*
-     * Set the message
-     * 
-     * @param message the message to send
-     */
-    public void setMessage(String message) {
-	this.message = message;
-    }
-
-    /**
-     * Strats the trip of this aglet to the destination.
-     */
-    public synchronized void startTrip(Message msg) {
-
-	// get the address for trip
-	String destination = (String) msg.getArg();
-
-	// Go to the destination and Send "sayHello" message to owner(this)
-	try {
-	    this.itinerary.go(destination, "sayHello");
-	} catch (Exception ex) {
-	    ex.printStackTrace();
+	/*
+	 * Handles the message
+	 * 
+	 * @param msg the message sent
+	 */
+	@Override
+	public boolean handleMessage(final Message msg) {
+		if (msg.sameKind("atHome")) {
+			atHome(msg);
+		} else if (msg.sameKind("startTrip")) {
+			startTrip(msg);
+		} else if (msg.sameKind("sayHello")) {
+			sayHello(msg);
+		} else if (msg.sameKind("dialog")) {
+			dialog(msg);
+		} else {
+			return false;
+		}
+		return true;
 	}
-    }
+
+	/*
+	 * Initializes the aglet. Only called the very first time this aglet is
+	 * created.
+	 */
+	@Override
+	public void onCreation(final Object init) {
+		setMessage("Hello World!"); // default message
+
+		// Create GUI to control this Aglet
+		createGUI();
+		itinerary = new SimpleItinerary(this);
+
+		// Initialize the variable.
+		home = getAgletContext().getHostingURL().toString();
+	}
+
+	/*
+	 * Say hello!
+	 */
+	public void sayHello(final Message msg) {
+		setText(message); // greetings
+		this.waitMessage(5 * 1000); // show message, 5 seconds
+
+		// try back home
+		try {
+			setText("I'll go back to.. " + home);
+			this.waitMessage(1000); // 1 second
+
+			// Go back home and Send "atHome" message to owner this
+			itinerary.go(home, "atHome");
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	/*
+	 * Set the message
+	 * 
+	 * @param message the message to send
+	 */
+	public void setMessage(final String message) {
+		this.message = message;
+	}
+
+	/**
+	 * Strats the trip of this aglet to the destination.
+	 */
+	public synchronized void startTrip(final Message msg) {
+
+		// get the address for trip
+		final String destination = (String) msg.getArg();
+
+		// Go to the destination and Send "sayHello" message to owner(this)
+		try {
+			itinerary.go(destination, "sayHello");
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 }

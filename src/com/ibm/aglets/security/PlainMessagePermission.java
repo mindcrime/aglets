@@ -20,60 +20,60 @@ import java.util.Vector;
 
 public class PlainMessagePermission extends AgletsPermissionBase implements
 Serializable {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -6199236253073440162L;
-    private String _actions = null;
-    private Vector _messages = new Vector();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6199236253073440162L;
+	private String _actions = null;
+	private final Vector _messages = new Vector();
 
-    // should be implemented?
-    // ==== public PermissionCollection newPermissionCollection();
-    public PlainMessagePermission(String name, String actions) {
-	super(name);
-	String[] actionList = split(actions.toLowerCase(), SEPARATORS);
-	int i = 0;
+	// should be implemented?
+	// ==== public PermissionCollection newPermissionCollection();
+	public PlainMessagePermission(final String name, final String actions) {
+		super(name);
+		final String[] actionList = split(actions.toLowerCase(), SEPARATORS);
+		int i = 0;
 
-	for (i = 0; i < actionList.length; i++) {
-	    this._messages.addElement(actionList[i]);
+		for (i = 0; i < actionList.length; i++) {
+			_messages.addElement(actionList[i]);
+		}
+		_actions = concat(_messages);
 	}
-	this._actions = concat(this._messages);
-    }
 
-    @Override
-    public boolean equals(Object obj) {
-	if (obj == this) {
-	    return true;
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof PlainMessagePermission)) {
+			return false;
+		}
+		final PlainMessagePermission o = (PlainMessagePermission) obj;
+
+		return (getName().equals(o.getName()) && _actions.equals(o._actions));
 	}
-	if (!(obj instanceof PlainMessagePermission)) {
-	    return false;
+
+	@Override
+	public String getActions() {
+		return _actions;
 	}
-	PlainMessagePermission o = (PlainMessagePermission) obj;
 
-	return (this.getName().equals(o.getName()) && this._actions.equals(o._actions));
-    }
-
-    @Override
-    public String getActions() {
-	return this._actions;
-    }
-
-    @Override
-    public int hashCode() {
-	return this.getName().hashCode() + this._actions.hashCode();
-    }
-
-    @Override
-    public boolean implies(Permission p) {
-	if (!(p instanceof PlainMessagePermission)) {
-	    return false;
+	@Override
+	public int hashCode() {
+		return getName().hashCode() + _actions.hashCode();
 	}
-	PlainMessagePermission mp = (PlainMessagePermission) p;
 
-	if (checkAglet(this.getName(), mp.getName())) {
-	    return matches(this._messages, mp._messages);
-	} else {
-	    return true;
+	@Override
+	public boolean implies(final Permission p) {
+		if (!(p instanceof PlainMessagePermission)) {
+			return false;
+		}
+		final PlainMessagePermission mp = (PlainMessagePermission) p;
+
+		if (checkAglet(getName(), mp.getName())) {
+			return matches(_messages, mp._messages);
+		} else {
+			return true;
+		}
 	}
-    }
 }

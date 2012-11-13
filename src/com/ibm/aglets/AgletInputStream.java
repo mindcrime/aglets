@@ -44,66 +44,66 @@ import java.io.StreamCorruptedException;
 
 final class AgletInputStream extends ObjectInputStream {
 
-    private ResourceManager rm = null;
+	private ResourceManager rm = null;
 
-    /**
-     * Create a new instance of this class.
-     * 
-     * @param in
-     *            an input stream containing objects and class data.
-     * @exception IOException
-     *                if can not read data from the input stream.
-     * @exception StreamCorruptedException
-     *                if data in the input stream is invalid.
-     */
-    public AgletInputStream(InputStream in, ResourceManager rm)
-    throws IOException {
-	super(in);
-	this.rm = rm;
-    }
-
-    /*
-     * Verify and check whether the stream contains the aglet
-     */
-    @Override
-    protected void readStreamHeader()
-    throws IOException,
-    StreamCorruptedException {
-	int incoming_magic = this.readInt();
-
-	if (incoming_magic != AgletRuntime.AGLET_MAGIC) {
-	    throw new StreamCorruptedException("InputStream does not contain an aglet");
+	/**
+	 * Create a new instance of this class.
+	 * 
+	 * @param in
+	 *            an input stream containing objects and class data.
+	 * @exception IOException
+	 *                if can not read data from the input stream.
+	 * @exception StreamCorruptedException
+	 *                if data in the input stream is invalid.
+	 */
+	public AgletInputStream(final InputStream in, final ResourceManager rm)
+	throws IOException {
+		super(in);
+		this.rm = rm;
 	}
 
-	byte stream_version = this.readByte();
+	/*
+	 * Verify and check whether the stream contains the aglet
+	 */
+	@Override
+	protected void readStreamHeader()
+	throws IOException,
+	StreamCorruptedException {
+		final int incoming_magic = readInt();
 
-	if (stream_version != AgletRuntime.AGLET_STREAM_VERSION) {
-	    throw new StreamCorruptedException("Stream Version Mismatch: "
-		    + stream_version);
+		if (incoming_magic != AgletRuntime.AGLET_MAGIC) {
+			throw new StreamCorruptedException("InputStream does not contain an aglet");
+		}
+
+		final byte stream_version = readByte();
+
+		if (stream_version != AgletRuntime.AGLET_STREAM_VERSION) {
+			throw new StreamCorruptedException("Stream Version Mismatch: "
+					+ stream_version);
+		}
 	}
-    }
 
-    /**
-     * Resolve a class specified by classinfo. This method reads class data from
-     * the input stream and resolves the class by using a class loader
-     * corresponding to the origin of the class. If the class is common class,
-     * the class will be resolved by super.resolveClass. This method reads class
-     * data of all super classes of the class in the input stream and put them
-     * into the class data cache of the class loader. These super classes will
-     * be resolved on demand.
-     * 
-     * @param classinfo
-     *            stream containing class data.
-     * @return the resolved class.
-     * @exception IOException
-     *                if can not read data from the input stream.
-     * @exception ClassNotFoundException
-     *                if can not resolve the class.
-     */
-    @Override
-    public Class resolveClass(ObjectStreamClass classinfo)
-    throws IOException,
-    ClassNotFoundException {
-	return this.rm.loadClass(classinfo.getName());
-    }
+	/**
+	 * Resolve a class specified by classinfo. This method reads class data from
+	 * the input stream and resolves the class by using a class loader
+	 * corresponding to the origin of the class. If the class is common class,
+	 * the class will be resolved by super.resolveClass. This method reads class
+	 * data of all super classes of the class in the input stream and put them
+	 * into the class data cache of the class loader. These super classes will
+	 * be resolved on demand.
+	 * 
+	 * @param classinfo
+	 *            stream containing class data.
+	 * @return the resolved class.
+	 * @exception IOException
+	 *                if can not read data from the input stream.
+	 * @exception ClassNotFoundException
+	 *                if can not resolve the class.
+	 */
+	@Override
+	public Class resolveClass(final ObjectStreamClass classinfo)
+	throws IOException,
+	ClassNotFoundException {
+		return rm.loadClass(classinfo.getName());
+	}
 }

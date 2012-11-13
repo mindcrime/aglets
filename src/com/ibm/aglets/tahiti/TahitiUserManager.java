@@ -17,22 +17,22 @@ package com.ibm.aglets.tahiti;
 import java.security.cert.Certificate;
 
 public final class TahitiUserManager extends UserManager {
-    public TahitiUserManager() {
-    }
-
-    @Override
-    public Certificate login() {
-	LoginDialog d = new LoginDialog();
-
-	d.popupAtCenterOfScreen();
-	d.toFront();
-	d.waitForAuthentication();
-	if (d.checkAuthentication() == false) {
-	    System.out.println("Authentication Failed");
-	    System.exit(1);
+	public TahitiUserManager() {
 	}
-	this.setUsername(d.getUsername());
-	this.setCertificate(d.getCertificate());
-	return this.getCertificate();
-    }
+
+	@Override
+	public Certificate login() {
+		final LoginDialog d = new LoginDialog();
+
+		d.popupAtCenterOfScreen();
+		d.toFront();
+		d.waitForAuthentication();
+		if (d.checkAuthentication() == false) {
+			System.out.println("Authentication Failed");
+			System.exit(1);
+		}
+		setUsername(d.getUsername());
+		setCertificate(d.getCertificate());
+		return getCertificate();
+	}
 }

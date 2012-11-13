@@ -23,64 +23,64 @@ import com.ibm.aglet.message.Message;
 import com.ibm.agletx.patterns.Slave;
 
 public class SimpleMaster extends Aglet {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -2916763871556793792L;
-    Vector urllist = null;
-    String SlaveClassName = "examples.simplemasterslave.SimpleSlave";
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2916763871556793792L;
+	Vector urllist = null;
+	String SlaveClassName = "examples.simplemasterslave.SimpleSlave";
 
-    private void addURL(URL url) {
-	this.urllist.addElement(url);
-    }
-
-    private void createGUI() {
-	CommandWindow cm = new CommandWindow(this.getProxy());
-
-	cm.pack();
-	cm.setSize(cm.getPreferredSize());
-	cm.setVisible(true);
-    }
-
-    private void createSlave() {
-	try {
-	    Slave.create(this.getCodeBase(), this.SlaveClassName, this.getAgletContext(), this, this.getURLList(), new String());
-
-	} catch (Exception e) {
-	    System.out.println("Error:" + e.getMessage());
+	private void addURL(final URL url) {
+		urllist.addElement(url);
 	}
-    }
 
-    private Vector getURLList() {
-	return this.urllist;
-    }
+	private void createGUI() {
+		final CommandWindow cm = new CommandWindow(getProxy());
 
-    @Override
-    public boolean handleMessage(Message msg) {
-	if (msg.sameKind("go")) {
-	    this.createSlave();
-	    return true;
-	} else if (msg.sameKind("add")) {
-	    this.addURL((URL) msg.getArg());
-	    return true;
-	} else if (msg.sameKind("remove")) {
-	    this.removeURL(((Integer) msg.getArg()).intValue());
-	    return true;
-	} else if (msg.sameKind("getlist")) {
-	    msg.sendReply(this.getURLList());
-	    return true;
-	} else {
-	    return false;
+		cm.pack();
+		cm.setSize(cm.getPreferredSize());
+		cm.setVisible(true);
 	}
-    }
 
-    @Override
-    public void onCreation(Object o) {
-	this.urllist = new Vector();
-	this.createGUI();
-    }
+	private void createSlave() {
+		try {
+			Slave.create(getCodeBase(), SlaveClassName, getAgletContext(), this, getURLList(), new String());
 
-    private void removeURL(int i) {
-	this.urllist.removeElementAt(i);
-    }
+		} catch (final Exception e) {
+			System.out.println("Error:" + e.getMessage());
+		}
+	}
+
+	private Vector getURLList() {
+		return urllist;
+	}
+
+	@Override
+	public boolean handleMessage(final Message msg) {
+		if (msg.sameKind("go")) {
+			createSlave();
+			return true;
+		} else if (msg.sameKind("add")) {
+			addURL((URL) msg.getArg());
+			return true;
+		} else if (msg.sameKind("remove")) {
+			removeURL(((Integer) msg.getArg()).intValue());
+			return true;
+		} else if (msg.sameKind("getlist")) {
+			msg.sendReply(getURLList());
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public void onCreation(final Object o) {
+		urllist = new Vector();
+		createGUI();
+	}
+
+	private void removeURL(final int i) {
+		urllist.removeElementAt(i);
+	}
 }

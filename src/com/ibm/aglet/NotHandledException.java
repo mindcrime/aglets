@@ -31,24 +31,24 @@ package com.ibm.aglet;
  */
 public class NotHandledException extends AgletException {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 2471020604217748994L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2471020604217748994L;
 
-    /**
-     * Constructs a NotHandledException
-     */
-    public NotHandledException() {
-    }
+	/**
+	 * Constructs a NotHandledException
+	 */
+	public NotHandledException() {
+	}
 
-    /**
-     * Constructs a NotHandledException with the detailed message.
-     * 
-     * @param s
-     *            the detailed message
-     */
-    public NotHandledException(String s) {
-	super(s);
-    }
+	/**
+	 * Constructs a NotHandledException with the detailed message.
+	 * 
+	 * @param s
+	 *            the detailed message
+	 */
+	public NotHandledException(final String s) {
+		super(s);
+	}
 }

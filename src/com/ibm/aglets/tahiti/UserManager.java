@@ -27,47 +27,47 @@ import com.ibm.aglets.AgletRuntime;
  * @author ONO Kouichi
  */
 public abstract class UserManager {
-    private static String DEFAULT_USERNAME = null;
-    static {
-	DEFAULT_USERNAME = (String) AccessController.doPrivileged(new PrivilegedAction() {
-	    @Override
-	    public Object run() {
-		return System.getProperty("user.name");
-	    }
-	});
-    }
+	private static String DEFAULT_USERNAME = null;
+	static {
+		DEFAULT_USERNAME = (String) AccessController.doPrivileged(new PrivilegedAction() {
+			@Override
+			public Object run() {
+				return System.getProperty("user.name");
+			}
+		});
+	}
 
-    private String _username = null;
-    private Certificate _certificate = null;
+	static public final String getDefaultUsername() {
+		return DEFAULT_USERNAME;
+	}
+	/* protected */
+	public static Certificate getRegisteredCertificate(final String username) {
+		return AgletRuntime.getRegisteredCertificate(username);
+	}
 
-    public Certificate getCertificate() {
-	return this._certificate;
-    }
+	protected static boolean isRegisteredUser(final String username) {
+		return (getRegisteredCertificate(username) != null);
+	}
 
-    static public final String getDefaultUsername() {
-	return DEFAULT_USERNAME;
-    }
+	private String _username = null;
 
-    /* protected */
-    public static Certificate getRegisteredCertificate(String username) {
-	return AgletRuntime.getRegisteredCertificate(username);
-    }
+	private Certificate _certificate = null;
 
-    public String getUsername() {
-	return this._username;
-    }
+	public Certificate getCertificate() {
+		return _certificate;
+	}
 
-    protected static boolean isRegisteredUser(String username) {
-	return (getRegisteredCertificate(username) != null);
-    }
+	public String getUsername() {
+		return _username;
+	}
 
-    public abstract Certificate login();
+	public abstract Certificate login();
 
-    protected void setCertificate(Certificate cert) {
-	this._certificate = cert;
-    }
+	protected void setCertificate(final Certificate cert) {
+		_certificate = cert;
+	}
 
-    protected void setUsername(String username) {
-	this._username = username;
-    }
+	protected void setUsername(final String username) {
+		_username = username;
+	}
 }

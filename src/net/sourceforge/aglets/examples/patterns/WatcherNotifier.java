@@ -31,70 +31,70 @@ import com.ibm.agletx.patterns.Notifier;
  */
 
 public class WatcherNotifier extends Notifier {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 5679879225025244235L;
-    private long _lastModified = 0;
-    private String _filePath = "";
-    private File f;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5679879225025244235L;
+	private long _lastModified = 0;
+	private String _filePath = "";
+	private File f;
 
-    /**
-     * This method is to specify the check method for this notifier.
-     * 
-     * @return the result of the initial check.
-     * @exception AgletException
-     *                if fails to complete.
-     */
-    @Override
-    protected boolean doCheck() throws AgletException {
-	long time;
+	/**
+	 * This method is to specify the check method for this notifier.
+	 * 
+	 * @return the result of the initial check.
+	 * @exception AgletException
+	 *                if fails to complete.
+	 */
+	@Override
+	protected boolean doCheck() throws AgletException {
+		long time;
 
-	if (this.f != null) {
+		if (f != null) {
 
-	    // get the timestamp of the target file
-	    time = this.f.lastModified();
-	    if (this._lastModified != time) {
+			// get the timestamp of the target file
+			time = f.lastModified();
+			if (_lastModified != time) {
 
-		// Getting absolute time stamp by Date(time) is not recommended
-		// in ApiDoc. We guess use of Date(time) within the machine
-		// that we have got "time" stamp value might be OK.
-		this.MESSAGE = this._filePath;
+				// Getting absolute time stamp by Date(time) is not recommended
+				// in ApiDoc. We guess use of Date(time) within the machine
+				// that we have got "time" stamp value might be OK.
+				MESSAGE = _filePath;
 
-		// update _lastModefied timestamp
-		this._lastModified = time;
+				// update _lastModefied timestamp
+				_lastModified = time;
 
-		// file has changed on time "Date(time)"
-		return true;
-	    }
-	} else {
-	    throw new AgletException("Null File object error");
+				// file has changed on time "Date(time)"
+				return true;
+			}
+		} else {
+			throw new AgletException("Null File object error");
+		}
+
+		// no change on the taget file
+		return false;
 	}
 
-	// no change on the taget file
-	return false;
-    }
+	/**
+	 * This method is to specify the intial check performed by this notifier.
+	 * 
+	 * @exception AgletException
+	 *                if fails to complete.
+	 */
+	@Override
+	protected void initializeCheck() throws AgletException {
+		_filePath = (String) ARGUMENT;
+		setText("checking update of " + _filePath);
+		if ((f = new File(_filePath)) == null) {
+			throw new AgletException("Null File object error");
+		}
 
-    /**
-     * This method is to specify the intial check performed by this notifier.
-     * 
-     * @exception AgletException
-     *                if fails to complete.
-     */
-    @Override
-    protected void initializeCheck() throws AgletException {
-	this._filePath = (String) this.ARGUMENT;
-	this.setText("checking update of " + this._filePath);
-	if ((this.f = new File(this._filePath)) == null) {
-	    throw new AgletException("Null File object error");
+		if (f.exists()) {
+			_lastModified = f.lastModified();
+			MESSAGE = _filePath;
+			return;
+		} else {
+			throw new AgletException("Non-Existing File Access");
+		}
 	}
-
-	if (this.f.exists()) {
-	    this._lastModified = this.f.lastModified();
-	    this.MESSAGE = this._filePath;
-	    return;
-	} else {
-	    throw new AgletException("Non-Existing File Access");
-	}
-    }
 }

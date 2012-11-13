@@ -23,39 +23,39 @@ package com.ibm.aglets.tahiti;
  */
 final class AgletThreadGroup extends ThreadGroup {
 
-    protected ResourceManagerImpl _rm;
+	protected ResourceManagerImpl _rm;
 
-    //
-    private int maxThreadNumber = 10;
+	//
+	private int maxThreadNumber = 10;
 
-    // Constructs an aglet thread group for the specified aglet.
-    //
-    public AgletThreadGroup(ThreadGroup parent, ResourceManagerImpl rm) {
-	super(parent, "AgletThreadGroup:" + rm.getName());
-	this._rm = rm;
-	this.setMaxPriority(5);
-    }
+	// Constructs an aglet thread group for the specified aglet.
+	//
+	public AgletThreadGroup(final ThreadGroup parent, final ResourceManagerImpl rm) {
+		super(parent, "AgletThreadGroup:" + rm.getName());
+		_rm = rm;
+		setMaxPriority(5);
+	}
 
-    public int getMaxThreadNumber() {
-	this.checkAccess();
-	return this.maxThreadNumber;
-    }
+	public int getMaxThreadNumber() {
+		checkAccess();
+		return maxThreadNumber;
+	}
 
-    public void invalidate() {
-	this._rm = null;
-    }
+	public void invalidate() {
+		_rm = null;
+	}
 
-    /*
-     * 
-     */
-    public void setMaxThreadNumber(int i) {
-	this.checkAccess();
-	this.maxThreadNumber = i;
-    }
+	/*
+	 * 
+	 */
+	public void setMaxThreadNumber(final int i) {
+		checkAccess();
+		maxThreadNumber = i;
+	}
 
-    @Override
-    public String toString() {
-	return this.getClass().getName() + "[name=" + this.getName()
-	+ ",maxpri=" + this.getMaxPriority() + "]";
-    }
+	@Override
+	public String toString() {
+		return this.getClass().getName() + "[name=" + getName()
+		+ ",maxpri=" + getMaxPriority() + "]";
+	}
 }

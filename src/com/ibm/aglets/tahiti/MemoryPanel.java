@@ -30,277 +30,277 @@ import com.ibm.aglets.thread.AgletThreadPool;
  */
 public class MemoryPanel extends JPanel implements ActionListener {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 2429665474224569992L;
-    /**
-     * The logger of this class.
-     */
-    private AgletsLogger logger = AgletsLogger.getLogger(this.getClass().getName());
-    /**
-     * The tranlator of this object.
-     */
-    private AgletsTranslator translator = AgletsTranslator.getInstance("tahiti", Locale.getDefault());
-    /**
-     * The name of this class.
-     */
-    private String baseKey = this.getClass().getName();
-    /**
-     * The current runtime for this progress memoryBar.
-     */
-    protected Runtime currentRuntime = Runtime.getRuntime();
-    /**
-     * Memory ammount.
-     */
-    protected long total = 0;
-    /**
-     * Memory ammount.
-     */
-    protected long used = 0;
-    /**
-     * Size of the memoryBar.
-     */
-    protected int height = 0;
-    /**
-     * Size of the memoryBar.
-     */
-    protected int length = 0;
-    /**
-     * The progress memoryBar.
-     */
-    protected JProgressBar memoryBar = null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2429665474224569992L;
+	/**
+	 * The logger of this class.
+	 */
+	private final AgletsLogger logger = AgletsLogger.getLogger(this.getClass().getName());
+	/**
+	 * The tranlator of this object.
+	 */
+	private final AgletsTranslator translator = AgletsTranslator.getInstance("tahiti", Locale.getDefault());
+	/**
+	 * The name of this class.
+	 */
+	private final String baseKey = this.getClass().getName();
+	/**
+	 * The current runtime for this progress memoryBar.
+	 */
+	protected Runtime currentRuntime = Runtime.getRuntime();
+	/**
+	 * Memory ammount.
+	 */
+	protected long total = 0;
+	/**
+	 * Memory ammount.
+	 */
+	protected long used = 0;
+	/**
+	 * Size of the memoryBar.
+	 */
+	protected int height = 0;
+	/**
+	 * Size of the memoryBar.
+	 */
+	protected int length = 0;
+	/**
+	 * The progress memoryBar.
+	 */
+	protected JProgressBar memoryBar = null;
 
-    /**
-     * A progress bar for the threads
-     */
-    protected JProgressBar threadBar = null;
+	/**
+	 * A progress bar for the threads
+	 */
+	protected JProgressBar threadBar = null;
 
-    /**
-     * The update period.
-     */
-    protected int updateTime = 1000;
-    /**
-     * My thread.
-     */
-    protected Thread myThread = null;
-    /**
-     * The scaling factor.
-     */
-    protected float scaling = 1;
-    /**
-     * A label to show below the progress memoryBar
-     * 
-     */
-    protected JLabel description;
-    /**
-     * Indicates if the description must be shown.
-     */
-    protected boolean showDescription = false;
+	/**
+	 * The update period.
+	 */
+	protected int updateTime = 1000;
+	/**
+	 * My thread.
+	 */
+	protected Thread myThread = null;
+	/**
+	 * The scaling factor.
+	 */
+	protected float scaling = 1;
+	/**
+	 * A label to show below the progress memoryBar
+	 * 
+	 */
+	protected JLabel description;
+	/**
+	 * Indicates if the description must be shown.
+	 */
+	protected boolean showDescription = false;
 
-    /**
-     * The threadpool to monitor.
-     */
-    protected AgletThreadPool pool = AgletThreadPool.getInstance();
+	/**
+	 * The threadpool to monitor.
+	 */
+	protected AgletThreadPool pool = AgletThreadPool.getInstance();
 
-    /**
-     * The number of threads that can be contained in the pool.
-     */
-    private int totalThreads = 0;
+	/**
+	 * The number of threads that can be contained in the pool.
+	 */
+	private int totalThreads = 0;
 
-    /**
-     * The current number of busy threads.
-     */
-    private int threadUsed;
+	/**
+	 * The current number of busy threads.
+	 */
+	private int threadUsed;
 
-    /**
-     * The tooltip text to use (must be formatted).
-     */
-    private String memoryString = null;
+	/**
+	 * The tooltip text to use (must be formatted).
+	 */
+	private String memoryString = null;
 
-    /**
-     * The thread tooltip (must be formatted).
-     */
-    private String threadString = null;
+	/**
+	 * The thread tooltip (must be formatted).
+	 */
+	private String threadString = null;
 
-    /**
-     * Default constructor.
-     * 
-     * @param width
-     *            the size of the memoryBar
-     * @param height
-     *            the height of the memoryBar
-     * @param startThread
-     *            true if the thread must be started.
-     * @param showDescription
-     *            if true shows a description of the memory usage under the
-     *            progress memoryBar
-     */
-    public MemoryPanel(int width, int height, boolean startThread,
-                       boolean showDescription) {
-	super();
-	this.showDescription = showDescription;
-	this.description = new JLabel();
-	this.setLayout(new FlowLayout(FlowLayout.RIGHT));
-	this.createAndPlaceProgressBars(width, height);
-	this.setSize(width, height);
+	/**
+	 * Default constructor.
+	 * 
+	 * @param width
+	 *            the size of the memoryBar
+	 * @param height
+	 *            the height of the memoryBar
+	 * @param startThread
+	 *            true if the thread must be started.
+	 * @param showDescription
+	 *            if true shows a description of the memory usage under the
+	 *            progress memoryBar
+	 */
+	public MemoryPanel(final int width, final int height, final boolean startThread,
+	                   final boolean showDescription) {
+		super();
+		this.showDescription = showDescription;
+		description = new JLabel();
+		setLayout(new FlowLayout(FlowLayout.RIGHT));
+		createAndPlaceProgressBars(width, height);
+		this.setSize(width, height);
 
-	// get the tooltip string
-	this.memoryString = this.translator.translate(this.baseKey
-		+ ".memoryString");
-	this.threadString = this.translator.translate(this.baseKey
-		+ ".threadString");
+		// get the tooltip string
+		memoryString = translator.translate(baseKey
+				+ ".memoryString");
+		threadString = translator.translate(baseKey
+				+ ".threadString");
 
-	// create a swing time
-	Timer timer = new Timer(this.updateTime, this);
-	timer.setRepeats(true);
-	timer.start();
+		// create a swing time
+		final Timer timer = new Timer(updateTime, this);
+		timer.setRepeats(true);
+		timer.start();
 
-    }
-
-    /**
-     * A string that describes the memory usage.
-     * 
-     * @param currentValue
-     *            the current value for the memory
-     * @param maxValue
-     *            the max value
-     * @return the string that describes the memory usage
-     */
-    protected String getCurrentMemoryStringDescription(
-                                                       long currentValue,
-                                                       long maxValue) {
-	return String.format(this.memoryString, new Object[] { currentValue,
-		maxValue, (float) ((float) currentValue / (float) maxValue) });
-    }
-
-    /**
-     * Provides the information for the thread progress bar.
-     * 
-     * @param currentValue
-     *            the current number of busy threads
-     * @param maxValue
-     *            the max number of available threads
-     * @return the string with the description
-     */
-    protected String getCurrentThreadStringDescription(
-                                                       long currentValue,
-                                                       long maxValue) {
-	return String.format(this.threadString, new Object[] { currentValue,
-		maxValue });
-    }
-
-    protected long getMaxValue() {
-	/* the total memory should not change during the execution */
-	return this.currentRuntime.totalMemory();
-
-    }
-
-    protected long getCurrentValue() {
-	return this.currentRuntime.freeMemory();
-    }
-
-    /**
-     * Method to update the progress memoryBar.
-     * 
-     * @param newLevel
-     *            the new value to set
-     * @param bar
-     *            the progress bar on which to work
-     */
-    protected void updateProgressBar(JProgressBar bar, long newLevel) {
-	if (newLevel < 0)
-	    return;
-
-	int used = (int) (newLevel * this.scaling);
-
-	if (bar != null)
-	    bar.setValue(used);
-
-	// change the color of the progress memoryBar
-	if (used < 50)
-	    bar.setForeground(Color.GREEN);
-	else if (used < 80)
-	    bar.setForeground(Color.YELLOW);
-	else if (used > 80)
-	    bar.setForeground(Color.RED);
-    }
-
-    /**
-     * Method to init the size of the memoryBar. The size is calculated
-     * automatically to the size of the panel.
-     * 
-     * @param x
-     *            the size of the memoryBar
-     * @param y
-     *            the size of the memoryBar
-     */
-    protected void createAndPlaceProgressBars(int x, int y) {
-
-	this.memoryBar = new JProgressBar(SwingConstants.CENTER);
-	this.memoryBar.setStringPainted(true);
-	this.memoryBar.setForeground(Color.GREEN);
-	this.memoryBar.setBackground(Color.darkGray);
-	this.memoryBar.setSize(x / 4, y);
-	this.memoryBar.setVisible(true);
-	this.memoryBar.setMinimum(0);
-	this.memoryBar.setMaximum(100);
-	this.add(new JLabel(this.translator.translate(this.baseKey
-		+ ".memoryDescription")));
-	this.add(this.memoryBar);
-	if (this.showDescription)
-	    this.add(this.description);
-
-	this.threadBar = new JProgressBar(SwingConstants.CENTER);
-	this.threadBar.setStringPainted(true);
-	this.threadBar.setForeground(Color.GREEN);
-	this.threadBar.setBackground(Color.darkGray);
-	this.threadBar.setSize(x / 4, y);
-	this.threadBar.setVisible(true);
-	this.threadBar.setMinimum(0);
-	this.threadBar.setMaximum(100);
-	this.add(new JLabel(this.translator.translate(this.baseKey
-		+ ".threadDescription")));
-	this.add(this.threadBar);
-
-    }
-
-    /**
-     * Method to set the update time.
-     * 
-     * @param millis
-     *            interval time in milliseconds
-     */
-    public void setUpdateTime(int millis) {
-	if (millis > 0) {
-	    this.updateTime = millis;
 	}
-    }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-	Runtime.getRuntime();
+	@Override
+	public void actionPerformed(final ActionEvent e) {
+		Runtime.getRuntime();
 
-	/* the total memory should not change during the execution */
-	this.total = this.getMaxValue();
+		/* the total memory should not change during the execution */
+		total = getMaxValue();
 
-	// set the max value for the
-	// thread bar
-	this.totalThreads = this.pool.getMaxPoolSize();
-	this.threadBar.setMaximum(this.totalThreads);
+		// set the max value for the
+		// thread bar
+		totalThreads = pool.getMaxPoolSize();
+		threadBar.setMaximum(totalThreads);
 
-	/* set the scaling factor */
-	this.scaling = (float) 100 / (float) this.total;
+		/* set the scaling factor */
+		scaling = (float) 100 / (float) total;
 
-	/* get the local memory */
-	/* get the local memory */
-	this.used = this.total - this.getCurrentValue();
-	this.threadUsed = this.pool.getBusyThreadsNumber();
-	this.updateProgressBar(this.memoryBar, this.used);
-	this.updateProgressBar(this.threadBar, this.threadUsed);
-	this.memoryBar.setToolTipText(this.getCurrentMemoryStringDescription(this.used, this.total));
-	this.threadBar.setToolTipText(this.getCurrentThreadStringDescription(this.threadUsed, this.totalThreads));
+		/* get the local memory */
+		/* get the local memory */
+		used = total - getCurrentValue();
+		threadUsed = pool.getBusyThreadsNumber();
+		updateProgressBar(memoryBar, used);
+		updateProgressBar(threadBar, threadUsed);
+		memoryBar.setToolTipText(getCurrentMemoryStringDescription(used, total));
+		threadBar.setToolTipText(getCurrentThreadStringDescription(threadUsed, totalThreads));
 
-    }
+	}
+
+	/**
+	 * Method to init the size of the memoryBar. The size is calculated
+	 * automatically to the size of the panel.
+	 * 
+	 * @param x
+	 *            the size of the memoryBar
+	 * @param y
+	 *            the size of the memoryBar
+	 */
+	protected void createAndPlaceProgressBars(final int x, final int y) {
+
+		memoryBar = new JProgressBar(SwingConstants.CENTER);
+		memoryBar.setStringPainted(true);
+		memoryBar.setForeground(Color.GREEN);
+		memoryBar.setBackground(Color.darkGray);
+		memoryBar.setSize(x / 4, y);
+		memoryBar.setVisible(true);
+		memoryBar.setMinimum(0);
+		memoryBar.setMaximum(100);
+		this.add(new JLabel(translator.translate(baseKey
+				+ ".memoryDescription")));
+		this.add(memoryBar);
+		if (showDescription)
+			this.add(description);
+
+		threadBar = new JProgressBar(SwingConstants.CENTER);
+		threadBar.setStringPainted(true);
+		threadBar.setForeground(Color.GREEN);
+		threadBar.setBackground(Color.darkGray);
+		threadBar.setSize(x / 4, y);
+		threadBar.setVisible(true);
+		threadBar.setMinimum(0);
+		threadBar.setMaximum(100);
+		this.add(new JLabel(translator.translate(baseKey
+				+ ".threadDescription")));
+		this.add(threadBar);
+
+	}
+
+	/**
+	 * A string that describes the memory usage.
+	 * 
+	 * @param currentValue
+	 *            the current value for the memory
+	 * @param maxValue
+	 *            the max value
+	 * @return the string that describes the memory usage
+	 */
+	protected String getCurrentMemoryStringDescription(
+	                                                   final long currentValue,
+	                                                   final long maxValue) {
+		return String.format(memoryString, new Object[] { currentValue,
+				maxValue, (float) ((float) currentValue / (float) maxValue) });
+	}
+
+	/**
+	 * Provides the information for the thread progress bar.
+	 * 
+	 * @param currentValue
+	 *            the current number of busy threads
+	 * @param maxValue
+	 *            the max number of available threads
+	 * @return the string with the description
+	 */
+	protected String getCurrentThreadStringDescription(
+	                                                   final long currentValue,
+	                                                   final long maxValue) {
+		return String.format(threadString, new Object[] { currentValue,
+				maxValue });
+	}
+
+	protected long getCurrentValue() {
+		return currentRuntime.freeMemory();
+	}
+
+	protected long getMaxValue() {
+		/* the total memory should not change during the execution */
+		return currentRuntime.totalMemory();
+
+	}
+
+	/**
+	 * Method to set the update time.
+	 * 
+	 * @param millis
+	 *            interval time in milliseconds
+	 */
+	public void setUpdateTime(final int millis) {
+		if (millis > 0) {
+			updateTime = millis;
+		}
+	}
+
+	/**
+	 * Method to update the progress memoryBar.
+	 * 
+	 * @param newLevel
+	 *            the new value to set
+	 * @param bar
+	 *            the progress bar on which to work
+	 */
+	protected void updateProgressBar(final JProgressBar bar, final long newLevel) {
+		if (newLevel < 0)
+			return;
+
+		final int used = (int) (newLevel * scaling);
+
+		if (bar != null)
+			bar.setValue(used);
+
+		// change the color of the progress memoryBar
+		if (used < 50)
+			bar.setForeground(Color.GREEN);
+		else if (used < 80)
+			bar.setForeground(Color.YELLOW);
+		else if (used > 80)
+			bar.setForeground(Color.RED);
+	}
 
 }

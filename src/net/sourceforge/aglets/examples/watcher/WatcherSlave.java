@@ -37,152 +37,152 @@ import com.ibm.aglet.message.MessageManager;
  * @author Mitsuru Oshima
  */
 public class WatcherSlave extends Aglet {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 2892337996219553685L;
-    AgletProxy master;
-    boolean started = false;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2892337996219553685L;
+	AgletProxy master;
+	boolean started = false;
 
-    public String getInfo() {
-	AgletContext ac = this.getAgletContext();
-	StringBuffer b = new StringBuffer();
+	public String getInfo() {
+		final AgletContext ac = getAgletContext();
+		final StringBuffer b = new StringBuffer();
 
-	Enumeration e = ac.getAgletProxies(ACTIVE | INACTIVE);
+		final Enumeration e = ac.getAgletProxies(ACTIVE | INACTIVE);
 
-	while (e.hasMoreElements()) {
-	    try {
-		AgletProxy p = (AgletProxy) e.nextElement();
-		AgletInfo info = p.getAgletInfo();
+		while (e.hasMoreElements()) {
+			try {
+				final AgletProxy p = (AgletProxy) e.nextElement();
+				final AgletInfo info = p.getAgletInfo();
 
-		b.append(info.toString());
-		b.append("\n---------\n");
-	    } catch (InvalidAgletException ex) {
-		b.append("[InvalidAglet]\n");
-		continue;
-	    }
-	}
-	return b.toString();
-    }
-
-    @Override
-    public boolean handleMessage(Message msg) {
-	if (msg.sameKind("start")) {
-
-	    // to work around a bug in framework..... sorry.
-	    msg.sendReply();
-
-	    this.start();
-	} else if (msg.sameKind("stop")) {
-	    this.stop();
-
-	} else if (msg.sameKind("gonext")) {
-	    try {
-		this.dispatch((URL) msg.getArg());
-	    } catch (Exception ex) {
-		ex.printStackTrace();
-	    }
-
-	} else if (msg.sameKind("sleep")) {
-
-	    // sleep at most 10 seconds.
-	    try {
-		this.deactivate(10 * 1000);
-	    } catch (IOException ex) {
-		ex.printStackTrace();
-	    }
-	} else if (msg.sameKind("getInfo")) {
-	    msg.sendReply(this.getInfo());
-
-	} else {
-	    return false;
-	}
-	return true;
-    }
-
-    @Override
-    public void onCreation(Object o) {
-	if (o instanceof AgletID) {
-	    this.master = this.getAgletContext().getAgletProxy((AgletID) o);
-	} else if (o instanceof AgletProxy) {
-	    this.master = (AgletProxy) o;
-	} else {
-	    this.master = null;
-	}
-
-	//
-	// Activate if these messages arrives.
-	//
-	this.getMessageManager().setPriority("start", MessageManager.ACTIVATE_AGLET);
-	this.getMessageManager().setPriority(Message.DISPOSE, MessageManager.ACTIVATE_AGLET);
-
-	//
-	// event listener
-	//
-	this.addPersistencyListener(new PersistencyAdapter() {
-	    /**
-	     * 
-	     */
-	    private static final long serialVersionUID = -1788859594009985012L;
-
-	    @Override
-	    public void onActivation(PersistencyEvent ev) {
-		WatcherSlave.this.setText("wakeup");
-
-		//
-		// Start monitoring if it was monitoring
-		//
-		if (WatcherSlave.this.started) {
-		    WatcherSlave.this.started = false;
-		    WatcherSlave.this.start();
+				b.append(info.toString());
+				b.append("\n---------\n");
+			} catch (final InvalidAgletException ex) {
+				b.append("[InvalidAglet]\n");
+				continue;
+			}
 		}
-	    }
-	});
-	this.addMobilityListener(new MobilityAdapter() {
-	    /**
-	     * 
-	     */
-	    private static final long serialVersionUID = -1615892152139033000L;
+		return b.toString();
+	}
 
-	    @Override
-	    public void onArrival(MobilityEvent ev) {
-		WatcherSlave.this.setText("arrived");
+	@Override
+	public boolean handleMessage(final Message msg) {
+		if (msg.sameKind("start")) {
 
-		//
-		// Start monitoring if it was monitoring
-		//
-		if (WatcherSlave.this.started) {
-		    WatcherSlave.this.started = false;
-		    WatcherSlave.this.start();
+			// to work around a bug in framework..... sorry.
+			msg.sendReply();
+
+			start();
+		} else if (msg.sameKind("stop")) {
+			stop();
+
+		} else if (msg.sameKind("gonext")) {
+			try {
+				this.dispatch((URL) msg.getArg());
+			} catch (final Exception ex) {
+				ex.printStackTrace();
+			}
+
+		} else if (msg.sameKind("sleep")) {
+
+			// sleep at most 10 seconds.
+			try {
+				deactivate(10 * 1000);
+			} catch (final IOException ex) {
+				ex.printStackTrace();
+			}
+		} else if (msg.sameKind("getInfo")) {
+			msg.sendReply(getInfo());
+
+		} else {
+			return false;
 		}
-	    }
-	});
-    }
-
-    /**
-     * Start monitoring
-     */
-    public void start() {
-	if (this.started || (this.master == null)) {
-	    return;
+		return true;
 	}
-	this.setText("started");
-	this.started = true;
 
-	while (this.started) {
-	    try {
-		this.master.sendAsyncMessage(new Message("update", this.getInfo()));
-	    } catch (InvalidAgletException ex) {
-		ex.printStackTrace();
-		this.dispose();
-	    }
-	    this.waitMessage(2 * 1000); // wait two seconds.
+	@Override
+	public void onCreation(final Object o) {
+		if (o instanceof AgletID) {
+			master = getAgletContext().getAgletProxy((AgletID) o);
+		} else if (o instanceof AgletProxy) {
+			master = (AgletProxy) o;
+		} else {
+			master = null;
+		}
+
+		//
+		// Activate if these messages arrives.
+		//
+		getMessageManager().setPriority("start", MessageManager.ACTIVATE_AGLET);
+		getMessageManager().setPriority(Message.DISPOSE, MessageManager.ACTIVATE_AGLET);
+
+		//
+		// event listener
+		//
+		addPersistencyListener(new PersistencyAdapter() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -1788859594009985012L;
+
+			@Override
+			public void onActivation(final PersistencyEvent ev) {
+				WatcherSlave.this.setText("wakeup");
+
+				//
+				// Start monitoring if it was monitoring
+				//
+				if (started) {
+					started = false;
+					WatcherSlave.this.start();
+				}
+			}
+		});
+		addMobilityListener(new MobilityAdapter() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -1615892152139033000L;
+
+			@Override
+			public void onArrival(final MobilityEvent ev) {
+				WatcherSlave.this.setText("arrived");
+
+				//
+				// Start monitoring if it was monitoring
+				//
+				if (started) {
+					started = false;
+					WatcherSlave.this.start();
+				}
+			}
+		});
 	}
-	this.setText("stopped");
-    }
 
-    public void stop() {
-	this.started = false;
-	this.notifyMessage();
-    }
+	/**
+	 * Start monitoring
+	 */
+	public void start() {
+		if (started || (master == null)) {
+			return;
+		}
+		setText("started");
+		started = true;
+
+		while (started) {
+			try {
+				master.sendAsyncMessage(new Message("update", getInfo()));
+			} catch (final InvalidAgletException ex) {
+				ex.printStackTrace();
+				dispose();
+			}
+			this.waitMessage(2 * 1000); // wait two seconds.
+		}
+		setText("stopped");
+	}
+
+	public void stop() {
+		started = false;
+		notifyMessage();
+	}
 }

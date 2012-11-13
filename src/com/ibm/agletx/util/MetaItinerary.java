@@ -32,70 +32,70 @@ import com.ibm.aglet.event.MobilityEvent;
 public class MetaItinerary extends MobilityAdapter implements
 java.io.Serializable {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -3170189459194900971L;
-    private Vector visitedHosts = new Vector();
-    private Vector hosts = new Vector();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3170189459194900971L;
+	private final Vector visitedHosts = new Vector();
+	private final Vector hosts = new Vector();
 
-    public MetaItinerary(Aglet aglet) {
-	aglet.addMobilityListener(this);
-    }
-
-    /**
-     * Return unvisited destinations
-     * 
-     * @return enumaration of addresses of unvisited destinations.
-     */
-    public Enumeration getNonVisitedHosts() {
-	Vector v = new Vector();
-	boolean found = false;
-
-	for (Enumeration e = this.hosts.elements(); e.hasMoreElements();) {
-	    URL url = null;
-
-	    try {
-		url = new URL((String) e.nextElement());
-	    } catch (Exception ex) {
-		continue;
-	    }
-
-	    found = false;
-	    for (Enumeration e1 = this.visitedHosts.elements(); e1.hasMoreElements();) {
-		try {
-		    found = url.sameFile(new URL((String) (e1.nextElement())));
-		} catch (Exception ex) {
-		    continue;
-		}
-		if (found) {
-		    break;
-		}
-	    }
-
-	    if (!found) {
-		v.addElement(url);
-	    }
+	public MetaItinerary(final Aglet aglet) {
+		aglet.addMobilityListener(this);
 	}
-	return v.elements();
-    }
 
-    /**
-     * Return visited destinations
-     * 
-     * @return enumaration of addresses of visited destinations.
-     */
-    public Enumeration getVisitedHosts() {
-	return this.visitedHosts.elements();
-    }
+	/**
+	 * Return unvisited destinations
+	 * 
+	 * @return enumaration of addresses of unvisited destinations.
+	 */
+	public Enumeration getNonVisitedHosts() {
+		final Vector v = new Vector();
+		boolean found = false;
 
-    @Override
-    public void onArrival(MobilityEvent ev) {
-	this.visitedHosts.addElement(ev.getLocation().toString());
-    }
+		for (final Enumeration e = hosts.elements(); e.hasMoreElements();) {
+			URL url = null;
 
-    @Override
-    public void onDispatching(MobilityEvent ev) {
-	this.hosts.addElement(ev.getLocation().toString());
-    }
+			try {
+				url = new URL((String) e.nextElement());
+			} catch (final Exception ex) {
+				continue;
+			}
+
+			found = false;
+			for (final Enumeration e1 = visitedHosts.elements(); e1.hasMoreElements();) {
+				try {
+					found = url.sameFile(new URL((String) (e1.nextElement())));
+				} catch (final Exception ex) {
+					continue;
+				}
+				if (found) {
+					break;
+				}
+			}
+
+			if (!found) {
+				v.addElement(url);
+			}
+		}
+		return v.elements();
+	}
+
+	/**
+	 * Return visited destinations
+	 * 
+	 * @return enumaration of addresses of visited destinations.
+	 */
+	public Enumeration getVisitedHosts() {
+		return visitedHosts.elements();
+	}
+
+	@Override
+	public void onArrival(final MobilityEvent ev) {
+		visitedHosts.addElement(ev.getLocation().toString());
+	}
+
+	@Override
+	public void onDispatching(final MobilityEvent ev) {
+		hosts.addElement(ev.getLocation().toString());
+	}
 }

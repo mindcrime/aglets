@@ -77,72 +77,72 @@ import com.ibm.aglet.Aglet;
 
 public class SlaveItinerary extends SeqItinerary {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -528297595968340623L;
-    private Task task = null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -528297595968340623L;
+	private Task task = null;
 
-    /**
-     * Constructor.
-     * 
-     * @param aglet
-     *            the owner aglet
-     * @param task
-     *            the task to preform
-     * @param address
-     *            an address where the task should be preformed
-     */
-    public SlaveItinerary(Aglet aglet, String address, Task task) {
-	super(aglet);
-	this.task = task;
-	this.addPlan(address);
-    }
-
-    /**
-     * Constructor.
-     * 
-     * @param aglet
-     *            the owner aglet
-     * @param task
-     *            the task to preform
-     * @param addresses
-     *            a vector of address where the task should be performed.
-     */
-    public SlaveItinerary(Aglet aglet, Vector addresses, Task task) {
-	super(aglet);
-	this.task = task;
-	for (Enumeration e = addresses.elements(); e.hasMoreElements();) {
-	    this.addPlan(((URL) e.nextElement()).toString());
+	/**
+	 * Constructor.
+	 * 
+	 * @param aglet
+	 *            the owner aglet
+	 * @param task
+	 *            the task to preform
+	 * @param address
+	 *            an address where the task should be preformed
+	 */
+	public SlaveItinerary(final Aglet aglet, final String address, final Task task) {
+		super(aglet);
+		this.task = task;
+		addPlan(address);
 	}
-    }
 
-    /**
-     * Add a new address to the itinerary of the owner aglet
-     */
-    public void addPlan(String address) {
-	this.addTask(address, this.task);
-    }
-
-    /**
-     * Return the current task to be preformed by the owner aglet
-     */
-    public Task getTask() {
-	return this.task;
-    }
-
-    /**
-     * Set the task to be preformed by the owner aglet
-     */
-    public void setTask(Task task) {
-	this.task = task;
-	Enumeration e = this.addresses();
-
-	this.clear();
-	for (; e.hasMoreElements();) {
-	    String address = (String) e.nextElement();
-
-	    this.addPlan(address);
+	/**
+	 * Constructor.
+	 * 
+	 * @param aglet
+	 *            the owner aglet
+	 * @param task
+	 *            the task to preform
+	 * @param addresses
+	 *            a vector of address where the task should be performed.
+	 */
+	public SlaveItinerary(final Aglet aglet, final Vector addresses, final Task task) {
+		super(aglet);
+		this.task = task;
+		for (final Enumeration e = addresses.elements(); e.hasMoreElements();) {
+			addPlan(((URL) e.nextElement()).toString());
+		}
 	}
-    }
+
+	/**
+	 * Add a new address to the itinerary of the owner aglet
+	 */
+	public void addPlan(final String address) {
+		addTask(address, task);
+	}
+
+	/**
+	 * Return the current task to be preformed by the owner aglet
+	 */
+	public Task getTask() {
+		return task;
+	}
+
+	/**
+	 * Set the task to be preformed by the owner aglet
+	 */
+	public void setTask(final Task task) {
+		this.task = task;
+		final Enumeration e = addresses();
+
+		clear();
+		for (; e.hasMoreElements();) {
+			final String address = (String) e.nextElement();
+
+			addPlan(address);
+		}
+	}
 }

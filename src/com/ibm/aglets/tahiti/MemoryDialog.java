@@ -11,21 +11,21 @@ import java.awt.BorderLayout;
  */
 public class MemoryDialog extends TahitiDialog {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 4618287515135257471L;
-    /**
-     * The memory panel for this dialog.
-     */
-    private MemoryPanel memory = null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4618287515135257471L;
+	/**
+	 * The memory panel for this dialog.
+	 */
+	private MemoryPanel memory = null;
 
-    public MemoryDialog(MainWindow owner) {
-	super(owner);
+	public MemoryDialog(final MainWindow owner) {
+		super(owner);
 
-	this.memory = new MemoryPanel(200, 100, true, false);
-	this.contentPanel.add(this.memory, BorderLayout.CENTER);
+		memory = new MemoryPanel(200, 100, true, false);
+		contentPanel.add(memory, BorderLayout.CENTER);
 
-	this.pack();
-    }
+		pack();
+	}
 }

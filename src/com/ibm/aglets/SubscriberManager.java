@@ -33,103 +33,103 @@ import com.ibm.aglet.message.ReplySet;
 
 final class SubscriberManager {
 
-    private Hashtable dependent = new Hashtable();
+	private final Hashtable dependent = new Hashtable();
 
-    public SubscriberManager() {
-    }
-
-    // REMIND: performance can be improved.
-
-    /* synchronized */
-    public ReplySet multicastMessage(Message msg) {
-	MessageManagerImpl owners_manager = null;
-
-	ReplySet replySet = new ReplySet();
-	Vector v = (Vector) this.dependent.get(msg.getKind());
-
-	if (v == null) {
-
-	    // no subscriber
-	    return replySet;
+	public SubscriberManager() {
 	}
 
-	// synchronizing this method will cause the dead lock
-	v = (Vector) v.clone(); // for avoid synchronized block
+	// REMIND: performance can be improved.
 
-	for (Enumeration e = v.elements(); e.hasMoreElements();) {
-	    LocalAgletRef ref = (LocalAgletRef) e.nextElement();
+	/* synchronized */
+	public ReplySet multicastMessage(final Message msg) {
+		MessageManagerImpl owners_manager = null;
 
-	    // MessageManagerImpl mm =
-	    // (MessageManagerImpl) ref.getMessageManager();
-	    MessageManagerImpl mm = ref.messageManager;
+		final ReplySet replySet = new ReplySet();
+		Vector v = (Vector) dependent.get(msg.getKind());
 
-	    if (mm == null) {
-		System.out.println("MessageManager is null. "
-			+ ref.getStateAsString());
-		continue;
-	    }
+		if (v == null) {
 
-	    try {
-		if (mm.isOwner()) {
-		    owners_manager = mm;
-		} else {
-		    FutureReplyImpl future = new FutureReplyImpl();
-		    MessageImpl m = new MessageImpl(msg, future, Message.FUTURE, System.currentTimeMillis());
-
-		    replySet.addFutureReply(future);
-
-		    // sendMessage cannot be used in order to avoid
-		    // security check
-		    mm.postMessage(m);
+			// no subscriber
+			return replySet;
 		}
-	    } catch (RuntimeException ex) {
-		ex.printStackTrace();
-	    }
+
+		// synchronizing this method will cause the dead lock
+		v = (Vector) v.clone(); // for avoid synchronized block
+
+		for (final Enumeration e = v.elements(); e.hasMoreElements();) {
+			final LocalAgletRef ref = (LocalAgletRef) e.nextElement();
+
+			// MessageManagerImpl mm =
+			// (MessageManagerImpl) ref.getMessageManager();
+			final MessageManagerImpl mm = ref.messageManager;
+
+			if (mm == null) {
+				System.out.println("MessageManager is null. "
+						+ ref.getStateAsString());
+				continue;
+			}
+
+			try {
+				if (mm.isOwner()) {
+					owners_manager = mm;
+				} else {
+					final FutureReplyImpl future = new FutureReplyImpl();
+					final MessageImpl m = new MessageImpl(msg, future, Message.FUTURE, System.currentTimeMillis());
+
+					replySet.addFutureReply(future);
+
+					// sendMessage cannot be used in order to avoid
+					// security check
+					mm.postMessage(m);
+				}
+			} catch (final RuntimeException ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		if (owners_manager != null) {
+			try {
+				final FutureReplyImpl future = new FutureReplyImpl();
+				final MessageImpl m = new MessageImpl(msg, future, Message.FUTURE, System.currentTimeMillis());
+
+				replySet.addFutureReply(future);
+
+				// sendMessage cannot be used in order to avoid
+				// security check
+				owners_manager.postMessage(m);
+			} catch (final RuntimeException ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		return replySet;
 	}
 
-	if (owners_manager != null) {
-	    try {
-		FutureReplyImpl future = new FutureReplyImpl();
-		MessageImpl m = new MessageImpl(msg, future, Message.FUTURE, System.currentTimeMillis());
+	synchronized public void subscribe(final LocalAgletRef ref, final String name) {
+		Vector v = (Vector) dependent.get(name);
 
-		replySet.addFutureReply(future);
+		if (v == null) {
+			v = new Vector();
+			dependent.put(name, v);
+		}
 
-		// sendMessage cannot be used in order to avoid
-		// security check
-		owners_manager.postMessage(m);
-	    } catch (RuntimeException ex) {
-		ex.printStackTrace();
-	    }
+		if (v.indexOf(ref) < 0) {
+			v.addElement(ref);
+		}
 	}
 
-	return replySet;
-    }
+	synchronized public boolean unsubscribe(final LocalAgletRef ref, final String name) {
+		final Vector v = (Vector) dependent.get(name);
 
-    synchronized public void subscribe(LocalAgletRef ref, String name) {
-	Vector v = (Vector) this.dependent.get(name);
-
-	if (v == null) {
-	    v = new Vector();
-	    this.dependent.put(name, v);
+		if (v != null) {
+			return v.removeElement(ref);
+		}
+		return false;
 	}
 
-	if (v.indexOf(ref) < 0) {
-	    v.addElement(ref);
+	synchronized public void unsubscribeAll(final LocalAgletRef ref) {
+		for (final Enumeration e = dependent.elements(); e.hasMoreElements();) {
+			((Vector) e.nextElement()).removeElement(ref);
+		}
 	}
-    }
-
-    synchronized public boolean unsubscribe(LocalAgletRef ref, String name) {
-	Vector v = (Vector) this.dependent.get(name);
-
-	if (v != null) {
-	    return v.removeElement(ref);
-	}
-	return false;
-    }
-
-    synchronized public void unsubscribeAll(LocalAgletRef ref) {
-	for (Enumeration e = this.dependent.elements(); e.hasMoreElements();) {
-	    ((Vector) e.nextElement()).removeElement(ref);
-	}
-    }
 }

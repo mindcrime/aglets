@@ -20,35 +20,35 @@ import com.ibm.aglet.AgletProxy;
 import com.ibm.aglet.message.Message;
 
 public class Test extends Aglet {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -7013701224449124317L;
-    AgletProxy _finder;
-    Message lookup = new Message("Lookup", "Traveller");
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7013701224449124317L;
+	AgletProxy _finder;
+	Message lookup = new Message("Lookup", "Traveller");
 
-    @Override
-    public boolean handleMessage(Message msg) {
-	try {
-	    AgletProxy proxy = (AgletProxy) this._finder.sendMessage(this.lookup);
+	@Override
+	public boolean handleMessage(final Message msg) {
+		try {
+			final AgletProxy proxy = (AgletProxy) _finder.sendMessage(lookup);
 
-	    System.out.println(proxy.getAgletInfo());
-	} catch (Exception ex) {
-	    ex.printStackTrace();
+			System.out.println(proxy.getAgletInfo());
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+		return true;
 	}
-	return true;
-    }
 
-    @Override
-    public void onCreation(Object init) {
-	this._finder = (AgletProxy) this.getAgletContext().getProperty("finder");
+	@Override
+	public void onCreation(final Object init) {
+		_finder = (AgletProxy) getAgletContext().getProperty("finder");
 
-	try {
-	    AgletProxy proxy = (AgletProxy) this._finder.sendMessage(this.lookup);
+		try {
+			final AgletProxy proxy = (AgletProxy) _finder.sendMessage(lookup);
 
-	    System.out.println(proxy.getAgletInfo());
-	} catch (Exception ex) {
-	    ex.printStackTrace();
+			System.out.println(proxy.getAgletInfo());
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
 	}
-    }
 }

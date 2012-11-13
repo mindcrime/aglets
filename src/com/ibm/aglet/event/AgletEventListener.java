@@ -35,199 +35,199 @@ import java.util.Vector;
  */
 public class AgletEventListener implements CloneListener, MobilityListener,
 PersistencyListener {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 6181788401517660403L;
-    Vector vector = new Vector();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6181788401517660403L;
+	Vector vector = new Vector();
 
-    public AgletEventListener() {
-    }
-
-    /**
-     * Constructs an AgletEventlistener object with specified two clone listener
-     * objects.
-     */
-    public AgletEventListener(CloneListener l1, CloneListener l2) {
-	this.vector.addElement(l1);
-	this.vector.addElement(l2);
-    }
-
-    /**
-     * Constructs an AgletEventlistener object with specified two mobility
-     * listener objects.
-     */
-    public AgletEventListener(MobilityListener l1, MobilityListener l2) {
-	this.vector.addElement(l1);
-	this.vector.addElement(l2);
-    }
-
-    /**
-     * Constructs an AgletEventlistener object with specified two persistency
-     * listener objects.
-     */
-    public AgletEventListener(PersistencyListener l1, PersistencyListener l2) {
-	this.vector.addElement(l1);
-	this.vector.addElement(l2);
-    }
-
-    /**
-     * Adds the specified clone listener object
-     */
-    public void addCloneListener(CloneListener listener) {
-	if (this.vector.contains(listener)) {
-	    return;
+	public AgletEventListener() {
 	}
-	this.vector.addElement(listener);
-    }
 
-    /**
-     * Adds the specified mobility listener object
-     */
-    public void addMobilityListener(MobilityListener listener) {
-	if (this.vector.contains(listener)) {
-	    return;
+	/**
+	 * Constructs an AgletEventlistener object with specified two clone listener
+	 * objects.
+	 */
+	public AgletEventListener(final CloneListener l1, final CloneListener l2) {
+		vector.addElement(l1);
+		vector.addElement(l2);
 	}
-	this.vector.addElement(listener);
-    }
 
-    /**
-     * Adds the specified persistency listener object
-     */
-    public void addPersistencyListener(PersistencyListener listener) {
-	if (this.vector.contains(listener)) {
-	    return;
+	/**
+	 * Constructs an AgletEventlistener object with specified two mobility
+	 * listener objects.
+	 */
+	public AgletEventListener(final MobilityListener l1, final MobilityListener l2) {
+		vector.addElement(l1);
+		vector.addElement(l2);
 	}
-	this.vector.addElement(listener);
-    }
 
-    /**
-     * Calls the onActivation methods on the listers with the specified
-     * persistency event.
-     */
-    @Override
-    public void onActivation(PersistencyEvent ev) {
-	Enumeration e = this.vector.elements();
-
-	while (e.hasMoreElements()) {
-	    ((PersistencyListener) e.nextElement()).onActivation(ev);
+	/**
+	 * Constructs an AgletEventlistener object with specified two persistency
+	 * listener objects.
+	 */
+	public AgletEventListener(final PersistencyListener l1, final PersistencyListener l2) {
+		vector.addElement(l1);
+		vector.addElement(l2);
 	}
-    }
 
-    /**
-     * Calls the onArrival methods on the listers with the specified mobility
-     * event.
-     */
-    @Override
-    public void onArrival(MobilityEvent ev) {
-	Enumeration e = this.vector.elements();
-
-	while (e.hasMoreElements()) {
-	    ((MobilityListener) e.nextElement()).onArrival(ev);
+	/**
+	 * Adds the specified clone listener object
+	 */
+	public void addCloneListener(final CloneListener listener) {
+		if (vector.contains(listener)) {
+			return;
+		}
+		vector.addElement(listener);
 	}
-    }
 
-    /**
-     * Calls the onClone methods on the listers with the specified Clone event.
-     */
-    @Override
-    public void onClone(CloneEvent ev) {
-	Enumeration e = this.vector.elements();
-
-	while (e.hasMoreElements()) {
-	    ((CloneListener) e.nextElement()).onClone(ev);
+	/**
+	 * Adds the specified mobility listener object
+	 */
+	public void addMobilityListener(final MobilityListener listener) {
+		if (vector.contains(listener)) {
+			return;
+		}
+		vector.addElement(listener);
 	}
-    }
 
-    /**
-     * Calls the onCloned methods on the listers with the specified Clone event.
-     */
-    @Override
-    public void onCloned(CloneEvent ev) {
-	Enumeration e = this.vector.elements();
-
-	while (e.hasMoreElements()) {
-	    ((CloneListener) e.nextElement()).onCloned(ev);
+	/**
+	 * Adds the specified persistency listener object
+	 */
+	public void addPersistencyListener(final PersistencyListener listener) {
+		if (vector.contains(listener)) {
+			return;
+		}
+		vector.addElement(listener);
 	}
-    }
 
-    /**
-     * Calls the onCloning methods on the listers with the specified Clone
-     * event.
-     */
-    @Override
-    public void onCloning(CloneEvent ev) {
-	Enumeration e = this.vector.elements();
+	/**
+	 * Calls the onActivation methods on the listers with the specified
+	 * persistency event.
+	 */
+	@Override
+	public void onActivation(final PersistencyEvent ev) {
+		final Enumeration e = vector.elements();
 
-	while (e.hasMoreElements()) {
-	    ((CloneListener) e.nextElement()).onCloning(ev);
+		while (e.hasMoreElements()) {
+			((PersistencyListener) e.nextElement()).onActivation(ev);
+		}
 	}
-    }
 
-    /**
-     * Calls the onDeactivating methods on the listers with the specified
-     * persistency event.
-     */
-    @Override
-    public void onDeactivating(PersistencyEvent ev) {
-	Enumeration e = this.vector.elements();
+	/**
+	 * Calls the onArrival methods on the listers with the specified mobility
+	 * event.
+	 */
+	@Override
+	public void onArrival(final MobilityEvent ev) {
+		final Enumeration e = vector.elements();
 
-	while (e.hasMoreElements()) {
-	    ((PersistencyListener) e.nextElement()).onDeactivating(ev);
+		while (e.hasMoreElements()) {
+			((MobilityListener) e.nextElement()).onArrival(ev);
+		}
 	}
-    }
 
-    /**
-     * Calls the onDispatching methods on the listers with the specified
-     * mobility event.
-     */
-    @Override
-    public void onDispatching(MobilityEvent ev) {
-	Enumeration e = this.vector.elements();
+	/**
+	 * Calls the onClone methods on the listers with the specified Clone event.
+	 */
+	@Override
+	public void onClone(final CloneEvent ev) {
+		final Enumeration e = vector.elements();
 
-	while (e.hasMoreElements()) {
-	    ((MobilityListener) e.nextElement()).onDispatching(ev);
+		while (e.hasMoreElements()) {
+			((CloneListener) e.nextElement()).onClone(ev);
+		}
 	}
-    }
 
-    /**
-     * Calls the onReverting methods on the listers with the specified mobility
-     * event.
-     */
-    @Override
-    public void onReverting(MobilityEvent ev) {
-	Enumeration e = this.vector.elements();
+	/**
+	 * Calls the onCloned methods on the listers with the specified Clone event.
+	 */
+	@Override
+	public void onCloned(final CloneEvent ev) {
+		final Enumeration e = vector.elements();
 
-	while (e.hasMoreElements()) {
-	    ((MobilityListener) e.nextElement()).onReverting(ev);
+		while (e.hasMoreElements()) {
+			((CloneListener) e.nextElement()).onCloned(ev);
+		}
 	}
-    }
 
-    /**
-     * Removes the specified clone listener object
-     */
-    public void removeCloneListener(CloneListener listener) {
-	this.vector.removeElement(listener);
-    }
+	/**
+	 * Calls the onCloning methods on the listers with the specified Clone
+	 * event.
+	 */
+	@Override
+	public void onCloning(final CloneEvent ev) {
+		final Enumeration e = vector.elements();
 
-    /**
-     * Removes the specified mobility listener object
-     */
-    public void removeMobilityListener(MobilityListener listener) {
-	this.vector.removeElement(listener);
-    }
+		while (e.hasMoreElements()) {
+			((CloneListener) e.nextElement()).onCloning(ev);
+		}
+	}
 
-    /**
-     * Removes the specified persistency listener object
-     */
-    public void removePersistencyListener(PersistencyListener listener) {
-	this.vector.removeElement(listener);
-    }
+	/**
+	 * Calls the onDeactivating methods on the listers with the specified
+	 * persistency event.
+	 */
+	@Override
+	public void onDeactivating(final PersistencyEvent ev) {
+		final Enumeration e = vector.elements();
 
-    /**
-     * Returns the number of listeners
-     */
-    public int size() {
-	return this.vector.size();
-    }
+		while (e.hasMoreElements()) {
+			((PersistencyListener) e.nextElement()).onDeactivating(ev);
+		}
+	}
+
+	/**
+	 * Calls the onDispatching methods on the listers with the specified
+	 * mobility event.
+	 */
+	@Override
+	public void onDispatching(final MobilityEvent ev) {
+		final Enumeration e = vector.elements();
+
+		while (e.hasMoreElements()) {
+			((MobilityListener) e.nextElement()).onDispatching(ev);
+		}
+	}
+
+	/**
+	 * Calls the onReverting methods on the listers with the specified mobility
+	 * event.
+	 */
+	@Override
+	public void onReverting(final MobilityEvent ev) {
+		final Enumeration e = vector.elements();
+
+		while (e.hasMoreElements()) {
+			((MobilityListener) e.nextElement()).onReverting(ev);
+		}
+	}
+
+	/**
+	 * Removes the specified clone listener object
+	 */
+	public void removeCloneListener(final CloneListener listener) {
+		vector.removeElement(listener);
+	}
+
+	/**
+	 * Removes the specified mobility listener object
+	 */
+	public void removeMobilityListener(final MobilityListener listener) {
+		vector.removeElement(listener);
+	}
+
+	/**
+	 * Removes the specified persistency listener object
+	 */
+	public void removePersistencyListener(final PersistencyListener listener) {
+		vector.removeElement(listener);
+	}
+
+	/**
+	 * Returns the number of listeners
+	 */
+	public int size() {
+		return vector.size();
+	}
 }

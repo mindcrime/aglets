@@ -33,115 +33,116 @@ import java.awt.Panel;
 
 public class MessagePanel extends Panel {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -1845486283000204517L;
-    private GridBagConstraints cns = new GridBagConstraints();
-    private GridBagLayout grid = new GridBagLayout();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1845486283000204517L;
+	private final GridBagConstraints cns = new GridBagConstraints();
+	private final GridBagLayout grid = new GridBagLayout();
 
-    private boolean raised;
-    private int alignment;
+	private final boolean raised;
+	private int alignment;
 
-    /**
-     * Line separator constants
-     */
-    static final public String lineSeparator = "\n";
-    static final public char lineSeparatorChar = lineSeparator.charAt(0);
+	/**
+	 * Line separator constants
+	 */
+	static final public String lineSeparator = "\n";
+	static final public char lineSeparatorChar = lineSeparator.charAt(0);
 
-    /*
-     * Constructs a message panel with the message.
-     * 
-     * @param message
-     * 
-     * @param alignment
-     * 
-     * @param raised
-     */
-    public MessagePanel(String message, int alignment, boolean raised) {
-	this.alignment = alignment;
-	this.raised = raised;
-
-	this.setMessage(message);
-    }
-
-    /*
-     * Constructs a MessagePanel with the message and boolean which specifies
-     * the shape of the frame.
-     * 
-     * @param message
-     * 
-     * @param raised
-     */
-    public MessagePanel(String message, boolean raised) {
-	this(message, Label.LEFT, raised);
-    }
-
-    @Override
-    public void paint(Graphics g) {
-	super.paint(g);
-	g.setColor(this.getBackground());
-	g.fillRect(0, 0, this.getSize().width, this.getSize().height);
-	g.draw3DRect(1, 1, this.getSize().width - 2, this.getSize().height - 2, this.raised);
-    }
-
-    /**
-     * Sets alignment
-     * 
-     * @param alignment
-     */
-    public void setAlignment(int alignment) {
-	int t = this.getComponentCount();
-
-	this.alignment = alignment;
-	for (int i = 0; i < t; i++) {
-	    Component c = this.getComponent(i);
-
-	    if (c instanceof Label) {
-		((Label) c).setAlignment(alignment);
-	    }
+	/*
+	 * Constructs a MessagePanel with the message and boolean which specifies
+	 * the shape of the frame.
+	 * 
+	 * @param message
+	 * 
+	 * @param raised
+	 */
+	public MessagePanel(final String message, final boolean raised) {
+		this(message, Label.LEFT, raised);
 	}
-    }
 
-    /**
-     * Sets message string to be shown.
-     * 
-     * @param message
-     *            the message
-     */
-    public void setMessage(String message) {
-	this.removeAll();
+	/*
+	 * Constructs a message panel with the message.
+	 * 
+	 * @param message
+	 * 
+	 * @param alignment
+	 * 
+	 * @param raised
+	 */
+	public MessagePanel(final String message, final int alignment, final boolean raised) {
+		this.alignment = alignment;
+		this.raised = raised;
 
-	String messages[] = this.split(message);
-
-	this.cns.gridwidth = GridBagConstraints.REMAINDER;
-	this.cns.fill = GridBagConstraints.BOTH;
-	this.cns.weightx = 1.0;
-	this.cns.weighty = 1.0;
-	this.cns.insets = new Insets(3, 3, 3, 3);
-	this.setLayout(this.grid);
-
-	for (String message2 : messages) {
-	    Label l = new Label(message2, this.alignment);
-
-	    this.grid.setConstraints(l, this.cns);
-	    this.add(l);
+		setMessage(message);
 	}
-    }
 
-    private String[] split(String str) {
-	String msg[] = new String[50];
-	int pos, i, size = lineSeparator.length();
-
-	for (i = 0; ((pos = str.indexOf(lineSeparator)) >= 0) && (i < 49); i++) {
-	    msg[i] = str.substring(0, pos);
-	    str = str.substring(pos + size);
+	@Override
+	public void paint(final Graphics g) {
+		super.paint(g);
+		g.setColor(getBackground());
+		g.fillRect(0, 0, this.getSize().width, this.getSize().height);
+		g.draw3DRect(1, 1, this.getSize().width - 2, this.getSize().height - 2, raised);
 	}
-	msg[i++] = str;
 
-	String ret[] = new String[i];
+	/**
+	 * Sets alignment
+	 * 
+	 * @param alignment
+	 */
+	public void setAlignment(final int alignment) {
+		final int t = getComponentCount();
 
-	System.arraycopy(msg, 0, ret, 0, i);
-	return ret;
-    }
+		this.alignment = alignment;
+		for (int i = 0; i < t; i++) {
+			final Component c = getComponent(i);
+
+			if (c instanceof Label) {
+				((Label) c).setAlignment(alignment);
+			}
+		}
+	}
+
+	/**
+	 * Sets message string to be shown.
+	 * 
+	 * @param message
+	 *            the message
+	 */
+	public void setMessage(final String message) {
+		removeAll();
+
+		final String messages[] = split(message);
+
+		cns.gridwidth = GridBagConstraints.REMAINDER;
+		cns.fill = GridBagConstraints.BOTH;
+		cns.weightx = 1.0;
+		cns.weighty = 1.0;
+		cns.insets = new Insets(3, 3, 3, 3);
+		setLayout(grid);
+
+		for (final String message2 : messages) {
+			final Label l = new Label(message2, alignment);
+
+			grid.setConstraints(l, cns);
+			this.add(l);
+		}
+	}
+
+	private String[] split(String str) {
+		final String msg[] = new String[50];
+		int pos, i;
+		final int size = lineSeparator.length();
+
+		for (i = 0; ((pos = str.indexOf(lineSeparator)) >= 0) && (i < 49); i++) {
+			msg[i] = str.substring(0, pos);
+			str = str.substring(pos + size);
+		}
+		msg[i++] = str;
+
+		final String ret[] = new String[i];
+
+		System.arraycopy(msg, 0, ret, 0, i);
+		return ret;
+	}
 }

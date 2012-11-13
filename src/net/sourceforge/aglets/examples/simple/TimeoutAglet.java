@@ -28,21 +28,21 @@ import com.ibm.aglet.Aglet;
  */
 public class TimeoutAglet extends Aglet {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -7015232163677957516L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7015232163677957516L;
 
-    @Override
-    public void run() {
-	try {
-	    for (int i = 60; i > 0; i--) {
-		Thread.sleep(1000); // 1 second
-		this.setText(i + " more seconds.");
-	    }
-	    this.dispose();
-	} catch (Exception e) {
-	    System.out.println(e);
+	@Override
+	public void run() {
+		try {
+			for (int i = 60; i > 0; i--) {
+				Thread.sleep(1000); // 1 second
+				setText(i + " more seconds.");
+			}
+			dispose();
+		} catch (final Exception e) {
+			System.out.println(e);
+		}
 	}
-    }
 }

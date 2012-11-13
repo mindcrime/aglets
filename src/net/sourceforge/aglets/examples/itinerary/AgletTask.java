@@ -23,30 +23,30 @@ import com.ibm.agletx.util.SeqItinerary;
 
 class AgletTask extends MeetingTask {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -4205233067065946508L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4205233067065946508L;
 
-    public AgletTask(Meeting meeting) {
-	super(meeting);
-    }
-
-    @Override
-    public void execute(SeqItinerary itin, Enumeration agletIDs) {
-	String list = "";
-	String id = "";
-
-	for (; agletIDs.hasMoreElements();) {
-	    list += (agletIDs.nextElement()) + " ";
+	public AgletTask(final Meeting meeting) {
+		super(meeting);
 	}
-	try {
-	    id = itin.getOwnerAglet().getAgletID().toString();
-	} catch (Exception ex) {
 
-	    //
+	@Override
+	public void execute(final SeqItinerary itin, final Enumeration agletIDs) {
+		String list = "";
+		String id = "";
+
+		for (; agletIDs.hasMoreElements();) {
+			list += (agletIDs.nextElement()) + " ";
+		}
+		try {
+			id = itin.getOwnerAglet().getAgletID().toString();
+		} catch (final Exception ex) {
+
+			//
+		}
+		System.out.println(">>VisitingAglet: [" + id + "] I met with [" + list
+				+ "]");
 	}
-	System.out.println(">>VisitingAglet: [" + id + "] I met with [" + list
-		+ "]");
-    }
 }

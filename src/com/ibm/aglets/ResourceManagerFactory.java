@@ -23,16 +23,16 @@ import com.ibm.maf.ClassName;
 
 public interface ResourceManagerFactory {
 
-    void clearCache();
+	void clearCache();
 
-    void clearCache(URL codebase, Certificate owner);
+	void clearCache(URL codebase, Certificate owner);
 
-    ResourceManager createResourceManager(
-                                          URL codebase,
-                                          Certificate owner,
-                                          ClassName[] table);
+	ResourceManager createResourceManager(
+	                                      URL codebase,
+	                                      Certificate owner,
+	                                      ClassName[] table);
 
-    ResourceManager getCurrentResourceManager();
+	ResourceManager getCurrentResourceManager();
 
-    URL lookupCodeBaseFor(String name);
+	URL lookupCodeBaseFor(String name);
 }

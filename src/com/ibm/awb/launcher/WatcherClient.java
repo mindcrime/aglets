@@ -34,33 +34,33 @@ import com.ibm.aglet.system.Aglets;
  */
 public class WatcherClient {
 
-    public static void main(String a[]) throws java.lang.Exception {
+	public static void main(final String a[]) throws java.lang.Exception {
 
-	if (a.length < 1) {
-	    System.out.println("WatcherClient firstAddress secondAddress ...");
-	    return;
+		if (a.length < 1) {
+			System.out.println("WatcherClient firstAddress secondAddress ...");
+			return;
+		}
+
+		System.out.println("========= Creating in " + a[0]);
+
+		AgletProxy proxy = Aglets.createAglet(a[0], null, "keio.ics.nak.watcher.WatcherSlave", null);
+
+		System.out.println((String) proxy.sendMessage(new Message("getInfo")));
+
+		int i = 1;
+
+		while (a.length > i) {
+			try {
+				System.out.println("========== Dispatching to " + a[i]);
+				proxy = proxy.dispatch(new URL(a[i++]));
+				final String str = (String) proxy.sendMessage(new Message("getInfo"));
+
+				System.out.println(str);
+			} catch (final Exception ex) {
+				ex.printStackTrace();
+				break;
+			}
+		}
+		proxy.dispose();
 	}
-
-	System.out.println("========= Creating in " + a[0]);
-
-	AgletProxy proxy = Aglets.createAglet(a[0], null, "keio.ics.nak.watcher.WatcherSlave", null);
-
-	System.out.println((String) proxy.sendMessage(new Message("getInfo")));
-
-	int i = 1;
-
-	while (a.length > i) {
-	    try {
-		System.out.println("========== Dispatching to " + a[i]);
-		proxy = proxy.dispatch(new URL(a[i++]));
-		String str = (String) proxy.sendMessage(new Message("getInfo"));
-
-		System.out.println(str);
-	    } catch (Exception ex) {
-		ex.printStackTrace();
-		break;
-	    }
-	}
-	proxy.dispose();
-    }
 }

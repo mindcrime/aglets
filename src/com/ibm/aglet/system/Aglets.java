@@ -53,44 +53,44 @@ import com.ibm.aglet.AgletProxy;
  */
 abstract public class Aglets {
 
-    static {
-	try {
-	    AgletRuntime.init(null);
-	} catch (Throwable t) {
+	static {
+		try {
+			AgletRuntime.init(null);
+		} catch (final Throwable t) {
 
-	    // ignore
+			// ignore
+		}
 	}
-    }
 
-    /**
-     * Creates an aglet
-     * 
-     */
-    static public AgletProxy createAglet(
-                                         String contextAddress,
-                                         URL codebase,
-                                         String classname,
-                                         Object init) throws IOException {
-	return AgletRuntime.getAgletRuntime().createAglet(contextAddress, codebase, classname, init);
-    }
+	/**
+	 * Creates an aglet
+	 * 
+	 */
+	static public AgletProxy createAglet(
+	                                     final String contextAddress,
+	                                     final URL codebase,
+	                                     final String classname,
+	                                     final Object init) throws IOException {
+		return AgletRuntime.getAgletRuntime().createAglet(contextAddress, codebase, classname, init);
+	}
 
-    /**
-     * Gets an enumeration of aglet proxies of all aglets residing in the
-     * context specified by contextAddress.
-     * 
-     * @param contextAddress
-     *            specify context URL with a string.
-     */
-    static public AgletProxy[] getAgletProxies(String contextAddress)
-    throws IOException {
-	return AgletRuntime.getAgletRuntime().getAgletProxies(contextAddress);
-    }
+	/**
+	 * Gets an enumeration of aglet proxies of all aglets residing in the
+	 * context specified by contextAddress.
+	 * 
+	 * @param contextAddress
+	 *            specify context URL with a string.
+	 */
+	static public AgletProxy[] getAgletProxies(final String contextAddress)
+	throws IOException {
+		return AgletRuntime.getAgletRuntime().getAgletProxies(contextAddress);
+	}
 
-    /**
-     * Obtains a proxy reference to the remote aglet.
-     */
-    static public AgletProxy getAgletProxy(String contextAddress, AgletID id)
-    throws IOException {
-	return AgletRuntime.getAgletRuntime().getAgletProxy(contextAddress, id);
-    }
+	/**
+	 * Obtains a proxy reference to the remote aglet.
+	 */
+	static public AgletProxy getAgletProxy(final String contextAddress, final AgletID id)
+	throws IOException {
+		return AgletRuntime.getAgletRuntime().getAgletProxy(contextAddress, id);
+	}
 }

@@ -35,147 +35,147 @@ import com.ibm.aglet.message.Message;
  * @author ONO Kouichi
  */
 public class ProtectionAglet extends Aglet {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -8866311642773135301L;
-    private AgletID _aid = null; // Original Aglet
-    private AgletProxy _target = null; // Target Aglet Proxy
-    private String _owner = null; // Aglet Owner
-    private ProtectionDialog _protectionDialog = null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8866311642773135301L;
+	private AgletID _aid = null; // Original Aglet
+	private AgletProxy _target = null; // Target Aglet Proxy
+	private String _owner = null; // Aglet Owner
+	private ProtectionDialog _protectionDialog = null;
 
-    void setTarget(AgletProxy target) {
-	this._target = target;
-    }
-
-    void cloneTarget() {
-	try {
-	    this._target.clone();
-	} catch (Exception ex) {
-	    System.err.println(ex.toString());
+	void cloneTarget() {
+		try {
+			_target.clone();
+		} catch (final Exception ex) {
+			System.err.println(ex.toString());
+		}
 	}
-    }
 
-    void createTarget() {
-	if ((this._target != null) && this._target.isValid()) {
-	    try {
-		this._target.dispose();
-	    } catch (Exception ex) {
-		System.err.println(ex.toString());
-	    }
+	void createTarget() {
+		if ((_target != null) && _target.isValid()) {
+			try {
+				_target.dispose();
+			} catch (final Exception ex) {
+				System.err.println(ex.toString());
+			}
+		}
+		try {
+			_target = getAgletContext().createAglet(null, "examples.protection.TargetAglet", _owner);
+		} catch (final Exception ex) {
+			System.err.println(ex.toString());
+		}
 	}
-	try {
-	    this._target = this.getAgletContext().createAglet(null, "examples.protection.TargetAglet", this._owner);
-	} catch (Exception ex) {
-	    System.err.println(ex.toString());
+
+	void deactivateTarget(final long duration) {
+		try {
+			_target.deactivate(duration);
+		} catch (final InvalidAgletException ex) {
+			System.err.println(ex.toString());
+		} catch (final IOException ex) {
+			System.err.println(ex.toString());
+		}
 	}
-    }
 
-    void deactivateTarget(long duration) {
-	try {
-	    this._target.deactivate(duration);
-	} catch (InvalidAgletException ex) {
-	    System.err.println(ex.toString());
-	} catch (IOException ex) {
-	    System.err.println(ex.toString());
+	void dispatchTarget(final String destination) {
+		URL dest = null;
+
+		try {
+			dest = new URL(destination);
+		} catch (final MalformedURLException ex) {
+			System.err.println(ex.toString());
+			return;
+		}
+		AgletProxy ap = null;
+
+		try {
+			ap = _target.dispatch(dest);
+		} catch (final IOException ex) {
+			System.err.println(ex.toString());
+		} catch (final AgletException ex) {
+			System.err.println(ex.toString());
+		}
+		if (ap != null) {
+			_target = ap;
+		}
 	}
-    }
 
-    void dispatchTarget(String destination) {
-	URL dest = null;
-
-	try {
-	    dest = new URL(destination);
-	} catch (MalformedURLException ex) {
-	    System.err.println(ex.toString());
-	    return;
+	void disposeTarget() {
+		try {
+			_target.dispose();
+		} catch (final InvalidAgletException ex) {
+			System.err.println(ex.toString());
+		}
 	}
-	AgletProxy ap = null;
 
-	try {
-	    ap = this._target.dispatch(dest);
-	} catch (IOException ex) {
-	    System.err.println(ex.toString());
-	} catch (AgletException ex) {
-	    System.err.println(ex.toString());
+	@Override
+	public boolean handleMessage(final Message message) {
+		if (message.sameKind("dialog")) {
+			_protectionDialog.show();
+		}
+		return true;
 	}
-	if (ap != null) {
-	    this._target = ap;
+
+	private void init() {
+		final AgletInfo info = getAgletInfo();
+
+		_owner = info.getAuthorityName();
+		final String label = "Protection Dialog: " + info.getAgletID() + "("
+		+ _owner + ")";
+		_protectionDialog = new ProtectionDialog(this, label);
+		_protectionDialog.pack();
 	}
-    }
 
-    void disposeTarget() {
-	try {
-	    this._target.dispose();
-	} catch (InvalidAgletException ex) {
-	    System.err.println(ex.toString());
+	@Override
+	public void onCreation(final Object init) {
+		_aid = getAgletID();
+		init();
 	}
-    }
 
-    void retractTarget() {
-	AgletInfo info = null;
-	URL source = null;
+	void retractTarget() {
+		AgletInfo info = null;
+		URL source = null;
 
-	try {
-	    info = this._target.getAgletInfo();
-	    source = new URL(this._target.getAddress());
-	} catch (InvalidAgletException ex) {
-	    System.err.println(ex.toString());
-	    return;
-	} catch (MalformedURLException ex) {
-	    System.err.println(ex.toString());
-	    return;
+		try {
+			info = _target.getAgletInfo();
+			source = new URL(_target.getAddress());
+		} catch (final InvalidAgletException ex) {
+			System.err.println(ex.toString());
+			return;
+		} catch (final MalformedURLException ex) {
+			System.err.println(ex.toString());
+			return;
+		}
+		final AgletID aid = info.getAgletID();
+		AgletProxy ap = null;
+
+		try {
+			ap = getAgletContext().retractAglet(source, aid);
+		} catch (final IOException ex) {
+			System.err.println(ex.toString());
+		} catch (final AgletException ex) {
+			System.err.println(ex.toString());
+		}
+		if (ap != null) {
+			_target = ap;
+		}
 	}
-	AgletID aid = info.getAgletID();
-	AgletProxy ap = null;
 
-	try {
-	    ap = this.getAgletContext().retractAglet(source, aid);
-	} catch (IOException ex) {
-	    System.err.println(ex.toString());
-	} catch (AgletException ex) {
-	    System.err.println(ex.toString());
+	void setAgletProtectionActions(String name, final String actions) {
+		if (_target != null) {
+			try {
+				name = _owner;
+				final Message msg = new Message("setProtections");
+				msg.setArg("name", name);
+				msg.setArg("actions", actions);
+				_target.sendMessage(msg);
+			} catch (final Exception ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
-	if (ap != null) {
-	    this._target = ap;
+
+	void setTarget(final AgletProxy target) {
+		_target = target;
 	}
-    }
-
-    void setAgletProtectionActions(String name, String actions) {
-	if (this._target != null) {
-	    try {
-		name = this._owner;
-		Message msg = new Message("setProtections");
-		msg.setArg("name", name);
-		msg.setArg("actions", actions);
-		this._target.sendMessage(msg);
-	    } catch (Exception ex) {
-		ex.printStackTrace();
-	    }
-	}
-    }
-
-    private void init() {
-	AgletInfo info = this.getAgletInfo();
-
-	this._owner = info.getAuthorityName();
-	String label = "Protection Dialog: " + info.getAgletID() + "("
-	+ this._owner + ")";
-	this._protectionDialog = new ProtectionDialog(this, label);
-	this._protectionDialog.pack();
-    }
-
-    @Override
-    public void onCreation(Object init) {
-	this._aid = this.getAgletID();
-	this.init();
-    }
-
-    @Override
-    public boolean handleMessage(Message message) {
-	if (message.sameKind("dialog")) {
-	    this._protectionDialog.show();
-	}
-	return true;
-    }
 }

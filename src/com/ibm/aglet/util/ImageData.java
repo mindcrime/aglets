@@ -34,13 +34,13 @@ import java.io.OutputStream;
  */
 public interface ImageData {
 
-    /**
-     * Gets source of the image
-     */
-    public ImageProducer getImageProducer();
+	/**
+	 * Gets source of the image
+	 */
+	public ImageProducer getImageProducer();
 
-    /**
-     * Writes the image data to the given output stream
-     */
-    public void writeTo(OutputStream out) throws java.io.IOException;
+	/**
+	 * Writes the image data to the given output stream
+	 */
+	public void writeTo(OutputStream out) throws java.io.IOException;
 }

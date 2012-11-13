@@ -23,77 +23,77 @@ package com.ibm.maf;
 
 public final class Name implements java.io.Serializable {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -5878175992615314666L;
-    // instance variables
-    public byte[] authority;
-    public byte[] identity;
-    public short agent_system_type;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5878175992615314666L;
+	// instance variables
+	public byte[] authority;
+	public byte[] identity;
+	public short agent_system_type;
 
-    // constructors
-    public Name() {
-    }
-
-    public Name(byte[] __authority, byte[] __identity, short __agent_system_type) {
-	this.authority = __authority;
-	this.identity = __identity;
-	this.agent_system_type = __agent_system_type;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-	if (!(o instanceof Name)) {
-	    return false;
+	// constructors
+	public Name() {
 	}
-	Name n = (Name) o;
 
-	if ((this.authority.length != n.authority.length)
-		|| (this.identity.length != n.identity.length)
-		|| (this.agent_system_type != n.agent_system_type)) {
-	    return false;
+	public Name(final byte[] __authority, final byte[] __identity, final short __agent_system_type) {
+		authority = __authority;
+		identity = __identity;
+		agent_system_type = __agent_system_type;
 	}
-	for (int i = 0; i < this.authority.length; i++) {
-	    if (this.authority[i] != n.authority[i]) {
-		return false;
-	    }
-	}
-	for (int i = 0; i < this.identity.length; i++) {
-	    if (this.identity[i] != n.identity[i]) {
-		return false;
-	    }
-	}
-	return true;
-    }
 
-    /**
-     * Returns an integer suitable for hash table indexing.
-     * 
-     * @return hash table indexing integer.
-     */
-    @Override
-    public int hashCode() {
-	int h = 0;
+	@Override
+	public boolean equals(final Object o) {
+		if (!(o instanceof Name)) {
+			return false;
+		}
+		final Name n = (Name) o;
 
-	for (byte element : this.authority) {
-	    h += (h * 37) + element;
+		if ((authority.length != n.authority.length)
+				|| (identity.length != n.identity.length)
+				|| (agent_system_type != n.agent_system_type)) {
+			return false;
+		}
+		for (int i = 0; i < authority.length; i++) {
+			if (authority[i] != n.authority[i]) {
+				return false;
+			}
+		}
+		for (int i = 0; i < identity.length; i++) {
+			if (identity[i] != n.identity[i]) {
+				return false;
+			}
+		}
+		return true;
 	}
-	for (byte element : this.identity) {
-	    h += (h * 37) + element;
-	}
-	h += (h * 37) + this.agent_system_type;
-	return h;
-    }
 
-    @Override
-    public String toString() {
-	StringBuffer buf = new StringBuffer();
+	/**
+	 * Returns an integer suitable for hash table indexing.
+	 * 
+	 * @return hash table indexing integer.
+	 */
+	@Override
+	public int hashCode() {
+		int h = 0;
 
-	for (byte b : this.identity) {
-	    buf.append(Character.forDigit((b >>> 4) & 0xF, 16));
-	    buf.append(Character.forDigit(b & 0xF, 16));
+		for (final byte element : authority) {
+			h += (h * 37) + element;
+		}
+		for (final byte element : identity) {
+			h += (h * 37) + element;
+		}
+		h += (h * 37) + agent_system_type;
+		return h;
 	}
-	return buf.toString();
-    }
+
+	@Override
+	public String toString() {
+		final StringBuffer buf = new StringBuffer();
+
+		for (final byte b : identity) {
+			buf.append(Character.forDigit((b >>> 4) & 0xF, 16));
+			buf.append(Character.forDigit(b & 0xF, 16));
+		}
+		return buf.toString();
+	}
 }

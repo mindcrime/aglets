@@ -25,69 +25,69 @@ import com.ibm.maf.MAFAgentSystem;
  * @author Mitsuru Oshima
  */
 final class RemoteFutureReplyImpl extends FutureReplyImpl {
-    static final Integer HANDLED = new Integer(0);
-    static final Integer MESSAGE_EXCEPTION = new Integer(1);
-    static final Integer NOT_HANDLED = new Integer(2);
+	static final Integer HANDLED = new Integer(0);
+	static final Integer MESSAGE_EXCEPTION = new Integer(1);
+	static final Integer NOT_HANDLED = new Integer(2);
 
-    private MAFAgentSystem agentsystem;
-    private ResourceManager rmanager;
-    private long return_id;
+	private final MAFAgentSystem agentsystem;
+	private final ResourceManager rmanager;
+	private final long return_id;
 
-    RemoteFutureReplyImpl(MAFAgentSystem as, ResourceManager rm, long id) {
-	this.agentsystem = as;
-	this.rmanager = rm;
-	this.return_id = id;
-    }
-
-    @Override
-    synchronized void cancel(String msg) {
-	super.cancel(msg);
-
-	try {
-	    Object ret[] = new Object[2];
-
-	    ret[0] = NOT_HANDLED;
-	    ret[1] = msg;
-	    byte reply[] = MessageOutputStream.toByteArray(this.rmanager, ret);
-
-	    this.agentsystem.receive_future_reply(this.return_id, reply);
-	} catch (Exception ex) {
-	    ex.printStackTrace();
+	RemoteFutureReplyImpl(final MAFAgentSystem as, final ResourceManager rm, final long id) {
+		agentsystem = as;
+		rmanager = rm;
+		return_id = id;
 	}
-    }
 
-    @Override
-    synchronized void setExceptionAndNotify(Throwable ex) {
-	super.setExceptionAndNotify(ex);
+	@Override
+	synchronized void cancel(final String msg) {
+		super.cancel(msg);
 
-	try {
-	    Object ret[] = new Object[2];
+		try {
+			final Object ret[] = new Object[2];
 
-	    ret[0] = MESSAGE_EXCEPTION;
-	    ret[1] = new MessageException(ex);
-	    byte reply[] = MessageOutputStream.toByteArray(this.rmanager, ret);
+			ret[0] = NOT_HANDLED;
+			ret[1] = msg;
+			final byte reply[] = MessageOutputStream.toByteArray(rmanager, ret);
 
-	    this.agentsystem.receive_future_reply(this.return_id, reply);
-	} catch (Exception exx) {
-	    exx.printStackTrace();
+			agentsystem.receive_future_reply(return_id, reply);
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
 	}
-    }
 
-    @Override
-    synchronized void setReplyAndNotify(Object result) {
-	super.setReplyAndNotify(result);
+	@Override
+	synchronized void setExceptionAndNotify(final Throwable ex) {
+		super.setExceptionAndNotify(ex);
 
-	try {
-	    Object ret[] = new Object[2];
+		try {
+			final Object ret[] = new Object[2];
 
-	    ret[0] = HANDLED;
-	    ret[1] = result;
+			ret[0] = MESSAGE_EXCEPTION;
+			ret[1] = new MessageException(ex);
+			final byte reply[] = MessageOutputStream.toByteArray(rmanager, ret);
 
-	    byte[] reply = MessageOutputStream.toByteArray(this.rmanager, ret);
-
-	    this.agentsystem.receive_future_reply(this.return_id, reply);
-	} catch (Exception ex) {
-	    ex.printStackTrace();
+			agentsystem.receive_future_reply(return_id, reply);
+		} catch (final Exception exx) {
+			exx.printStackTrace();
+		}
 	}
-    }
+
+	@Override
+	synchronized void setReplyAndNotify(final Object result) {
+		super.setReplyAndNotify(result);
+
+		try {
+			final Object ret[] = new Object[2];
+
+			ret[0] = HANDLED;
+			ret[1] = result;
+
+			final byte[] reply = MessageOutputStream.toByteArray(rmanager, ret);
+
+			agentsystem.receive_future_reply(return_id, reply);
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 }

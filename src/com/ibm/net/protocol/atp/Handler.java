@@ -29,15 +29,15 @@ import java.net.URLStreamHandler;
 
 public class Handler extends URLStreamHandler {
 
-    /**
-     * Opens a connection to the object referenced by the URL argument.
-     * 
-     * @param url
-     *            the URL that this connect to.
-     * @return an AtpURLConnection object for the URL.
-     */
-    @Override
-    public URLConnection openConnection(URL url) throws IOException {
-	return new URLConnectionForATP(url);
-    }
+	/**
+	 * Opens a connection to the object referenced by the URL argument.
+	 * 
+	 * @param url
+	 *            the URL that this connect to.
+	 * @return an AtpURLConnection object for the URL.
+	 */
+	@Override
+	public URLConnection openConnection(final URL url) throws IOException {
+		return new URLConnectionForATP(url);
+	}
 }

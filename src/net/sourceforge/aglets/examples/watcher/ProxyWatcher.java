@@ -45,102 +45,102 @@ import com.ibm.aglet.message.Message;
  * @see net.sourceforge.aglets.examples.watcher.WatcherSlave
  */
 public class ProxyWatcher extends Aglet {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 6509197929548594627L;
-    transient AgletContext ac;
-    WatcherFrame frame;
-    AgletProxy slave = null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6509197929548594627L;
+	transient AgletContext ac;
+	WatcherFrame frame;
+	AgletProxy slave = null;
 
-    public void go(String address) {
-	try {
-
-	    //
-	    // Creates another aglet
-	    //
-	    if (this.slave == null) {
-		this.slave = this.ac.createAglet(this.getCodeBase(), "keio.ics.nak.watcher.WatcherSlave", this.getAgletID());
-	    }
-
-	    //
-	    // Obtain the remote proxy.
-	    //
-	    Message gonext = new Message("gonext", new URL(address));
-
-	    // update the proxy
-	    this.slave = (AgletProxy) this.slave.sendMessage(gonext);
-
-	} catch (Exception ex) {
-	    if (this.slave != null) {
+	public void go(final String address) {
 		try {
-		    this.slave.dispose();
-		} catch (Exception exx) {
-		    exx.printStackTrace();
+
+			//
+			// Creates another aglet
+			//
+			if (slave == null) {
+				slave = ac.createAglet(getCodeBase(), "keio.ics.nak.watcher.WatcherSlave", getAgletID());
+			}
+
+			//
+			// Obtain the remote proxy.
+			//
+			final Message gonext = new Message("gonext", new URL(address));
+
+			// update the proxy
+			slave = (AgletProxy) slave.sendMessage(gonext);
+
+		} catch (final Exception ex) {
+			if (slave != null) {
+				try {
+					slave.dispose();
+				} catch (final Exception exx) {
+					exx.printStackTrace();
+				}
+			}
+			ex.printStackTrace();
 		}
-	    }
-	    ex.printStackTrace();
 	}
-    }
 
-    @Override
-    public boolean handleMessage(Message msg) {
-	if (msg.sameKind("update")) {
-	    String s = String.valueOf(msg.getArg());
+	@Override
+	public boolean handleMessage(final Message msg) {
+		if (msg.sameKind("update")) {
+			final String s = String.valueOf(msg.getArg());
 
-	    this.frame.update(s);
-	} else {
-	    return false;
+			frame.update(s);
+		} else {
+			return false;
+		}
+		return true;
 	}
-	return true;
-    }
 
-    public void move(String address) {
-	try {
-	    URL dest = new URL(address);
+	public void move(final String address) {
+		try {
+			final URL dest = new URL(address);
 
-	    this.slave = this.slave.dispatch(dest);
-	} catch (AgletException ex) {
-	    ex.printStackTrace();
-	} catch (java.io.IOException ex) {
-	    ex.printStackTrace();
+			slave = slave.dispatch(dest);
+		} catch (final AgletException ex) {
+			ex.printStackTrace();
+		} catch (final java.io.IOException ex) {
+			ex.printStackTrace();
+		}
 	}
-    }
 
-    @Override
-    public void onCreation(Object o) {
-	this.ac = this.getAgletContext();
-	this.frame = new WatcherFrame(this);
-	this.frame.pack();
-	this.frame.setVisible(true);
-    }
-
-    public void sendMessage(Message msg) {
-	if (this.slave != null) {
-	    try {
-
-		//
-		// Remote messaging.
-		//
-		this.slave.sendAsyncMessage(msg);
-	    } catch (InvalidAgletException ex) {
-		ex.printStackTrace();
-	    }
+	@Override
+	public void onCreation(final Object o) {
+		ac = getAgletContext();
+		frame = new WatcherFrame(this);
+		frame.pack();
+		frame.setVisible(true);
 	}
-    }
 
-    public void terminate() {
-	if (this.slave == null) {
-	    return;
-	}
-	try {
+	public void sendMessage(final Message msg) {
+		if (slave != null) {
+			try {
 
-	    //
-	    // you can call the dispose method on the remote aglet.
-	    //
-	    this.slave.dispose();
-	} catch (InvalidAgletException ex) {
-	    ex.printStackTrace();
+				//
+				// Remote messaging.
+				//
+				slave.sendAsyncMessage(msg);
+			} catch (final InvalidAgletException ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
-    }
+
+	public void terminate() {
+		if (slave == null) {
+			return;
+		}
+		try {
+
+			//
+			// you can call the dispose method on the remote aglet.
+			//
+			slave.dispose();
+		} catch (final InvalidAgletException ex) {
+			ex.printStackTrace();
+		}
+	}
 }

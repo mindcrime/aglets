@@ -26,83 +26,83 @@ import java.awt.event.WindowEvent;
 
 final class MemoryUsageDialog extends TahitiDialog implements Runnable {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -8229846872561650844L;
-    private java.awt.Canvas _myCanvas = new MemCanvas();
-    private Thread _handler = null;
-
-    /*
-     * Singleton instance reference.
-     */
-    private static MemoryUsageDialog _instance = null;
-
-    /*
-     * Constructs a new Aglet creation dialog.
-     */
-    private MemoryUsageDialog(MainWindow parent) {
-	super(parent, "Memory Usage", false);
-	this.add("North", new Label(""));
-	this.add("Center", this._myCanvas);
-
-	this.addCloseButton(null);
-
-	this._handler = new Thread(this);
-	this._handler.start();
-    }
-
-    protected void closeButtonPressed() {
-	this._handler.suspend();
-    }
-
-    /*
-     * Singletion method to get the instnace
-     */
-    static MemoryUsageDialog getInstance(MainWindow parent) {
-	if (_instance == null) {
-	    _instance = new MemoryUsageDialog(parent);
-	} else {
-	    _instance.repaint();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8229846872561650844L;
+	/*
+	 * Singletion method to get the instnace
+	 */
+	static MemoryUsageDialog getInstance(final MainWindow parent) {
+		if (_instance == null) {
+			_instance = new MemoryUsageDialog(parent);
+		} else {
+			_instance.repaint();
+		}
+		_instance.start();
+		return _instance;
 	}
-	_instance.start();
-	return _instance;
-    }
+	private final java.awt.Canvas _myCanvas = new MemCanvas();
 
-    /*
-     * Layouts all components. protected void makePanel(GridBagLayout grid) {
-     * GridBagConstraints cns = new GridBagConstraints();
-     * 
-     * cns.fill = GridBagConstraints.HORIZONTAL; cns.weightx = 1.0; //
-     * cns.weighty = 0.1; cns.ipadx = cns.ipady = 5; cns.insets = new
-     * Insets(5,5,5,5); cns.gridwidth = GridBagConstraints.REMAINDER;
-     * 
-     * addCmp(_myCanvas, grid, cns); }
-     */
+	private Thread _handler = null;
 
-    /*
-     * Save options
-     */
-    @Override
-    public void run() {
-	while (true) {
-	    this._myCanvas.repaint();
-	    try {
-		Thread.currentThread();
-		Thread.sleep(1000);
-	    } catch (Exception ex) {
-		break;
-	    }
+	/*
+	 * Singleton instance reference.
+	 */
+	private static MemoryUsageDialog _instance = null;
+
+	/*
+	 * Constructs a new Aglet creation dialog.
+	 */
+	private MemoryUsageDialog(final MainWindow parent) {
+		super(parent, "Memory Usage", false);
+		this.add("North", new Label(""));
+		this.add("Center", _myCanvas);
+
+		addCloseButton(null);
+
+		_handler = new Thread(this);
+		_handler.start();
 	}
-	this._handler = null;
-    }
 
-    public void start() {
-	this._handler.resume();
-    }
+	protected void closeButtonPressed() {
+		_handler.suspend();
+	}
 
-    protected boolean windowClosing(WindowEvent ev) {
-	this._handler.suspend();
-	return false;
-    }
+	/*
+	 * Layouts all components. protected void makePanel(GridBagLayout grid) {
+	 * GridBagConstraints cns = new GridBagConstraints();
+	 * 
+	 * cns.fill = GridBagConstraints.HORIZONTAL; cns.weightx = 1.0; //
+	 * cns.weighty = 0.1; cns.ipadx = cns.ipady = 5; cns.insets = new
+	 * Insets(5,5,5,5); cns.gridwidth = GridBagConstraints.REMAINDER;
+	 * 
+	 * addCmp(_myCanvas, grid, cns); }
+	 */
+
+	/*
+	 * Save options
+	 */
+	@Override
+	public void run() {
+		while (true) {
+			_myCanvas.repaint();
+			try {
+				Thread.currentThread();
+				Thread.sleep(1000);
+			} catch (final Exception ex) {
+				break;
+			}
+		}
+		_handler = null;
+	}
+
+	public void start() {
+		_handler.resume();
+	}
+
+	protected boolean windowClosing(final WindowEvent ev) {
+		_handler.suspend();
+		return false;
+	}
 }

@@ -12,10 +12,10 @@ package net.sourceforge.aglets.rolex.descriptors;
  */
 public interface RoleDescriptor extends GenericDescriptor {
 
-    /**
-     * Returns the available operations.
-     * 
-     * @return the operations that belongs to this role
-     */
-    public OperationDescriptor[] getOperations();
+	/**
+	 * Returns the available operations.
+	 * 
+	 * @return the operations that belongs to this role
+	 */
+	public OperationDescriptor[] getOperations();
 }

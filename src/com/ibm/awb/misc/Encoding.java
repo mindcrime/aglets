@@ -27,101 +27,101 @@ import sun.io.CharToByteConverter;
  */
 
 public class Encoding {
-    static private Hashtable encodingTable = new Hashtable();
+	static private Hashtable encodingTable = new Hashtable();
 
-    static {
+	static {
 
-	// MIME Official encoding schema
+		// MIME Official encoding schema
 
-	encodingTable.put("ISO8859_1", "iso-8859-1");
-	encodingTable.put("ISO8859_2", "iso-8859-2");
-	encodingTable.put("ISO8859_3", "iso-8859-3");
-	encodingTable.put("ISO8859_4", "iso-8859-4");
-	encodingTable.put("ISO8859_5", "iso-8859-5");
-	encodingTable.put("ISO8859_6", "iso-8859-6");
-	encodingTable.put("ISO8859_7", "iso-8859-7");
-	encodingTable.put("ISO8859_8", "iso-8859-8");
-	encodingTable.put("ISO8859_9", "iso-8859-9");
+		encodingTable.put("ISO8859_1", "iso-8859-1");
+		encodingTable.put("ISO8859_2", "iso-8859-2");
+		encodingTable.put("ISO8859_3", "iso-8859-3");
+		encodingTable.put("ISO8859_4", "iso-8859-4");
+		encodingTable.put("ISO8859_5", "iso-8859-5");
+		encodingTable.put("ISO8859_6", "iso-8859-6");
+		encodingTable.put("ISO8859_7", "iso-8859-7");
+		encodingTable.put("ISO8859_8", "iso-8859-8");
+		encodingTable.put("ISO8859_9", "iso-8859-9");
 
-	encodingTable.put("ISO2022JP", "iso-2022-jp");
-	encodingTable.put("ISO2022CN", "iso-2022-cn");
-	encodingTable.put("ISO2022KR", "iso-2022-kr");
+		encodingTable.put("ISO2022JP", "iso-2022-jp");
+		encodingTable.put("ISO2022CN", "iso-2022-cn");
+		encodingTable.put("ISO2022KR", "iso-2022-kr");
 
-	// MIME Unofficial encoding schema
+		// MIME Unofficial encoding schema
 
-	encodingTable.put("EUC_JP", "euc-jp");
-	encodingTable.put("EUC_KR", "euc-kr");
-	encodingTable.put("EUC_CN", "euc-cn");
-	encodingTable.put("EUC_TW", "euc-tw");
+		encodingTable.put("EUC_JP", "euc-jp");
+		encodingTable.put("EUC_KR", "euc-kr");
+		encodingTable.put("EUC_CN", "euc-cn");
+		encodingTable.put("EUC_TW", "euc-tw");
 
-	encodingTable.put("SJIS", "Shift_JIS");
-    }
-
-    private String _encoding = null;
-    private String _charset = null;
-
-    /**
-     * Java Encoding name into HTML charset name.
-     * 
-     * @param javaEncoding
-     *            Java Encoding name
-     */
-    public Encoding(String javaEncoding) {
-	this._encoding = javaEncoding;
-	this._charset = javaEncodingToHTMLCharset(this._encoding);
-    }
-
-    public static Encoding getDefault() {
-	return new Encoding(CharToByteConverter.getDefault().getCharacterEncoding());
-    }
-
-    /**
-     * get HTML charset name.
-     * 
-     * @return HTML charset name
-     */
-    public String getHTMLCharset() {
-	return this._charset;
-    }
-
-    /**
-     * get Java Encoding name.
-     * 
-     * @return Java Encoding name
-     */
-    public String getJavaEncoding() {
-	return this._encoding;
-    }
-
-    /**
-     * Converts HTML charset name into Java Encoding name.
-     * 
-     * @param charset
-     *            HTML charset name
-     * @return Java Encoding name
-     */
-    public static String htmlCharsetToJavaEncoding(String charset) {
-	Enumeration keys = encodingTable.keys();
-
-	while (keys.hasMoreElements()) {
-	    String key = (String) keys.nextElement();
-	    String cs = (String) encodingTable.get(key);
-
-	    if ((cs != null) && cs.equals(charset)) {
-		return key;
-	    }
+		encodingTable.put("SJIS", "Shift_JIS");
 	}
-	return null;
-    }
 
-    /**
-     * Converts Java Encoding name into HTML charset name.
-     * 
-     * @param javaEncoding
-     *            Java Encoding name
-     * @return HTML charset name
-     */
-    public static String javaEncodingToHTMLCharset(String javaEncoding) {
-	return (String) encodingTable.get(javaEncoding);
-    }
+	public static Encoding getDefault() {
+		return new Encoding(CharToByteConverter.getDefault().getCharacterEncoding());
+	}
+	/**
+	 * Converts HTML charset name into Java Encoding name.
+	 * 
+	 * @param charset
+	 *            HTML charset name
+	 * @return Java Encoding name
+	 */
+	public static String htmlCharsetToJavaEncoding(final String charset) {
+		final Enumeration keys = encodingTable.keys();
+
+		while (keys.hasMoreElements()) {
+			final String key = (String) keys.nextElement();
+			final String cs = (String) encodingTable.get(key);
+
+			if ((cs != null) && cs.equals(charset)) {
+				return key;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Converts Java Encoding name into HTML charset name.
+	 * 
+	 * @param javaEncoding
+	 *            Java Encoding name
+	 * @return HTML charset name
+	 */
+	public static String javaEncodingToHTMLCharset(final String javaEncoding) {
+		return (String) encodingTable.get(javaEncoding);
+	}
+
+	private String _encoding = null;
+
+	private String _charset = null;
+
+	/**
+	 * Java Encoding name into HTML charset name.
+	 * 
+	 * @param javaEncoding
+	 *            Java Encoding name
+	 */
+	public Encoding(final String javaEncoding) {
+		_encoding = javaEncoding;
+		_charset = javaEncodingToHTMLCharset(_encoding);
+	}
+
+	/**
+	 * get HTML charset name.
+	 * 
+	 * @return HTML charset name
+	 */
+	public String getHTMLCharset() {
+		return _charset;
+	}
+
+	/**
+	 * get Java Encoding name.
+	 * 
+	 * @return Java Encoding name
+	 */
+	public String getJavaEncoding() {
+		return _encoding;
+	}
 }

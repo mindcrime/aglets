@@ -16,13 +16,13 @@ package com.ibm.aglets.tahiti;
 
 class SecurityPermissionEditor extends GeneralPermissionEditor {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -8989705322233730008L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8989705322233730008L;
 
-    // currently action should be null
-    SecurityPermissionEditor() {
-	super();
-    }
+	// currently action should be null
+	SecurityPermissionEditor() {
+		super();
+	}
 }

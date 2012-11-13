@@ -28,111 +28,111 @@ import com.ibm.awb.misc.FileUtils;
  * @author Mitsuru Oshima
  */
 final class SimplePersistence implements com.ibm.aglets.Persistence {
-    String spool_dir;
+	String spool_dir;
 
-    SimplePersistence(String str) throws IOException {
-	this.spool_dir = str;
+	SimplePersistence(final String str) throws IOException {
+		spool_dir = str;
 
-	// to make sure that str point to a directory.
-	if (this.spool_dir.charAt(this.spool_dir.length() - 1) != File.separatorChar) {
-	    this.spool_dir += File.separator;
-	}
-	final File dir = new File(this.spool_dir);
-	boolean exists = false;
-	boolean isDir = false;
-
-	try {
-	    boolean[] bb = (boolean[]) AccessController.doPrivileged(new PrivilegedAction() {
-		@Override
-		public Object run() {
-		    boolean[] result = new boolean[2];
-
-		    result[0] = dir.exists();
-		    result[1] = dir.isDirectory();
-		    return result;
+		// to make sure that str point to a directory.
+		if (spool_dir.charAt(spool_dir.length() - 1) != File.separatorChar) {
+			spool_dir += File.separator;
 		}
-	    });
+		final File dir = new File(spool_dir);
+		boolean exists = false;
+		boolean isDir = false;
 
-	    exists = bb[0];
-	    isDir = bb[1];
-	} catch (Exception ex) {
-	    ex.printStackTrace();
-	}
-	if (exists && (isDir == false)) {
-	    throw new IOException(str + "is not a directory.");
-	}
-	if (exists == false) {
-	    if (FileUtils.ensureDirectory(this.spool_dir) == false) {
-		System.err.println("Failed to create new spool directory : "
-			+ str);
-	    }
-	}
-    }
+		try {
+			final boolean[] bb = (boolean[]) AccessController.doPrivileged(new PrivilegedAction() {
+				@Override
+				public Object run() {
+					final boolean[] result = new boolean[2];
 
-    @Override
-    public PersistentEntry createEntryWith(String key) {
-	final File f = new File(this.spool_dir + key);
+					result[0] = dir.exists();
+					result[1] = dir.isDirectory();
+					return result;
+				}
+			});
 
-	try {
-	    return (PersistentEntry) AccessController.doPrivileged(new PrivilegedAction() {
-		@Override
-		public Object run() {
-		    if (!f.exists() || f.canWrite()) {
-			return new SimplePEntry(f);
-		    } else {
-			return null;
-		    }
+			exists = bb[0];
+			isDir = bb[1];
+		} catch (final Exception ex) {
+			ex.printStackTrace();
 		}
-	    });
-	} catch (Exception ex) {
-	    ex.printStackTrace();
-	}
-	return null;
-    }
-
-    @Override
-    public Enumeration entryKeys() {
-	return new KeyEnumerator(this.spool_dir);
-    }
-
-    @Override
-    public PersistentEntry getEntry(String key) {
-	final File f = new File(this.spool_dir + key);
-
-	try {
-	    return (PersistentEntry) AccessController.doPrivileged(new PrivilegedAction() {
-		@Override
-		public Object run() {
-		    if (f.exists() && f.canWrite()) {
-			return new SimplePEntry(f);
-		    } else {
-			return null;
-		    }
+		if (exists && (isDir == false)) {
+			throw new IOException(str + "is not a directory.");
 		}
-	    });
-	} catch (Exception ex) {
-	    ex.printStackTrace();
-	}
-	return null;
-    }
-
-    @Override
-    public void removeEntry(String key) {
-	try {
-	    final String fSpoolDir = this.spool_dir;
-	    final String fKey = key;
-
-	    AccessController.doPrivileged(new PrivilegedAction() {
-		@Override
-		public Object run() {
-		    String filename = fSpoolDir + fKey;
-
-		    (new File(filename)).delete();
-		    return null;
+		if (exists == false) {
+			if (FileUtils.ensureDirectory(spool_dir) == false) {
+				System.err.println("Failed to create new spool directory : "
+						+ str);
+			}
 		}
-	    });
-	} catch (Exception ex) {
-	    ex.printStackTrace();
 	}
-    }
+
+	@Override
+	public PersistentEntry createEntryWith(final String key) {
+		final File f = new File(spool_dir + key);
+
+		try {
+			return (PersistentEntry) AccessController.doPrivileged(new PrivilegedAction() {
+				@Override
+				public Object run() {
+					if (!f.exists() || f.canWrite()) {
+						return new SimplePEntry(f);
+					} else {
+						return null;
+					}
+				}
+			});
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public Enumeration entryKeys() {
+		return new KeyEnumerator(spool_dir);
+	}
+
+	@Override
+	public PersistentEntry getEntry(final String key) {
+		final File f = new File(spool_dir + key);
+
+		try {
+			return (PersistentEntry) AccessController.doPrivileged(new PrivilegedAction() {
+				@Override
+				public Object run() {
+					if (f.exists() && f.canWrite()) {
+						return new SimplePEntry(f);
+					} else {
+						return null;
+					}
+				}
+			});
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public void removeEntry(final String key) {
+		try {
+			final String fSpoolDir = spool_dir;
+			final String fKey = key;
+
+			AccessController.doPrivileged(new PrivilegedAction() {
+				@Override
+				public Object run() {
+					final String filename = fSpoolDir + fKey;
+
+					(new File(filename)).delete();
+					return null;
+				}
+			});
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 }

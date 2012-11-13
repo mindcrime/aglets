@@ -36,74 +36,74 @@ import com.ibm.aglet.InvalidAgletException;
 
 final class CloneAgletDialog extends TahitiDialog implements ActionListener {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -9035713424701354881L;
-    /*
-     * The proxy of the Aglet that is to be cloned
-     */
-    private AgletProxy proxy = null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9035713424701354881L;
+	/*
+	 * The proxy of the Aglet that is to be cloned
+	 */
+	private AgletProxy proxy = null;
 
-    /*
-     * Constructs the clone Aglet window.
-     */
-    CloneAgletDialog(MainWindow parent, AgletProxy proxy) {
-	super(parent);
+	/*
+	 * Constructs the clone Aglet window.
+	 */
+	CloneAgletDialog(final MainWindow parent, final AgletProxy proxy) {
+		super(parent);
 
-	// set the title
-	this.setTitle(JComponentBuilder.getTitle(this.baseKey));
+		// set the title
+		setTitle(JComponentBuilder.getTitle(baseKey));
 
-	// store the proxy
-	this.proxy = proxy;
+		// store the proxy
+		this.proxy = proxy;
 
-	// try to understand if this is a valid agent
-	String message = null;
-	AgletInfo info = null;
-	try {
-	    if ((this.proxy == null)
-		    || ((info = this.proxy.getAgletInfo()) == null)) {
-		// show an error message
-		message = this.translator.translate(this.baseKey
-			+ ".selectionError");
-		this.showMessage(message);
-	    } else
-		// try to get the information about this agent
-		message = this.translator.translate(this.baseKey
-			+ ".confirmMessage");
-	    this.showMessage(message);
-	    this.showAgletInfo(info);
+		// try to understand if this is a valid agent
+		String message = null;
+		AgletInfo info = null;
+		try {
+			if ((this.proxy == null)
+					|| ((info = this.proxy.getAgletInfo()) == null)) {
+				// show an error message
+				message = translator.translate(baseKey
+						+ ".selectionError");
+				showMessage(message);
+			} else
+				// try to get the information about this agent
+				message = translator.translate(baseKey
+						+ ".confirmMessage");
+			showMessage(message);
+			showAgletInfo(info);
 
-	} catch (InvalidAgletException ex) {
-	    JOptionPane.showMessageDialog(this, this.translator.translate(this.baseKey
-		    + ".infoError"), this.translator.translate(this.baseKey
-			    + ".infoError.title"), JOptionPane.ERROR_MESSAGE);
-	} finally {
-	    this.pack();
+		} catch (final InvalidAgletException ex) {
+			JOptionPane.showMessageDialog(this, translator.translate(baseKey
+					+ ".infoError"), translator.translate(baseKey
+							+ ".infoError.title"), JOptionPane.ERROR_MESSAGE);
+		} finally {
+			pack();
+		}
+
 	}
 
-    }
+	/**
+	 * Manages events from the buttons and other components. If the command
+	 * comes from the OK/Clone event that means the user wants to clone the
+	 * agent, and thus I clone it and dispose this window, otherwise I leave the
+	 * parent frame to manage the event.
+	 */
+	@Override
+	public void actionPerformed(final ActionEvent ev) {
+		// check params
+		if (ev == null)
+			return;
 
-    /**
-     * Manages events from the buttons and other components. If the command
-     * comes from the OK/Clone event that means the user wants to clone the
-     * agent, and thus I clone it and dispose this window, otherwise I leave the
-     * parent frame to manage the event.
-     */
-    @Override
-    public void actionPerformed(ActionEvent ev) {
-	// check params
-	if (ev == null)
-	    return;
+		final String command = ev.getActionCommand();
 
-	String command = ev.getActionCommand();
-
-	if (GUICommandStrings.OK_COMMAND.equals(command)) {
-	    // the user wants to clone the agent
-	    this.getMainWindow().cloneAglet(this.proxy);
-	    this.setVisible(false);
-	    this.dispose();
-	} else
-	    super.actionPerformed(ev);
-    }
+		if (GUICommandStrings.OK_COMMAND.equals(command)) {
+			// the user wants to clone the agent
+			getMainWindow().cloneAglet(proxy);
+			setVisible(false);
+			dispose();
+		} else
+			super.actionPerformed(ev);
+	}
 }

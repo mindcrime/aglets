@@ -34,50 +34,50 @@ import com.ibm.agletx.util.MessengerItinerary;
  */
 public class MessengerAglet extends Aglet {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 2982048683048297403L;
-    MessengerItinerary itinerary;
-    Vector addresses = new Vector();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2982048683048297403L;
+	MessengerItinerary itinerary;
+	Vector addresses = new Vector();
 
-    public void createStationaryAglets(MessengerItinerary itin)
-    throws Exception {
-	String addr = null;
+	public void createStationaryAglets(final MessengerItinerary itin)
+	throws Exception {
+		String addr = null;
 
-	for (int i = 0; i < this.addresses.size(); i++) {
-	    try {
-		AgletProxy p = Aglets.createAglet(addr = (String) this.addresses.elementAt(i), null, "examples.itinerary.StationaryAglet", null);
+		for (int i = 0; i < addresses.size(); i++) {
+			try {
+				final AgletProxy p = Aglets.createAglet(addr = (String) addresses.elementAt(i), null, "examples.itinerary.StationaryAglet", null);
 
-		itin.addAglet(addr, p.getAgletID());
-	    } catch (Exception ex) {
-	    }
+				itin.addAglet(addr, p.getAgletID());
+			} catch (final Exception ex) {
+			}
+		}
 	}
-    }
 
-    @Override
-    public boolean handleMessage(Message msg) {
-	if (msg.sameKind("dialog")) {
-	    Frame f = new MessengerFrame(this);
+	@Override
+	public boolean handleMessage(final Message msg) {
+		if (msg.sameKind("dialog")) {
+			final Frame f = new MessengerFrame(this);
 
-	    f.pack();
-	    f.setVisible(true);
-	    return true;
+			f.pack();
+			f.setVisible(true);
+			return true;
+		}
+		return false;
 	}
-	return false;
-    }
 
-    @Override
-    public void onCreation(Object ini) {
-    }
-
-    public void start() {
-	try {
-	    this.itinerary.clear();
-	    this.createStationaryAglets(this.itinerary);
-	    this.itinerary.startTrip();
-	} catch (Exception ex) {
-	    ex.printStackTrace();
+	@Override
+	public void onCreation(final Object ini) {
 	}
-    }
+
+	public void start() {
+		try {
+			itinerary.clear();
+			createStationaryAglets(itinerary);
+			itinerary.startTrip();
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 }

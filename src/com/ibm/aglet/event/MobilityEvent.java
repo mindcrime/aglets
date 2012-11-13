@@ -36,60 +36,60 @@ import com.ibm.aglet.Ticket;
  */
 public class MobilityEvent extends AgletEvent {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -302947062244875184L;
-    /**
-     * The ticket for the mobility.
-     */
-    private Ticket ticket;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -302947062244875184L;
+	/**
+	 * The ticket for the mobility.
+	 */
+	private final Ticket ticket;
 
-    /**
-     * Constructs a mobility event with the next available id, the specified
-     * proxy as target, the ticket and the even type.
-     */
-    public MobilityEvent(AgletProxy target, Ticket tick, EventType type) {
-	super(target, AgletEvent.nextID(), type);
-	this.ticket = tick;
+	/**
+	 * Constructs a mobility event with the next available id, the specified
+	 * proxy as target, the ticket and the even type.
+	 */
+	public MobilityEvent(final AgletProxy target, final Ticket tick, final EventType type) {
+		super(target, AgletEvent.nextID(), type);
+		ticket = tick;
 
-    }
+	}
 
-    /**
-     * Constructs a mobility event with specified id, target and location
-     */
-    public MobilityEvent(AgletProxy target, URL loc, EventType type) {
-	super(target, AgletEvent.nextID(), type);
-	this.ticket = new Ticket(loc);
-    }
+	/**
+	 * Constructs a mobility event with specified id, target and location
+	 */
+	public MobilityEvent(final AgletProxy target, final URL loc, final EventType type) {
+		super(target, AgletEvent.nextID(), type);
+		ticket = new Ticket(loc);
+	}
 
-    /**
-     * Returns the aglet proxy which is the source of the event.
-     */
-    public AgletProxy getAgletProxy() {
-	return (AgletProxy) this.source;
-    }
+	/**
+	 * Returns the aglet proxy which is the source of the event.
+	 */
+	public AgletProxy getAgletProxy() {
+		return (AgletProxy) source;
+	}
 
-    /**
-     * Gets the location. This specifies: The destination if the event is
-     * <tt> DISPATCHING </tt>. The requester if the event is
-     * <tt> REVERTING </tt>. The host it arrived if the event is
-     * <tt> ARRIVED </tt>. This returns null for the REVERTING event at the
-     * present.
-     */
-    public URL getLocation() {
-	return this.ticket.getDestination();
-    }
+	/**
+	 * Gets the location. This specifies: The destination if the event is
+	 * <tt> DISPATCHING </tt>. The requester if the event is
+	 * <tt> REVERTING </tt>. The host it arrived if the event is
+	 * <tt> ARRIVED </tt>. This returns null for the REVERTING event at the
+	 * present.
+	 */
+	public URL getLocation() {
+		return ticket.getDestination();
+	}
 
-    /**
-     * Gets the ticket.
-     */
-    public Ticket getTicket() {
-	return this.ticket;
-    }
+	/**
+	 * Gets the ticket.
+	 */
+	public Ticket getTicket() {
+		return ticket;
+	}
 
-    @Override
-    public String toString() {
-	return "MobilityEvent[" + this.getEventType().toString() + "]";
-    }
+	@Override
+	public String toString() {
+		return "MobilityEvent[" + getEventType().toString() + "]";
+	}
 }

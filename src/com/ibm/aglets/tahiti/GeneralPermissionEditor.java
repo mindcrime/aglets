@@ -21,89 +21,89 @@ import java.awt.TextField;
 import java.util.Vector;
 
 class GeneralPermissionEditor extends PermissionEditor {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 4260455073544559761L;
-    private static final String DEFAULT_LABEL_NAME = "Name";
-    private static final int LENGTH_NAME = 15;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4260455073544559761L;
+	private static final String DEFAULT_LABEL_NAME = "Name";
+	private static final int LENGTH_NAME = 15;
 
-    private TextField name = new TextField(LENGTH_NAME);
+	private final TextField name = new TextField(LENGTH_NAME);
 
-    GeneralPermissionEditor() {
-	this(DEFAULT_LABEL_NAME);
-    }
-
-    GeneralPermissionEditor(String labelName) {
-	GridBagLayout grid = new GridBagLayout();
-
-	this.setLayout(grid);
-
-	GridBagConstraints cns = new GridBagConstraints();
-
-	cns.weighty = 0.0;
-	cns.fill = GridBagConstraints.HORIZONTAL;
-	cns.ipadx = cns.ipady = 5;
-
-	Label label = null;
-
-	// name
-	label = new Label(labelName);
-	this.add(label);
-	cns.weightx = 0.2;
-	cns.gridwidth = GridBagConstraints.RELATIVE;
-	grid.setConstraints(label, cns);
-
-	this.add(this.name);
-	cns.weightx = 1.0;
-	cns.gridwidth = GridBagConstraints.REMAINDER;
-	grid.setConstraints(this.name, cns);
-
-	// actions
-	label = new Label(LABEL_ACTIONS);
-	this.add(label);
-	cns.weightx = 0.2;
-	cns.gridwidth = GridBagConstraints.RELATIVE;
-	grid.setConstraints(label, cns);
-
-	this.add(this.actions);
-	cns.weightx = 1.0;
-	cns.gridwidth = GridBagConstraints.REMAINDER;
-	grid.setConstraints(this.actions, cns);
-    }
-
-    @Override
-    public String getText() {
-	Vector args = new Vector();
-	final String nam = this.name.getText();
-	final String acts = this.actions.getText();
-	final boolean n = (nam != null) && !nam.equals("");
-	final boolean a = (acts != null) && !acts.equals("");
-
-	if (n || a) {
-	    args.addElement(nam);
+	GeneralPermissionEditor() {
+		this(DEFAULT_LABEL_NAME);
 	}
-	if (a) {
-	    args.addElement(acts);
-	}
-	return toText(args);
-    }
 
-    @Override
-    public void setText(String text) {
-	this.parseText(text);
-	final String nam = this.getArg(0);
-	final String acts = this.getArg(1);
+	GeneralPermissionEditor(final String labelName) {
+		final GridBagLayout grid = new GridBagLayout();
 
-	if (nam != null) {
-	    this.name.setText(nam);
-	} else {
-	    this.name.setText("");
+		setLayout(grid);
+
+		final GridBagConstraints cns = new GridBagConstraints();
+
+		cns.weighty = 0.0;
+		cns.fill = GridBagConstraints.HORIZONTAL;
+		cns.ipadx = cns.ipady = 5;
+
+		Label label = null;
+
+		// name
+		label = new Label(labelName);
+		this.add(label);
+		cns.weightx = 0.2;
+		cns.gridwidth = GridBagConstraints.RELATIVE;
+		grid.setConstraints(label, cns);
+
+		this.add(name);
+		cns.weightx = 1.0;
+		cns.gridwidth = GridBagConstraints.REMAINDER;
+		grid.setConstraints(name, cns);
+
+		// actions
+		label = new Label(LABEL_ACTIONS);
+		this.add(label);
+		cns.weightx = 0.2;
+		cns.gridwidth = GridBagConstraints.RELATIVE;
+		grid.setConstraints(label, cns);
+
+		this.add(actions);
+		cns.weightx = 1.0;
+		cns.gridwidth = GridBagConstraints.REMAINDER;
+		grid.setConstraints(actions, cns);
 	}
-	if (acts != null) {
-	    this.actions.setText(acts);
-	} else {
-	    this.actions.setText("");
+
+	@Override
+	public String getText() {
+		final Vector args = new Vector();
+		final String nam = name.getText();
+		final String acts = actions.getText();
+		final boolean n = (nam != null) && !nam.equals("");
+		final boolean a = (acts != null) && !acts.equals("");
+
+		if (n || a) {
+			args.addElement(nam);
+		}
+		if (a) {
+			args.addElement(acts);
+		}
+		return toText(args);
 	}
-    }
+
+	@Override
+	public void setText(final String text) {
+		this.parseText(text);
+		final String nam = this.getArg(0);
+		final String acts = this.getArg(1);
+
+		if (nam != null) {
+			name.setText(nam);
+		} else {
+			name.setText("");
+		}
+		if (acts != null) {
+			actions.setText(acts);
+		} else {
+			actions.setText("");
+		}
+	}
 }

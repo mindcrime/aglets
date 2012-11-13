@@ -51,187 +51,187 @@ import com.ibm.aglet.message.ReplySet;
 
 public final class Meeting implements java.io.Serializable {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -5522945932243735986L;
-    private String _id = null;
-    private String _place = null;
-    private Vector _colleagues = null;
-    private Object _info = null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5522945932243735986L;
+	private synchronized static Vector ready0(
+	                                          final AgletID aid,
+	                                          final AgletContext ctx,
+	                                          final String id,
+	                                          final Aglet ag) throws AgletException {
 
-    /**
-     * A Constructor
-     * 
-     * @param place
-     *            the meeting place.
-     */
-    public Meeting(String place) {
-	this._place = place;
-	this._id = "meet." + String.valueOf(Math.random());
-    }
+		final ReplySet rs = ctx.multicastMessage(new Message(id, aid));
 
-    /**
-     * A Constructor
-     * 
-     * @param place
-     *            the meeting place.
-     * @param colleagues
-     *            the colleagues
-     * @exception AgletException
-     *                if colleagues is invalid (should include only AgletID
-     *                objects)
-     */
-
-    public Meeting(String place, Vector colleagues) throws AgletException {
-	this._place = place;
-	this._id = "meet." + String.valueOf(Math.random());
-	this.setColleagues(colleagues);
-    }
-
-    private Vector append(Vector v1, Vector v2) {
-	Vector v = new Vector();
-
-	if (v1 == null) {
-	    return v2;
+		ag.subscribeMessage(id);
+		return toVector(rs);
 	}
-	if (v2 == null) {
-	    return v1;
+	private static Vector toVector(final ReplySet rs) throws AgletException {
+		final Vector v = new Vector();
 
-	}
-	for (int i = 0; i < v1.size(); i++) {
-	    v.addElement(v1.elementAt(i));
-	}
-	for (int j = 0; j < v2.size(); j++) {
-	    v.addElement(v2.elementAt(j));
-	}
-	return v;
-    }
+		try {
+			while (rs.hasMoreFutureReplies()) {
+				final Object obj = rs.getNextFutureReply().getReply();
 
-    private void checkColleagues(Vector c) throws AgletException {
-	for (int i = 0; i < c.size(); i++) {
-	    if ((c.elementAt(i) instanceof AgletID) == false) {
-		throw new AgletException("non AgletIdentifer object is included");
-	    }
-	}
-    }
-
-    private void checkColleaguesArePresent(AgletContext ctx, Vector c)
-    throws AgletException {
-	boolean found = false;
-
-	if (c == null) {
-	    return;
-	}
-	for (int i = 0; i < c.size(); i++) {
-	    found = false;
-	    for (Enumeration e = ctx.getAgletProxies(); e.hasMoreElements();) {
-		AgletProxy p = (AgletProxy) e.nextElement();
-
-		if (p.getAgletID().equals(c.elementAt(i))) {
-		    found = true;
-		    break;
+				if (obj instanceof AgletID) {
+					v.addElement(obj);
+				} else {
+					throw new AgletException("a non AgletIdentifer object");
+				}
+			}
+		} catch (final Exception e) {
 		}
-	    }
-	    if (found == false) {
-		throw new AgletException("not all colleagues are presented");
-	    }
+		return v;
 	}
-    }
+	private String _id = null;
+	private String _place = null;
 
-    public Object getAttachedInfo() {
-	return this._info;
-    }
+	private Vector _colleagues = null;
 
-    // temporaty function to overcome adding a trial "/" while
-    // converting from a string to a URL.
-    private URL getHostingURL(AgletContext ctx) {
-	try {
-	    return new URL(ctx.getHostingURL().toString());
-	} catch (IOException e) {
-	    return null;
-	}
-    }
+	private Object _info = null;
 
-    public String getID() {
-	return this._id;
-    }
-
-    public String getPlace() {
-	return this._place;
-    }
-
-    /**
-     * Accepts an aglet to a meeting.
-     * 
-     * @param ag
-     *            the arrived aglet.
-     * @return enumeration of the agletID of all presented aglets.
-     * @exception AgletException
-     *                if wrong meeting place or if any of the colleagues is not
-     *                presented.
-     */
-    public Enumeration ready(Aglet ag) throws AgletException {
-
-	// get aglet identifier
-	AgletID aid = ag.getAgletID();
-	AgletContext ctx = ag.getAgletContext();
-
-	URL url = null;
-
-	try {
-	    url = new URL(this._place);
-	} catch (Exception ex) {
+	/**
+	 * A Constructor
+	 * 
+	 * @param place
+	 *            the meeting place.
+	 */
+	public Meeting(final String place) {
+		_place = place;
+		_id = "meet." + String.valueOf(Math.random());
 	}
 
-	if (!NetUtils.sameURL(url, this.getHostingURL(ctx))) {
-	    throw new AgletException("a wrong meeting place : " + this._place);
-	} else {
-	    this.checkColleaguesArePresent(ctx, this._colleagues);
-	    return this.append(ready0(aid, ctx, this._id, ag), this._colleagues).elements();
+	/**
+	 * A Constructor
+	 * 
+	 * @param place
+	 *            the meeting place.
+	 * @param colleagues
+	 *            the colleagues
+	 * @exception AgletException
+	 *                if colleagues is invalid (should include only AgletID
+	 *                objects)
+	 */
+
+	public Meeting(final String place, final Vector colleagues) throws AgletException {
+		_place = place;
+		_id = "meet." + String.valueOf(Math.random());
+		setColleagues(colleagues);
 	}
-    }
 
-    private synchronized static Vector ready0(
-                                              AgletID aid,
-                                              AgletContext ctx,
-                                              String id,
-                                              Aglet ag) throws AgletException {
+	private Vector append(final Vector v1, final Vector v2) {
+		final Vector v = new Vector();
 
-	ReplySet rs = ctx.multicastMessage(new Message(id, aid));
+		if (v1 == null) {
+			return v2;
+		}
+		if (v2 == null) {
+			return v1;
 
-	ag.subscribeMessage(id);
-	return toVector(rs);
-    }
+		}
+		for (int i = 0; i < v1.size(); i++) {
+			v.addElement(v1.elementAt(i));
+		}
+		for (int j = 0; j < v2.size(); j++) {
+			v.addElement(v2.elementAt(j));
+		}
+		return v;
+	}
 
-    public void setAttachedInfo(Object obj) {
-	this._info = obj;
-    }
+	private void checkColleagues(final Vector c) throws AgletException {
+		for (int i = 0; i < c.size(); i++) {
+			if ((c.elementAt(i) instanceof AgletID) == false) {
+				throw new AgletException("non AgletIdentifer object is included");
+			}
+		}
+	}
 
-    public void setColleagues(Vector colleagues) throws AgletException {
-	this.checkColleagues(colleagues);
-	this._colleagues = colleagues;
-    }
+	private void checkColleaguesArePresent(final AgletContext ctx, final Vector c)
+	throws AgletException {
+		boolean found = false;
 
-    public void setID(String id) {
-	this._id = "meet." + id;
-    }
+		if (c == null) {
+			return;
+		}
+		for (int i = 0; i < c.size(); i++) {
+			found = false;
+			for (final Enumeration e = ctx.getAgletProxies(); e.hasMoreElements();) {
+				final AgletProxy p = (AgletProxy) e.nextElement();
 
-    private static Vector toVector(ReplySet rs) throws AgletException {
-	Vector v = new Vector();
+				if (p.getAgletID().equals(c.elementAt(i))) {
+					found = true;
+					break;
+				}
+			}
+			if (found == false) {
+				throw new AgletException("not all colleagues are presented");
+			}
+		}
+	}
 
-	try {
-	    while (rs.hasMoreFutureReplies()) {
-		Object obj = rs.getNextFutureReply().getReply();
+	public Object getAttachedInfo() {
+		return _info;
+	}
 
-		if (obj instanceof AgletID) {
-		    v.addElement(obj);
+	// temporaty function to overcome adding a trial "/" while
+	// converting from a string to a URL.
+	private URL getHostingURL(final AgletContext ctx) {
+		try {
+			return new URL(ctx.getHostingURL().toString());
+		} catch (final IOException e) {
+			return null;
+		}
+	}
+
+	public String getID() {
+		return _id;
+	}
+
+	public String getPlace() {
+		return _place;
+	}
+
+	/**
+	 * Accepts an aglet to a meeting.
+	 * 
+	 * @param ag
+	 *            the arrived aglet.
+	 * @return enumeration of the agletID of all presented aglets.
+	 * @exception AgletException
+	 *                if wrong meeting place or if any of the colleagues is not
+	 *                presented.
+	 */
+	public Enumeration ready(final Aglet ag) throws AgletException {
+
+		// get aglet identifier
+		final AgletID aid = ag.getAgletID();
+		final AgletContext ctx = ag.getAgletContext();
+
+		URL url = null;
+
+		try {
+			url = new URL(_place);
+		} catch (final Exception ex) {
+		}
+
+		if (!NetUtils.sameURL(url, getHostingURL(ctx))) {
+			throw new AgletException("a wrong meeting place : " + _place);
 		} else {
-		    throw new AgletException("a non AgletIdentifer object");
+			checkColleaguesArePresent(ctx, _colleagues);
+			return append(ready0(aid, ctx, _id, ag), _colleagues).elements();
 		}
-	    }
-	} catch (Exception e) {
 	}
-	return v;
-    }
+
+	public void setAttachedInfo(final Object obj) {
+		_info = obj;
+	}
+
+	public void setColleagues(final Vector colleagues) throws AgletException {
+		checkColleagues(colleagues);
+		_colleagues = colleagues;
+	}
+
+	public void setID(final String id) {
+		_id = "meet." + id;
+	}
 }

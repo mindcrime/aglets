@@ -31,30 +31,30 @@ package com.ibm.aglet;
  */
 public class InvalidAgletException extends AgletException {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 382151911909514979L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 382151911909514979L;
 
-    /*
-     * Constructs a InvalidAgletException.
-     * 
-     * @param s the detailed message
-     */
-    public InvalidAgletException() {
-	super();
-    }
+	/*
+	 * Constructs a InvalidAgletException.
+	 * 
+	 * @param s the detailed message
+	 */
+	public InvalidAgletException() {
+		super();
+	}
 
-    /*
-     * Constructs a InvalidAgletException with the specified detailed message.
-     * 
-     * @param s the detailed message
-     */
-    public InvalidAgletException(String s) {
-	super(s);
-    }
+	public InvalidAgletException(final Exception cause) {
+		super(cause);
+	}
 
-    public InvalidAgletException(Exception cause) {
-	super(cause);
-    }
+	/*
+	 * Constructs a InvalidAgletException with the specified detailed message.
+	 * 
+	 * @param s the detailed message
+	 */
+	public InvalidAgletException(final String s) {
+		super(s);
+	}
 }

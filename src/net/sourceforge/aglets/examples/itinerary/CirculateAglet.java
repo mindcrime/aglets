@@ -31,101 +31,101 @@ import com.ibm.agletx.util.SeqPlanItinerary;
  * @author Mitsuru Oshima
  */
 public class CirculateAglet extends Aglet {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 5121407791713217163L;
-    StringBuffer buffer;
-    SeqPlanItinerary itinerary;
-    Vector proxies;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5121407791713217163L;
+	StringBuffer buffer;
+	SeqPlanItinerary itinerary;
+	Vector proxies;
 
-    public void getLocalInfo(Message msg) {
-	this.buffer.append("Username : " + this.getProperty("user.name"));
-	this.buffer.append("\n");
-	this.buffer.append("Home directory : " + this.getProperty("user.home"));
-	this.buffer.append("\n");
-	this.buffer.append("Currect working directory : "
-		+ this.getProperty("user.dir"));
-	this.buffer.append("\n");
-	this.buffer.append("Machine architecture : "
-		+ this.getProperty("os.arch"));
-	this.buffer.append("\n");
-	this.buffer.append("OS name : " + this.getProperty("os.name"));
-	this.buffer.append("\n");
-	this.buffer.append("OS version : " + this.getProperty("os.version"));
-	this.buffer.append("\n");
-	this.buffer.append("Java version : " + this.getProperty("java.version"));
-	this.buffer.append("\n");
-    }
-
-    private String getProperty(String key) {
-	return System.getProperty(key, "Unknown");
-    }
-
-    public void getProxies(Message msg) {
-	Enumeration e = this.getAgletContext().getAgletProxies(ACTIVE);
-
-	while (e.hasMoreElements()) {
-	    this.proxies.addElement(e.nextElement());
+	public void getLocalInfo(final Message msg) {
+		buffer.append("Username : " + getProperty("user.name"));
+		buffer.append("\n");
+		buffer.append("Home directory : " + getProperty("user.home"));
+		buffer.append("\n");
+		buffer.append("Currect working directory : "
+				+ getProperty("user.dir"));
+		buffer.append("\n");
+		buffer.append("Machine architecture : "
+				+ getProperty("os.arch"));
+		buffer.append("\n");
+		buffer.append("OS name : " + getProperty("os.name"));
+		buffer.append("\n");
+		buffer.append("OS version : " + getProperty("os.version"));
+		buffer.append("\n");
+		buffer.append("Java version : " + getProperty("java.version"));
+		buffer.append("\n");
 	}
-    }
 
-    @Override
-    public boolean handleMessage(Message msg) {
-	if (msg.sameKind("getLocalInfo")) {
-	    this.getLocalInfo(msg);
-	    return true;
-	} else if (msg.sameKind("getProxies")) {
-	    this.getProxies(msg);
-	    return true;
-	} else if (msg.sameKind("dialog")) {
-	    CirculateFrame f = new CirculateFrame(this);
+	private String getProperty(final String key) {
+		return System.getProperty(key, "Unknown");
+	}
 
-	    f.pack();
-	    f.setVisible(true);
-	    this.init();
-	    return true;
-	} else if (msg.sameKind("printResult")) {
-	    System.out.println(this.buffer);
-	    Enumeration e = this.proxies.elements();
+	public void getProxies(final Message msg) {
+		final Enumeration e = getAgletContext().getAgletProxies(ACTIVE);
 
-	    while (e.hasMoreElements()) {
-		AgletProxy p = (AgletProxy) e.nextElement();
-
-		try {
-		    System.out.println(p.getAgletInfo());
-		} catch (InvalidAgletException ex) {
-		    System.out.println("InvalidAglet");
+		while (e.hasMoreElements()) {
+			proxies.addElement(e.nextElement());
 		}
-	    }
-	    return true;
 	}
-	return false;
-    }
 
-    private void init() {
-	this.buffer = new StringBuffer();
-	this.proxies = new Vector();
-    }
+	@Override
+	public boolean handleMessage(final Message msg) {
+		if (msg.sameKind("getLocalInfo")) {
+			getLocalInfo(msg);
+			return true;
+		} else if (msg.sameKind("getProxies")) {
+			getProxies(msg);
+			return true;
+		} else if (msg.sameKind("dialog")) {
+			final CirculateFrame f = new CirculateFrame(this);
 
-    public void oncemore() {
-	try {
-	    this.itinerary.startTrip();
-	} catch (Exception ex) {
-	    ex.printStackTrace();
+			f.pack();
+			f.setVisible(true);
+			init();
+			return true;
+		} else if (msg.sameKind("printResult")) {
+			System.out.println(buffer);
+			final Enumeration e = proxies.elements();
+
+			while (e.hasMoreElements()) {
+				final AgletProxy p = (AgletProxy) e.nextElement();
+
+				try {
+					System.out.println(p.getAgletInfo());
+				} catch (final InvalidAgletException ex) {
+					System.out.println("InvalidAglet");
+				}
+			}
+			return true;
+		}
+		return false;
 	}
-    }
 
-    @Override
-    public void onCreation(Object ini) {
-	this.itinerary = new SeqPlanItinerary(this);
-	this.itinerary.addPlan("atp://sirius.trl.ibm.com:2000/", "getLocalInfo");
-	this.itinerary.addPlan("atp://vmoshima.trl.ibm.com/", "getProxies");
-	this.itinerary.addPlan(this.getAgletContext().getHostingURL().toString(), "printResult");
-    }
+	private void init() {
+		buffer = new StringBuffer();
+		proxies = new Vector();
+	}
 
-    public void start() {
-	this.init();
-	this.oncemore();
-    }
+	public void oncemore() {
+		try {
+			itinerary.startTrip();
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onCreation(final Object ini) {
+		itinerary = new SeqPlanItinerary(this);
+		itinerary.addPlan("atp://sirius.trl.ibm.com:2000/", "getLocalInfo");
+		itinerary.addPlan("atp://vmoshima.trl.ibm.com/", "getProxies");
+		itinerary.addPlan(getAgletContext().getHostingURL().toString(), "printResult");
+	}
+
+	public void start() {
+		init();
+		oncemore();
+	}
 }

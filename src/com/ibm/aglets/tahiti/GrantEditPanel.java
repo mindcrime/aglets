@@ -17,31 +17,31 @@ package com.ibm.aglets.tahiti;
 import java.awt.List;
 
 class GrantEditPanel extends EditListPanel {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -7722004754186234319L;
-    SecurityConfigDialog _dialog = null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7722004754186234319L;
+	SecurityConfigDialog _dialog = null;
 
-    GrantEditPanel(SecurityConfigDialog dialog, List list, Editor editor) {
-	super(null, list, editor);
-	this._dialog = dialog;
-    }
+	GrantEditPanel(final SecurityConfigDialog dialog, final List list, final Editor editor) {
+		super(null, list, editor);
+		_dialog = dialog;
+	}
 
-    @Override
-    protected void addItemIntoList(String item) {
-	this._dialog.addGrantPanel(item);
-	this.selectItem(item);
-	this._dialog.showGrantPanel(item);
-    }
+	@Override
+	protected void addItemIntoList(final String item) {
+		_dialog.addGrantPanel(item);
+		selectItem(item);
+		_dialog.showGrantPanel(item);
+	}
 
-    @Override
-    protected void removeItemFromList() {
-	final int idx = this.getSelectedIndex();
-	final String item = this.getSelectedItem();
+	@Override
+	protected void removeItemFromList() {
+		final int idx = getSelectedIndex();
+		final String item = getSelectedItem();
 
-	super.removeItemFromList();
-	this._dialog.removeGrantPanel(idx, item);
-	this._dialog.showGrantPanel(item);
-    }
+		super.removeItemFromList();
+		_dialog.removeGrantPanel(idx, item);
+		_dialog.showGrantPanel(item);
+	}
 }

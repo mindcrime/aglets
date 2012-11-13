@@ -18,222 +18,222 @@ import net.sourceforge.aglets.util.gui.JComponentBuilder;
  */
 public class TahitiMenuBar extends JMenuBar {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 624948583728651720L;
-
-    /**
-     * The base name for this class.
-     */
-    private String baseKey = this.getClass().getName();
-
-    /**
-     * A linked list of components that could be enabled/disabled depending on
-     * other events within the GUI.
-     */
-    private LinkedList<JMenuItem> conditionalItems = null;
-
-    /**
-     * Default constructor, creates all menus and their entries.
-     * 
-     * @param listener
-     *            the action listener for each menu entry
-     */
-    public TahitiMenuBar(ActionListener listener) {
-	super();
-	this.conditionalItems = new LinkedList<JMenuItem>();
-
-	// all the menus and submenus
-	JMenu aglets = JComponentBuilder.createJMenu(this.baseKey
-		+ ".agletsMenu");
-	JMenu creation = JComponentBuilder.createJMenu(this.baseKey
-		+ ".creationSubMenu");
-	JMenu killing = JComponentBuilder.createJMenu(this.baseKey
-		+ ".killSubMenu");
-	JMenu mobility = JComponentBuilder.createJMenu(this.baseKey
-		+ ".mobilitySubMenu");
-	JMenu activation = JComponentBuilder.createJMenu(this.baseKey
-		+ ".activationSubMenu");
-	JMenu misc = JComponentBuilder.createJMenu(this.baseKey
-		+ ".miscSubMenu");
-
-	// the aglets (sub)menus
-	JMenuItem create = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".createItem", GUICommandStrings.CREATE_AGLET_COMMAND, listener);
-
-	JMenuItem clone = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".cloneItem", GUICommandStrings.CLONE_AGLET_COMMAND, listener);
-	this.conditionalItems.add(clone);
-
-	JMenuItem dispatch = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".dispatchItem", GUICommandStrings.DISPATCH_AGLET_COMMAND, listener);
-	this.conditionalItems.add(dispatch);
-
-	JMenuItem retract = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".retractItem", GUICommandStrings.RETRACT_AGLET_COMMAND, listener);
-
-	JMenuItem dispose = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".disposeItem", GUICommandStrings.DISPOSE_AGLET_COMMAND, listener);
-	this.conditionalItems.add(dispose);
-
-	/*
-	 * JMenuItem kill = JComponentBuilder.createJMenuItem(this.baseKey +
-	 * ".killItem", GUICommandStrings.KILL_AGLET_COMMAND, listener);
-	 * this.conditionalItems.add(kill);
+	/**
+	 * 
 	 */
+	private static final long serialVersionUID = 624948583728651720L;
 
-	JMenuItem activate = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".activateItem", GUICommandStrings.ACTIVATE_AGLET_COMMAND, listener);
-	this.conditionalItems.add(activate);
+	/**
+	 * The base name for this class.
+	 */
+	private final String baseKey = this.getClass().getName();
 
-	JMenuItem deactivate = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".deactivateItem", GUICommandStrings.DEACTIVATE_AGLET_COMMAND, listener);
-	this.conditionalItems.add(deactivate);
+	/**
+	 * A linked list of components that could be enabled/disabled depending on
+	 * other events within the GUI.
+	 */
+	private LinkedList<JMenuItem> conditionalItems = null;
 
-	JMenuItem exit = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".exitItem", GUICommandStrings.EXIT_COMMAND, listener);
+	/**
+	 * Default constructor, creates all menus and their entries.
+	 * 
+	 * @param listener
+	 *            the action listener for each menu entry
+	 */
+	public TahitiMenuBar(final ActionListener listener) {
+		super();
+		conditionalItems = new LinkedList<JMenuItem>();
 
-	JMenuItem reboot = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".rebootItem", GUICommandStrings.REBOOT_COMMAND, listener);
+		// all the menus and submenus
+		final JMenu aglets = JComponentBuilder.createJMenu(baseKey
+				+ ".agletsMenu");
+		final JMenu creation = JComponentBuilder.createJMenu(baseKey
+				+ ".creationSubMenu");
+		final JMenu killing = JComponentBuilder.createJMenu(baseKey
+				+ ".killSubMenu");
+		final JMenu mobility = JComponentBuilder.createJMenu(baseKey
+				+ ".mobilitySubMenu");
+		final JMenu activation = JComponentBuilder.createJMenu(baseKey
+				+ ".activationSubMenu");
+		final JMenu misc = JComponentBuilder.createJMenu(baseKey
+				+ ".miscSubMenu");
 
-	JMenuItem sleep = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".sleepItem", GUICommandStrings.SLEEP_AGLET_COMMAND, listener);
-	this.conditionalItems.add(sleep);
+		// the aglets (sub)menus
+		final JMenuItem create = JComponentBuilder.createJMenuItem(baseKey
+				+ ".createItem", GUICommandStrings.CREATE_AGLET_COMMAND, listener);
 
-	JMenuItem info = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".infoItem", GUICommandStrings.INFO_AGLET_COMMAND, listener);
-	this.conditionalItems.add(info);
+		final JMenuItem clone = JComponentBuilder.createJMenuItem(baseKey
+				+ ".cloneItem", GUICommandStrings.CLONE_AGLET_COMMAND, listener);
+		conditionalItems.add(clone);
 
-	JMenuItem dialog = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".dialogItem", GUICommandStrings.MESSAGE_AGLET_COMMAND, listener);
-	this.conditionalItems.add(dialog);
+		final JMenuItem dispatch = JComponentBuilder.createJMenuItem(baseKey
+				+ ".dispatchItem", GUICommandStrings.DISPATCH_AGLET_COMMAND, listener);
+		conditionalItems.add(dispatch);
 
-	// menu structure
-	creation.add(create);
-	creation.add(clone);
-	killing.add(dispose);
-	// killing.add(kill);
-	mobility.add(dispatch);
-	mobility.add(retract);
-	activation.add(activate);
-	activation.add(deactivate);
+		final JMenuItem retract = JComponentBuilder.createJMenuItem(baseKey
+				+ ".retractItem", GUICommandStrings.RETRACT_AGLET_COMMAND, listener);
 
-	misc.add(sleep);
-	misc.addSeparator();
-	misc.add(dialog);
-	misc.add(info);
+		final JMenuItem dispose = JComponentBuilder.createJMenuItem(baseKey
+				+ ".disposeItem", GUICommandStrings.DISPOSE_AGLET_COMMAND, listener);
+		conditionalItems.add(dispose);
 
-	aglets.add(creation);
-	aglets.add(activation);
-	aglets.add(mobility);
-	aglets.addSeparator();
-	aglets.add(killing);
-	aglets.addSeparator();
-	aglets.add(misc);
-	aglets.addSeparator();
-	aglets.add(reboot);
-	aglets.add(exit);
+		/*
+		 * JMenuItem kill = JComponentBuilder.createJMenuItem(this.baseKey +
+		 * ".killItem", GUICommandStrings.KILL_AGLET_COMMAND, listener);
+		 * this.conditionalItems.add(kill);
+		 */
 
-	// the tools menu
-	JMenu tools = JComponentBuilder.createJMenu(this.baseKey + ".toolsMenu");
-	JMenu mem = JComponentBuilder.createJMenu(this.baseKey
-		+ ".memorySubMenu");
-	JMenu dbg = JComponentBuilder.createJMenu(this.baseKey
-		+ ".debugSubMenu");
+		final JMenuItem activate = JComponentBuilder.createJMenuItem(baseKey
+				+ ".activateItem", GUICommandStrings.ACTIVATE_AGLET_COMMAND, listener);
+		conditionalItems.add(activate);
 
-	// the tools (sub)menus
-	JMenuItem memory = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".memoryItem", GUICommandStrings.MEMORY_COMMAND, listener);
-	JMenuItem gc = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".gcItem", GUICommandStrings.GARBAGECOLLECTOR_COMMAND, listener);
-	JComponentBuilder.createJMenuItem(this.baseKey + ".logItem", GUICommandStrings.LOG_COMMAND, listener);
-	JMenuItem console = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".consoleItem", GUICommandStrings.CONSOLE_COMMAND, listener);
+		final JMenuItem deactivate = JComponentBuilder.createJMenuItem(baseKey
+				+ ".deactivateItem", GUICommandStrings.DEACTIVATE_AGLET_COMMAND, listener);
+		conditionalItems.add(deactivate);
 
-	JMenuItem ref = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".refItem", GUICommandStrings.REF_COMMAND, listener);
-	JComponentBuilder.createJMenuItem(this.baseKey + ".debugItem", GUICommandStrings.DEBUG_COMMAND, listener);
-	JMenuItem threads = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".threadsItem", GUICommandStrings.THREAD_COMMAND, listener);
+		final JMenuItem exit = JComponentBuilder.createJMenuItem(baseKey
+				+ ".exitItem", GUICommandStrings.EXIT_COMMAND, listener);
 
-	// menu structure
-	// dbg.add(log); // how to show the log produced from log4j??
-	// dbg.addSeparator();
-	dbg.add(threads);
-	dbg.add(ref);
-	dbg.addSeparator();
-	dbg.add(console);
-	mem.add(memory);
-	mem.addSeparator();
-	mem.add(gc);
-	tools.add(mem);
-	tools.add(dbg);
+		final JMenuItem reboot = JComponentBuilder.createJMenuItem(baseKey
+				+ ".rebootItem", GUICommandStrings.REBOOT_COMMAND, listener);
 
-	// the preferences menu
-	JMenu prefs = JComponentBuilder.createJMenu(this.baseKey + ".prefsMenu");
+		final JMenuItem sleep = JComponentBuilder.createJMenuItem(baseKey
+				+ ".sleepItem", GUICommandStrings.SLEEP_AGLET_COMMAND, listener);
+		conditionalItems.add(sleep);
 
-	// the preferences (sub)menus
-	JMenuItem netprefs = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".netprefsItem", GUICommandStrings.NETPREFS_COMMAND, listener);
-	JMenuItem genprefs = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".genprefsItem", GUICommandStrings.GENPREFS_COMMAND, listener);
-	JMenuItem serprefs = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".servprefsItem", GUICommandStrings.SERVPREFS_COMMAND, listener);
-	JMenuItem secprefs = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".secprefsItem", GUICommandStrings.SECPREFS_COMMAND, listener);
+		final JMenuItem info = JComponentBuilder.createJMenuItem(baseKey
+				+ ".infoItem", GUICommandStrings.INFO_AGLET_COMMAND, listener);
+		conditionalItems.add(info);
 
-	// the menu structure
-	prefs.add(genprefs);
-	prefs.add(secprefs);
-	prefs.add(netprefs);
-	prefs.add(serprefs);
+		final JMenuItem dialog = JComponentBuilder.createJMenuItem(baseKey
+				+ ".dialogItem", GUICommandStrings.MESSAGE_AGLET_COMMAND, listener);
+		conditionalItems.add(dialog);
 
-	// the help menu
-	JMenu help = JComponentBuilder.createJMenu(this.baseKey + ".helpMenu");
+		// menu structure
+		creation.add(create);
+		creation.add(clone);
+		killing.add(dispose);
+		// killing.add(kill);
+		mobility.add(dispatch);
+		mobility.add(retract);
+		activation.add(activate);
+		activation.add(deactivate);
 
-	// the help submenu
-	JMenuItem about_tahiti = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".aboutItem", GUICommandStrings.ABOUT_COMMAND, listener);
-	JComponentBuilder.createJMenuItem(this.baseKey + ".creditsItem", GUICommandStrings.CREDITS_COMMAND, listener);
-	JMenuItem web_page = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".webItem", GUICommandStrings.WEB_COMMAND, listener);
-	JMenuItem javadoc = JComponentBuilder.createJMenuItem(this.baseKey
-		+ ".docItem", GUICommandStrings.DOC_COMMAND, listener);
+		misc.add(sleep);
+		misc.addSeparator();
+		misc.add(dialog);
+		misc.add(info);
 
-	// the menu structure
-	help.add(about_tahiti);
-	// help.add(about_aglets);
-	help.addSeparator();
-	help.add(web_page);
-	help.add(javadoc);
+		aglets.add(creation);
+		aglets.add(activation);
+		aglets.add(mobility);
+		aglets.addSeparator();
+		aglets.add(killing);
+		aglets.addSeparator();
+		aglets.add(misc);
+		aglets.addSeparator();
+		aglets.add(reboot);
+		aglets.add(exit);
 
-	// add the menus to the menubar
-	this.add(aglets);
-	this.add(tools);
-	this.add(prefs);
-	this.add(help);
+		// the tools menu
+		final JMenu tools = JComponentBuilder.createJMenu(baseKey + ".toolsMenu");
+		final JMenu mem = JComponentBuilder.createJMenu(baseKey
+				+ ".memorySubMenu");
+		final JMenu dbg = JComponentBuilder.createJMenu(baseKey
+				+ ".debugSubMenu");
 
-	// disable components if I've got no one aglet
-	this.enableConditionalItems(false);
-    }
+		// the tools (sub)menus
+		final JMenuItem memory = JComponentBuilder.createJMenuItem(baseKey
+				+ ".memoryItem", GUICommandStrings.MEMORY_COMMAND, listener);
+		final JMenuItem gc = JComponentBuilder.createJMenuItem(baseKey
+				+ ".gcItem", GUICommandStrings.GARBAGECOLLECTOR_COMMAND, listener);
+		JComponentBuilder.createJMenuItem(baseKey + ".logItem", GUICommandStrings.LOG_COMMAND, listener);
+		final JMenuItem console = JComponentBuilder.createJMenuItem(baseKey
+				+ ".consoleItem", GUICommandStrings.CONSOLE_COMMAND, listener);
 
-    /**
-     * Enables or disables items in the menu that have been marked as
-     * conditionals.
-     * 
-     * @param enabled
-     *            true if the items must be enabled, false otherwise
-     */
-    public final void enableConditionalItems(boolean enabled) {
-	if ((this.conditionalItems == null) || this.conditionalItems.isEmpty())
-	    return;
+		final JMenuItem ref = JComponentBuilder.createJMenuItem(baseKey
+				+ ".refItem", GUICommandStrings.REF_COMMAND, listener);
+		JComponentBuilder.createJMenuItem(baseKey + ".debugItem", GUICommandStrings.DEBUG_COMMAND, listener);
+		final JMenuItem threads = JComponentBuilder.createJMenuItem(baseKey
+				+ ".threadsItem", GUICommandStrings.THREAD_COMMAND, listener);
 
-	Iterator iter = this.conditionalItems.iterator();
-	while ((iter != null) && iter.hasNext()) {
-	    JMenuItem item = (JMenuItem) iter.next();
-	    item.setEnabled(enabled);
+		// menu structure
+		// dbg.add(log); // how to show the log produced from log4j??
+		// dbg.addSeparator();
+		dbg.add(threads);
+		dbg.add(ref);
+		dbg.addSeparator();
+		dbg.add(console);
+		mem.add(memory);
+		mem.addSeparator();
+		mem.add(gc);
+		tools.add(mem);
+		tools.add(dbg);
 
+		// the preferences menu
+		final JMenu prefs = JComponentBuilder.createJMenu(baseKey + ".prefsMenu");
+
+		// the preferences (sub)menus
+		final JMenuItem netprefs = JComponentBuilder.createJMenuItem(baseKey
+				+ ".netprefsItem", GUICommandStrings.NETPREFS_COMMAND, listener);
+		final JMenuItem genprefs = JComponentBuilder.createJMenuItem(baseKey
+				+ ".genprefsItem", GUICommandStrings.GENPREFS_COMMAND, listener);
+		final JMenuItem serprefs = JComponentBuilder.createJMenuItem(baseKey
+				+ ".servprefsItem", GUICommandStrings.SERVPREFS_COMMAND, listener);
+		final JMenuItem secprefs = JComponentBuilder.createJMenuItem(baseKey
+				+ ".secprefsItem", GUICommandStrings.SECPREFS_COMMAND, listener);
+
+		// the menu structure
+		prefs.add(genprefs);
+		prefs.add(secprefs);
+		prefs.add(netprefs);
+		prefs.add(serprefs);
+
+		// the help menu
+		final JMenu help = JComponentBuilder.createJMenu(baseKey + ".helpMenu");
+
+		// the help submenu
+		final JMenuItem about_tahiti = JComponentBuilder.createJMenuItem(baseKey
+				+ ".aboutItem", GUICommandStrings.ABOUT_COMMAND, listener);
+		JComponentBuilder.createJMenuItem(baseKey + ".creditsItem", GUICommandStrings.CREDITS_COMMAND, listener);
+		final JMenuItem web_page = JComponentBuilder.createJMenuItem(baseKey
+				+ ".webItem", GUICommandStrings.WEB_COMMAND, listener);
+		final JMenuItem javadoc = JComponentBuilder.createJMenuItem(baseKey
+				+ ".docItem", GUICommandStrings.DOC_COMMAND, listener);
+
+		// the menu structure
+		help.add(about_tahiti);
+		// help.add(about_aglets);
+		help.addSeparator();
+		help.add(web_page);
+		help.add(javadoc);
+
+		// add the menus to the menubar
+		this.add(aglets);
+		this.add(tools);
+		this.add(prefs);
+		this.add(help);
+
+		// disable components if I've got no one aglet
+		enableConditionalItems(false);
 	}
-    }
+
+	/**
+	 * Enables or disables items in the menu that have been marked as
+	 * conditionals.
+	 * 
+	 * @param enabled
+	 *            true if the items must be enabled, false otherwise
+	 */
+	public final void enableConditionalItems(final boolean enabled) {
+		if ((conditionalItems == null) || conditionalItems.isEmpty())
+			return;
+
+		final Iterator iter = conditionalItems.iterator();
+		while ((iter != null) && iter.hasNext()) {
+			final JMenuItem item = (JMenuItem) iter.next();
+			item.setEnabled(enabled);
+
+		}
+	}
 }

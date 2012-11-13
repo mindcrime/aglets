@@ -18,60 +18,60 @@ import java.util.Hashtable;
  */
 
 final public class Debug {
-    static private Hashtable h = new Hashtable();
+	static private Hashtable h = new Hashtable();
 
-    static public boolean debug = false;
+	static public boolean debug = false;
 
-    static public void check() {
-	if (debug) {
-	    Exception e = (Exception) h.get(Thread.currentThread());
+	static public void check() {
+		if (debug) {
+			final Exception e = (Exception) h.get(Thread.currentThread());
 
-	    if (e != null) {
-		e.fillInStackTrace();
-	    }
+			if (e != null) {
+				e.fillInStackTrace();
+			}
+		}
 	}
-    }
 
-    static public void check(Object obj) {
-	if (debug) {
-	    System.out.println(obj);
-	    Exception e = (Exception) h.get(Thread.currentThread());
+	static public void check(final Object obj) {
+		if (debug) {
+			System.out.println(obj);
+			final Exception e = (Exception) h.get(Thread.currentThread());
 
-	    if (e != null) {
-		e.fillInStackTrace();
-	    }
+			if (e != null) {
+				e.fillInStackTrace();
+			}
+		}
 	}
-    }
 
-    static public void debug(boolean b) {
-	debug = b;
-    }
-
-    static public void end() {
-	if (debug) {
-	    h.remove(Thread.currentThread());
+	static public void debug(final boolean b) {
+		debug = b;
 	}
-    }
 
-    static public void list(java.io.PrintStream p) {
-	if (debug == false) {
-	    p.println("Debug off");
+	static public void end() {
+		if (debug) {
+			h.remove(Thread.currentThread());
+		}
 	}
-	Enumeration e = h.keys();
 
-	while (e.hasMoreElements()) {
-	    Thread t = (Thread) e.nextElement();
-	    Exception ex = (Exception) h.get(t);
+	static public void list(final java.io.PrintStream p) {
+		if (debug == false) {
+			p.println("Debug off");
+		}
+		final Enumeration e = h.keys();
 
-	    p.println("Thread = " + t);
-	    p.println("Latest StackTrace = ");
-	    ex.printStackTrace(p);
+		while (e.hasMoreElements()) {
+			final Thread t = (Thread) e.nextElement();
+			final Exception ex = (Exception) h.get(t);
+
+			p.println("Thread = " + t);
+			p.println("Latest StackTrace = ");
+			ex.printStackTrace(p);
+		}
 	}
-    }
 
-    static public void start() {
-	if (debug) {
-	    h.put(Thread.currentThread(), new Exception());
+	static public void start() {
+		if (debug) {
+			h.put(Thread.currentThread(), new Exception());
+		}
 	}
-    }
 }

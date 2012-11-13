@@ -31,149 +31,149 @@ import com.ibm.aglet.message.ReplySet;
  * @author Mitsuru Oshima
  */
 class FutureReplyImpl extends FutureReply {
-    volatile boolean available = false;
-    Object result;
-    AgletException exception = null;
-    Object set = null;
+	volatile boolean available = false;
+	Object result;
+	AgletException exception = null;
+	Object set = null;
 
-    @Override
-    final synchronized protected void addedTo(ReplySet replySet) {
-	if (this.available) {
-	    replySet.done(this);
-	    return;
-	}
-	if (this.set == null) {
-	    this.set = replySet;
-	} else if (this.set instanceof ReplySet) {
-	    Vector v = new Vector();
-
-	    v.addElement(this.set);
-	    v.addElement(replySet);
-	    this.set = v;
-	} else {
-	    ((Vector) this.set).addElement(replySet);
-	}
-    }
-
-    synchronized void cancel(String msg) {
-	if (!this.available) {
-	    this.available = true;
-	    this.exception = new NotHandledException(msg);
-	    this.notifyAll();
-	    this.notifySet();
-	}
-    }
-
-    @Override
-    final synchronized public Object getReply()
-    throws MessageException,
-    NotHandledException {
-	this.waitForReply();
-	if (this.exception != null) {
-	    if (this.exception instanceof NotHandledException) {
-		throw (NotHandledException) this.exception;
-	    } else if (this.exception instanceof MessageException) {
-		throw (MessageException) this.exception;
-	    }
-	}
-	return this.result;
-    }
-
-    /*
-     * synchronized void complete(boolean result, Throwable ex, String msg) { //
-     * REMIND. critical session. if (! available) { if (result) { if (ex ==
-     * null) { setReplyAndNotify(null); } else { setExceptionAndNotify(ex); } }
-     * else { // REMIND: // Improvement is needed to define // precise
-     * semantics. if (ex != null) { msg += " with exception " + ex.getMessage();
-     * } cancel(msg); } } }
-     */
-
-    @Override
-    final public boolean isAvailable() {
-	return this.available;
-    }
-
-    /*
-     * This must be called only from synchronized method.
-     */
-    final private void notifySet() {
-	if (this.set == null) {
-	    return;
-	} else if (this.set instanceof ReplySet) {
-	    ((ReplySet) this.set).done(this);
-	} else if (this.set instanceof Vector) {
-	    Enumeration e = ((Vector) this.set).elements();
-
-	    while (e.hasMoreElements()) {
-		ReplySet rep = (ReplySet) e.nextElement();
-
-		rep.done(this);
-	    }
-	}
-	this.set = null;
-    }
-
-    final synchronized void sendExceptionIfNeeded(Throwable ex) {
-	if (!this.available) {
-	    this.setExceptionAndNotify(ex);
-	}
-    }
-
-    final synchronized void sendReplyIfNeeded(Object obj) {
-	if (!this.available) {
-	    this.setReplyAndNotify(obj);
-	}
-    }
-
-    synchronized void setExceptionAndNotify(Throwable ex) {
-	if (this.available) {
-	    throw new IllegalAccessError("Reply has been already set");
-	}
-	this.available = true;
-	this.exception = new MessageException(ex);
-	this.notifyAll();
-
-	this.notifySet();
-    }
-
-    synchronized void setReplyAndNotify(Object result) {
-	if (this.available) {
-	    throw new IllegalAccessError("Reply has been already set");
-	}
-	this.result = result;
-	this.available = true;
-	this.notifyAll();
-
-	this.notifySet();
-    }
-
-    @Override
-    final synchronized public void waitForReply() {
-	while (this.available == false) {
-	    try {
-		this.wait();
-	    } catch (InterruptedException ex) {
-		ex.printStackTrace();
-	    }
-	}
-    }
-
-    @Override
-    final synchronized public void waitForReply(long timeout) {
-	if (timeout == 0) {
-	    this.waitForReply();
-	} else {
-	    long until = System.currentTimeMillis() + timeout;
-	    long reft;
-
-	    while ((this.available == false)
-		    && ((reft = (until - System.currentTimeMillis())) > 0)) {
-		try {
-		    this.wait(reft);
-		} catch (InterruptedException ex) {
-		    ex.printStackTrace();
+	@Override
+	final synchronized protected void addedTo(final ReplySet replySet) {
+		if (available) {
+			replySet.done(this);
+			return;
 		}
-	    }
+		if (set == null) {
+			set = replySet;
+		} else if (set instanceof ReplySet) {
+			final Vector v = new Vector();
+
+			v.addElement(set);
+			v.addElement(replySet);
+			set = v;
+		} else {
+			((Vector) set).addElement(replySet);
+		}
 	}
-    }
+
+	synchronized void cancel(final String msg) {
+		if (!available) {
+			available = true;
+			exception = new NotHandledException(msg);
+			notifyAll();
+			notifySet();
+		}
+	}
+
+	@Override
+	final synchronized public Object getReply()
+	throws MessageException,
+	NotHandledException {
+		this.waitForReply();
+		if (exception != null) {
+			if (exception instanceof NotHandledException) {
+				throw (NotHandledException) exception;
+			} else if (exception instanceof MessageException) {
+				throw (MessageException) exception;
+			}
+		}
+		return result;
+	}
+
+	/*
+	 * synchronized void complete(boolean result, Throwable ex, String msg) { //
+	 * REMIND. critical session. if (! available) { if (result) { if (ex ==
+	 * null) { setReplyAndNotify(null); } else { setExceptionAndNotify(ex); } }
+	 * else { // REMIND: // Improvement is needed to define // precise
+	 * semantics. if (ex != null) { msg += " with exception " + ex.getMessage();
+	 * } cancel(msg); } } }
+	 */
+
+	@Override
+	final public boolean isAvailable() {
+		return available;
+	}
+
+	/*
+	 * This must be called only from synchronized method.
+	 */
+	final private void notifySet() {
+		if (set == null) {
+			return;
+		} else if (set instanceof ReplySet) {
+			((ReplySet) set).done(this);
+		} else if (set instanceof Vector) {
+			final Enumeration e = ((Vector) set).elements();
+
+			while (e.hasMoreElements()) {
+				final ReplySet rep = (ReplySet) e.nextElement();
+
+				rep.done(this);
+			}
+		}
+		set = null;
+	}
+
+	final synchronized void sendExceptionIfNeeded(final Throwable ex) {
+		if (!available) {
+			setExceptionAndNotify(ex);
+		}
+	}
+
+	final synchronized void sendReplyIfNeeded(final Object obj) {
+		if (!available) {
+			setReplyAndNotify(obj);
+		}
+	}
+
+	synchronized void setExceptionAndNotify(final Throwable ex) {
+		if (available) {
+			throw new IllegalAccessError("Reply has been already set");
+		}
+		available = true;
+		exception = new MessageException(ex);
+		notifyAll();
+
+		notifySet();
+	}
+
+	synchronized void setReplyAndNotify(final Object result) {
+		if (available) {
+			throw new IllegalAccessError("Reply has been already set");
+		}
+		this.result = result;
+		available = true;
+		notifyAll();
+
+		notifySet();
+	}
+
+	@Override
+	final synchronized public void waitForReply() {
+		while (available == false) {
+			try {
+				this.wait();
+			} catch (final InterruptedException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	final synchronized public void waitForReply(final long timeout) {
+		if (timeout == 0) {
+			this.waitForReply();
+		} else {
+			final long until = System.currentTimeMillis() + timeout;
+			long reft;
+
+			while ((available == false)
+					&& ((reft = (until - System.currentTimeMillis())) > 0)) {
+				try {
+					this.wait(reft);
+				} catch (final InterruptedException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+	}
 }

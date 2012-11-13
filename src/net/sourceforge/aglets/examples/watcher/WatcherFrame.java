@@ -30,106 +30,106 @@ import com.ibm.aglet.message.Message;
 import com.ibm.aglet.util.AddressChooser;
 
 class WatcherFrame extends Frame implements WindowListener, ActionListener {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -1240859890295707297L;
-    ProxyWatcher aglet;
-    TextArea text = new TextArea(10, 10);
-    AddressChooser address = new AddressChooser(15);
-    Button go = new Button("Go!");
-    Button start = new Button("Start");
-    Button stop = new Button("Stop");
-    Button sleep = new Button("Sleep");
-    Button move = new Button("Move");
-    Button terminate = new Button("Terminate");
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1240859890295707297L;
+	ProxyWatcher aglet;
+	TextArea text = new TextArea(10, 10);
+	AddressChooser address = new AddressChooser(15);
+	Button go = new Button("Go!");
+	Button start = new Button("Start");
+	Button stop = new Button("Stop");
+	Button sleep = new Button("Sleep");
+	Button move = new Button("Move");
+	Button terminate = new Button("Terminate");
 
-    WatcherFrame(ProxyWatcher a) {
-	this.aglet = a;
-	this.setLayout(new BorderLayout());
-	this.add("North", this.address);
-	this.add("Center", this.text);
-	Panel p = new Panel();
+	WatcherFrame(final ProxyWatcher a) {
+		aglet = a;
+		setLayout(new BorderLayout());
+		this.add("North", address);
+		this.add("Center", text);
+		final Panel p = new Panel();
 
-	p.setLayout(new FlowLayout());
+		p.setLayout(new FlowLayout());
 
-	this.addWindowListener(this);
-	this.go.addActionListener(this);
-	this.start.addActionListener(this);
-	this.stop.addActionListener(this);
-	this.sleep.addActionListener(this);
-	this.move.addActionListener(this);
-	this.terminate.addActionListener(this);
+		addWindowListener(this);
+		go.addActionListener(this);
+		start.addActionListener(this);
+		stop.addActionListener(this);
+		sleep.addActionListener(this);
+		move.addActionListener(this);
+		terminate.addActionListener(this);
 
-	p.add(this.go);
-	p.add(this.start);
-	p.add(this.stop);
-	p.add(this.sleep);
-	p.add(this.move);
-	p.add(this.terminate);
-	this.add("South", p);
-    }
-
-    /**
-     * Handles the action event
-     * 
-     * @param ae
-     *            the event to be handled
-     */
-    @Override
-    public void actionPerformed(ActionEvent ae) {
-	if ("Go!".equals(ae.getActionCommand())) {
-	    this.aglet.go(this.address.getAddress());
-	} else if ("Start".equals(ae.getActionCommand())) {
-	    this.aglet.sendMessage(new Message("start"));
-	} else if ("Stop".equals(ae.getActionCommand())) {
-	    this.aglet.sendMessage(new Message("stop"));
-	} else if ("Sleep".equals(ae.getActionCommand())) {
-	    this.aglet.sendMessage(new Message("sleep"));
-	} else if ("Move".equals(ae.getActionCommand())) {
-	    this.aglet.move(this.address.getAddress());
-	} else if ("Terminate".equals(ae.getActionCommand())) {
-	    this.aglet.terminate();
+		p.add(go);
+		p.add(start);
+		p.add(stop);
+		p.add(sleep);
+		p.add(move);
+		p.add(terminate);
+		this.add("South", p);
 	}
-    }
 
-    void update(String s) {
-	this.text.setText(s);
-    }
+	/**
+	 * Handles the action event
+	 * 
+	 * @param ae
+	 *            the event to be handled
+	 */
+	@Override
+	public void actionPerformed(final ActionEvent ae) {
+		if ("Go!".equals(ae.getActionCommand())) {
+			aglet.go(address.getAddress());
+		} else if ("Start".equals(ae.getActionCommand())) {
+			aglet.sendMessage(new Message("start"));
+		} else if ("Stop".equals(ae.getActionCommand())) {
+			aglet.sendMessage(new Message("stop"));
+		} else if ("Sleep".equals(ae.getActionCommand())) {
+			aglet.sendMessage(new Message("sleep"));
+		} else if ("Move".equals(ae.getActionCommand())) {
+			aglet.move(address.getAddress());
+		} else if ("Terminate".equals(ae.getActionCommand())) {
+			aglet.terminate();
+		}
+	}
 
-    @Override
-    public void windowActivated(WindowEvent we) {
-    }
+	void update(final String s) {
+		text.setText(s);
+	}
 
-    @Override
-    public void windowClosed(WindowEvent we) {
-    }
+	@Override
+	public void windowActivated(final WindowEvent we) {
+	}
 
-    /**
-     * Handles the window event
-     * 
-     * @param we
-     *            the event to be handled
-     */
+	@Override
+	public void windowClosed(final WindowEvent we) {
+	}
 
-    @Override
-    public void windowClosing(WindowEvent we) {
-	this.dispose();
-    }
+	/**
+	 * Handles the window event
+	 * 
+	 * @param we
+	 *            the event to be handled
+	 */
 
-    @Override
-    public void windowDeactivated(WindowEvent we) {
-    }
+	@Override
+	public void windowClosing(final WindowEvent we) {
+		dispose();
+	}
 
-    @Override
-    public void windowDeiconified(WindowEvent we) {
-    }
+	@Override
+	public void windowDeactivated(final WindowEvent we) {
+	}
 
-    @Override
-    public void windowIconified(WindowEvent we) {
-    }
+	@Override
+	public void windowDeiconified(final WindowEvent we) {
+	}
 
-    @Override
-    public void windowOpened(WindowEvent we) {
-    }
+	@Override
+	public void windowIconified(final WindowEvent we) {
+	}
+
+	@Override
+	public void windowOpened(final WindowEvent we) {
+	}
 }

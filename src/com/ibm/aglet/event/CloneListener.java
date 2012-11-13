@@ -32,19 +32,19 @@ package com.ibm.aglet.event;
 public interface CloneListener extends java.util.EventListener,
 java.io.Serializable {
 
-    /**
-     * Invoked after an aglet was cloned. This is delivered to the cloned aglet.
-     */
-    public void onClone(CloneEvent event);
+	/**
+	 * Invoked after an aglet was cloned. This is delivered to the cloned aglet.
+	 */
+	public void onClone(CloneEvent event);
 
-    /**
-     * Invoked after an aglet was cloned. This is delivered to the original
-     * aglet.
-     */
-    public void onCloned(CloneEvent event);
+	/**
+	 * Invoked after an aglet was cloned. This is delivered to the original
+	 * aglet.
+	 */
+	public void onCloned(CloneEvent event);
 
-    /**
-     * Invoked when an aglet is attempted to clone
-     */
-    public void onCloning(CloneEvent event);
+	/**
+	 * Invoked when an aglet is attempted to clone
+	 */
+	public void onCloning(CloneEvent event);
 }

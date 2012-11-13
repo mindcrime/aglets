@@ -32,13 +32,13 @@ package com.ibm.aglet.event;
 public interface PersistencyListener extends java.util.EventListener,
 java.io.Serializable {
 
-    /**
-     * Invoked just after the aglet was activated.
-     */
-    public void onActivation(PersistencyEvent event);
+	/**
+	 * Invoked just after the aglet was activated.
+	 */
+	public void onActivation(PersistencyEvent event);
 
-    /**
-     * Invoked when an aglet is attempted to deactivate.
-     */
-    public void onDeactivating(PersistencyEvent event);
+	/**
+	 * Invoked when an aglet is attempted to deactivate.
+	 */
+	public void onDeactivating(PersistencyEvent event);
 }

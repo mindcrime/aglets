@@ -32,69 +32,69 @@ import com.ibm.maf.ClassName;
  * @author ONO Kouichi
  */
 final class AgletWriter {
-    ByteArrayOutputStream _baos = new ByteArrayOutputStream();
-    ObjectOutputStream _oout = null;
-    ClassName[] _table = null;
+	ByteArrayOutputStream _baos = new ByteArrayOutputStream();
+	ObjectOutputStream _oout = null;
+	ClassName[] _table = null;
 
-    AgletWriter() throws IOException {
-	this._oout = new ObjectOutputStream(this._baos);
-    }
+	AgletWriter() throws IOException {
+		_oout = new ObjectOutputStream(_baos);
+	}
 
-    /*
-     * 
-     */
-    byte[] getBytes() {
-	return this._baos.toByteArray();
-    }
+	/*
+	 * 
+	 */
+	byte[] getBytes() {
+		return _baos.toByteArray();
+	}
 
-    /*
-     * 
-     */
-    ClassName[] getClassNames() {
-	return this._table;
-    }
+	/*
+	 * 
+	 */
+	ClassName[] getClassNames() {
+		return _table;
+	}
 
-    void writeAglet(LocalAgletRef ref) throws IOException {
+	void writeAglet(final LocalAgletRef ref) throws IOException {
 
-	ByteArrayOutputStream tmp = new ByteArrayOutputStream();
-	AgletOutputStream aos = new AgletOutputStream(tmp);
+		final ByteArrayOutputStream tmp = new ByteArrayOutputStream();
+		final AgletOutputStream aos = new AgletOutputStream(tmp);
 
-	//
-	// Message Manager
-	//
-	aos.writeObject(ref.messageManager);
+		//
+		// Message Manager
+		//
+		aos.writeObject(ref.messageManager);
 
-	//
-	// Aglet
-	//
-	aos.writeObject(ref.aglet);
-	aos.flush();
+		//
+		// Aglet
+		//
+		aos.writeObject(ref.aglet);
+		aos.flush();
 
-	//
-	// writes the table first
-	//
-	this._table = aos.getClassNames(ref.resourceManager);
-	this._oout.writeObject(ref.resourceManager.getArchive(this._table));
-	this._oout.flush();
+		//
+		// writes the table first
+		//
+		_table = aos.getClassNames(ref.resourceManager);
+		_oout.writeObject(ref.resourceManager.getArchive(_table));
+		_oout.flush();
 
-	tmp.writeTo(this._baos);
-    }
+		tmp.writeTo(_baos);
+	}
 
-    void writeInfo(LocalAgletRef ref) throws IOException {
+	void writeInfo(final LocalAgletRef ref) throws IOException {
 
-	//
-	// AgletInfo
-	//
-	this._oout.writeObject(ref.info);
+		//
+		// AgletInfo
+		//
+		_oout.writeObject(ref.info);
 
-	//
-	// Protections
-	//
-	this._oout.writeObject(ref.protections);
+		//
+		// Protections
+		//
+		_oout.writeObject(ref.protections);
 
-	//
-	// secure/unsecure
-	//
-	this._oout.writeBoolean(ref.getSecurity());
-    }
+		//
+		// secure/unsecure
+		//
+		_oout.writeBoolean(ref.getSecurity());
+	}
 }

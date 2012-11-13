@@ -23,20 +23,20 @@ package com.ibm.maf;
 
 public final class AuthInfo implements java.io.Serializable {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -3218233482062226510L;
-    // instance variables
-    public boolean is_auth;
-    public short authenticator;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3218233482062226510L;
+	// instance variables
+	public boolean is_auth;
+	public short authenticator;
 
-    // constructors
-    public AuthInfo() {
-    }
+	// constructors
+	public AuthInfo() {
+	}
 
-    public AuthInfo(boolean __is_auth, short __authenticator) {
-	this.is_auth = __is_auth;
-	this.authenticator = __authenticator;
-    }
+	public AuthInfo(final boolean __is_auth, final short __authenticator) {
+		is_auth = __is_auth;
+		authenticator = __authenticator;
+	}
 }

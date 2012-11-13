@@ -28,102 +28,102 @@ import javax.swing.JButton;
 
 final class ShutdownDialog extends TahitiDialog {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 8472863600041738626L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8472863600041738626L;
 
-    /*
-     * Singleton instance reference.
-     */
-    private static ShutdownDialog _instance = null;
+	/*
+	 * Singleton instance reference.
+	 */
+	private static ShutdownDialog _instance = null;
 
-    /**
-     * Shutdown
-     */
-    private JButton _OKButton = null;
-    /**
-     * Reboot
-     */
-    private JButton _RebootButton = null;
-
-    /*
-     * Constructs
-     */
-    private ShutdownDialog(MainWindow parent) {
-	this(parent, "OK?");
-    }
-
-    /*
-     * 
-     */
-    /* package protected */
-    ShutdownDialog(MainWindow parent, String msg) {
-	super(parent);
-
-	this.add("North", new Label("Shutdown Server", Label.CENTER));
-	this.add("Center", new Label(msg, Label.CENTER));
-
-	this.addOKButton("OK");
-	this.addRebootButton("Reboot");
-	this.addCloseButton("Cancel");
-    }
-
-    protected void addOKButton(String name) {
-	if (name == null) {
-	    name = "OK";
+	/*
+	 * Singletion method to get the instnace
+	 */
+	static ShutdownDialog getInstance(final MainWindow parent) {
+		if (_instance == null) {
+			_instance = new ShutdownDialog(parent);
+		}
+		return _instance;
 	}
-	class ShutdownListener extends ActionAndKeyListener {
-	    ShutdownDialog shutdownDialog = null;
+	/**
+	 * Shutdown
+	 */
+	private JButton _OKButton = null;
 
-	    ShutdownListener(ShutdownDialog dialog) {
-		this.shutdownDialog = dialog;
-	    }
+	/**
+	 * Reboot
+	 */
+	private JButton _RebootButton = null;
 
-	    @Override
-	    protected void doAction() {
-		this.shutdownDialog.dispose();
-		this.shutdownDialog.getMainWindow().shutdown();
-	    }
+	/*
+	 * Constructs
+	 */
+	private ShutdownDialog(final MainWindow parent) {
+		this(parent, "OK?");
 	}
-	ActionAndKeyListener listener = new ShutdownListener(this);
 
-	this._OKButton = this.addButton(name, listener, listener);
-    }
+	/*
+	 * 
+	 */
+	/* package protected */
+	ShutdownDialog(final MainWindow parent, final String msg) {
+		super(parent);
 
-    protected void addRebootButton(String name) {
-	if (name == null) {
-	    name = "Reboot";
+		this.add("North", new Label("Shutdown Server", Label.CENTER));
+		this.add("Center", new Label(msg, Label.CENTER));
+
+		addOKButton("OK");
+		addRebootButton("Reboot");
+		addCloseButton("Cancel");
 	}
-	class RebootListener extends ActionAndKeyListener {
-	    ShutdownDialog shutdownDialog = null;
 
-	    RebootListener(ShutdownDialog dialog) {
-		this.shutdownDialog = dialog;
-	    }
+	protected void addOKButton(String name) {
+		if (name == null) {
+			name = "OK";
+		}
+		class ShutdownListener extends ActionAndKeyListener {
+			ShutdownDialog shutdownDialog = null;
 
-	    @Override
-	    protected void doAction() {
-		this.shutdownDialog.dispose();
-		this.shutdownDialog.getMainWindow().reboot();
-	    }
+			ShutdownListener(final ShutdownDialog dialog) {
+				shutdownDialog = dialog;
+			}
+
+			@Override
+			protected void doAction() {
+				shutdownDialog.dispose();
+				shutdownDialog.getMainWindow().shutdown();
+			}
+		}
+		final ActionAndKeyListener listener = new ShutdownListener(this);
+
+		_OKButton = this.addButton(name, listener, listener);
 	}
-	ActionAndKeyListener listener = new RebootListener(this);
 
-	this._RebootButton = this.addButton(name, listener, listener);
-    }
+	protected void addRebootButton(String name) {
+		if (name == null) {
+			name = "Reboot";
+		}
+		class RebootListener extends ActionAndKeyListener {
+			ShutdownDialog shutdownDialog = null;
 
-    /*
-     * Singletion method to get the instnace
-     */
-    static ShutdownDialog getInstance(MainWindow parent) {
-	if (_instance == null) {
-	    _instance = new ShutdownDialog(parent);
+			RebootListener(final ShutdownDialog dialog) {
+				shutdownDialog = dialog;
+			}
+
+			@Override
+			protected void doAction() {
+				shutdownDialog.dispose();
+				shutdownDialog.getMainWindow().reboot();
+			}
+		}
+		final ActionAndKeyListener listener = new RebootListener(this);
+
+		_RebootButton = this.addButton(name, listener, listener);
 	}
-	return _instance;
-    }
 
-    public boolean windowClosing(WindowEvent ev) {
-	return false;
-    }
+	public boolean windowClosing(final WindowEvent ev) {
+		return false;
+	}
 }

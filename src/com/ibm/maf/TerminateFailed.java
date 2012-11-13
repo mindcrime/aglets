@@ -23,13 +23,13 @@ package com.ibm.maf;
 
 public final class TerminateFailed extends MAFException {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -3639679465533162003L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3639679465533162003L;
 
-    // constructor
-    public TerminateFailed() {
-	super();
-    }
+	// constructor
+	public TerminateFailed() {
+		super();
+	}
 }

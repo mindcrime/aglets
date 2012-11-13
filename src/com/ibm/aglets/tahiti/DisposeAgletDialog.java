@@ -33,107 +33,107 @@ import com.ibm.aglet.AgletProxy;
 
 final class DisposeAgletDialog extends TahitiDialog implements ActionListener {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -8146917115337440376L;
-    /**
-     * A list of the agent proxies that must be disposed.
-     */
-    private LinkedList<AgletProxy> proxies = null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8146917115337440376L;
+	/**
+	 * A list of the agent proxies that must be disposed.
+	 */
+	private LinkedList<AgletProxy> proxies = null;
 
-    /*
-     * Constructs the remove Aglet window.
-     */
-    DisposeAgletDialog(MainWindow parent, AgletProxy proxies[]) {
-	super(parent);
+	/*
+	 * Constructs the remove Aglet window.
+	 */
+	DisposeAgletDialog(final MainWindow parent, final AgletProxy proxies[]) {
+		super(parent);
 
-	// build up a list from the proxy array
-	if ((proxies != null) && (proxies.length > 0)) {
-	    LinkedList<AgletProxy> proxyList = new LinkedList<AgletProxy>();
+		// build up a list from the proxy array
+		if ((proxies != null) && (proxies.length > 0)) {
+			final LinkedList<AgletProxy> proxyList = new LinkedList<AgletProxy>();
 
-	    for (AgletProxy proxie : proxies)
-		proxyList.add(proxie);
+			for (final AgletProxy proxie : proxies)
+				proxyList.add(proxie);
 
-	    // add the information about the proxies
-	    this.showAgletProxies(proxyList);
-	    this.proxies = proxyList;
+			// add the information about the proxies
+			showAgletProxies(proxyList);
+			this.proxies = proxyList;
 
-	    // add a text
-	    this.showMessage("Please confirm the dispose operation over the "
-		    + proxies.length + " agents");
-	    this.pack();
+			// add a text
+			showMessage("Please confirm the dispose operation over the "
+					+ proxies.length + " agents");
+			pack();
+		}
 	}
-    }
 
-    DisposeAgletDialog(MainWindow parent, LinkedList<AgletProxy> proxies) {
-	super(parent);
+	DisposeAgletDialog(final MainWindow parent, final AgletProxy proxy) {
+		super(parent);
 
-	// store the list of proxies
-	this.proxies = proxies;
+		// create a new list of one element
+		proxies = new LinkedList<AgletProxy>();
+		proxies.add(proxy);
 
-	// show the list of the agent that I'm going to work on
-	this.showAgletProxies(proxies);
+		showAgletProxies(proxies);
 
-	// add a text
-	this.showUserMessage();
-	this.pack();
+		// add a text
+		showUserMessage();
+		pack();
 
-    }
+	}
 
-    DisposeAgletDialog(MainWindow parent, AgletProxy proxy) {
-	super(parent);
+	DisposeAgletDialog(final MainWindow parent, final LinkedList<AgletProxy> proxies) {
+		super(parent);
 
-	// create a new list of one element
-	this.proxies = new LinkedList<AgletProxy>();
-	this.proxies.add(proxy);
+		// store the list of proxies
+		this.proxies = proxies;
 
-	this.showAgletProxies(this.proxies);
+		// show the list of the agent that I'm going to work on
+		showAgletProxies(proxies);
 
-	// add a text
-	this.showUserMessage();
-	this.pack();
+		// add a text
+		showUserMessage();
+		pack();
 
-    }
+	}
 
-    /**
-     * Shows a user message for asking confirmation.
-     * 
-     */
-    protected void showUserMessage() {
-	String localizedString = this.translator.translate(this.baseKey
-		+ ".userMessage");
-	this.showMessage(localizedString);
-    }
+	/*
+	 * Disposes the selected Aglet.
+	 */
+	@Override
+	public void actionPerformed(final ActionEvent event) {
+		if (event == null)
+			return;
 
-    /*
-     * Disposes the selected Aglet.
-     */
-    @Override
-    public void actionPerformed(ActionEvent event) {
-	if (event == null)
-	    return;
+		final String command = event.getActionCommand();
 
-	String command = event.getActionCommand();
+		if (GUICommandStrings.OK_COMMAND.equals(command)
+				&& (proxies != null)) {
+			// dispose
+			final MainWindow mWindow = getMainWindow();
+			setVisible(false);
 
-	if (GUICommandStrings.OK_COMMAND.equals(command)
-		&& (this.proxies != null)) {
-	    // dispose
-	    MainWindow mWindow = this.getMainWindow();
-	    this.setVisible(false);
+			// iterate on each aglet
+			final Iterator iter = proxies.iterator();
+			while ((iter != null) && iter.hasNext()) {
+				final AgletProxy currentProxy = (AgletProxy) iter.next();
+				mWindow.disposeAglet(currentProxy);
 
-	    // iterate on each aglet
-	    Iterator iter = this.proxies.iterator();
-	    while ((iter != null) && iter.hasNext()) {
-		AgletProxy currentProxy = (AgletProxy) iter.next();
-		mWindow.disposeAglet(currentProxy);
+			}
 
-	    }
+			dispose();
 
-	    this.dispose();
+		} else
+			super.actionPerformed(event);
 
-	} else
-	    super.actionPerformed(event);
+	}
 
-    }
+	/**
+	 * Shows a user message for asking confirmation.
+	 * 
+	 */
+	protected void showUserMessage() {
+		final String localizedString = translator.translate(baseKey
+				+ ".userMessage");
+		showMessage(localizedString);
+	}
 }

@@ -37,321 +37,321 @@ import com.ibm.maf.ClassName;
 
 final class ResourceManagerImpl implements com.ibm.aglets.ResourceManager {
 
-    static private ThreadGroup AGLET_GROUPS = new ThreadGroup("AGLET_GROUPS");
-    private static AgletsLogger logger = AgletsLogger.getLogger(ResourceManagerImpl.class.getName());
+	static private ThreadGroup AGLET_GROUPS = new ThreadGroup("AGLET_GROUPS");
+	private static AgletsLogger logger = AgletsLogger.getLogger(ResourceManagerImpl.class.getName());
 
-    static {
-	int max = Thread.currentThread().getPriority();
+	static {
+		final int max = Thread.currentThread().getPriority();
 
-	AGLET_GROUPS.setMaxPriority(max - 1);
-    }
-
-    /*
-     * 
-     */
-    private AgletThreadGroup _group = null;
-    private AgletClassLoader _loader = null;
-    private Vector _resources = new Vector();
-    private String _name = null;
-
-    /*
-     * ====================================================== ResourceManager
-     * Context ======================================================
-     */
-    static private Hashtable rm_contexts = new Hashtable();
-
-    /**
-     * 
-     */
-    public ResourceManagerImpl(AgletClassLoader l, String name) {
-	logger.debug("Ctor: [" + name + "]");
-	this._loader = l;
-	this._name = name;
-    }
-
-    /*
-     * ======================================================== General (Window)
-     * ========================================================
-     */
-    @Override
-    public void addResource(Object o) {
-	logger.debug("addResource");
-	synchronized (this._resources) {
-	    if (this._resources.contains(o) == false) {
-		this._resources.addElement(o);
-	    }
+		AGLET_GROUPS.setMaxPriority(max - 1);
 	}
-    }
 
-    /**
-     * return false if not found.
-     */
-    @Override
-    public boolean contains(Class cls) {
-	logger.debug("contains()");
-	return this._loader.contains(cls);
-    }
+	/* package */
+	static ResourceManagerImpl getResourceManagerContext() {
+		logger.debug("getResourceManagerContext()++");
+		ResourceManagerImpl rm = (ResourceManagerImpl) rm_contexts.get(Thread.currentThread());
 
-    @Override
-    public void disposeAllResources() {
-	synchronized (this._resources) {
-	    java.util.Enumeration e = this._resources.elements();
+		if (rm == null) {
+			logger.debug("No context found for thread getting group.");
+			final ThreadGroup tg = Thread.currentThread().getThreadGroup();
 
-	    while (e.hasMoreElements()) {
-		Object o = e.nextElement();
-
-		if (o instanceof java.awt.Window) {
-		    ((java.awt.Window) o).dispose();
-		} else {
-
-		    // what's else?
+			if (tg instanceof AgletThreadGroup) {
+				rm = ((AgletThreadGroup) tg)._rm;
+			}
 		}
-	    }
-	    this._resources = null;
-	}
-	// <RAB> 01092002 Do not kill loader so agent can recieve message to
-	// reativate
-	// _loader = null;
-	// </RAB>
-    }
 
-    /**
-     * Archives that this resource manager is managing.
-     */
-    @Override
-    public Archive getArchive(ClassName[] table) {
-	return this._loader.getArchive(table);
-    }
-
-    /**
-     * 
-     */
-    @Override
-    public ClassName[] getClassNames(Class[] classes) {
-	return this._loader.getClassNames(classes);
-    }
-
-    String getName() {
-	return this._name;
-    }
-
-    /* package */
-    static ResourceManagerImpl getResourceManagerContext() {
-	logger.debug("getResourceManagerContext()++");
-	ResourceManagerImpl rm = (ResourceManagerImpl) rm_contexts.get(Thread.currentThread());
-
-	if (rm == null) {
-	    logger.debug("No context found for thread getting group.");
-	    ThreadGroup tg = Thread.currentThread().getThreadGroup();
-
-	    if (tg instanceof AgletThreadGroup) {
-		rm = ((AgletThreadGroup) tg)._rm;
-	    }
-	}
-
-	if (logger.isDebugEnabled()) {
-	    if (rm != null) {
-		logger.debug("Using RM: " + rm.getName());
-	    } else {
-		logger.debug("No manager found");
-	    }
-	}
-	logger.debug("getResourceManagerContext()--");
-	return rm;
-    }
-
-    synchronized public ThreadGroup getThreadGroup() {
-	if (this._group == null) {
-	    try {
-		final ResourceManagerImpl fResMan = this;
-
-		this._group = (AgletThreadGroup) AccessController.doPrivileged(new PrivilegedAction() {
-		    @Override
-		    public Object run() {
-			return new AgletThreadGroup(AGLET_GROUPS, fResMan);
-		    }
-		});
-	    } catch (Exception ex) {
-		ex.printStackTrace();
-	    }
-	}
-	return this._group;
-    }
-
-    /*
-     * 
-     */
-    @Override
-    public void importArchive(Archive a) {
-	this._loader.importArchive(a);
-    }
-
-    /*
-     * ======================================================== ByteCode and
-     * Class Management ========================================================
-     */
-    @Override
-    public Class loadClass(String name) throws ClassNotFoundException {
-	return this._loader.loadClass(name);
-    }
-
-    /*
-     * ====================================================== Thread Management
-     * ======================================================
-     */
-    @Override
-    public AgletThread newAgletThread(MessageManager mm) {
-	logger.debug("newAgletThread");
-	try {
-	    final ThreadGroup fThreadGroup = this.getThreadGroup();
-	    final MessageManager fMsgMan = mm;
-
-	    return (AgletThread) AccessController.doPrivileged(new PrivilegedAction() {
-		@Override
-		public Object run() {
-		    return new AgletThread(fThreadGroup, fMsgMan);
-		}
-	    });
-	} catch (Exception ex) {
-	    ex.printStackTrace();
-	    return null;
-	}
-    }
-
-    @Override
-    public void resumeAllThreads() {
-	try {
-	    final ThreadGroup fThreadGroup = this.getThreadGroup();
-
-	    AccessController.doPrivileged(new PrivilegedAction() {
-		@Override
-		public Object run() {
-		    fThreadGroup.resume();
-		    return null;
-		}
-	    });
-	} catch (Exception ex) {
-	    ex.printStackTrace();
-	}
-    }
-
-    @Override
-    public void setResourceManagerContext() {
-	logger.debug("setResourceManagerContext() : " + this.getName());
-	rm_contexts.put(Thread.currentThread(), this);
-    }
-
-    @Override
-    public void stopAllThreads() {
-	final AgletThreadGroup g = (AgletThreadGroup) this.getThreadGroup();
-
-	//
-	// Needs to imporove.
-	//
-	try {
-	    AccessController.doPrivileged(new PrivilegedAction() {
-		@Override
-		public Object run() {
-		    boolean suicide = false;
-
-		    synchronized (g) {
-			g.invalidate();
-			g.setDaemon(true);
-			ThreadGroup currentGroup = Thread.currentThread().getThreadGroup();
-
-			if (g.parentOf(currentGroup)) {
-
-			    // suicide
-			    suicide = true;
-			    Thread t[] = new Thread[g.activeCount() + 1];
-			    int num = g.enumerate(t, true);
-			    Thread current = Thread.currentThread();
-
-			    for (int i = 0; i < num; i++) {
-				if (current != t[i]) {
-				    t[i].resume();
-				    t[i].stop();
-				    t[i].interrupt();
-				}
-			    }
+		if (logger.isDebugEnabled()) {
+			if (rm != null) {
+				logger.debug("Using RM: " + rm.getName());
 			} else {
-			    g.stop();
-			    g.resume();
+				logger.debug("No manager found");
 			}
-		    }
-		    if (suicide == false) {
-			g.destroy();
-		    }
-		    return null;
 		}
-	    });
-	} catch (IllegalThreadStateException ex) {
-	} catch (Exception ex) {
-	    ex.printStackTrace();
+		logger.debug("getResourceManagerContext()--");
+		return rm;
 	}
-    }
+	/*
+	 * 
+	 */
+	private AgletThreadGroup _group = null;
+	private AgletClassLoader _loader = null;
+	private Vector _resources = new Vector();
 
-    @Override
-    synchronized public void stopThreadGroup() {
-	try {
-	    final ThreadGroup fThreadGroup = this._group;
+	private String _name = null;
 
-	    AccessController.doPrivileged(new PrivilegedAction() {
-		@Override
-		public Object run() {
-		    try {
-			fThreadGroup.stop();
-		    } catch (Exception ex) {
-		    } finally {
+	/*
+	 * ====================================================== ResourceManager
+	 * Context ======================================================
+	 */
+	static private Hashtable rm_contexts = new Hashtable();
+
+	/**
+	 * 
+	 */
+	public ResourceManagerImpl(final AgletClassLoader l, final String name) {
+		logger.debug("Ctor: [" + name + "]");
+		_loader = l;
+		_name = name;
+	}
+
+	/*
+	 * ======================================================== General (Window)
+	 * ========================================================
+	 */
+	@Override
+	public void addResource(final Object o) {
+		logger.debug("addResource");
+		synchronized (_resources) {
+			if (_resources.contains(o) == false) {
+				_resources.addElement(o);
+			}
+		}
+	}
+
+	/**
+	 * return false if not found.
+	 */
+	@Override
+	public boolean contains(final Class cls) {
+		logger.debug("contains()");
+		return _loader.contains(cls);
+	}
+
+	@Override
+	public void disposeAllResources() {
+		synchronized (_resources) {
+			final java.util.Enumeration e = _resources.elements();
+
+			while (e.hasMoreElements()) {
+				final Object o = e.nextElement();
+
+				if (o instanceof java.awt.Window) {
+					((java.awt.Window) o).dispose();
+				} else {
+
+					// what's else?
+				}
+			}
+			_resources = null;
+		}
+		// <RAB> 01092002 Do not kill loader so agent can recieve message to
+		// reativate
+		// _loader = null;
+		// </RAB>
+	}
+
+	/**
+	 * Archives that this resource manager is managing.
+	 */
+	@Override
+	public Archive getArchive(final ClassName[] table) {
+		return _loader.getArchive(table);
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public ClassName[] getClassNames(final Class[] classes) {
+		return _loader.getClassNames(classes);
+	}
+
+	String getName() {
+		return _name;
+	}
+
+	synchronized public ThreadGroup getThreadGroup() {
+		if (_group == null) {
 			try {
-			    fThreadGroup.destroy();
-			} catch (IllegalThreadStateException ex) {
+				final ResourceManagerImpl fResMan = this;
+
+				_group = (AgletThreadGroup) AccessController.doPrivileged(new PrivilegedAction() {
+					@Override
+					public Object run() {
+						return new AgletThreadGroup(AGLET_GROUPS, fResMan);
+					}
+				});
+			} catch (final Exception ex) {
+				ex.printStackTrace();
 			}
-		    }
-		    return null;
 		}
-	    });
-	} catch (Exception ex) {
-	    ex.printStackTrace();
+		return _group;
 	}
-	this._group = null;
-    }
 
-    @Override
-    public void suspendAllThreads() {
-	final ThreadGroup fThreadGroup = this.getThreadGroup();
-	synchronized (fThreadGroup) {
-	    try {
-		AccessController.doPrivileged(new PrivilegedAction() {
-		    @Override
-		    public Object run() {
-			Thread t[] = new Thread[fThreadGroup.activeCount()];
-			Thread current = Thread.currentThread();
-			int num = fThreadGroup.enumerate(t, true);
+	/*
+	 * 
+	 */
+	@Override
+	public void importArchive(final Archive a) {
+		_loader.importArchive(a);
+	}
 
-			for (int i = 0; i < num; i++) {
-			    if (current != t[i]) {
-				t[i].suspend();
-			    }
-			}
+	/*
+	 * ======================================================== ByteCode and
+	 * Class Management ========================================================
+	 */
+	@Override
+	public Class loadClass(final String name) throws ClassNotFoundException {
+		return _loader.loadClass(name);
+	}
+
+	/*
+	 * ====================================================== Thread Management
+	 * ======================================================
+	 */
+	@Override
+	public AgletThread newAgletThread(final MessageManager mm) {
+		logger.debug("newAgletThread");
+		try {
+			final ThreadGroup fThreadGroup = getThreadGroup();
+			final MessageManager fMsgMan = mm;
+
+			return (AgletThread) AccessController.doPrivileged(new PrivilegedAction() {
+				@Override
+				public Object run() {
+					return new AgletThread(fThreadGroup, fMsgMan);
+				}
+			});
+		} catch (final Exception ex) {
+			ex.printStackTrace();
 			return null;
-		    }
-		});
-	    } catch (Exception ex) {
-		ex.printStackTrace();
-	    }
+		}
 	}
-    }
 
-    @Override
-    public void unsetResourceManagerContext() {
-	logger.debug("unsetResourceManagerContext()");
-	rm_contexts.remove(Thread.currentThread());
-    }
+	@Override
+	public void resumeAllThreads() {
+		try {
+			final ThreadGroup fThreadGroup = getThreadGroup();
 
-    @Override
-    public String toString() {
-	return this._name;
-    }
+			AccessController.doPrivileged(new PrivilegedAction() {
+				@Override
+				public Object run() {
+					fThreadGroup.resume();
+					return null;
+				}
+			});
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	@Override
+	public void setResourceManagerContext() {
+		logger.debug("setResourceManagerContext() : " + getName());
+		rm_contexts.put(Thread.currentThread(), this);
+	}
+
+	@Override
+	public void stopAllThreads() {
+		final AgletThreadGroup g = (AgletThreadGroup) getThreadGroup();
+
+		//
+		// Needs to imporove.
+		//
+		try {
+			AccessController.doPrivileged(new PrivilegedAction() {
+				@Override
+				public Object run() {
+					boolean suicide = false;
+
+					synchronized (g) {
+						g.invalidate();
+						g.setDaemon(true);
+						final ThreadGroup currentGroup = Thread.currentThread().getThreadGroup();
+
+						if (g.parentOf(currentGroup)) {
+
+							// suicide
+							suicide = true;
+							final Thread t[] = new Thread[g.activeCount() + 1];
+							final int num = g.enumerate(t, true);
+							final Thread current = Thread.currentThread();
+
+							for (int i = 0; i < num; i++) {
+								if (current != t[i]) {
+									t[i].resume();
+									t[i].stop();
+									t[i].interrupt();
+								}
+							}
+						} else {
+							g.stop();
+							g.resume();
+						}
+					}
+					if (suicide == false) {
+						g.destroy();
+					}
+					return null;
+				}
+			});
+		} catch (final IllegalThreadStateException ex) {
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	@Override
+	synchronized public void stopThreadGroup() {
+		try {
+			final ThreadGroup fThreadGroup = _group;
+
+			AccessController.doPrivileged(new PrivilegedAction() {
+				@Override
+				public Object run() {
+					try {
+						fThreadGroup.stop();
+					} catch (final Exception ex) {
+					} finally {
+						try {
+							fThreadGroup.destroy();
+						} catch (final IllegalThreadStateException ex) {
+						}
+					}
+					return null;
+				}
+			});
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+		_group = null;
+	}
+
+	@Override
+	public void suspendAllThreads() {
+		final ThreadGroup fThreadGroup = getThreadGroup();
+		synchronized (fThreadGroup) {
+			try {
+				AccessController.doPrivileged(new PrivilegedAction() {
+					@Override
+					public Object run() {
+						final Thread t[] = new Thread[fThreadGroup.activeCount()];
+						final Thread current = Thread.currentThread();
+						final int num = fThreadGroup.enumerate(t, true);
+
+						for (int i = 0; i < num; i++) {
+							if (current != t[i]) {
+								t[i].suspend();
+							}
+						}
+						return null;
+					}
+				});
+			} catch (final Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public String toString() {
+		return _name;
+	}
+
+	@Override
+	public void unsetResourceManagerContext() {
+		logger.debug("unsetResourceManagerContext()");
+		rm_contexts.remove(Thread.currentThread());
+	}
 
 }

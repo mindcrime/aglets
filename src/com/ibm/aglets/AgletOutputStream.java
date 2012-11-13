@@ -38,91 +38,91 @@ import com.ibm.maf.ClassName;
 
 final class AgletOutputStream extends ObjectOutputStream {
 
-    private Vector classes = new Vector();
+	private final Vector classes = new Vector();
 
-    /*
-     * Write annotated classes to DataOutput object. private void
-     * writeTo(DataOutput dout, ResourceManager rm) throws IOException { int num
-     * = classes.size();
-     * 
-     * dout.writeInt(num); Enumeration e = classes.elements();
-     * 
-     * while(e.hasMoreElements()) { Class cls = (Class)e.nextElement();
-     * 
-     * dout.writeUTF(cls.getName()); byte bytecode[] = rm.getByteCode(cls); if
-     * (bytecode != null) { dout.writeInt(bytecode.length);
-     * dout.write(bytecode); } else { dout.writeInt(0); } } }
-     */
-    /**
-     * Create a new instance of this class with version given.
-     * 
-     * @param out
-     *            an output stream where data are written into.
-     * @exception IOException
-     *                if can not write into the output stream.
-     */
-    AgletOutputStream(OutputStream out) throws IOException {
-	super(out);
-    }
-
-    /**
-     * Write the class data into the output stream. Class data of all super
-     * classes of the class will be written together.
-     * 
-     * @param cls
-     *            class.
-     * @exception IOException
-     *                if can not write into the output stream.
-     */
-    @Override
-    synchronized public void annotateClass(Class cls) throws IOException {
-
-	// annotate interfaces
-	Class interfaces[] = cls.getInterfaces();
-
-	for (Class interface1 : interfaces) {
-	    this.annotateClass(interface1);
+	/*
+	 * Write annotated classes to DataOutput object. private void
+	 * writeTo(DataOutput dout, ResourceManager rm) throws IOException { int num
+	 * = classes.size();
+	 * 
+	 * dout.writeInt(num); Enumeration e = classes.elements();
+	 * 
+	 * while(e.hasMoreElements()) { Class cls = (Class)e.nextElement();
+	 * 
+	 * dout.writeUTF(cls.getName()); byte bytecode[] = rm.getByteCode(cls); if
+	 * (bytecode != null) { dout.writeInt(bytecode.length);
+	 * dout.write(bytecode); } else { dout.writeInt(0); } } }
+	 */
+	/**
+	 * Create a new instance of this class with version given.
+	 * 
+	 * @param out
+	 *            an output stream where data are written into.
+	 * @exception IOException
+	 *                if can not write into the output stream.
+	 */
+	AgletOutputStream(final OutputStream out) throws IOException {
+		super(out);
 	}
 
-	// annotate class if it's not in the class cache.
-	if (this.classes.contains(cls) == false) {
-	    this.classes.addElement(cls);
+	/**
+	 * Write the class data into the output stream. Class data of all super
+	 * classes of the class will be written together.
+	 * 
+	 * @param cls
+	 *            class.
+	 * @exception IOException
+	 *                if can not write into the output stream.
+	 */
+	@Override
+	synchronized public void annotateClass(final Class cls) throws IOException {
 
-	    //
-	    // REMIND: may not need in RMIprebeta2 or JDK1.1
-	    //
-	    Class super_class = cls.getSuperclass();
+		// annotate interfaces
+		final Class interfaces[] = cls.getInterfaces();
 
-	    if (super_class != null) {
-		this.annotateClass(super_class);
-	    }
+		for (final Class interface1 : interfaces) {
+			annotateClass(interface1);
+		}
+
+		// annotate class if it's not in the class cache.
+		if (classes.contains(cls) == false) {
+			classes.addElement(cls);
+
+			//
+			// REMIND: may not need in RMIprebeta2 or JDK1.1
+			//
+			final Class super_class = cls.getSuperclass();
+
+			if (super_class != null) {
+				annotateClass(super_class);
+			}
+		}
 	}
-    }
 
-    /*
-     * Creates class table for classes
-     */
-    private Class[] getClasses() {
-	Class[] ret = new Class[this.classes.size()];
+	/*
+	 * Creates class table for classes
+	 */
+	private Class[] getClasses() {
+		final Class[] ret = new Class[classes.size()];
 
-	this.classes.copyInto(ret);
-	return ret;
-    }
+		classes.copyInto(ret);
+		return ret;
+	}
 
-    /*
-     * 
-     */
-    /* package */
-    ClassName[] getClassNames(ResourceManager rm) {
-	return rm.getClassNames(this.getClasses());
-    }
+	/*
+	 * 
+	 */
+	/* package */
+	ClassName[] getClassNames(final ResourceManager rm) {
+		return rm.getClassNames(getClasses());
+	}
 
-    /*
-     * 
-     */
-    @Override
-    protected void writeStreamHeader() throws IOException {
-	this.writeInt(AgletRuntime.AGLET_MAGIC);
-	this.writeByte(AgletRuntime.AGLET_STREAM_VERSION);
-    }
+	/*
+	 * 
+	 */
+	@Override
+	protected void writeStreamHeader() throws IOException {
+		writeInt(AgletRuntime.AGLET_MAGIC);
+		writeByte(AgletRuntime.AGLET_STREAM_VERSION);
+	}
 }

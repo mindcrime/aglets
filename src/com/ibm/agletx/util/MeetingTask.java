@@ -26,40 +26,40 @@ import com.ibm.agletx.patterns.Meeting;
 
 public abstract class MeetingTask extends Task {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 6406621214633110803L;
-    private Meeting meeting = null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6406621214633110803L;
+	private Meeting meeting = null;
 
-    public MeetingTask(Meeting meeting) {
-	this.meeting = meeting;
-    }
+	public MeetingTask(final Meeting meeting) {
+		this.meeting = meeting;
+	}
 
-    /**
-     * Aglet programers should not modify this method
-     */
-    @Override
-    public void execute(SeqItinerary itin) throws Exception {
-	this.execute(itin, this.meeting.ready(itin.getOwnerAglet().getAglet()));
-    }
+	/**
+	 * Aglet programers should not modify this method
+	 */
+	@Override
+	public void execute(final SeqItinerary itin) throws Exception {
+		this.execute(itin, meeting.ready(itin.getOwnerAglet().getAglet()));
+	}
 
-    /**
-     * Define the task to be performed upon arrival to a meeting
-     * 
-     * @param itin
-     *            the MeetingsItinerary object
-     * @param participants
-     *            enumeration of the current participants in the meeting.
-     * @exception Exception
-     *                if failed to perform the task
-     */
-    public abstract void execute(
-                                 SeqItinerary itin,
-                                 java.util.Enumeration participants)
-    throws Exception;
+	/**
+	 * Define the task to be performed upon arrival to a meeting
+	 * 
+	 * @param itin
+	 *            the MeetingsItinerary object
+	 * @param participants
+	 *            enumeration of the current participants in the meeting.
+	 * @exception Exception
+	 *                if failed to perform the task
+	 */
+	public abstract void execute(
+	                             SeqItinerary itin,
+	                             java.util.Enumeration participants)
+	throws Exception;
 
-    public Meeting getMeeting() {
-	return this.meeting;
-    }
+	public Meeting getMeeting() {
+		return meeting;
+	}
 }

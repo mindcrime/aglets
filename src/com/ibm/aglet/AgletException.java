@@ -38,68 +38,68 @@ import java.io.Serializable;
  * @author Danny B. Lange
  */
 public class AgletException extends Exception implements Serializable {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -5852186361181050874L;
-    private boolean _original = true;
-    private String _stackTrace = null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5852186361181050874L;
+	private boolean _original = true;
+	private String _stackTrace = null;
 
-    /**
-     * Constructs an AgletException with no detail message. A detail message is
-     * a string that describes this particular exception.
-     */
-    public AgletException() {
-	super();
-    }
-
-    /**
-     * Creates an exception with another exception as cause.
-     * 
-     * @param initialException
-     *            the cause of this exception
-     */
-    public AgletException(Exception initialException) {
-	super(initialException);
-    }
-
-    /**
-     * Constructs an AgletException with the specified detail message. A detail
-     * message is a string that describes this particular exception.
-     * 
-     * @param s
-     *            the detail message.
-     */
-    public AgletException(String s) {
-	super(s);
-    }
-
-    @Override
-    public void printStackTrace() {
-	if (this._original) {
-	    super.printStackTrace();
-	} else {
-	    System.err.println(this);
-	    System.err.println(this._stackTrace);
+	/**
+	 * Constructs an AgletException with no detail message. A detail message is
+	 * a string that describes this particular exception.
+	 */
+	public AgletException() {
+		super();
 	}
-    }
 
-    private void readObject(ObjectInputStream s)
-    throws IOException,
-    ClassNotFoundException {
-	this._original = false;
-	this._stackTrace = (String) s.readObject();
-    }
-
-    /**
-     * 
-     */
-    private void writeObject(ObjectOutputStream s) throws IOException {
-	if (this._original) {
-	    ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-	    this.printStackTrace(new PrintWriter(new OutputStreamWriter(out)));
-	    s.writeObject(new String(out.toByteArray()));
+	/**
+	 * Creates an exception with another exception as cause.
+	 * 
+	 * @param initialException
+	 *            the cause of this exception
+	 */
+	public AgletException(final Exception initialException) {
+		super(initialException);
 	}
-    }
+
+	/**
+	 * Constructs an AgletException with the specified detail message. A detail
+	 * message is a string that describes this particular exception.
+	 * 
+	 * @param s
+	 *            the detail message.
+	 */
+	public AgletException(final String s) {
+		super(s);
+	}
+
+	@Override
+	public void printStackTrace() {
+		if (_original) {
+			super.printStackTrace();
+		} else {
+			System.err.println(this);
+			System.err.println(_stackTrace);
+		}
+	}
+
+	private void readObject(final ObjectInputStream s)
+	throws IOException,
+	ClassNotFoundException {
+		_original = false;
+		_stackTrace = (String) s.readObject();
+	}
+
+	/**
+	 * 
+	 */
+	private void writeObject(final ObjectOutputStream s) throws IOException {
+		if (_original) {
+			final ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+			this.printStackTrace(new PrintWriter(new OutputStreamWriter(out)));
+			s.writeObject(new String(out.toByteArray()));
+		}
+	}
 }

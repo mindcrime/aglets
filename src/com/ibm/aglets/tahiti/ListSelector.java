@@ -19,27 +19,27 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 class ListSelector implements ItemListener {
-    MultiList _mlist = null;
-    int _col = -1;
+	MultiList _mlist = null;
+	int _col = -1;
 
-    ListSelector(MultiList mlist, int col) {
-	this._mlist = mlist;
-	this._col = col;
-    }
-
-    @Override
-    public void itemStateChanged(ItemEvent ev) {
-	if (this._mlist != null) {
-	    List list = this._mlist.getList(this._col);
-
-	    if (list != null) {
-		final int idx = list.getSelectedIndex();
-
-		if (idx >= 0) {
-		    this._mlist.select(idx);
-		    this._mlist.notifyToItemListeners(ev);
-		}
-	    }
+	ListSelector(final MultiList mlist, final int col) {
+		_mlist = mlist;
+		_col = col;
 	}
-    }
+
+	@Override
+	public void itemStateChanged(final ItemEvent ev) {
+		if (_mlist != null) {
+			final List list = _mlist.getList(_col);
+
+			if (list != null) {
+				final int idx = list.getSelectedIndex();
+
+				if (idx >= 0) {
+					_mlist.select(idx);
+					_mlist.notifyToItemListeners(ev);
+				}
+			}
+		}
+	}
 }

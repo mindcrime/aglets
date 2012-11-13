@@ -26,109 +26,109 @@ import java.security.PrivilegedAction;
  * @author ONO Kouichi
  */
 public class ServerIdentifier {
-    /**
-     * IP address of the aglet server
-     */
-    private InetAddress _address = null;
+	/**
+	 * IP address of the aglet server
+	 */
+	private InetAddress _address = null;
 
-    /**
-     * port of socket used by the aglet server
-     */
-    private int _port = -1;
+	/**
+	 * port of socket used by the aglet server
+	 */
+	private int _port = -1;
 
-    /**
-     * Constructor for server identifier.
-     * 
-     * @param address
-     *            IP address of the aglet server
-     * @param port
-     *            port of socket used by the aglet server
-     */
-    protected ServerIdentifier(InetAddress address, int port) {
-	this.setInetAddress(address);
-	this.setPort(port);
-    }
-
-    /**
-     * Constructor for server identifier.
-     * 
-     * @param socket
-     *            socket used by the aglet server
-     */
-    public ServerIdentifier(Socket socket) {
-	this(socket.getInetAddress(), socket.getPort());
-    }
-
-    /**
-     * Returns equality.
-     * 
-     * @return true if the IP address and port equals to given server
-     *         identifier, otherwise false.
-     */
-    @Override
-    public boolean equals(Object obj) {
-	if (!(obj instanceof ServerIdentifier)) {
-	    return false;
+	/**
+	 * Constructor for server identifier.
+	 * 
+	 * @param address
+	 *            IP address of the aglet server
+	 * @param port
+	 *            port of socket used by the aglet server
+	 */
+	protected ServerIdentifier(final InetAddress address, final int port) {
+		setInetAddress(address);
+		setPort(port);
 	}
-	final ServerIdentifier id = (ServerIdentifier) obj;
-	boolean addreq = false;
 
-	try {
-	    final InetAddress fAddr = this._address;
-	    Boolean b = (Boolean) AccessController.doPrivileged(new PrivilegedAction() {
-		@Override
-		public Object run() {
-		    try {
-			return new Boolean(id.getInetAddress().equals(fAddr));
-		    } catch (Exception ex) {
-			return new Boolean(false);
-		    }
+	/**
+	 * Constructor for server identifier.
+	 * 
+	 * @param socket
+	 *            socket used by the aglet server
+	 */
+	public ServerIdentifier(final Socket socket) {
+		this(socket.getInetAddress(), socket.getPort());
+	}
+
+	/**
+	 * Returns equality.
+	 * 
+	 * @return true if the IP address and port equals to given server
+	 *         identifier, otherwise false.
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (!(obj instanceof ServerIdentifier)) {
+			return false;
 		}
-	    });
+		final ServerIdentifier id = (ServerIdentifier) obj;
+		boolean addreq = false;
 
-	    addreq = b.booleanValue();
-	} catch (Exception ex) {
-	    ex.printStackTrace();
-	    addreq = false;
+		try {
+			final InetAddress fAddr = _address;
+			final Boolean b = (Boolean) AccessController.doPrivileged(new PrivilegedAction() {
+				@Override
+				public Object run() {
+					try {
+						return new Boolean(id.getInetAddress().equals(fAddr));
+					} catch (final Exception ex) {
+						return new Boolean(false);
+					}
+				}
+			});
+
+			addreq = b.booleanValue();
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+			addreq = false;
+		}
+		return (addreq && (id.getPort() == _port));
 	}
-	return (addreq && (id.getPort() == this._port));
-    }
 
-    /**
-     * Gets IP address of the aglet server.
-     * 
-     * @return IP address of aglet server
-     */
-    private final InetAddress getInetAddress() {
-	return this._address;
-    }
+	/**
+	 * Gets IP address of the aglet server.
+	 * 
+	 * @return IP address of aglet server
+	 */
+	private final InetAddress getInetAddress() {
+		return _address;
+	}
 
-    /**
-     * Gets port of socket used by the aglet server.
-     * 
-     * @return port of socket used by the aglet server
-     */
-    private final int getPort() {
-	return this._port;
-    }
+	/**
+	 * Gets port of socket used by the aglet server.
+	 * 
+	 * @return port of socket used by the aglet server
+	 */
+	private final int getPort() {
+		return _port;
+	}
 
-    /**
-     * Sets IP address of the aglet server.
-     * 
-     * @param address
-     *            IP address of aglet server
-     */
-    private final void setInetAddress(InetAddress address) {
-	this._address = address;
-    }
+	/**
+	 * Sets IP address of the aglet server.
+	 * 
+	 * @param address
+	 *            IP address of aglet server
+	 */
+	private final void setInetAddress(final InetAddress address) {
+		_address = address;
+	}
 
-    /**
-     * Sets port of socket used by the aglet server.
-     * 
-     * @param port
-     *            port of socket used by the aglet server
-     */
-    private final void setPort(int port) {
-	this._port = port;
-    }
+	/**
+	 * Sets port of socket used by the aglet server.
+	 * 
+	 * @param port
+	 *            port of socket used by the aglet server
+	 */
+	private final void setPort(final int port) {
+		_port = port;
+	}
 }

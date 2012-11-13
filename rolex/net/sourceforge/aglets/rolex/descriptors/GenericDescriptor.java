@@ -12,24 +12,24 @@ package net.sourceforge.aglets.rolex.descriptors;
  */
 public interface GenericDescriptor {
 
-    /**
-     * The symbolic name of the descriptor.
-     * 
-     * @return the name of the descriptor
-     */
-    public String getName();
+	/**
+	 * The aim of the class related to this descriptor.
+	 * 
+	 * @return the aim as string
+	 */
+	public String getAim();
 
-    /**
-     * The keywords related to this descriptor.
-     * 
-     * @return the keywords array
-     */
-    public String[] getKeywords();
+	/**
+	 * The keywords related to this descriptor.
+	 * 
+	 * @return the keywords array
+	 */
+	public String[] getKeywords();
 
-    /**
-     * The aim of the class related to this descriptor.
-     * 
-     * @return the aim as string
-     */
-    public String getAim();
+	/**
+	 * The symbolic name of the descriptor.
+	 * 
+	 * @return the name of the descriptor
+	 */
+	public String getName();
 }

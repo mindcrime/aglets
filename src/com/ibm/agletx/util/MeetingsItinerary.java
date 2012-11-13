@@ -76,42 +76,42 @@ import com.ibm.agletx.patterns.Meeting;
 
 public class MeetingsItinerary extends SeqItinerary {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -6503791120022552099L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6503791120022552099L;
 
-    /**
-     * Constructs a MeetingsItinerary object with the specified owner aglet.
-     * 
-     * @param aglet
-     *            the owner aglet
-     */
-    public MeetingsItinerary(Aglet aglet) {
-	super(aglet);
-    }
+	/**
+	 * Constructs a MeetingsItinerary object with the specified owner aglet.
+	 * 
+	 * @param aglet
+	 *            the owner aglet
+	 */
+	public MeetingsItinerary(final Aglet aglet) {
+		super(aglet);
+	}
 
-    /**
-     * Add the new plan item (meetingTask object)
-     * 
-     * @param task
-     *            a task containing also the meeting at which to be carried out 
-     */
-    public void addMeetingTask(MeetingTask task) {
-	this.addTask(task.getMeeting().getPlace(), task);
-    }
+	/**
+	 * Add the new plan item (meetingTask object)
+	 * 
+	 * @param task
+	 *            a task containing also the meeting at which to be carried out 
+	 */
+	public void addMeetingTask(final MeetingTask task) {
+		addTask(task.getMeeting().getPlace(), task);
+	}
 
-    /**
-     * Return the current Meeting object
-     */
-    public Meeting getCurrentMeeting() {
-	return ((MeetingTask) this.getCurrentTask()).getMeeting();
-    }
+	/**
+	 * Return the current Meeting object
+	 */
+	public Meeting getCurrentMeeting() {
+		return ((MeetingTask) getCurrentTask()).getMeeting();
+	}
 
-    /**
-     * Return the meeting object at the specified index.
-     */
-    public Meeting getMeetingAt(int index) {
-	return ((MeetingTask) this.getTaskAt(index)).getMeeting();
-    }
+	/**
+	 * Return the meeting object at the specified index.
+	 */
+	public Meeting getMeetingAt(final int index) {
+		return ((MeetingTask) getTaskAt(index)).getMeeting();
+	}
 }

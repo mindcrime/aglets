@@ -25,66 +25,66 @@ import com.ibm.aglets.AgletRuntime;
 
 class PollingThread extends Thread {
 
-    // -- frequency of polling
-    private int _sec = 0; // never
-    private MainWindow _window = null;
+	// -- frequency of polling
+	private int _sec = 0; // never
+	private MainWindow _window = null;
 
-    PollingThread(int id, MainWindow window) {
-	this.setPriority(Thread.MIN_PRIORITY);
-	this.setFrequency(id);
-	this._window = window;
-    }
+	PollingThread(final int id, final MainWindow window) {
+		setPriority(Thread.MIN_PRIORITY);
+		setFrequency(id);
+		_window = window;
+	}
 
-    private void poll() {
-	AgletRuntime.verboseOut("polling!!");
-	this._window.getAglets();
-    }
+	private void poll() {
+		AgletRuntime.verboseOut("polling!!");
+		_window.getAglets();
+	}
 
-    @Override
-    synchronized public void run() {
-	while (true) {
-	    try {
-		if (this._sec <= 0) {
-		    this.wait();
-		} else {
-		    this.poll();
-		    this.wait(this._sec * 1000L); // wait...
+	@Override
+	synchronized public void run() {
+		while (true) {
+			try {
+				if (_sec <= 0) {
+					this.wait();
+				} else {
+					poll();
+					this.wait(_sec * 1000L); // wait...
+				}
+			} catch (final InterruptedException ie) {
+			} // Catch any interrupts.
 		}
-	    } catch (InterruptedException ie) {
-	    } // Catch any interrupts.
 	}
-    }
 
-    synchronized public void setFrequency(int id) {
-	if ((id < 0) || (id > 6)) {
-	    id = 0;
+	synchronized public void setFrequency(int id) {
+		if ((id < 0) || (id > 6)) {
+			id = 0;
 
-	    // new IllegalArgumentException("illegal setting :" +
-	    // id).printStackTrace();
+			// new IllegalArgumentException("illegal setting :" +
+			// id).printStackTrace();
+		}
+		switch (id) {
+			case 0:
+				_sec = 0;
+				break;
+			case 1:
+				_sec = 15;
+				break;
+			case 2:
+				_sec = 30;
+				break;
+			case 3:
+				_sec = 60;
+				break;
+			case 4:
+				_sec = 60 * 5;
+				break;
+			case 5:
+				_sec = 60 * 15;
+				break;
+			case 6:
+				_sec = 60 * 60;
+				break;
+		}
+		notify();
 	}
-	switch (id) {
-	case 0:
-	    this._sec = 0;
-	    break;
-	case 1:
-	    this._sec = 15;
-	    break;
-	case 2:
-	    this._sec = 30;
-	    break;
-	case 3:
-	    this._sec = 60;
-	    break;
-	case 4:
-	    this._sec = 60 * 5;
-	    break;
-	case 5:
-	    this._sec = 60 * 15;
-	    break;
-	case 6:
-	    this._sec = 60 * 60;
-	    break;
-	}
-	this.notify();
-    }
 }

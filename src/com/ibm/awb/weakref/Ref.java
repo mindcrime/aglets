@@ -20,17 +20,17 @@ import java.io.ObjectOutputStream;
 
 public interface Ref {
 
-    public Ref getRef(VirtualRef vref);
+	public Ref getRef(VirtualRef vref);
 
-    public String getRefClassName();
+	public String getRefClassName();
 
-    public void referenced();
+	public void referenced();
 
-    public void setRef(VirtualRef vref, ObjectInputStream s)
-    throws IOException,
-    ClassNotFoundException;
+	public void setRef(VirtualRef vref, ObjectInputStream s)
+	throws IOException,
+	ClassNotFoundException;
 
-    public void unreferenced();
+	public void unreferenced();
 
-    public void writeInfo(ObjectOutputStream s) throws IOException;
+	public void writeInfo(ObjectOutputStream s) throws IOException;
 }

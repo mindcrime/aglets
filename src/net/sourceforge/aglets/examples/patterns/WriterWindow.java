@@ -38,105 +38,105 @@ import com.ibm.aglet.AgletException;
  */
 
 public class WriterWindow extends SampleWindow {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 3567219069273581289L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3567219069273581289L;
 
-    private static final String TITLE = "Writer";
+	private static final String TITLE = "Writer";
 
-    // -- Main panel
-    private TextField _messageText = new TextField(FIELD);
+	// -- Main panel
+	private final TextField _messageText = new TextField(FIELD);
 
-    // -- Constructs the dialog window.
-    //
-    public WriterWindow(Writer aglet) throws AgletException {
-	super(aglet);
-	this.makeMainPanel();
-	displayFrame(this);
-    }
-
-    // -- The call back methods
-    @Override
-    protected void go() {
-	String text = this._messageText.getText().trim();
-	boolean ok = true;
-	String adr = this._addressChooser.getAddress();
-	Vector destination = null;
-
-	if (!adr.equals("")) {
-	    URL dest = null;
-
-	    try {
-		dest = new URL(adr);
-		destination = new Vector();
-		destination.addElement(dest);
-	    } catch (MalformedURLException e) {
-		this._malFormedURLWindow.popup(this);
-		ok = false;
-	    } catch (IOException ae) {
-		ok = false;
-	    }
-	    if (ok) {
-		((SampleAglet) this._aglet).go(destination, text);
-	    }
-	} else {
-	    this._malFormedURLWindow.popup(this);
+	// -- Constructs the dialog window.
+	//
+	public WriterWindow(final Writer aglet) throws AgletException {
+		super(aglet);
+		makeMainPanel();
+		displayFrame(this);
 	}
-    }
 
-    private void makeMainPanel() throws AgletException {
-	Component comp;
+	// -- The call back methods
+	@Override
+	protected void go() {
+		final String text = _messageText.getText().trim();
+		boolean ok = true;
+		final String adr = _addressChooser.getAddress();
+		Vector destination = null;
 
-	// button
-	this.constraints.anchor = GridBagConstraints.CENTER;
-	this.constraints.gridwidth = GridBagConstraints.REMAINDER;
-	this.constraints.fill = GridBagConstraints.BOTH;
-	this.constraints.weightx = 1.0;
-	comp = this.makeMainButtonPanel();
-	this.layout.setConstraints(comp, this.constraints);
-	this.add(comp);
+		if (!adr.equals("")) {
+			URL dest = null;
 
-	// title
-	this.constraints.anchor = GridBagConstraints.WEST;
-	this.constraints.gridwidth = GridBagConstraints.REMAINDER;
-	this.constraints.fill = GridBagConstraints.BOTH;
-	this.constraints.weightx = 1.0;
-	comp = new Label(TITLE);
-	comp.setFont(new Font(this.getFont().getName(), Font.BOLD, this.getFont().getSize() + 1));
-
-	this.layout.setConstraints(comp, this.constraints);
-	this.add(comp);
-
-	// information settings
-	this.constraints.gridwidth = GridBagConstraints.REMAINDER;
-	this.constraints.fill = GridBagConstraints.HORIZONTAL;
-	this.constraints.insets = new Insets(0, 0, 10, 0);
-	this.constraints.weightx = 1.0;
-	comp = this._addressChooser;
-	this.layout.setConstraints(comp, this.constraints);
-	this.add(comp);
-
-	// message text panel
-	this.addLabeledComponent("Message", this._messageText);
-
-	// area for error messages
-	this.constraints.gridwidth = GridBagConstraints.REMAINDER;
-	this.constraints.fill = GridBagConstraints.BOTH;
-	this.initMessagePanel();
-	comp = this._msgLine;
-	this.layout.setConstraints(comp, this.constraints);
-	this.add(comp);
-    }
-
-    // -- Event handler methods
-    @Override
-    protected boolean popUpHandleButton(Button button) {
-	if ((button == this._malFormedURLWindow.getButton(GeneralDialog.OKAY))
-		&& "Okay".equals(button.getLabel())) {
-	    this._malFormedURLWindow.setVisible(false);
-	    return true;
+			try {
+				dest = new URL(adr);
+				destination = new Vector();
+				destination.addElement(dest);
+			} catch (final MalformedURLException e) {
+				_malFormedURLWindow.popup(this);
+				ok = false;
+			} catch (final IOException ae) {
+				ok = false;
+			}
+			if (ok) {
+				((SampleAglet) _aglet).go(destination, text);
+			}
+		} else {
+			_malFormedURLWindow.popup(this);
+		}
 	}
-	return false; // -- should not reach here.
-    }
+
+	private void makeMainPanel() throws AgletException {
+		Component comp;
+
+		// button
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.gridwidth = GridBagConstraints.REMAINDER;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.weightx = 1.0;
+		comp = makeMainButtonPanel();
+		layout.setConstraints(comp, constraints);
+		this.add(comp);
+
+		// title
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.gridwidth = GridBagConstraints.REMAINDER;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.weightx = 1.0;
+		comp = new Label(TITLE);
+		comp.setFont(new Font(getFont().getName(), Font.BOLD, getFont().getSize() + 1));
+
+		layout.setConstraints(comp, constraints);
+		this.add(comp);
+
+		// information settings
+		constraints.gridwidth = GridBagConstraints.REMAINDER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(0, 0, 10, 0);
+		constraints.weightx = 1.0;
+		comp = _addressChooser;
+		layout.setConstraints(comp, constraints);
+		this.add(comp);
+
+		// message text panel
+		addLabeledComponent("Message", _messageText);
+
+		// area for error messages
+		constraints.gridwidth = GridBagConstraints.REMAINDER;
+		constraints.fill = GridBagConstraints.BOTH;
+		initMessagePanel();
+		comp = _msgLine;
+		layout.setConstraints(comp, constraints);
+		this.add(comp);
+	}
+
+	// -- Event handler methods
+	@Override
+	protected boolean popUpHandleButton(final Button button) {
+		if ((button == _malFormedURLWindow.getButton(GeneralDialog.OKAY))
+				&& "Okay".equals(button.getLabel())) {
+			_malFormedURLWindow.setVisible(false);
+			return true;
+		}
+		return false; // -- should not reach here.
+	}
 }

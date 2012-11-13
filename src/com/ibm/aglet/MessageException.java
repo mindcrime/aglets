@@ -10,16 +10,16 @@ package com.ibm.aglet;
  */
 public class MessageException extends com.ibm.aglet.message.MessageException {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -67525147958042378L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -67525147958042378L;
 
-    public MessageException(Throwable t) {
-	super(t);
-    }
+	public MessageException(final Throwable t) {
+		super(t);
+	}
 
-    public MessageException(Throwable t, String s) {
-	super(t, s);
-    }
+	public MessageException(final Throwable t, final String s) {
+		super(t, s);
+	}
 }

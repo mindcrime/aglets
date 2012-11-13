@@ -32,24 +32,24 @@ package com.ibm.aglet;
 
 public class RequestRefusedException extends AgletException {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 9088950825726715397L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9088950825726715397L;
 
-    /**
-     * Constructs a RequestRefusedException
-     */
-    public RequestRefusedException() {
-    }
+	/**
+	 * Constructs a RequestRefusedException
+	 */
+	public RequestRefusedException() {
+	}
 
-    /**
-     * Constructs a RequestRefusedException with the specified detailed message.
-     * 
-     * @param s
-     *            the detailed message
-     */
-    public RequestRefusedException(String s) {
-	super(s);
-    }
+	/**
+	 * Constructs a RequestRefusedException with the specified detailed message.
+	 * 
+	 * @param s
+	 *            the detailed message
+	 */
+	public RequestRefusedException(final String s) {
+		super(s);
+	}
 }

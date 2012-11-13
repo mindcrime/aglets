@@ -25,8 +25,6 @@ package com.ibm.aglet.system;
 
 import java.util.EventListener;
 
-import com.ibm.aglet.Aglet;
-
 /**
  * The ContextListener interface specifies a set of methods for receiving
  * context events.
@@ -37,80 +35,80 @@ import com.ibm.aglet.Aglet;
 
 public interface ContextListener extends EventListener {
 
-    /**
-     * Called when an aglet has been activated
-     */
-    public void agletActivated(ContextEvent ev);
+	/**
+	 * Called when an aglet has been activated
+	 */
+	public void agletActivated(ContextEvent ev);
 
-    /**
-     * Called when an aglet has arrived
-     */
-    public void agletArrived(ContextEvent ev);
+	/**
+	 * Called when an aglet has arrived
+	 */
+	public void agletArrived(ContextEvent ev);
 
-    /**
-     * Called when an aglet has been cloned
-     */
-    public void agletCloned(ContextEvent ev);
+	/**
+	 * Called when an aglet has been cloned
+	 */
+	public void agletCloned(ContextEvent ev);
 
-    /**
-     * Called when an aglet has been created
-     */
-    public void agletCreated(ContextEvent ev);
+	/**
+	 * Called when an aglet has been created
+	 */
+	public void agletCreated(ContextEvent ev);
 
-    /**
-     * Called when an aglet has been deactivated
-     */
-    public void agletDeactivated(ContextEvent ev);
+	/**
+	 * Called when an aglet has been deactivated
+	 */
+	public void agletDeactivated(ContextEvent ev);
 
-    /**
-     * Called when an aglet has been dispatched
-     */
-    public void agletDispatched(ContextEvent ev);
+	/**
+	 * Called when an aglet has been dispatched
+	 */
+	public void agletDispatched(ContextEvent ev);
 
-    /**
-     * Called when an aglet has been disposed
-     */
-    public void agletDisposed(ContextEvent ev);
+	/**
+	 * Called when an aglet has been disposed
+	 */
+	public void agletDisposed(ContextEvent ev);
 
-    /**
-     * Called when an aglet has been resumed
-     */
-    public void agletResumed(ContextEvent ev);
+	/**
+	 * Called when an aglet has been resumed
+	 */
+	public void agletResumed(ContextEvent ev);
 
-    /**
-     * Called when an aglet has been reverted.
-     */
-    public void agletReverted(ContextEvent ev);
+	/**
+	 * Called when an aglet has been reverted.
+	 */
+	public void agletReverted(ContextEvent ev);
 
-    /**
-     * Called when the state of an aglet has changed.
-     */
-    public void agletStateChanged(ContextEvent ev);
+	/**
+	 * Called when the state of an aglet has changed.
+	 */
+	public void agletStateChanged(ContextEvent ev);
 
-    /**
-     * Called when an aglet has been suspended
-     */
-    public void agletSuspended(ContextEvent ev);
+	/**
+	 * Called when an aglet has been suspended
+	 */
+	public void agletSuspended(ContextEvent ev);
 
-    /**
-     * Called when shutting down
-     */
-    public void contextShutdown(ContextEvent ev);
+	/**
+	 * Called when shutting down
+	 */
+	public void contextShutdown(ContextEvent ev);
 
-    /**
-     * Called when the context is started.
-     */
-    public void contextStarted(ContextEvent ev);
+	/**
+	 * Called when the context is started.
+	 */
+	public void contextStarted(ContextEvent ev);
 
-    /**
-     * Called when an aglet asks the context to show the document given as URL
-     * 
-     * @see com.ibm.aglets.tahiti.Tahiti#showDocument
-     */
-    public void showDocument(ContextEvent ev);
+	/**
+	 * Called when an aglet asks the context to show the document given as URL
+	 * 
+	 * @see com.ibm.aglets.tahiti.Tahiti#showDocument
+	 */
+	public void showDocument(ContextEvent ev);
 
-    /**
-     * Called to show the message
-     */
-    public void showMessage(ContextEvent ev);
+	/**
+	 * Called to show the message
+	 */
+	public void showMessage(ContextEvent ev);
 }

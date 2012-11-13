@@ -40,66 +40,66 @@ import com.ibm.agletx.patterns.Slave;
 
 public class Finger extends SampleAglet {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -7835129519725014397L;
-    // Aglet web source (the URL & classname of the slave class).
-    private static final String SlaveClassName = "examples.patterns.FingerSlave";
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7835129519725014397L;
+	// Aglet web source (the URL & classname of the slave class).
+	private static final String SlaveClassName = "examples.patterns.FingerSlave";
 
-    /**
-     * Creates and sets up the slave with necessary information for it to
-     * dispatch to a remote aglet server and hopefully return safely. This
-     * method is a callback method for the interaction window.
-     * 
-     * @param destinations
-     *            a vector containing the url of the destinations.
-     * @param obj
-     *            the initialization object
-     */
-    @Override
-    protected void createSlave(Vector destinations, Object obj) {
-	try {
-	    Slave.create(null, SlaveClassName, this.getAgletContext(), this, destinations, new String());
-	} catch (IOException ae) {
-	    this.inError(ae.getMessage());
-	} catch (AgletException ae) {
-	    this.inError(ae.getMessage());
-	}
-    }
-
-    @Override
-    public void createWindow() {
-	try {
-	    this._msw = new FingerWindow(this);
-	    this.updateWindow();
-	} catch (Exception e) {
-	    this.inError(e.getMessage());
-	}
-    }
-
-    // -- Handler for messages
-    //
-    @Override
-    public boolean handleMessage(Message msg) {
-	try {
-	    if (msg.sameKind("result")) {
-		FingerInfo arg = null;
-
-		if ((arg = (FingerInfo) (msg.getArg())) != null) {
-		    this._msw.setResult(arg.toTextBlock());
-		    this.setTheMessage("Finished");
-		} else {
-		    this.setTheMessage("Finished, but no argument!");
+	/**
+	 * Creates and sets up the slave with necessary information for it to
+	 * dispatch to a remote aglet server and hopefully return safely. This
+	 * method is a callback method for the interaction window.
+	 * 
+	 * @param destinations
+	 *            a vector containing the url of the destinations.
+	 * @param obj
+	 *            the initialization object
+	 */
+	@Override
+	protected void createSlave(final Vector destinations, final Object obj) {
+		try {
+			Slave.create(null, SlaveClassName, getAgletContext(), this, destinations, new String());
+		} catch (final IOException ae) {
+			inError(ae.getMessage());
+		} catch (final AgletException ae) {
+			inError(ae.getMessage());
 		}
-	    } else {
-		super.handleMessage(msg);
-	    }
-	} catch (Exception e) {
-
-	    // -- not yet handled
-	    System.out.println(e);
 	}
-	return false;
-    }
+
+	@Override
+	public void createWindow() {
+		try {
+			_msw = new FingerWindow(this);
+			updateWindow();
+		} catch (final Exception e) {
+			inError(e.getMessage());
+		}
+	}
+
+	// -- Handler for messages
+	//
+	@Override
+	public boolean handleMessage(final Message msg) {
+		try {
+			if (msg.sameKind("result")) {
+				FingerInfo arg = null;
+
+				if ((arg = (FingerInfo) (msg.getArg())) != null) {
+					_msw.setResult(arg.toTextBlock());
+					setTheMessage("Finished");
+				} else {
+					setTheMessage("Finished, but no argument!");
+				}
+			} else {
+				super.handleMessage(msg);
+			}
+		} catch (final Exception e) {
+
+			// -- not yet handled
+			System.out.println(e);
+		}
+		return false;
+	}
 }

@@ -30,47 +30,47 @@ import java.security.PrivilegedExceptionAction;
  * @author Mitsuru Oshima
  */
 final class SimplePEntry implements com.ibm.aglets.PersistentEntry {
-    File file;
+	File file;
 
-    SimplePEntry(File f) {
-	this.file = f;
-    }
-
-    @Override
-    public InputStream getInputStream() throws FileNotFoundException {
-	try {
-	    final File f = this.file;
-
-	    return (InputStream) AccessController.doPrivileged(new PrivilegedExceptionAction() {
-		@Override
-		public Object run() throws FileNotFoundException {
-		    return new FileInputStream(f);
-		}
-	    });
-	} catch (PrivilegedActionException ex) {
-	    throw (FileNotFoundException) ex.getException();
+	SimplePEntry(final File f) {
+		file = f;
 	}
-    }
 
-    @Override
-    public OutputStream getOutputStream() throws IOException {
-	try {
-	    final File f = this.file;
+	@Override
+	public InputStream getInputStream() throws FileNotFoundException {
+		try {
+			final File f = file;
 
-	    return (OutputStream) AccessController.doPrivileged(new PrivilegedExceptionAction() {
-		@Override
-		public Object run() throws IOException {
-		    if (!f.exists()) {
-			File dir = f.getCanonicalFile().getParentFile();
-
-			dir.mkdirs();
-			f.createNewFile();
-		    }
-		    return new FileOutputStream(f);
+			return (InputStream) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				@Override
+				public Object run() throws FileNotFoundException {
+					return new FileInputStream(f);
+				}
+			});
+		} catch (final PrivilegedActionException ex) {
+			throw (FileNotFoundException) ex.getException();
 		}
-	    });
-	} catch (PrivilegedActionException ex) {
-	    throw (IOException) ex.getException();
 	}
-    }
+
+	@Override
+	public OutputStream getOutputStream() throws IOException {
+		try {
+			final File f = file;
+
+			return (OutputStream) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				@Override
+				public Object run() throws IOException {
+					if (!f.exists()) {
+						final File dir = f.getCanonicalFile().getParentFile();
+
+						dir.mkdirs();
+						f.createNewFile();
+					}
+					return new FileOutputStream(f);
+				}
+			});
+		} catch (final PrivilegedActionException ex) {
+			throw (IOException) ex.getException();
+		}
+	}
 }

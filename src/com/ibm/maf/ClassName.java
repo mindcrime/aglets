@@ -23,20 +23,20 @@ package com.ibm.maf;
 
 public final class ClassName implements java.io.Serializable {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1921090469040763716L;
-    // instance variables
-    public String name;
-    public byte[] descriminator;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1921090469040763716L;
+	// instance variables
+	public String name;
+	public byte[] descriminator;
 
-    // constructors
-    public ClassName() {
-    }
+	// constructors
+	public ClassName() {
+	}
 
-    public ClassName(String __name, byte[] __descriminator) {
-	this.name = __name;
-	this.descriminator = __descriminator;
-    }
+	public ClassName(final String __name, final byte[] __descriminator) {
+		name = __name;
+		descriminator = __descriminator;
+	}
 }

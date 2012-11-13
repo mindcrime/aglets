@@ -32,90 +32,90 @@ import com.ibm.aglet.message.Message;
  */
 public class TalkMaster extends Aglet {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -6463228915907125022L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6463228915907125022L;
 
-    transient AgletProxy remoteProxy = null;
+	transient AgletProxy remoteProxy = null;
 
-    String name = "Unknown";
+	String name = "Unknown";
 
-    TalkWindow window = null;
+	TalkWindow window = null;
 
-    public void dispatchSlave(String dest) {
-	try {
-	    if (this.remoteProxy != null) {
-		this.remoteProxy.sendMessage(new Message("bye"));
-	    }
+	public void dispatchSlave(final String dest) {
+		try {
+			if (remoteProxy != null) {
+				remoteProxy.sendMessage(new Message("bye"));
+			}
 
-	    AgletContext context = this.getAgletContext();
+			final AgletContext context = getAgletContext();
 
-	    AgletProxy proxy = context.createAglet(null, "examples.talk.TalkSlave", this.getProxy());
+			final AgletProxy proxy = context.createAglet(null, "examples.talk.TalkSlave", getProxy());
 
-	    URL url = new URL(dest);
+			final URL url = new URL(dest);
 
-	    this.remoteProxy = proxy.dispatch(url);
+			remoteProxy = proxy.dispatch(url);
 
-	} catch (InvalidAgletException ex) {
-	    ex.printStackTrace();
-	} catch (Exception ex) {
-	    ex.printStackTrace();
+		} catch (final InvalidAgletException ex) {
+			ex.printStackTrace();
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
 	}
-    }
 
-    private String getProperty(String key) {
-	return System.getProperty(key, "Unknown");
-    }
+	private String getProperty(final String key) {
+		return System.getProperty(key, "Unknown");
+	}
 
-    @Override
-    public boolean handleMessage(Message msg) {
-	if (msg.sameKind("dialog")) {
-	    this.window.show();
-	} else if (msg.sameKind("text")) {
-	    if (this.window.isVisible() == false) {
-		this.window.show();
-	    }
-	    this.window.appendText((String) msg.getArg());
-	    return true;
+	@Override
+	public boolean handleMessage(final Message msg) {
+		if (msg.sameKind("dialog")) {
+			window.show();
+		} else if (msg.sameKind("text")) {
+			if (window.isVisible() == false) {
+				window.show();
+			}
+			window.appendText((String) msg.getArg());
+			return true;
+		}
+		return false;
 	}
-	return false;
-    }
 
-    @Override
-    public void onCreation(Object o) {
-	this.window = new TalkWindow(this);
-	this.window.pack();
-	this.window.show();
-	try {
-	    this.name = this.getProperty("user.name");
-	} catch (Exception ex) {
+	@Override
+	public void onCreation(final Object o) {
+		window = new TalkWindow(this);
+		window.pack();
+		window.show();
+		try {
+			name = getProperty("user.name");
+		} catch (final Exception ex) {
+		}
 	}
-    }
 
-    @Override
-    public void onDisposing() {
-	if (this.window != null) {
-	    this.window.dispose();
-	    this.window = null;
+	@Override
+	public void onDisposing() {
+		if (window != null) {
+			window.dispose();
+			window = null;
+		}
+		if (remoteProxy != null) {
+			try {
+				remoteProxy.sendMessage(new Message("bye"));
+			} catch (final AgletException ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
-	if (this.remoteProxy != null) {
-	    try {
-		this.remoteProxy.sendMessage(new Message("bye"));
-	    } catch (AgletException ex) {
-		ex.printStackTrace();
-	    }
-	}
-    }
 
-    void sendText(String text) {
-	try {
-	    if (this.remoteProxy != null) {
-		this.remoteProxy.sendMessage(new Message("text", this.name
-			+ " : " + text));
-	    }
-	} catch (Exception ex) {
-	    ex.printStackTrace();
+	void sendText(final String text) {
+		try {
+			if (remoteProxy != null) {
+				remoteProxy.sendMessage(new Message("text", name
+						+ " : " + text));
+			}
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
 	}
-    }
 }

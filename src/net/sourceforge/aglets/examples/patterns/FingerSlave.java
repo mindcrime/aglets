@@ -34,41 +34,41 @@ import com.ibm.agletx.patterns.Slave;
 
 public class FingerSlave extends Slave {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 4290392056404272921L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4290392056404272921L;
 
-    @Override
-    protected void doJob() throws AgletException {
-	this.RESULT = this.getLocalInfo();
-    }
-
-    private Object getLocalInfo() throws AgletException {
-	AgletContext ac = this.getAgletContext();
-	String hostname;
-
-	if (ac.getHostingURL() == null) {
-	    hostname = "Unknown";
-	} else {
-	    hostname = ac.getHostingURL().getHost().toString();
+	@Override
+	protected void doJob() throws AgletException {
+		RESULT = getLocalInfo();
 	}
 
-	FingerInfo info = new FingerInfo(hostname,
+	private Object getLocalInfo() throws AgletException {
+		final AgletContext ac = getAgletContext();
+		String hostname;
 
-		// PropertyPermission for the following properties
-		// should be specified in aglets.policy file.
-		this.getProperty("user.name"), this.getProperty("user.home"), this.getProperty("user.dir"), this.getProperty("os.arch"), this.getProperty("os.name"), this.getProperty("os.version"), this.getProperty("java.version"), (new Date()));
+		if (ac.getHostingURL() == null) {
+			hostname = "Unknown";
+		} else {
+			hostname = ac.getHostingURL().getHost().toString();
+		}
 
-	return info;
-    }
+		final FingerInfo info = new FingerInfo(hostname,
 
-    private String getProperty(String key) {
-	return System.getProperty(key, "Unknown");
-    }
+				// PropertyPermission for the following properties
+				// should be specified in aglets.policy file.
+				getProperty("user.name"), getProperty("user.home"), getProperty("user.dir"), getProperty("os.arch"), getProperty("os.name"), getProperty("os.version"), getProperty("java.version"), (new Date()));
 
-    @Override
-    protected void initializeJob() {
-	this.RESULT = null;
-    }
+		return info;
+	}
+
+	private String getProperty(final String key) {
+		return System.getProperty(key, "Unknown");
+	}
+
+	@Override
+	protected void initializeJob() {
+		RESULT = null;
+	}
 }

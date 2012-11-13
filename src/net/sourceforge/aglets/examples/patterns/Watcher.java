@@ -41,98 +41,98 @@ import com.ibm.agletx.patterns.Notifier;
  */
 
 public class Watcher extends SampleAglet {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -5034114008843261797L;
-    private final static String NotifierClassName = "examples.patterns.WatcherNotifier";
-    private double interval = 0.0;
-    private double duration = 0.0;
-    private boolean stay = false;
-    private String path = "";
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5034114008843261797L;
+	private final static String NotifierClassName = "examples.patterns.WatcherNotifier";
+	private double interval = 0.0;
+	private double duration = 0.0;
+	private boolean stay = false;
+	private String path = "";
 
-    @Override
-    protected void createSlave(Vector destinations, Object obj) {
-	try {
-	    Notifier.create(null, NotifierClassName, this.getAgletContext(), this, (URL) (destinations.firstElement()), this.interval, this.duration, this.stay, this.path);
-	} catch (IOException ae) {
-	    this.setTheMessage("Notifier Aglet creation failed...");
-	} catch (AgletException ae) {
-	    this.setTheMessage("Notifier Aglet creation failed...");
+	@Override
+	protected void createSlave(final Vector destinations, final Object obj) {
+		try {
+			Notifier.create(null, NotifierClassName, getAgletContext(), this, (URL) (destinations.firstElement()), interval, duration, stay, path);
+		} catch (final IOException ae) {
+			setTheMessage("Notifier Aglet creation failed...");
+		} catch (final AgletException ae) {
+			setTheMessage("Notifier Aglet creation failed...");
+		}
 	}
-    }
 
-    /*
-     * public void onCreation (Object o) { super.onCreation(o); try { _msw = new
-     * WatcherWindow(this); updateWindow(); } catch (Exception e) {
-     * inError(e.getMessage()); } }
-     */
+	/*
+	 * public void onCreation (Object o) { super.onCreation(o); try { _msw = new
+	 * WatcherWindow(this); updateWindow(); } catch (Exception e) {
+	 * inError(e.getMessage()); } }
+	 */
 
-    @Override
-    public void createWindow() {
-	try {
-	    this._msw = new WatcherWindow(this);
-	    this.updateWindow();
-	} catch (Exception e) {
-	    this.inError(e.getMessage());
+	@Override
+	public void createWindow() {
+		try {
+			_msw = new WatcherWindow(this);
+			updateWindow();
+		} catch (final Exception e) {
+			inError(e.getMessage());
+		}
 	}
-    }
 
-    /**
-     * Creates and sets up the WatcherNotifier with the necessary information to
-     * dispatch to a remote aglet server and hopefully stay there successfully.
-     * This method is a callback method for the interaction window.
-     * 
-     * @param destination
-     *            contains the destination URL.
-     * @param interval
-     *            TODO
-     * @param duration
-     *            TODO
-     * @param stay
-     *            TODO
-     * @param path
-     *            TODO
-     */
-    protected void go(
-                      URL destination,
-                      double interval,
-                      double duration,
-                      boolean stay,
-                      String path) {
-	this.interval = interval;
-	this.duration = duration;
-	this.stay = stay;
-	this.path = path;
+	/**
+	 * Creates and sets up the WatcherNotifier with the necessary information to
+	 * dispatch to a remote aglet server and hopefully stay there successfully.
+	 * This method is a callback method for the interaction window.
+	 * 
+	 * @param destination
+	 *            contains the destination URL.
+	 * @param interval
+	 *            TODO
+	 * @param duration
+	 *            TODO
+	 * @param stay
+	 *            TODO
+	 * @param path
+	 *            TODO
+	 */
+	protected void go(
+	                  final URL destination,
+	                  final double interval,
+	                  final double duration,
+	                  final boolean stay,
+	                  final String path) {
+		this.interval = interval;
+		this.duration = duration;
+		this.stay = stay;
+		this.path = path;
 
-	super.go(destination);
-    }
-
-    @Override
-    public boolean handleMessage(Message msg) {
-	if (msg.sameKind("notification")) {
-	    this.message((Arguments) (msg.getArg()));
-	} else {
-	    super.handleMessage(msg);
+		super.go(destination);
 	}
-	return true;
-    }
 
-    /**
-     * Implements the message interface of a receiver. This method is a part of
-     * the Messenger usage pattern.
-     * 
-     * @param message Message returned.
-     */
-    private synchronized void message(Arguments message) {
-	int type = ((Integer) message.getArg("type")).intValue();
-
-	if (type == Notifier.NOTIFICATION) {
-	    this._msw.appendResult("UPDATE: "
-		    + (String) (message.getArg("message")) + ", AT: "
-		    + message.getArg("date").toString());
-	} else {
-	    this.setTheMessage((String) (message.getArg("message")));
+	@Override
+	public boolean handleMessage(final Message msg) {
+		if (msg.sameKind("notification")) {
+			message((Arguments) (msg.getArg()));
+		} else {
+			super.handleMessage(msg);
+		}
+		return true;
 	}
-    }
+
+	/**
+	 * Implements the message interface of a receiver. This method is a part of
+	 * the Messenger usage pattern.
+	 * 
+	 * @param message Message returned.
+	 */
+	private synchronized void message(final Arguments message) {
+		final int type = ((Integer) message.getArg("type")).intValue();
+
+		if (type == Notifier.NOTIFICATION) {
+			_msw.appendResult("UPDATE: "
+					+ (String) (message.getArg("message")) + ", AT: "
+					+ message.getArg("date").toString());
+		} else {
+			setTheMessage((String) (message.getArg("message")));
+		}
+	}
 }

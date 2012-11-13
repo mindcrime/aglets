@@ -54,96 +54,96 @@ import com.ibm.aglet.message.Message;
  */
 public class MethodDispatcher implements Serializable {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1763521113053805059L;
-    private static Class TYPE = null;
-    private Object target;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1763521113053805059L;
+	private static Class TYPE = null;
+	private Object target;
 
-    static {
-	try {
-	    TYPE = Class.forName("com.ibm.aglet.Message");
-	} catch (Exception ex) {
-	    System.out.println(ex);
-	}
-    }
-
-    transient Hashtable method_table = new Hashtable();
-
-    public MethodDispatcher(Object a) {
-	this.target = a;
-	this.makeTable();
-    }
-
-    public boolean handleMessage(Message msg) {
-	Method m = (Method) this.method_table.get(msg.getKind());
-
-	if (m != null) {
-	    try {
-		Object args[] = new Object[1];
-
-		args[0] = msg;
-		m.invoke(this.target, args);
-	    } catch (IllegalAccessException ex) {
-
-		// should not happen
-		return false;
-	    } catch (IllegalArgumentException ex) {
-
-		// should not happen
-		return false;
-	    } catch (InvocationTargetException ex) {
-
-		// if the exception is thrown in the method
+	static {
 		try {
-		    if (ex.getTargetException() instanceof Exception) {
-			msg.sendException((Exception) ex.getTargetException());
-		    } else {
+			TYPE = Class.forName("com.ibm.aglet.Message");
+		} catch (final Exception ex) {
+			System.out.println(ex);
+		}
+	}
 
-			// temporary
-			msg.sendException(ex);
-		    }
+	transient Hashtable method_table = new Hashtable();
 
-		    // shold not happen
-		} catch (IllegalAccessError exx) {
+	public MethodDispatcher(final Object a) {
+		target = a;
+		makeTable();
+	}
 
-		    // if a reply has already been sent.
+	public boolean handleMessage(final Message msg) {
+		final Method m = (Method) method_table.get(msg.getKind());
+
+		if (m != null) {
+			try {
+				final Object args[] = new Object[1];
+
+				args[0] = msg;
+				m.invoke(target, args);
+			} catch (final IllegalAccessException ex) {
+
+				// should not happen
+				return false;
+			} catch (final IllegalArgumentException ex) {
+
+				// should not happen
+				return false;
+			} catch (final InvocationTargetException ex) {
+
+				// if the exception is thrown in the method
+				try {
+					if (ex.getTargetException() instanceof Exception) {
+						msg.sendException((Exception) ex.getTargetException());
+					} else {
+
+						// temporary
+						msg.sendException(ex);
+					}
+
+					// shold not happen
+				} catch (final IllegalAccessError exx) {
+
+					// if a reply has already been sent.
+				}
+				return false;
+			}
+			return true;
 		}
 		return false;
-	    }
-	    return true;
 	}
-	return false;
-    }
 
-    void makeTable() {
-	this.method_table = new Hashtable();
-	Class clazz = this.target.getClass();
-	Method methods[] = clazz.getMethods();
+	void makeTable() {
+		method_table = new Hashtable();
+		final Class clazz = target.getClass();
+		final Method methods[] = clazz.getMethods();
 
-	for (Method m : methods) {
-	    Class[] types = m.getParameterTypes();
+		for (final Method m : methods) {
+			final Class[] types = m.getParameterTypes();
 
-	    //
-	    // select the method whose signature is like
-	    // type method(Message msg);
-	    //
-	    if ((types.length == 1) && (types[0] == TYPE)
-		    && Modifier.isPublic(m.getModifiers())) {
-		this.method_table.put(m.getName(), m);
-	    }
+			//
+			// select the method whose signature is like
+			// type method(Message msg);
+			//
+			if ((types.length == 1) && (types[0] == TYPE)
+					&& Modifier.isPublic(m.getModifiers())) {
+				method_table.put(m.getName(), m);
+			}
+		}
 	}
-    }
 
-    private void readObject(ObjectInputStream s)
-    throws IOException,
-    ClassNotFoundException {
-	this.target = s.readObject();
-	this.makeTable();
-    }
+	private void readObject(final ObjectInputStream s)
+	throws IOException,
+	ClassNotFoundException {
+		target = s.readObject();
+		makeTable();
+	}
 
-    private void writeObject(ObjectOutputStream s) throws IOException {
-	s.writeObject(this.target);
-    }
+	private void writeObject(final ObjectOutputStream s) throws IOException {
+		s.writeObject(target);
+	}
 }

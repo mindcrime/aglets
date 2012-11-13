@@ -33,40 +33,40 @@ import com.ibm.aglet.AgletProxy;
  */
 public class PersistencyEvent extends AgletEvent {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 4023883775091603405L;
-    /**
-     * The duration of the persistency.
-     */
-    private long duration;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4023883775091603405L;
+	/**
+	 * The duration of the persistency.
+	 */
+	private final long duration;
 
-    /**
-     * Constructs a PersistencyEvent with the specified id, aglet proxy and
-     * duration.
-     */
-    public PersistencyEvent(AgletProxy aglet, long duration, EventType type) {
-	super(aglet, AgletEvent.nextID(), type);
-	this.duration = duration;
-    }
+	/**
+	 * Constructs a PersistencyEvent with the specified id, aglet proxy and
+	 * duration.
+	 */
+	public PersistencyEvent(final AgletProxy aglet, final long duration, final EventType type) {
+		super(aglet, AgletEvent.nextID(), type);
+		this.duration = duration;
+	}
 
-    /**
-     * Returns the aglet proxy which is the source of the event.
-     */
-    public AgletProxy getAgletProxy() {
-	return (AgletProxy) this.source;
-    }
+	/**
+	 * Returns the aglet proxy which is the source of the event.
+	 */
+	public AgletProxy getAgletProxy() {
+		return (AgletProxy) source;
+	}
 
-    /**
-     * Gets the duration
-     */
-    public long getDuration() {
-	return this.duration;
-    }
+	/**
+	 * Gets the duration
+	 */
+	public long getDuration() {
+		return duration;
+	}
 
-    @Override
-    public String toString() {
-	return "PersistencyEvent[" + this.getEventType().toString() + "]";
-    }
+	@Override
+	public String toString() {
+		return "PersistencyEvent[" + getEventType().toString() + "]";
+	}
 }

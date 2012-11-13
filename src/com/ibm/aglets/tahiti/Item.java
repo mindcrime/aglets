@@ -24,85 +24,85 @@ import com.ibm.aglet.InvalidAgletException;
 import com.ibm.aglet.message.Message;
 
 class Item {
-    AgletProxy proxy;
-    String text = "";
+	AgletProxy proxy;
+	String text = "";
 
-    Item(AgletProxy proxy) {
-	this.proxy = proxy;
-    }
-
-    /**
-     * Executs the command given as arguments to the aglet instance
-     */
-    public void command(String mtd, StringTokenizer st) throws Exception {
-	st.countTokens();
-
-	if ("clone".equalsIgnoreCase(mtd)) {
-	    this.proxy.clone();
-	} else if ("dispatch".equalsIgnoreCase(mtd)) {
-	    if (st.hasMoreTokens()) {
-		this.proxy.dispatch(new URL(st.nextToken()));
-	    } else {
-		new Error("aglet dispatch URL");
-	    }
-	} else if ("dialog".equalsIgnoreCase(mtd)) {
-	    this.proxy.sendAsyncMessage(new Message("dialog"));
-	} else if ("dispose".equalsIgnoreCase(mtd)) {
-	    this.proxy.dispose();
-
-	} else if ("activate".equalsIgnoreCase(mtd)) {
-	    this.proxy.activate();
-	} else if ("deactivate".equalsIgnoreCase(mtd)) {
-	    if (st.hasMoreTokens()) {
-		this.proxy.deactivate(Long.parseLong(st.nextToken()));
-	    } else {
-		this.proxy.deactivate(0);
-	    }
-	} else if ("property".equalsIgnoreCase(mtd)) {
-	    System.out.println(this.toString());
-	} else {
-	    System.out.println("unknown method " + mtd);
+	Item(final AgletProxy proxy) {
+		this.proxy = proxy;
 	}
-    }
 
-    @Override
-    public boolean equals(Object obj) {
-	return this.proxy == obj;
-    }
+	/**
+	 * Executs the command given as arguments to the aglet instance
+	 */
+	public void command(final String mtd, final StringTokenizer st) throws Exception {
+		st.countTokens();
 
-    public boolean isValid() {
-	return this.proxy.isValid();
-    }
+		if ("clone".equalsIgnoreCase(mtd)) {
+			proxy.clone();
+		} else if ("dispatch".equalsIgnoreCase(mtd)) {
+			if (st.hasMoreTokens()) {
+				proxy.dispatch(new URL(st.nextToken()));
+			} else {
+				new Error("aglet dispatch URL");
+			}
+		} else if ("dialog".equalsIgnoreCase(mtd)) {
+			proxy.sendAsyncMessage(new Message("dialog"));
+		} else if ("dispose".equalsIgnoreCase(mtd)) {
+			proxy.dispose();
 
-    void setText(String t) {
-	this.text = t;
-    }
-
-    /**
-     * 
-     */
-    @Override
-    public String toString() {
-	StringBuffer all = new StringBuffer();
-
-	try {
-	    AgletInfo info = this.proxy.getAgletInfo();
-
-	    // all.append(info.getPrivilegeName() + " Aglet" + "\n");
-	    all.append(" Aglet" + "\n");
-	    all.append(info.getAgletID() + "\n");
-	    java.security.cert.X509Certificate cert = (java.security.cert.X509Certificate) info.getAuthorityCertificate();
-
-	    all.append(cert.getSubjectDN().getName() + "\n");
-	    all.append(new Date(info.getCreationTime()));
-	    all.append("\n" + info.getAgletClassName() + "\n");
-	    all.append((info.getCodeBase() == null) ? "Local host"
-		    : info.getCodeBase().toString() + "\n");
-	    all.append(info.getAPIMajorVersion() + '.'
-		    + info.getAPIMinorVersion());
-	} catch (InvalidAgletException ex) {
-	    all.append("Unavailable");
+		} else if ("activate".equalsIgnoreCase(mtd)) {
+			proxy.activate();
+		} else if ("deactivate".equalsIgnoreCase(mtd)) {
+			if (st.hasMoreTokens()) {
+				proxy.deactivate(Long.parseLong(st.nextToken()));
+			} else {
+				proxy.deactivate(0);
+			}
+		} else if ("property".equalsIgnoreCase(mtd)) {
+			System.out.println(toString());
+		} else {
+			System.out.println("unknown method " + mtd);
+		}
 	}
-	return all.toString();
-    }
+
+	@Override
+	public boolean equals(final Object obj) {
+		return proxy == obj;
+	}
+
+	public boolean isValid() {
+		return proxy.isValid();
+	}
+
+	void setText(final String t) {
+		text = t;
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public String toString() {
+		final StringBuffer all = new StringBuffer();
+
+		try {
+			final AgletInfo info = proxy.getAgletInfo();
+
+			// all.append(info.getPrivilegeName() + " Aglet" + "\n");
+			all.append(" Aglet" + "\n");
+			all.append(info.getAgletID() + "\n");
+			final java.security.cert.X509Certificate cert = (java.security.cert.X509Certificate) info.getAuthorityCertificate();
+
+			all.append(cert.getSubjectDN().getName() + "\n");
+			all.append(new Date(info.getCreationTime()));
+			all.append("\n" + info.getAgletClassName() + "\n");
+			all.append((info.getCodeBase() == null) ? "Local host"
+					: info.getCodeBase().toString() + "\n");
+			all.append(info.getAPIMajorVersion() + '.'
+					+ info.getAPIMinorVersion());
+		} catch (final InvalidAgletException ex) {
+			all.append("Unavailable");
+		}
+		return all.toString();
+	}
 }

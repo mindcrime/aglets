@@ -26,98 +26,98 @@ import com.ibm.aglet.message.MessageException;
 
 public interface AgletRef extends com.ibm.awb.weakref.Ref {
 
-    /**
-     * Activate the aglet
-     */
-    public void activate() throws IOException, AgletException;
+	/**
+	 * Activate the aglet
+	 */
+	public void activate() throws IOException, AgletException;
 
-    public void checkValidation() throws InvalidAgletException;
+	public void checkValidation() throws InvalidAgletException;
 
-    /**
-     * Delegates a message
-     */
-    public void delegateMessage(Message msg) throws InvalidAgletException;
+	/**
+	 * Delegates a message
+	 */
+	public void delegateMessage(Message msg) throws InvalidAgletException;
 
-    // # /**
-    // # * Gets the allowance: availability of the aglet's resources.
-    // # * @return an Allowance object
-    // # */
-    // # public Allowance getAllowance();
+	// # /**
+	// # * Gets the allowance: availability of the aglet's resources.
+	// # * @return an Allowance object
+	// # */
+	// # public Allowance getAllowance();
 
-    /**
-     * Gets the address of the target aglet.
-     * 
-     * @return the address
-     */
-    public String getAddress() throws InvalidAgletException;
+	/**
+	 * Gets the address of the target aglet.
+	 * 
+	 * @return the address
+	 */
+	public String getAddress() throws InvalidAgletException;
 
-    /**
-     * Gets the aglet. If the aglet is access protected it will require the
-     * right key to get access.
-     * 
-     * @return the aglet
-     * @exception SecurityException
-     *                if the current execution is not allowed.
-     */
-    public Aglet getAglet() throws InvalidAgletException;
+	/**
+	 * Gets the aglet. If the aglet is access protected it will require the
+	 * right key to get access.
+	 * 
+	 * @return the aglet
+	 * @exception SecurityException
+	 *                if the current execution is not allowed.
+	 */
+	public Aglet getAglet() throws InvalidAgletException;
 
-    /**
-     * Gets the information of the aglet
-     * 
-     * @return the AgletInfo of the aglet
-     */
-    public AgletInfo getAgletInfo();
+	/**
+	 * Gets the information of the aglet
+	 * 
+	 * @return the AgletInfo of the aglet
+	 */
+	public AgletInfo getAgletInfo();
 
-    /**
-     * Checks if it's active.
-     */
-    public boolean isActive();
+	/**
+	 * Checks if it's active.
+	 */
+	public boolean isActive();
 
-    /**
-     * Checks if it's valid.
-     */
-    public boolean isRemote();
+	/**
+	 * Checks if it's valid.
+	 */
+	public boolean isRemote();
 
-    /**
-     * Checks a state of the aglet.
-     */
-    public boolean isState(int s);
+	/**
+	 * Checks a state of the aglet.
+	 */
+	public boolean isState(int s);
 
-    /**
-     * Checks if it's valid.
-     */
-    public boolean isValid();
+	/**
+	 * Checks if it's valid.
+	 */
+	public boolean isValid();
 
-    /**
-     * Resume the aglet
-     */
-    public void resume() throws AgletException;
+	/**
+	 * Resume the aglet
+	 */
+	public void resume() throws AgletException;
 
-    /**
-     * Sends a future message in asynchronous way.
-     * 
-     * @param msg
-     *            the message to send
-     */
-    public FutureReply sendFutureMessage(Message msg)
-    throws InvalidAgletException;
+	/**
+	 * Sends a future message in asynchronous way.
+	 * 
+	 * @param msg
+	 *            the message to send
+	 */
+	public FutureReply sendFutureMessage(Message msg)
+	throws InvalidAgletException;
 
-    /**
-     * Sends a message in synchronous way.
-     * 
-     * @param msg
-     *            the message to send
-     */
-    public Object sendMessage(Message msg)
-    throws MessageException,
-    InvalidAgletException,
-    NotHandledException;
+	/**
+	 * Sends a message in synchronous way.
+	 * 
+	 * @param msg
+	 *            the message to send
+	 */
+	public Object sendMessage(Message msg)
+	throws MessageException,
+	InvalidAgletException,
+	NotHandledException;
 
-    /**
-     * Sends an oneway message
-     * 
-     * @param msg
-     *            the message to send
-     */
-    public void sendOnewayMessage(Message msg) throws InvalidAgletException;
+	/**
+	 * Sends an oneway message
+	 * 
+	 * @param msg
+	 *            the message to send
+	 */
+	public void sendOnewayMessage(Message msg) throws InvalidAgletException;
 }

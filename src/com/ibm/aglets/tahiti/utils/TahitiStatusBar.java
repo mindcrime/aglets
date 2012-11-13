@@ -16,49 +16,49 @@ import javax.swing.SwingConstants;
  * A simple status bar to be shown at the bottom of the Tahiti window.
  */
 public class TahitiStatusBar extends JPanel {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -7347272840438355180L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7347272840438355180L;
 
-    /**
-     * A label containing the current message.
-     * 
-     */
-    private JLabel message;
+	/**
+	 * A label containing the current message.
+	 * 
+	 */
+	private final JLabel message;
 
-    /**
-     * A memory panel to show the memory usage
-     */
-    private MemoryPanel memPanel;
+	/**
+	 * A memory panel to show the memory usage
+	 */
+	private final MemoryPanel memPanel;
 
-    /**
-     * Build the status bar.
-     * 
-     * @param text
-     *            the initial text of the status bar
-     */
-    public TahitiStatusBar(String text) {
-	super();
-	this.setBackground(Color.BLACK);
-	this.message = new JLabel(text, SwingConstants.CENTER);
-	this.message.setForeground(Color.YELLOW);
-	this.message.setBackground(Color.BLACK);
-	this.memPanel = new MemoryPanel(200, 200, true, false);
-	this.setLayout(new BorderLayout());
-	this.add("South", this.message);
-	this.add("Center", this.memPanel);
-    }
+	/**
+	 * Build the status bar.
+	 * 
+	 * @param text
+	 *            the initial text of the status bar
+	 */
+	public TahitiStatusBar(final String text) {
+		super();
+		setBackground(Color.BLACK);
+		message = new JLabel(text, SwingConstants.CENTER);
+		message.setForeground(Color.YELLOW);
+		message.setBackground(Color.BLACK);
+		memPanel = new MemoryPanel(200, 200, true, false);
+		setLayout(new BorderLayout());
+		this.add("South", message);
+		this.add("Center", memPanel);
+	}
 
-    /**
-     * Changes the text of the status bar.
-     * 
-     * @param newText
-     *            the new text to display
-     * 
-     */
-    public void setText(String newText) {
-	this.message.setText(newText);
-    }
+	/**
+	 * Changes the text of the status bar.
+	 * 
+	 * @param newText
+	 *            the new text to display
+	 * 
+	 */
+	public void setText(final String newText) {
+		message.setText(newText);
+	}
 
 }

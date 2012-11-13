@@ -21,74 +21,74 @@ import com.ibm.maf.ClassName;
 
 public interface ResourceManager {
 
-    /*
-     * ================================================== Misc
-     * ==================================================
-     */
+	/*
+	 * ================================================== Misc
+	 * ==================================================
+	 */
 
-    // public java.net.URL getResource(String name);
+	// public java.net.URL getResource(String name);
 
-    // public byte[] getResourceAsByteArray(String name);
+	// public byte[] getResourceAsByteArray(String name);
 
-    // public java.io.InputStream getResourceAsStream(String name);
+	// public java.io.InputStream getResourceAsStream(String name);
 
-    // public void putResource(String name, byte[] res);
+	// public void putResource(String name, byte[] res);
 
-    /*
-     * ================================================== Window
-     * ==================================================
-     */
-    public void addResource(Object obj);
+	/*
+	 * ================================================== Window
+	 * ==================================================
+	 */
+	public void addResource(Object obj);
 
-    /**
-     * return false if not found.
-     */
-    public boolean contains(Class cls);
+	/**
+	 * return false if not found.
+	 */
+	public boolean contains(Class cls);
 
-    public void disposeAllResources();
+	public void disposeAllResources();
 
-    /**
-     * Archives that this resource manager is managing. public Archive
-     * getArchive(DigestTable table);
-     */
-    public Archive getArchive(ClassName[] table);
+	/**
+	 * Archives that this resource manager is managing. public Archive
+	 * getArchive(DigestTable table);
+	 */
+	public Archive getArchive(ClassName[] table);
 
-    /**
-     * 
-     * public DigestTable getDigestTable(Class[] classes);
-     */
-    public ClassName[] getClassNames(Class[] classes);
+	/**
+	 * 
+	 * public DigestTable getDigestTable(Class[] classes);
+	 */
+	public ClassName[] getClassNames(Class[] classes);
 
-    /*
-     * 
-     */
-    public void importArchive(Archive a);
+	/*
+	 * 
+	 */
+	public void importArchive(Archive a);
 
-    /*
-     * ================================================== Byte Code Management.
-     * ==================================================
-     */
-    public Class loadClass(String name) throws ClassNotFoundException;
+	/*
+	 * ================================================== Byte Code Management.
+	 * ==================================================
+	 */
+	public Class loadClass(String name) throws ClassNotFoundException;
 
-    /*
-     * ================================================== Thread Management
-     * ==================================================
-     */
-    public AgletThread newAgletThread(MessageManager mm);
+	/*
+	 * ================================================== Thread Management
+	 * ==================================================
+	 */
+	public AgletThread newAgletThread(MessageManager mm);
 
-    public void resumeAllThreads();
+	public void resumeAllThreads();
 
-    /*
-     * ================================================== Context Management
-     * ==================================================
-     */
-    void setResourceManagerContext();
+	/*
+	 * ================================================== Context Management
+	 * ==================================================
+	 */
+	void setResourceManagerContext();
 
-    public void stopAllThreads();
+	public void stopAllThreads();
 
-    public void stopThreadGroup();
+	public void stopThreadGroup();
 
-    public void suspendAllThreads();
+	public void suspendAllThreads();
 
-    void unsetResourceManagerContext();
+	void unsetResourceManagerContext();
 }

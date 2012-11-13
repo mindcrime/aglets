@@ -39,91 +39,91 @@ import com.ibm.aglet.event.EventType;
  */
 public class ContextEvent extends AgletEvent {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 7387680262581311719L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7387680262581311719L;
 
-    /**
-     * AgletProxy proxy
-     */
-    protected AgletProxy agletproxy;
+	/**
+	 * AgletProxy proxy
+	 */
+	protected AgletProxy agletproxy;
 
-    /**
-     * Arbitary arguments
-     */
-    public Object arg = null;
+	/**
+	 * Arbitary arguments
+	 */
+	public Object arg = null;
 
-    /**
-     * Constructs an ContextEvent with the specified type.
-     */
-    public ContextEvent(Object context, AgletProxy target, EventType type) {
-	super(context, AgletEvent.nextID(), type);
-	this.agletproxy = target;
-    }
-
-    /**
-     * Constructs an ContextEvent with the specified type.
-     */
-    public ContextEvent(Object context, AgletProxy target, Object arg,
-                        EventType type) {
-	this(context, target, type);
-	this.agletproxy = target;
-	this.arg = arg;
-    }
-
-    /**
-     * Gets AgletContext object of this event
-     */
-    public AgletContext getAgletContext() {
-	return (AgletContext) this.source;
-    }
-
-    /**
-     * Gets AgletProxy object of this event null if the event is STARTED or
-     * STOPPED
-     */
-    public AgletProxy getAgletProxy() {
-	return this.agletproxy;
-    }
-
-    /**
-     * Gets the document URL.
-     */
-    public final URL getDocumentURL() {
-	if (EventType.SHOW_DOCUMENT.equals(this.getEventType())) {
-	    return (URL) this.arg;
-	} else {
-	    throw new IllegalAccessError("Event is not SHOW_DOCUMENT");
+	/**
+	 * Constructs an ContextEvent with the specified type.
+	 */
+	public ContextEvent(final Object context, final AgletProxy target, final EventType type) {
+		super(context, AgletEvent.nextID(), type);
+		agletproxy = target;
 	}
-    }
 
-    /**
-     * Gets the message to show
-     */
-    public final String getMessage() {
-	if (EventType.AGLET_MESSAGE.equals(this.getEventType())) {
-	    return (String) this.arg;
-	} else {
-	    throw new IllegalAccessError("Event is not MESSAGE!");
+	/**
+	 * Constructs an ContextEvent with the specified type.
+	 */
+	public ContextEvent(final Object context, final AgletProxy target, final Object arg,
+	                    final EventType type) {
+		this(context, target, type);
+		agletproxy = target;
+		this.arg = arg;
 	}
-    }
 
-    /**
-     * Provides the text for a state change.
-     * 
-     * @return the state change text
-     */
-    public final String getText() {
-	if (EventType.AGLET_STATE_CHANGED.equals(this.getEventType())) {
-	    return (String) this.arg;
-	} else {
-	    throw new IllegalAccessError("Event is not STATE_CHANGED");
+	/**
+	 * Gets AgletContext object of this event
+	 */
+	public AgletContext getAgletContext() {
+		return (AgletContext) source;
 	}
-    }
 
-    @Override
-    public String toString() {
-	return "ContextEvent[" + this.getEventType() + "]";
-    }
+	/**
+	 * Gets AgletProxy object of this event null if the event is STARTED or
+	 * STOPPED
+	 */
+	public AgletProxy getAgletProxy() {
+		return agletproxy;
+	}
+
+	/**
+	 * Gets the document URL.
+	 */
+	public final URL getDocumentURL() {
+		if (EventType.SHOW_DOCUMENT.equals(getEventType())) {
+			return (URL) arg;
+		} else {
+			throw new IllegalAccessError("Event is not SHOW_DOCUMENT");
+		}
+	}
+
+	/**
+	 * Gets the message to show
+	 */
+	public final String getMessage() {
+		if (EventType.AGLET_MESSAGE.equals(getEventType())) {
+			return (String) arg;
+		} else {
+			throw new IllegalAccessError("Event is not MESSAGE!");
+		}
+	}
+
+	/**
+	 * Provides the text for a state change.
+	 * 
+	 * @return the state change text
+	 */
+	public final String getText() {
+		if (EventType.AGLET_STATE_CHANGED.equals(getEventType())) {
+			return (String) arg;
+		} else {
+			throw new IllegalAccessError("Event is not STATE_CHANGED");
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "ContextEvent[" + getEventType() + "]";
+	}
 }

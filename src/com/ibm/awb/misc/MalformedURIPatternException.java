@@ -24,22 +24,22 @@ import java.net.MalformedURLException;
  * @author ONO Kouichi
  */
 public class MalformedURIPatternException extends MalformedURLException {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 9096442742258478949L;
-    static private boolean debug = false;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9096442742258478949L;
+	static private boolean debug = false;
 
-    public MalformedURIPatternException() {
-	if (debug) {
-	    this.printStackTrace();
+	public MalformedURIPatternException() {
+		if (debug) {
+			this.printStackTrace();
+		}
 	}
-    }
 
-    public MalformedURIPatternException(String msg) {
-	super(msg);
-	if (debug) {
-	    this.printStackTrace();
+	public MalformedURIPatternException(final String msg) {
+		super(msg);
+		if (debug) {
+			this.printStackTrace();
+		}
 	}
-    }
 }

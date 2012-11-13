@@ -45,192 +45,192 @@ import com.ibm.awb.misc.Encoding;
  * @author Mitsuru Oshima
  */
 public class WebServerAglet extends Aglet {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -7996130836437543286L;
-    static private final Encoding ENCODING = Encoding.getDefault();
-    static private final String ENCODING_JAVA = ENCODING.getJavaEncoding();
-    static private final String CHARSET_PAGE = ENCODING.getHTMLCharset();
-    static private String META_TAG = null;
-    static {
-	META_TAG = "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html;";
-	if (CHARSET_PAGE != null) {
-	    META_TAG += " charset=" + CHARSET_PAGE;
-	}
-	META_TAG += "\">";
-    }
-
-    String indexPage = null;
-
-    //
-    // If it's http request.
-    //
-    boolean handleHttpRequest(Message m, PrintWriter p) {
-	System.out.println(m);
-	if (m.sameKind("index.html") || m.sameKind("")) {
-	    p.println(this.indexPage);
-	    p.flush();
-	} else if (m.sameKind("next.html")) {
-	    p.println("<HTML>");
-	    p.println("<HEAD>");
-	    p.println(META_TAG);
-	    p.println("<TITLE>");
-	    p.println("NEXT");
-	    p.println("</TITLE>");
-	    p.println("</HEAD>");
-	    p.println("<BODY>");
-	    p.println("<H1> Here is a list of proxies in <TT>"
-		    + this.getAgletContext().getHostingURL() + "</TT></H1>");
-	    Enumeration e = this.getAgletContext().getAgletProxies(ACTIVE
-		    | INACTIVE);
-
-	    p.println("<PRE>");
-	    while (e.hasMoreElements()) {
-		AgletProxy proxy = (AgletProxy) e.nextElement();
-
-		try {
-		    p.println(proxy.getAgletInfo().toString());
-		} catch (Exception ex) {
-		    ex.printStackTrace(p);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7996130836437543286L;
+	static private final Encoding ENCODING = Encoding.getDefault();
+	static private final String ENCODING_JAVA = ENCODING.getJavaEncoding();
+	static private final String CHARSET_PAGE = ENCODING.getHTMLCharset();
+	static private String META_TAG = null;
+	static {
+		META_TAG = "<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html;";
+		if (CHARSET_PAGE != null) {
+			META_TAG += " charset=" + CHARSET_PAGE;
 		}
-	    }
-	    p.println("</PRE>");
-	    p.println("</BODY>");
-	    p.println("</HTML>");
-	    p.flush();
-	    m.sendReply("text/html");
-	} else if (m.sameKind("go")) {
-	    System.out.println((String) m.getArg("location"));
-	    String l = (String) m.getArg("location");
-
-	    if (l.startsWith("atp:")) {
-		l = l.substring(4);
-		if (l.indexOf(':') < 0) {
-		    p.println("<HTML>");
-		    p.println("<HEAD>");
-		    p.println(META_TAG);
-		    p.println("<TITLE>");
-		    p.println("ILLEGAL INPUT");
-		    p.println("</TITLE>");
-		    p.println("</HEAD>");
-		    p.println("<BODY>");
-		    p.println("<H1>");
-		    p.println("Please specify port number. default = 434");
-		    p.println("</H1>");
-		    p.println("</BODY>");
-		    p.println("</HTML>");
-		    p.flush();
-		    m.sendReply("text/html");
-		    return true;
-		}
-	    }
-
-	    try {
-		p.println("<HTML>");
-		p.println("<HEAD>");
-		p.println(META_TAG);
-		p.println("<TITLE>");
-		p.println("MOVING TO");
-		p.println("</TITLE>");
-		p.println("</HEAD>");
-		p.println("<BODY>");
-		p.println("<H1> Moving to...! </H1>");
-		String contextName = this.getAgletContext().getName();
-
-		if (contextName.equals("")) {
-		    contextName = "default";
-		}
-
-		p.println("<a href= \"http:" + l + "/aglets/" + contextName
-			+ "/" + this.getAgletID()
-			+ "/index.html\" TARGET=_top> atp:" + l + " </a>");
-		p.println("Click above link to trace me! <BR>");
-		p.println("</BODY>");
-		p.println("</HTML>");
-		p.flush();
-		m.sendReply("text/html");
-
-		this.dispatch(new java.net.URL("atp:" + l));
-
-	    } catch (IOException ex) {
-		ex.printStackTrace();
-	    } catch (RequestRefusedException ex) {
-		ex.printStackTrace();
-	    }
-	} else {
-	    return false;
+		META_TAG += "\">";
 	}
-	return true;
-    }
 
-    @Override
-    public boolean handleMessage(Message m) {
+	String indexPage = null;
 
 	//
-	// This is just a temporary solution.
+	// If it's http request.
 	//
-	Object o = m.getArg("cgi-response");
-	if ((o != null) && (o instanceof OutputStream)) {
-	    OutputStream os = (OutputStream) o;
-	    OutputStreamWriter osw = null;
+	boolean handleHttpRequest(final Message m, final PrintWriter p) {
+		System.out.println(m);
+		if (m.sameKind("index.html") || m.sameKind("")) {
+			p.println(indexPage);
+			p.flush();
+		} else if (m.sameKind("next.html")) {
+			p.println("<HTML>");
+			p.println("<HEAD>");
+			p.println(META_TAG);
+			p.println("<TITLE>");
+			p.println("NEXT");
+			p.println("</TITLE>");
+			p.println("</HEAD>");
+			p.println("<BODY>");
+			p.println("<H1> Here is a list of proxies in <TT>"
+					+ getAgletContext().getHostingURL() + "</TT></H1>");
+			final Enumeration e = getAgletContext().getAgletProxies(ACTIVE
+					| INACTIVE);
 
-	    try {
-		osw = new OutputStreamWriter(os, ENCODING_JAVA);
-	    } catch (UnsupportedEncodingException excpt) {
-		osw = new OutputStreamWriter(os);
-	    }
-	    PrintWriter pw = new PrintWriter(osw);
+			p.println("<PRE>");
+			while (e.hasMoreElements()) {
+				final AgletProxy proxy = (AgletProxy) e.nextElement();
 
-	    return this.handleHttpRequest(m, pw);
+				try {
+					p.println(proxy.getAgletInfo().toString());
+				} catch (final Exception ex) {
+					ex.printStackTrace(p);
+				}
+			}
+			p.println("</PRE>");
+			p.println("</BODY>");
+			p.println("</HTML>");
+			p.flush();
+			m.sendReply("text/html");
+		} else if (m.sameKind("go")) {
+			System.out.println((String) m.getArg("location"));
+			String l = (String) m.getArg("location");
+
+			if (l.startsWith("atp:")) {
+				l = l.substring(4);
+				if (l.indexOf(':') < 0) {
+					p.println("<HTML>");
+					p.println("<HEAD>");
+					p.println(META_TAG);
+					p.println("<TITLE>");
+					p.println("ILLEGAL INPUT");
+					p.println("</TITLE>");
+					p.println("</HEAD>");
+					p.println("<BODY>");
+					p.println("<H1>");
+					p.println("Please specify port number. default = 434");
+					p.println("</H1>");
+					p.println("</BODY>");
+					p.println("</HTML>");
+					p.flush();
+					m.sendReply("text/html");
+					return true;
+				}
+			}
+
+			try {
+				p.println("<HTML>");
+				p.println("<HEAD>");
+				p.println(META_TAG);
+				p.println("<TITLE>");
+				p.println("MOVING TO");
+				p.println("</TITLE>");
+				p.println("</HEAD>");
+				p.println("<BODY>");
+				p.println("<H1> Moving to...! </H1>");
+				String contextName = getAgletContext().getName();
+
+				if (contextName.equals("")) {
+					contextName = "default";
+				}
+
+				p.println("<a href= \"http:" + l + "/aglets/" + contextName
+						+ "/" + getAgletID()
+						+ "/index.html\" TARGET=_top> atp:" + l + " </a>");
+				p.println("Click above link to trace me! <BR>");
+				p.println("</BODY>");
+				p.println("</HTML>");
+				p.flush();
+				m.sendReply("text/html");
+
+				this.dispatch(new java.net.URL("atp:" + l));
+
+			} catch (final IOException ex) {
+				ex.printStackTrace();
+			} catch (final RequestRefusedException ex) {
+				ex.printStackTrace();
+			}
+		} else {
+			return false;
+		}
+		return true;
 	}
-	return true;
-    }
 
-    /*
-     * index page
-     */
-    void indexPage() {
-	StringBuffer b = new StringBuffer();
+	@Override
+	public boolean handleMessage(final Message m) {
 
-	b.append("<HTML>");
-	b.append("<HEAD>");
-	b.append(META_TAG);
-	b.append("<TITLE>");
-	b.append("CGI TEST");
-	b.append("</TITLE>");
-	b.append("</HEAD>");
-	b.append("<BODY>");
-	b.append("<H1> Welcome to WebServerAglet! </H1>");
-	b.append("<a href=next.html> List Proxies </a> <BR>");
-	b.append("<FORM METHOD=GET ACTION=go>");
-	b.append("<INPUT NAME=location VALUE=\"atp://your.host\">");
-	b.append("<INPUT TYPE=submit VALUE=GO!> <BR>");
-	b.append("<P><FONT color=#FF0000>note:</FONT> Check box ");
-	b.append("for \"Accept HTTP Request as a message\"<BR>");
-	b.append("in \"Network Preference\" of target server <B>must be checked</B>.");
-	b.append("</BODY>");
-	b.append("</HTML>");
-	this.indexPage = b.toString();
-    }
+		//
+		// This is just a temporary solution.
+		//
+		final Object o = m.getArg("cgi-response");
+		if ((o != null) && (o instanceof OutputStream)) {
+			final OutputStream os = (OutputStream) o;
+			OutputStreamWriter osw = null;
 
-    @Override
-    public void onCreation(Object init) {
+			try {
+				osw = new OutputStreamWriter(os, ENCODING_JAVA);
+			} catch (final UnsupportedEncodingException excpt) {
+				osw = new OutputStreamWriter(os);
+			}
+			final PrintWriter pw = new PrintWriter(osw);
 
-	//
-	// this is just a convension.
-	//
-	this.getAgletContext().setProperty("name.test", this.getAgletID());
+			return handleHttpRequest(m, pw);
+		}
+		return true;
+	}
 
-	//
-	// Creating pages in advance.
-	//
-	this.indexPage();
+	/*
+	 * index page
+	 */
+	void indexPage() {
+		final StringBuffer b = new StringBuffer();
 
-	//
-	// Accepts http requests concurrently.
-	//
-	this.getMessageManager().setPriority("index.html", MessageManager.NOT_QUEUED);
-	this.getMessageManager().setPriority("next.html", MessageManager.NOT_QUEUED);
-    }
+		b.append("<HTML>");
+		b.append("<HEAD>");
+		b.append(META_TAG);
+		b.append("<TITLE>");
+		b.append("CGI TEST");
+		b.append("</TITLE>");
+		b.append("</HEAD>");
+		b.append("<BODY>");
+		b.append("<H1> Welcome to WebServerAglet! </H1>");
+		b.append("<a href=next.html> List Proxies </a> <BR>");
+		b.append("<FORM METHOD=GET ACTION=go>");
+		b.append("<INPUT NAME=location VALUE=\"atp://your.host\">");
+		b.append("<INPUT TYPE=submit VALUE=GO!> <BR>");
+		b.append("<P><FONT color=#FF0000>note:</FONT> Check box ");
+		b.append("for \"Accept HTTP Request as a message\"<BR>");
+		b.append("in \"Network Preference\" of target server <B>must be checked</B>.");
+		b.append("</BODY>");
+		b.append("</HTML>");
+		indexPage = b.toString();
+	}
+
+	@Override
+	public void onCreation(final Object init) {
+
+		//
+		// this is just a convension.
+		//
+		getAgletContext().setProperty("name.test", getAgletID());
+
+		//
+		// Creating pages in advance.
+		//
+		indexPage();
+
+		//
+		// Accepts http requests concurrently.
+		//
+		getMessageManager().setPriority("index.html", MessageManager.NOT_QUEUED);
+		getMessageManager().setPriority("next.html", MessageManager.NOT_QUEUED);
+	}
 }

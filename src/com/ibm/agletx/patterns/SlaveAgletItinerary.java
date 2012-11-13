@@ -31,132 +31,132 @@ import com.ibm.aglet.message.MessageException;
 
 final class SlaveAgletItinerary extends com.ibm.agletx.util.SeqPlanItinerary {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 5753313996227566152L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5753313996227566152L;
 
-    private Message message = null;
+	private Message message = null;
 
-    private boolean inOrigin = false;
+	private boolean inOrigin = false;
 
-    public SlaveAgletItinerary(Aglet aglet, URL url) {
-	super(aglet);
-	this.addPlan(url.toString(), "doJob");
-    }
-
-    public SlaveAgletItinerary(Aglet aglet, Vector urls) {
-	super(aglet);
-	for (Enumeration e = urls.elements(); e.hasMoreElements();) {
-	    this.addPlan(((URL) e.nextElement()).toString(), "doJob");
+	public SlaveAgletItinerary(final Aglet aglet, final URL url) {
+		super(aglet);
+		this.addPlan(url.toString(), "doJob");
 	}
-    }
 
-    private AgletProxy getProxy() {
-	return this.aglet.getAgletContext().getAgletProxy(this.aglet.getAgletID());
-
-    }
-
-    public void goOrigin(Message msg) {
-	try {
-	    this.message = msg;
-	    this.goOrigin1();
-	} catch (Exception e) {
-	    e.printStackTrace();
-	    this.message = null;
+	public SlaveAgletItinerary(final Aglet aglet, final Vector urls) {
+		super(aglet);
+		for (final Enumeration e = urls.elements(); e.hasMoreElements();) {
+			this.addPlan(((URL) e.nextElement()).toString(), "doJob");
+		}
 	}
-    }
 
-    private void goOrigin1() throws Exception {
-	String origin = this.getOrigin();
+	private AgletProxy getProxy() {
+		return aglet.getAgletContext().getAgletProxy(aglet.getAgletID());
 
-	if (origin == null) {
-	    throw new AgletException("no origin exists");
-	} else {
-	    this.inOrigin = true;
-	    while (true) { // -- try until you succeed.
+	}
+
+	public void goOrigin(final Message msg) {
 		try {
-		    URL orig = new URL(origin);
-
-		    this.aglet.dispatch(orig);
-		} catch (ServerNotFoundException e) {
-
-		    // -- do nothing
-		} catch (RequestRefusedException e) {
-
-		    // -- do nothing
-		} catch (Exception e) {
-		    e.printStackTrace();
-		    this.inOrigin = false;
-		    break;
+			message = msg;
+			goOrigin1();
+		} catch (final Exception e) {
+			e.printStackTrace();
+			message = null;
 		}
-	    }
 	}
-    }
 
-    @Override
-    public void handleException(Throwable ex) {
-	URL host = this.aglet.getAgletContext().getHostingURL();
+	private void goOrigin1() throws Exception {
+		final String origin = getOrigin();
 
-	this.goOrigin(new Message("onError", new SlaveError(host, ex)));
-    }
+		if (origin == null) {
+			throw new AgletException("no origin exists");
+		} else {
+			inOrigin = true;
+			while (true) { // -- try until you succeed.
+				try {
+					final URL orig = new URL(origin);
 
-    @Override
-    public void handleTripException(Throwable ex) {
+					aglet.dispatch(orig);
+				} catch (final ServerNotFoundException e) {
 
-	// modified by Y. Mima 9/10/98
-	// if the exception is ServerNotFoundException,
-	// Slave does not come home and continue its work
-	if (ex instanceof ServerNotFoundException) {
-	    URL host = this.aglet.getAgletContext().getHostingURL();
+					// -- do nothing
+				} catch (final RequestRefusedException e) {
 
-	    try {
-		this.aglet.getProxy().sendMessage(new Message("onError", new SlaveError(host, ex)));
-	    } catch (Exception e) {
-		this.handleException(e);
-	    }
-	} else {
-	    this.handleException(ex);
-	}
-    }
-
-    @Override
-    public void onArrival(MobilityEvent ev) {
-	if (this.inOrigin == true) {
-	    try {
-		if (this.message != null) {
-		    this.getProxy().sendMessage(this.message);
-		    this.aglet.dispose();
+					// -- do nothing
+				} catch (final Exception e) {
+					e.printStackTrace();
+					inOrigin = false;
+					break;
+				}
+			}
 		}
-	    } catch (MessageException ex) {
-		this.handleException(ex.getException());
-	    } catch (NotHandledException ex) {
-	    } catch (InvalidAgletException ex) {
-	    }
-	} else {
-	    super.onArrival(ev);
 	}
-    }
 
-    @Override
-    protected void onTermination() {
-	this.goOrigin(new Message("onReturn", null));
-    }
+	@Override
+	public void handleException(final Throwable ex) {
+		final URL host = aglet.getAgletContext().getHostingURL();
 
-    @Override
-    public void startTrip() {
-	Message msg = new Message("initializeJob", null);
-
-	try {
-	    this.getProxy().sendMessage(msg);
-	} catch (MessageException ex) {
-	    this.handleException(ex.getException());
-	} catch (NotHandledException ex) {
-	    this.handleException(ex);
-	} catch (InvalidAgletException ex) {
-	    this.handleException(ex);
+		goOrigin(new Message("onError", new SlaveError(host, ex)));
 	}
-	super.startTrip();
 
-    }
+	@Override
+	public void handleTripException(final Throwable ex) {
+
+		// modified by Y. Mima 9/10/98
+		// if the exception is ServerNotFoundException,
+		// Slave does not come home and continue its work
+		if (ex instanceof ServerNotFoundException) {
+			final URL host = aglet.getAgletContext().getHostingURL();
+
+			try {
+				aglet.getProxy().sendMessage(new Message("onError", new SlaveError(host, ex)));
+			} catch (final Exception e) {
+				handleException(e);
+			}
+		} else {
+			handleException(ex);
+		}
+	}
+
+	@Override
+	public void onArrival(final MobilityEvent ev) {
+		if (inOrigin == true) {
+			try {
+				if (message != null) {
+					getProxy().sendMessage(message);
+					aglet.dispose();
+				}
+			} catch (final MessageException ex) {
+				handleException(ex.getException());
+			} catch (final NotHandledException ex) {
+			} catch (final InvalidAgletException ex) {
+			}
+		} else {
+			super.onArrival(ev);
+		}
+	}
+
+	@Override
+	protected void onTermination() {
+		goOrigin(new Message("onReturn", null));
+	}
+
+	@Override
+	public void startTrip() {
+		final Message msg = new Message("initializeJob", null);
+
+		try {
+			getProxy().sendMessage(msg);
+		} catch (final MessageException ex) {
+			handleException(ex.getException());
+		} catch (final NotHandledException ex) {
+			handleException(ex);
+		} catch (final InvalidAgletException ex) {
+			handleException(ex);
+		}
+		super.startTrip();
+
+	}
 }

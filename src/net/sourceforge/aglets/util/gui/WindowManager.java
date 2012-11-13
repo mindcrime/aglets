@@ -22,75 +22,75 @@ import com.ibm.aglets.tahiti.TahitiWindow;
  */
 public class WindowManager extends WindowAdapter {
 
-    /**
-     * The owners list.
-     */
-    protected LinkedList<JFrame> owners = null;
+	/**
+	 * The owners list.
+	 */
+	protected LinkedList<JFrame> owners = null;
 
-    /**
-     * Initializes this window closer for the specified frame.
-     * 
-     * @param owner
-     *            the owner of this window closer
-     */
-    public WindowManager(JFrame owner) {
-	super();
-	this.owners = new LinkedList<JFrame>();
-	this.add(owner);
-    }
-
-    /**
-     * Adds a new JWindow object to manage thru this manager.
-     * 
-     * @param toAdd
-     *            the JWindow object to add
-     * @return true if it has been added, false otherwise
-     */
-    public boolean add(JFrame toAdd) {
-	if ((toAdd != null) && (!(this.owners.contains(toAdd)))) {
-	    this.owners.add(toAdd);
-	    return true;
-	} else
-	    return false;
-    }
-
-    /**
-     * Close all the windows managed from this manager.
-     */
-    @Override
-    public void windowClosing(WindowEvent event) {
-	if ((event == null) || (this.owners == null)
-		|| (this.owners.size() == 0))
-	    return;
-	else {
-	    // dispose each window managed
-	    Iterator iter = this.owners.iterator();
-	    while ((iter != null) && iter.hasNext()) {
-		JFrame window = (JFrame) iter.next();
-
-		// check if this window is a tahiti window and should
-		// exit on closing
-		if ((window instanceof TahitiWindow)
-			&& ((TahitiWindow) window).shouldExitOnClosing()) {
-
-		    TahitiWindow tWindow = (TahitiWindow) window;
-		    tWindow.getTranslator();
-		    tWindow.getBaseKey();
-
-		    // don't ask the user to confirm the exiting, since it will
-		    // be done by the tahiti window itself
-
-		    // send an exit event
-		    ActionEvent exit = new ActionEvent(this, 1, GUICommandStrings.EXIT_COMMAND);
-		    ((MainWindow) tWindow).actionPerformed(exit);
-
-		}
-
-		window.setVisible(false);
-		window.dispose();
-	    }
+	/**
+	 * Initializes this window closer for the specified frame.
+	 * 
+	 * @param owner
+	 *            the owner of this window closer
+	 */
+	public WindowManager(final JFrame owner) {
+		super();
+		owners = new LinkedList<JFrame>();
+		add(owner);
 	}
 
-    }
+	/**
+	 * Adds a new JWindow object to manage thru this manager.
+	 * 
+	 * @param toAdd
+	 *            the JWindow object to add
+	 * @return true if it has been added, false otherwise
+	 */
+	public boolean add(final JFrame toAdd) {
+		if ((toAdd != null) && (!(owners.contains(toAdd)))) {
+			owners.add(toAdd);
+			return true;
+		} else
+			return false;
+	}
+
+	/**
+	 * Close all the windows managed from this manager.
+	 */
+	@Override
+	public void windowClosing(final WindowEvent event) {
+		if ((event == null) || (owners == null)
+				|| (owners.size() == 0))
+			return;
+		else {
+			// dispose each window managed
+			final Iterator iter = owners.iterator();
+			while ((iter != null) && iter.hasNext()) {
+				final JFrame window = (JFrame) iter.next();
+
+				// check if this window is a tahiti window and should
+				// exit on closing
+				if ((window instanceof TahitiWindow)
+						&& ((TahitiWindow) window).shouldExitOnClosing()) {
+
+					final TahitiWindow tWindow = (TahitiWindow) window;
+					tWindow.getTranslator();
+					tWindow.getBaseKey();
+
+					// don't ask the user to confirm the exiting, since it will
+					// be done by the tahiti window itself
+
+					// send an exit event
+					final ActionEvent exit = new ActionEvent(this, 1, GUICommandStrings.EXIT_COMMAND);
+					((MainWindow) tWindow).actionPerformed(exit);
+
+				}
+
+				window.setVisible(false);
+				window.dispose();
+			}
+		}
+
+	}
 
 }

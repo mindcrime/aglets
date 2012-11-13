@@ -26,13 +26,13 @@ import java.awt.Frame;
 
 class PopUpMessageWindow extends MessageDialog {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -161851958524536808L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -161851958524536808L;
 
-    PopUpMessageWindow(Frame parent, String title, String message) {
-	super(parent, title, message);
-	this.setButtons(GeneralDialog.OKAY);
-    }
+	PopUpMessageWindow(final Frame parent, final String title, final String message) {
+		super(parent, title, message);
+		setButtons(GeneralDialog.OKAY);
+	}
 }

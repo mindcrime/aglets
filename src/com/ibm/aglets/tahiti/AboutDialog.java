@@ -26,94 +26,94 @@ import com.ibm.aglets.AgletRuntime;
  */
 public class AboutDialog extends BaseAgletsDialog {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 6317104289078288226L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6317104289078288226L;
 
-    /**
-     * The panel that will contain the image with the logo.
-     */
-    private ImagePanel image = null;
+	/**
+	 * The panel that will contain the image with the logo.
+	 */
+	private ImagePanel image = null;
 
-    /**
-     * A text area that will contain the credits.
-     */
-    private JTextArea creditArea = null;
+	/**
+	 * A text area that will contain the credits.
+	 */
+	private JTextArea creditArea = null;
 
-    /**
-     * A text area with the licence.
-     */
-    private JTextArea licenceArea = null;
+	/**
+	 * A text area with the licence.
+	 */
+	private JTextArea licenceArea = null;
 
-    /**
-     * An instance to myself.
-     */
-    private static AboutDialog mySelf = null;
+	/**
+	 * An instance to myself.
+	 */
+	private static AboutDialog mySelf = null;
 
-    protected AboutDialog(JFrame parentFrame) {
-	super(parentFrame);
+	/**
+	 * Provides an instance of this dialog window.
+	 * 
+	 * @param parentFrame
+	 *            the frame parent of this dialog
+	 * @return the instance of the dialog
+	 */
+	public synchronized static AboutDialog getInstance(final JFrame parentFrame) {
+		if (mySelf == null)
+			mySelf = new AboutDialog(parentFrame);
 
-	// create the logo
-	this.image = JComponentBuilder.createLogoPanel();
+		return mySelf;
+	}
 
-	// set the layout
-	this.setLayout(new BorderLayout(10, 10));
-	JPanel northPanel = new JPanel();
-	northPanel.setLayout(new GridLayout(0, 1));
+	protected AboutDialog(final JFrame parentFrame) {
+		super(parentFrame);
 
-	JLabel label = JComponentBuilder.createJLabel("Aglets");
-	northPanel.add(label);
-	label = JComponentBuilder.createJLabel(this.baseKey + ".version");
-	label.setText(label.getText() + " " + AgletRuntime.getVersion());
-	northPanel.add(label);
-	this.add(northPanel, BorderLayout.NORTH);
+		// create the logo
+		image = JComponentBuilder.createLogoPanel();
 
-	JPanel southPanel = new JPanel();
-	southPanel.setLayout(new BorderLayout());
-	label = JComponentBuilder.createJLabel(this.baseKey + ".webPage");
-	southPanel.add(label, BorderLayout.NORTH);
+		// set the layout
+		setLayout(new BorderLayout(10, 10));
+		final JPanel northPanel = new JPanel();
+		northPanel.setLayout(new GridLayout(0, 1));
 
-	this.creditArea = JComponentBuilder.createJTextArea(this.translator.translate(this.baseKey
-		+ ".creditsFile"));
-	this.creditArea.setEditable(false);
-	JTabbedPane tabbedPanel = new JTabbedPane();
+		JLabel label = JComponentBuilder.createJLabel("Aglets");
+		northPanel.add(label);
+		label = JComponentBuilder.createJLabel(baseKey + ".version");
+		label.setText(label.getText() + " " + AgletRuntime.getVersion());
+		northPanel.add(label);
+		this.add(northPanel, BorderLayout.NORTH);
 
-	JPanel creditPanel = new JPanel();
-	creditPanel.add(this.creditArea);
+		final JPanel southPanel = new JPanel();
+		southPanel.setLayout(new BorderLayout());
+		label = JComponentBuilder.createJLabel(baseKey + ".webPage");
+		southPanel.add(label, BorderLayout.NORTH);
 
-	JPanel licencePanel = new JPanel();
-	this.licenceArea = JComponentBuilder.createJTextArea(this.translator.translate(this.baseKey
-		+ ".licenceFile"));
-	licencePanel.add(this.licenceArea);
+		creditArea = JComponentBuilder.createJTextArea(translator.translate(baseKey
+				+ ".creditsFile"));
+		creditArea.setEditable(false);
+		final JTabbedPane tabbedPanel = new JTabbedPane();
 
-	tabbedPanel.add(this.translator.translate(this.baseKey + ".credits"), creditPanel);
-	tabbedPanel.add(this.translator.translate(this.baseKey + ".licence"), licencePanel);
-	southPanel.add(tabbedPanel, BorderLayout.CENTER);
+		final JPanel creditPanel = new JPanel();
+		creditPanel.add(creditArea);
 
-	JButton closeButton = JComponentBuilder.createJButton(this.baseKey
-		+ ".okButton", GUICommandStrings.OK_COMMAND, this);
-	southPanel.add(closeButton, BorderLayout.SOUTH);
+		final JPanel licencePanel = new JPanel();
+		licenceArea = JComponentBuilder.createJTextArea(translator.translate(baseKey
+				+ ".licenceFile"));
+		licencePanel.add(licenceArea);
 
-	this.add(northPanel, BorderLayout.NORTH);
-	this.add(this.image, BorderLayout.CENTER);
-	this.add(southPanel, BorderLayout.SOUTH);
+		tabbedPanel.add(translator.translate(baseKey + ".credits"), creditPanel);
+		tabbedPanel.add(translator.translate(baseKey + ".licence"), licencePanel);
+		southPanel.add(tabbedPanel, BorderLayout.CENTER);
 
-	this.pack();
+		final JButton closeButton = JComponentBuilder.createJButton(baseKey
+				+ ".okButton", GUICommandStrings.OK_COMMAND, this);
+		southPanel.add(closeButton, BorderLayout.SOUTH);
 
-    }
+		this.add(northPanel, BorderLayout.NORTH);
+		this.add(image, BorderLayout.CENTER);
+		this.add(southPanel, BorderLayout.SOUTH);
 
-    /**
-     * Provides an instance of this dialog window.
-     * 
-     * @param parentFrame
-     *            the frame parent of this dialog
-     * @return the instance of the dialog
-     */
-    public synchronized static AboutDialog getInstance(JFrame parentFrame) {
-	if (mySelf == null)
-	    mySelf = new AboutDialog(parentFrame);
+		pack();
 
-	return mySelf;
-    }
+	}
 }

@@ -15,19 +15,19 @@ import javax.swing.JFrame;
  *         sourceforge.net</A>
  */
 public class MemoryWindow extends JFrame {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -8080806717004726845L;
-    private MemoryPanel mem;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8080806717004726845L;
+	private final MemoryPanel mem;
 
-    public MemoryWindow() {
-	super();
-	this.mem = new MemoryPanel(250, 250, false, true);
-	this.getContentPane().add(this.mem);
-	this.pack();
-	this.setVisible(true);
+	public MemoryWindow() {
+		super();
+		mem = new MemoryPanel(250, 250, false, true);
+		getContentPane().add(mem);
+		pack();
+		setVisible(true);
 
-    }
+	}
 
 }

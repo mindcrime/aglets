@@ -16,14 +16,14 @@ package com.ibm.aglets.tahiti;
 
 class PropertyPermissionEditor extends GeneralPermissionEditor {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 2648553800860121740L;
-    // possible actions are "read" and "write"
-    private static final String LABEL_PROPERTY = "Property";
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2648553800860121740L;
+	// possible actions are "read" and "write"
+	private static final String LABEL_PROPERTY = "Property";
 
-    PropertyPermissionEditor() {
-	super(LABEL_PROPERTY);
-    }
+	PropertyPermissionEditor() {
+		super(LABEL_PROPERTY);
+	}
 }

@@ -29,59 +29,59 @@ import net.sourceforge.aglets.log.AgletsLogger;
  */
 
 final class MessageInputStream extends ObjectInputStream {
-    private static AgletsLogger logger = AgletsLogger.getLogger(MessageInputStream.class.getName());
-    private ResourceManager rm = null;
+	private static AgletsLogger logger = AgletsLogger.getLogger(MessageInputStream.class.getName());
+	static Object toObject(final ResourceManager rm, final byte[] b)
+	throws OptionalDataException,
+	ClassNotFoundException,
+	IOException {
+		final ByteArrayInputStream in = new ByteArrayInputStream(b);
+		final MessageInputStream ois = new MessageInputStream(in, rm);
 
-    /**
-     * Create a new instance of this class.
-     * 
-     * @param in
-     *            an input stream containing objests and class data.
-     * @exception IOException
-     *                if can not read data from the input stream.
-     * @exception StreamCorruptedException
-     *                if data in the input stream is invalid.
-     */
-    public MessageInputStream(InputStream in, ResourceManager rm)
-    throws IOException {
-	super(in);
-	this.rm = rm;
-    }
-
-    /**
-     * @param osc
-     *            object stream.
-     * @return the resolved class.
-     * @exception IOException
-     *                if can not read data from the input stream.
-     * @exception ClassNotFoundException
-     *                if can not resolve the class.
-     */
-    @Override
-    public Class resolveClass(ObjectStreamClass osc)
-    throws IOException,
-    ClassNotFoundException {
-
-	Class cls = (this.rm == null) ? Class.forName(osc.getName())
-		: this.rm.loadClass(osc.getName());
-
-	ClassLoader loader = cls.getClassLoader();
-
-	if ((loader == null) || !(loader instanceof ResourceManager)
-		|| this.rm.contains(cls)) {
-	    return cls;
+		return ois.readObject();
 	}
 
-	throw new AgletsSecurityException();
-    }
+	private ResourceManager rm = null;
 
-    static Object toObject(ResourceManager rm, byte[] b)
-    throws OptionalDataException,
-    ClassNotFoundException,
-    IOException {
-	ByteArrayInputStream in = new ByteArrayInputStream(b);
-	MessageInputStream ois = new MessageInputStream(in, rm);
+	/**
+	 * Create a new instance of this class.
+	 * 
+	 * @param in
+	 *            an input stream containing objests and class data.
+	 * @exception IOException
+	 *                if can not read data from the input stream.
+	 * @exception StreamCorruptedException
+	 *                if data in the input stream is invalid.
+	 */
+	public MessageInputStream(final InputStream in, final ResourceManager rm)
+	throws IOException {
+		super(in);
+		this.rm = rm;
+	}
 
-	return ois.readObject();
-    }
+	/**
+	 * @param osc
+	 *            object stream.
+	 * @return the resolved class.
+	 * @exception IOException
+	 *                if can not read data from the input stream.
+	 * @exception ClassNotFoundException
+	 *                if can not resolve the class.
+	 */
+	@Override
+	public Class resolveClass(final ObjectStreamClass osc)
+	throws IOException,
+	ClassNotFoundException {
+
+		final Class cls = (rm == null) ? Class.forName(osc.getName())
+				: rm.loadClass(osc.getName());
+
+		final ClassLoader loader = cls.getClassLoader();
+
+		if ((loader == null) || !(loader instanceof ResourceManager)
+				|| rm.contains(cls)) {
+			return cls;
+		}
+
+		throw new AgletsSecurityException();
+	}
 }

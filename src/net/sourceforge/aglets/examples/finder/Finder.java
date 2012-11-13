@@ -23,37 +23,37 @@ import com.ibm.aglet.message.Message;
 
 public class Finder extends Aglet {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1996926670286924416L;
-    // add this.
-    Hashtable _database = new Hashtable();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1996926670286924416L;
+	// add this.
+	Hashtable _database = new Hashtable();
 
-    @Override
-    public boolean handleMessage(Message msg) {
-	if (msg.sameKind("Lookup")) {
-	    msg.sendReply(this._database.get(msg.getArg()));
-	} else if (msg.sameKind("Register")) {
-	    System.out.println("Registering .. " + msg.getArg("NAME"));
-	    System.out.println(msg.getArg("PROXY"));
-	    this._database.put(msg.getArg("NAME"), msg.getArg("PROXY"));
+	@Override
+	public boolean handleMessage(final Message msg) {
+		if (msg.sameKind("Lookup")) {
+			msg.sendReply(_database.get(msg.getArg()));
+		} else if (msg.sameKind("Register")) {
+			System.out.println("Registering .. " + msg.getArg("NAME"));
+			System.out.println(msg.getArg("PROXY"));
+			_database.put(msg.getArg("NAME"), msg.getArg("PROXY"));
 
-	    // same
-	} else if (msg.sameKind("Unregister")) {
-	    this._database.remove(msg.getArg("NAME"));
-	} else {
-	    return false;
+			// same
+		} else if (msg.sameKind("Unregister")) {
+			_database.remove(msg.getArg("NAME"));
+		} else {
+			return false;
+		}
+		return true;
 	}
-	return true;
-    }
 
-    @Override
-    public void onCreation(Object init) {
+	@Override
+	public void onCreation(final Object init) {
 
-	// register it as an default finder..
-	AgletProxy proxy = this.getAgletContext().getAgletProxy(this.getAgletID());
+		// register it as an default finder..
+		final AgletProxy proxy = getAgletContext().getAgletProxy(getAgletID());
 
-	this.getAgletContext().setProperty("finder", proxy);
-    }
+		getAgletContext().setProperty("finder", proxy);
+	}
 }

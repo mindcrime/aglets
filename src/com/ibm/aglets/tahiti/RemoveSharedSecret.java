@@ -26,88 +26,88 @@ import com.ibm.atp.auth.SharedSecrets;
 
 class RemoveSharedSecret extends TahitiDialog implements ActionListener {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -4401746296431455597L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4401746296431455597L;
 
-    AgentListPanel list;
+	AgentListPanel list;
 
-    JTextField password;
+	JTextField password;
 
-    SharedSecrets secrets;
+	SharedSecrets secrets;
 
-    NetworkConfigDialog parent;
+	NetworkConfigDialog parent;
 
-    RemoveSharedSecret(JFrame f, SharedSecrets secs, NetworkConfigDialog net) {
-	super(f);
-	this.secrets = secs;
-	this.getContentPane().add("North", new JLabel(this.translator.translate("dialog.removesharedsecret.label"), SwingConstants.CENTER));
+	RemoveSharedSecret(final JFrame f, final SharedSecrets secs, final NetworkConfigDialog net) {
+		super(f);
+		secrets = secs;
+		getContentPane().add("North", new JLabel(translator.translate("dialog.removesharedsecret.label"), SwingConstants.CENTER));
 
-	GridBagPanel p = new GridBagPanel();
+		final GridBagPanel p = new GridBagPanel();
 
-	this.getContentPane().add(p);
+		getContentPane().add(p);
 
-	this.list = new AgentListPanel();
-	this.password = new JPasswordField(20);
+		list = new AgentListPanel();
+		password = new JPasswordField(20);
 
-	GridBagConstraints cns = new GridBagConstraints();
+		final GridBagConstraints cns = new GridBagConstraints();
 
-	cns.fill = GridBagPanel.HORIZONTAL;
-	cns.anchor = GridBagConstraints.WEST;
-	cns.gridwidth = GridBagConstraints.REMAINDER;
+		cns.fill = GridBagPanel.HORIZONTAL;
+		cns.anchor = GridBagConstraints.WEST;
+		cns.gridwidth = GridBagConstraints.REMAINDER;
 
-	p.setConstraints(cns);
-	p.addLabeled(this.translator.translate("dialog.removesharedsecret.label.list"), this.list);
-	p.addLabeled(this.translator.translate("dialog.removesharedsecret.label.password"), this.password);
+		p.setConstraints(cns);
+		p.addLabeled(translator.translate("dialog.removesharedsecret.label.list"), list);
+		p.addLabeled(translator.translate("dialog.removesharedsecret.label.password"), password);
 
-	Enumeration domains = this.secrets.getDomainNames();
+		final Enumeration domains = secrets.getDomainNames();
 
-	if (domains != null) {
-	    while (domains.hasMoreElements()) {
-		String domain = (String) domains.nextElement();
+		if (domains != null) {
+			while (domains.hasMoreElements()) {
+				final String domain = (String) domains.nextElement();
 
-		this.list.addItem(domain);
-	    }
+				list.addItem(domain);
+			}
+		}
+
+		// add the buttons
+		this.addButton(translator.translate("dialog.removesharedsecret.button.ok"), this);
+		this.addButton(translator.translate("dialog.removesharedsecret.button.cancel"), this);
 	}
 
-	// add the buttons
-	this.addButton(this.translator.translate("dialog.removesharedsecret.button.ok"), this);
-	this.addButton(this.translator.translate("dialog.removesharedsecret.button.cancel"), this);
-    }
+	@Override
+	public void actionPerformed(final ActionEvent ev) {
+		final String domainName = list.getSelectedItem();
+		final String command = ev.getActionCommand();
 
-    @Override
-    public void actionPerformed(ActionEvent ev) {
-	String domainName = this.list.getSelectedItem();
-	String command = ev.getActionCommand();
+		if (command.equals(TahitiCommandStrings.OK_COMMAND)) {
+			if ((domainName == null) || domainName.equals("")) {
+				JOptionPane.showMessageDialog(this, translator.translate("dialog.removesharedsecret.error.nulldomain"), translator.translate("dialog.removesharedsecret.error.nulldomain.title"), JOptionPane.ERROR_MESSAGE, IconRepository.getIcon("error"));
+				return;
+			}
+			final SharedSecret secret = secrets.getSharedSecret(domainName);
 
-	if (command.equals(TahitiCommandStrings.OK_COMMAND)) {
-	    if ((domainName == null) || domainName.equals("")) {
-		JOptionPane.showMessageDialog(this, this.translator.translate("dialog.removesharedsecret.error.nulldomain"), this.translator.translate("dialog.removesharedsecret.error.nulldomain.title"), JOptionPane.ERROR_MESSAGE, IconRepository.getIcon("error"));
-		return;
-	    }
-	    SharedSecret secret = this.secrets.getSharedSecret(domainName);
+			if (secret == null) {
+				JOptionPane.showMessageDialog(this, translator.translate("dialog.removesharedsecret.error.nullsecret"), translator.translate("dialog.removesharedsecret.error.nullsecret.title"), JOptionPane.ERROR_MESSAGE, IconRepository.getIcon("error"));
+				return;
+			}
+			final AgletRuntime rt = AgletRuntime.getAgletRuntime();
 
-	    if (secret == null) {
-		JOptionPane.showMessageDialog(this, this.translator.translate("dialog.removesharedsecret.error.nullsecret"), this.translator.translate("dialog.removesharedsecret.error.nullsecret.title"), JOptionPane.ERROR_MESSAGE, IconRepository.getIcon("error"));
-		return;
-	    }
-	    AgletRuntime rt = AgletRuntime.getAgletRuntime();
+			// Certificate ownerCert = rt.getOwnerCertificate();
+			final String ownerName = rt.getOwnerName();
 
-	    // Certificate ownerCert = rt.getOwnerCertificate();
-	    String ownerName = rt.getOwnerName();
+			if (rt.authenticateOwner(ownerName, password.getText()) == null) {
+				JOptionPane.showMessageDialog(this, translator.translate("dialog.removesharedsecret.error.password"), translator.translate("dialog.removesharedsecret.error.password.title"), JOptionPane.ERROR_MESSAGE, IconRepository.getIcon("error"));
+				password.setText("");
+				return;
+			}
 
-	    if (rt.authenticateOwner(ownerName, this.password.getText()) == null) {
-		JOptionPane.showMessageDialog(this, this.translator.translate("dialog.removesharedsecret.error.password"), this.translator.translate("dialog.removesharedsecret.error.password.title"), JOptionPane.ERROR_MESSAGE, IconRepository.getIcon("error"));
-		this.password.setText("");
-		return;
-	    }
+			secrets.removeSharedSecret(domainName);
+			secrets.save();
+		}
 
-	    this.secrets.removeSharedSecret(domainName);
-	    this.secrets.save();
+		setVisible(false);
+		dispose();
 	}
-
-	this.setVisible(false);
-	this.dispose();
-    }
 };

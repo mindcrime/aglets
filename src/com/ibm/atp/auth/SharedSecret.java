@@ -43,578 +43,578 @@ import com.ibm.awb.misc.Hexadecimal;
  * @author ONO Kouichi
  */
 final public class SharedSecret extends ByteSequence {
-    /**
-     * serial version UID
-     */
-    static final long serialVersionUID = -7990001265976183031L;
+	/**
+	 * serial version UID
+	 */
+	static final long serialVersionUID = -7990001265976183031L;
 
-    /**
-     * message digest algorithm.
-     */
-    final private static String MESSAGE_DIGEST_ALGORITHM = "SHA";
-    private static MessageDigest _mdigest = null;
+	/**
+	 * message digest algorithm.
+	 */
+	final private static String MESSAGE_DIGEST_ALGORITHM = "SHA";
+	private static MessageDigest _mdigest = null;
 
-    /**
-     * signature algorithm.
-     */
-    final private static String SIGNATURE_ALGORITHM = "DSA";
+	/**
+	 * signature algorithm.
+	 */
+	final private static String SIGNATURE_ALGORITHM = "DSA";
 
-    /**
-     * The length of byte sequence.
-     */
-    final public static int LENGTH = 32;
+	/**
+	 * The length of byte sequence.
+	 */
+	final public static int LENGTH = 32;
 
-    /**
-     * field names
-     */
-    final private static String FIELD_SECRET = "Secret";
-    final private static String FIELD_DOMAIN_NAME = "Domain";
-    final private static String FIELD_CREATOR = "Creator";
-    final private static String FIELD_SIGNATURE = "Signature";
+	/**
+	 * field names
+	 */
+	final private static String FIELD_SECRET = "Secret";
+	final private static String FIELD_DOMAIN_NAME = "Domain";
+	final private static String FIELD_CREATOR = "Creator";
+	final private static String FIELD_SIGNATURE = "Signature";
 
-    // final private static String FIELD_KEYSTORE_FILE = "KeyStoreFile";
-    // final private static String FIELD_KEYSTORE_PASSWORD = "KeyStorePassword";
-    // final private static String FIELD_KEY_ALIAS = "KeyAlias";
-    // final private static String FIELD_KEY_PASSWORD = "KeyPassword";
-    // final private static String FIELD_DATE = "Date";
-    // final private static String FIELD_OWNER_NAME = "Owner";
-    final private static char CHAR_COLON = ':';
-    final private static String FIELD_NAME_TERM = String.valueOf(CHAR_COLON)
-    + " ";
+	// final private static String FIELD_KEYSTORE_FILE = "KeyStoreFile";
+	// final private static String FIELD_KEYSTORE_PASSWORD = "KeyStorePassword";
+	// final private static String FIELD_KEY_ALIAS = "KeyAlias";
+	// final private static String FIELD_KEY_PASSWORD = "KeyPassword";
+	// final private static String FIELD_DATE = "Date";
+	// final private static String FIELD_OWNER_NAME = "Owner";
+	final private static char CHAR_COLON = ':';
+	final private static String FIELD_NAME_TERM = String.valueOf(CHAR_COLON)
+	+ " ";
 
-    // final private static String FORMAT_DATE = "yyyy.MM.dd HH:mm:ss.SSS z";
+	// final private static String FORMAT_DATE = "yyyy.MM.dd HH:mm:ss.SSS z";
 
-    /**
-     * signature.
-     */
-    private Signature _sign = null;
-
-    /**
-     * Domain name/Owner name
-     */
-
-    // private Date _date = null;
-    private transient String _domainName = null;
-    private transient String _signature = null;
-
-    // private transient String _keyStoreFile = null;
-    // private transient String _keyStorePassword = null;
-    // private transient String _ownerKeyAlias = null;
-    // private transient String _ownerKeyPassword = null;
-
-    private transient Certificate _creatorCert = null;
-
-    // private transient PrivateKey _ownerKey = null;
-    private transient byte[] _domainNameSeq = null;
-    private transient byte[] _signatureSeq = null;
-
-    /**
-     * Gets new line string.
-     */
-    private static final String PROPERTY_CRLF = "line.separator";
-    private static final String DEFAULT_CRLF = "\r\n";
-    private static String _strNewLine = null;
-
-    static {
-	try {
-	    _mdigest = MessageDigest.getInstance(MESSAGE_DIGEST_ALGORITHM);
-	} catch (NoSuchAlgorithmException ex) {
-	    ex.printStackTrace();
-	}
-	try {
-	    _strNewLine = (String) AccessController.doPrivileged(new PrivilegedAction() {
-		@Override
-		public Object run() {
-		    return System.getProperty(PROPERTY_CRLF, DEFAULT_CRLF);
+	/**
+	 * Converts lines into a shared secret.
+	 */
+	final static SharedSecret convertLinesToSharedSecret(final Enumeration lines) {
+		if (lines == null) {
+			return null;
 		}
-	    });
-	} catch (Exception ex) {
-	    ex.printStackTrace();
-	}
-    }
-    private transient byte[] _creatorCertSeq = null;
+		String domain = null;
+		String secret = null;
+		String signature = null;
+		Certificate creator = null;
 
-    /**
-     * Constructor creates a secure random generator, and generate byte sequence
-     * as a shared secret (password) for authentication.
-     */
-    private SharedSecret(String domainName, Certificate creatorCert) {
+		for (String line = null; lines.hasMoreElements();) {
+			line = (String) lines.nextElement();
+			if (line == null) {
 
-	// Sets a random number as the secret of this shared secret.
-	super(LENGTH);
-	this.init();
-	this.setDomainName(domainName);
-	this.setCreator(creatorCert);
+				// end of line
+				break;
+			}
+			final int idx = line.indexOf(FIELD_NAME_TERM);
 
-	// setSignature((byte[])null);
-    }
+			if (idx >= 0) {
+				final String fieldName = line.substring(0, idx);
+				final String fieldValue = line.substring(idx
+						+ FIELD_NAME_TERM.length() - 1).trim();
 
-    /**
-     * Constructor creates byte sequence as a copy of given hexadecimal string
-     * of encoded bytes as a shared secret (password) for authentication.
-     * 
-     * @param domainName
-     *            TODO document this
-     * @param creatorCert
-     *            TODO document this
-     * @param secret
-     *            a string of encoded byte sequence to be copied as a shared
-     *            secret
-     * @param signature
-     *            TODO document this
-     * @exception KeyStoreException
-     */
-    private SharedSecret(String domainName, Certificate creatorCert,
-                         String secret, String signature) throws KeyStoreException {
-	super(0, secret, null);
-	this.init();
-	this.setDomainName(domainName);
-	this.setCreator(creatorCert);
-	this.setSignature(signature);
-    }
+				if (FIELD_DOMAIN_NAME.equals(fieldName)) {
+					domain = fieldValue;
+				} else if (FIELD_SECRET.equals(fieldName)) {
+					secret = fieldValue;
+				} else if (FIELD_SIGNATURE.equals(fieldName)) {
+					signature = fieldValue;
+				} else if (FIELD_CREATOR.equals(fieldName)) {
+					final String encodedStr = fieldValue;
+					final byte[] encoded = Hexadecimal.parseSeq(encodedStr);
 
-    /**
-     * Converts lines into a shared secret.
-     */
-    final static SharedSecret convertLinesToSharedSecret(Enumeration lines) {
-	if (lines == null) {
-	    return null;
-	}
-	String domain = null;
-	String secret = null;
-	String signature = null;
-	Certificate creator = null;
+					creator = com.ibm.aglets.AgletRuntime.getCertificate(encoded);
+				} else {
 
-	for (String line = null; lines.hasMoreElements();) {
-	    line = (String) lines.nextElement();
-	    if (line == null) {
-
-		// end of line
-		break;
-	    }
-	    final int idx = line.indexOf(FIELD_NAME_TERM);
-
-	    if (idx >= 0) {
-		final String fieldName = line.substring(0, idx);
-		final String fieldValue = line.substring(idx
-			+ FIELD_NAME_TERM.length() - 1).trim();
-
-		if (FIELD_DOMAIN_NAME.equals(fieldName)) {
-		    domain = fieldValue;
-		} else if (FIELD_SECRET.equals(fieldName)) {
-		    secret = fieldValue;
-		} else if (FIELD_SIGNATURE.equals(fieldName)) {
-		    signature = fieldValue;
-		} else if (FIELD_CREATOR.equals(fieldName)) {
-		    String encodedStr = fieldValue;
-		    byte[] encoded = Hexadecimal.parseSeq(encodedStr);
-
-		    creator = com.ibm.aglets.AgletRuntime.getCertificate(encoded);
-		} else {
-
-		    // unknown field name
+					// unknown field name
+				}
+			}
 		}
-	    }
+
+		// Checks the parameters.
+		if ((domain == null) || domain.equals("")) {
+			System.err.println("Domain name of shared secret is null.");
+			return null;
+		}
+		if ((secret == null) || secret.equals("")) {
+			System.err.println("Byte sequence of shared secret is null.");
+			return null;
+		}
+		if ((signature == null) || signature.equals("")) {
+			System.err.println("Byte sequence of shared secret is null.");
+			return null;
+		}
+		if (creator == null) {
+			System.err.println("Creator of shared secret is null.");
+			return null;
+		}
+
+		// Creates a new shared secret and verify it.
+		try {
+			final SharedSecret sec = new SharedSecret(domain, creator, secret, signature);
+
+			if (sec.verify()) {
+				return sec;
+			}
+		} catch (final KeyStoreException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+		System.err.println("Signature of shared secret is incorrect.");
+		return null;
 	}
 
-	// Checks the parameters.
-	if ((domain == null) || domain.equals("")) {
-	    System.err.println("Domain name of shared secret is null.");
-	    return null;
+	/**
+	 * Creates a new shared secret.
+	 */
+	public synchronized final static SharedSecret createNewSharedSecret(
+	                                                                    final String domainName,
+	                                                                    final String creatorKeyAlias,
+	                                                                    final String creatorKeyPassword) {
+		final Certificate cert = com.ibm.aglets.AgletRuntime.getCertificate(creatorKeyAlias);
+
+		if (cert == null) {
+			System.err.println("SharedSecret.createNewSharedSecret: Creator's certificate was not found");
+			return null;
+		}
+		char[] pwd = null;
+
+		if (creatorKeyPassword != null) {
+			pwd = creatorKeyPassword.toCharArray();
+		}
+		final PrivateKey key = com.ibm.aglets.AgletRuntime.getPrivateKey(cert, pwd);
+
+		if (key == null) {
+			System.err.println("SharedSecret.createNewSharedSecert: Failed to get creator's private key");
+			return null;
+		}
+		final SharedSecret aSharedSecret = new SharedSecret(domainName, cert);
+
+		aSharedSecret.sign(key);
+		return aSharedSecret;
 	}
-	if ((secret == null) || secret.equals("")) {
-	    System.err.println("Byte sequence of shared secret is null.");
-	    return null;
+	/**
+	 * Loads shared secret.
+	 * 
+	 * @param filename
+	 *            filename of the shared secret file to be loaded
+	 */
+	public synchronized static SharedSecret load(final String filename)
+	throws FileNotFoundException,
+	IOException {
+		final FileReader freader = new FileReader(filename);
+		final BufferedReader breader = new BufferedReader(freader);
+		final Vector lines = new Vector();
+		String line = null;
+
+		while (true) {
+			line = breader.readLine();
+			if (line == null) {
+
+				// end of line
+				break;
+			}
+			lines.addElement(line);
+		}
+		breader.close();
+		return convertLinesToSharedSecret(lines.elements());
 	}
-	if ((signature == null) || signature.equals("")) {
-	    System.err.println("Byte sequence of shared secret is null.");
-	    return null;
+
+	// private transient String _keyStoreFile = null;
+	// private transient String _keyStorePassword = null;
+	// private transient String _ownerKeyAlias = null;
+	// private transient String _ownerKeyPassword = null;
+
+	/**
+	 * Saves shared secret.
+	 * 
+	 * @param filename
+	 *            filename of the shared secret file to be saved
+	 * @param secret
+	 *            the shared secret to be saved
+	 */
+	public synchronized static void save(final String filename, final SharedSecret secret)
+	throws IOException {
+		if (secret == null) {
+			throw new IOException("Secret is null.");
+		}
+		secret.save(filename);
 	}
-	if (creator == null) {
-	    System.err.println("Creator of shared secret is null.");
-	    return null;
+
+	/**
+	 * signature.
+	 */
+	private Signature _sign = null;
+	/**
+	 * Domain name/Owner name
+	 */
+
+	// private Date _date = null;
+	private transient String _domainName = null;
+
+	private transient String _signature = null;
+	private transient Certificate _creatorCert = null;
+	// private transient PrivateKey _ownerKey = null;
+	private transient byte[] _domainNameSeq = null;
+
+	private transient byte[] _signatureSeq = null;
+	/**
+	 * Gets new line string.
+	 */
+	private static final String PROPERTY_CRLF = "line.separator";
+
+	private static final String DEFAULT_CRLF = "\r\n";
+
+	private static String _strNewLine = null;
+
+	static {
+		try {
+			_mdigest = MessageDigest.getInstance(MESSAGE_DIGEST_ALGORITHM);
+		} catch (final NoSuchAlgorithmException ex) {
+			ex.printStackTrace();
+		}
+		try {
+			_strNewLine = (String) AccessController.doPrivileged(new PrivilegedAction() {
+				@Override
+				public Object run() {
+					return System.getProperty(PROPERTY_CRLF, DEFAULT_CRLF);
+				}
+			});
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
-	// Creates a new shared secret and verify it.
-	try {
-	    SharedSecret sec = new SharedSecret(domain, creator, secret, signature);
+	private transient byte[] _creatorCertSeq = null;
 
-	    if (sec.verify()) {
-		return sec;
-	    }
-	} catch (KeyStoreException ex) {
-	    ex.printStackTrace();
-	    return null;
+	/**
+	 * Constructor creates a secure random generator, and generate byte sequence
+	 * as a shared secret (password) for authentication.
+	 */
+	private SharedSecret(final String domainName, final Certificate creatorCert) {
+
+		// Sets a random number as the secret of this shared secret.
+		super(LENGTH);
+		init();
+		setDomainName(domainName);
+		setCreator(creatorCert);
+
+		// setSignature((byte[])null);
 	}
-	System.err.println("Signature of shared secret is incorrect.");
-	return null;
-    }
 
-    /**
-     * Creates a new shared secret.
-     */
-    public synchronized final static SharedSecret createNewSharedSecret(
-                                                                        String domainName,
-                                                                        String creatorKeyAlias,
-                                                                        String creatorKeyPassword) {
-	Certificate cert = com.ibm.aglets.AgletRuntime.getCertificate(creatorKeyAlias);
-
-	if (cert == null) {
-	    System.err.println("SharedSecret.createNewSharedSecret: Creator's certificate was not found");
-	    return null;
+	/**
+	 * Constructor creates byte sequence as a copy of given hexadecimal string
+	 * of encoded bytes as a shared secret (password) for authentication.
+	 * 
+	 * @param domainName
+	 *            TODO document this
+	 * @param creatorCert
+	 *            TODO document this
+	 * @param secret
+	 *            a string of encoded byte sequence to be copied as a shared
+	 *            secret
+	 * @param signature
+	 *            TODO document this
+	 * @exception KeyStoreException
+	 */
+	private SharedSecret(final String domainName, final Certificate creatorCert,
+	                     final String secret, final String signature) throws KeyStoreException {
+		super(0, secret, null);
+		init();
+		setDomainName(domainName);
+		setCreator(creatorCert);
+		this.setSignature(signature);
 	}
-	char[] pwd = null;
 
-	if (creatorKeyPassword != null) {
-	    pwd = creatorKeyPassword.toCharArray();
+	/**
+	 * Gets creator's certificate.
+	 * 
+	 * @return creator's certificate
+	 */
+	public Certificate getCreatorCert() {
+		return _creatorCert;
 	}
-	PrivateKey key = com.ibm.aglets.AgletRuntime.getPrivateKey(cert, pwd);
 
-	if (key == null) {
-	    System.err.println("SharedSecret.createNewSharedSecert: Failed to get creator's private key");
-	    return null;
+	/**
+	 * Gets the string representation of the encoded creator's certificate
+	 * 
+	 * @return a string
+	 */
+	public String getCreatorEncodedString() {
+		return Hexadecimal.valueOf(_creatorCertSeq);
 	}
-	SharedSecret aSharedSecret = new SharedSecret(domainName, cert);
 
-	aSharedSecret.sign(key);
-	return aSharedSecret;
-    }
-
-    /**
-     * Gets creator's certificate.
-     * 
-     * @return creator's certificate
-     */
-    public Certificate getCreatorCert() {
-	return this._creatorCert;
-    }
-
-    /**
-     * Gets the string representation of the encoded creator's certificate
-     * 
-     * @return a string
-     */
-    public String getCreatorEncodedString() {
-	return Hexadecimal.valueOf(this._creatorCertSeq);
-    }
-
-    /**
-     * Gets domain name.
-     * 
-     * @return domain name
-     */
-    public String getDomainName() {
-	return this._domainName;
-    }
-
-    /**
-     * Gets secret.
-     * 
-     * @return shared secret
-     */
-    private String getSecret() {
-	return Hexadecimal.valueOf(this.sequence());
-    }
-
-    /**
-     * Gets signature.
-     * 
-     * @return signature
-     */
-    public byte[] getSignature() {
-	return this._signatureSeq;
-    }
-
-    /**
-     * Gets signature string.
-     * 
-     * @return signature strnig
-     */
-    public String getSignatureString() {
-	return this._signature;
-    }
-
-    /**
-     * Initializes data.
-     */
-    private final void init() {
-	try {
-	    this._sign = Signature.getInstance(SIGNATURE_ALGORITHM);
-	} catch (NoSuchAlgorithmException excpt) {
-	    System.err.println(excpt.toString());
+	/**
+	 * Gets domain name.
+	 * 
+	 * @return domain name
+	 */
+	public String getDomainName() {
+		return _domainName;
 	}
-    }
 
-    /**
-     * Loads shared secret.
-     * 
-     * @param filename
-     *            filename of the shared secret file to be loaded
-     */
-    public synchronized static SharedSecret load(String filename)
-    throws FileNotFoundException,
-    IOException {
-	FileReader freader = new FileReader(filename);
-	BufferedReader breader = new BufferedReader(freader);
-	Vector lines = new Vector();
-	String line = null;
-
-	while (true) {
-	    line = breader.readLine();
-	    if (line == null) {
-
-		// end of line
-		break;
-	    }
-	    lines.addElement(line);
+	/**
+	 * Gets secret.
+	 * 
+	 * @return shared secret
+	 */
+	private String getSecret() {
+		return Hexadecimal.valueOf(sequence());
 	}
-	breader.close();
-	return convertLinesToSharedSecret(lines.elements());
-    }
 
-    /**
-     * Saves to file.
-     * 
-     * @param filename
-     *            filename of the shared secret file to be saved
-     */
-    public void save(String filename) throws IOException {
-	Enumeration lines = this.toLines();
-
-	if (lines == null) {
-	    System.err.println("No secret.");
-	    return;
+	/**
+	 * Gets signature.
+	 * 
+	 * @return signature
+	 */
+	public byte[] getSignature() {
+		return _signatureSeq;
 	}
-	FileWriter fwriter = new FileWriter(filename);
-	BufferedWriter bwriter = new BufferedWriter(fwriter);
 
-	while (lines.hasMoreElements()) {
-	    String line = (String) lines.nextElement();
-
-	    bwriter.write(line);
-	    bwriter.newLine();
+	/**
+	 * Gets signature string.
+	 * 
+	 * @return signature strnig
+	 */
+	public String getSignatureString() {
+		return _signature;
 	}
-	bwriter.flush();
-	bwriter.close();
-    }
 
-    /**
-     * Saves shared secret.
-     * 
-     * @param filename
-     *            filename of the shared secret file to be saved
-     * @param secret
-     *            the shared secret to be saved
-     */
-    public synchronized static void save(String filename, SharedSecret secret)
-    throws IOException {
-	if (secret == null) {
-	    throw new IOException("Secret is null.");
+	/**
+	 * Initializes data.
+	 */
+	private final void init() {
+		try {
+			_sign = Signature.getInstance(SIGNATURE_ALGORITHM);
+		} catch (final NoSuchAlgorithmException excpt) {
+			System.err.println(excpt.toString());
+		}
 	}
-	secret.save(filename);
-    }
 
-    /**
-     * Returns current byte sequence as a shared secret (password) for
-     * authentication.
-     * 
-     * @return current byte sequence as a shared secret (password) for
-     *         authentication.
-     */
-    final public byte[] secret() {
-	try {
-	    ByteSequence seq = new ByteSequence(this.sequence());
+	/**
+	 * Saves to file.
+	 * 
+	 * @param filename
+	 *            filename of the shared secret file to be saved
+	 */
+	public void save(final String filename) throws IOException {
+		final Enumeration lines = toLines();
 
-	    // seq.append(_dateSeq);
-	    seq.append(this._domainNameSeq);
-	    seq.append(this._creatorCert.getEncoded());
-	    return seq.sequence();
-	} catch (Exception ex) {
-	    ex.printStackTrace();
-	    return null; // ??????Is this OK?(HT)
+		if (lines == null) {
+			System.err.println("No secret.");
+			return;
+		}
+		final FileWriter fwriter = new FileWriter(filename);
+		final BufferedWriter bwriter = new BufferedWriter(fwriter);
+
+		while (lines.hasMoreElements()) {
+			final String line = (String) lines.nextElement();
+
+			bwriter.write(line);
+			bwriter.newLine();
+		}
+		bwriter.flush();
+		bwriter.close();
 	}
-    }
 
-    /**
-     * Sets creator.
-     * 
-     * @param creator
-     *            creator
-     */
-    private void setCreator(Certificate creator) {
-	try {
-	    this._creatorCert = creator;
-	    this._creatorCertSeq = creator.getEncoded();
-	} catch (java.security.cert.CertificateEncodingException ex) {
-	    System.out.println("Cannot get encoded byte sequence of the creator's certificate: "
-		    + creator.toString());
-	    this._creatorCert = null;
-	    this._creatorCertSeq = null;
+	/**
+	 * Returns current byte sequence as a shared secret (password) for
+	 * authentication.
+	 * 
+	 * @return current byte sequence as a shared secret (password) for
+	 *         authentication.
+	 */
+	final public byte[] secret() {
+		try {
+			final ByteSequence seq = new ByteSequence(sequence());
+
+			// seq.append(_dateSeq);
+			seq.append(_domainNameSeq);
+			seq.append(_creatorCert.getEncoded());
+			return seq.sequence();
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+			return null; // ??????Is this OK?(HT)
+		}
 	}
-    }
 
-    /**
-     * Sets domain name.
-     * 
-     * @param name
-     *            domain name
-     */
-    private void setDomainName(String name) {
-	this._domainName = name;
-	ByteSequence seq = new ByteSequence(name);
-
-	this._domainNameSeq = seq.sequence();
-    }
-
-    /**
-     * Sets signature.
-     * 
-     * @param signature
-     *            signature
-     */
-    private void setSignature(byte[] signature) {
-	this._signature = Hexadecimal.valueOf(signature);
-	this._signatureSeq = signature;
-    }
-
-    /**
-     * Sets signature.
-     * 
-     * @param signature
-     *            signature string
-     */
-    private void setSignature(String signature) {
-	byte[] seq = null;
-
-	try {
-	    seq = Hexadecimal.parseSeq(signature);
-	} catch (NumberFormatException excpt) {
-	    return;
+	/**
+	 * Sets creator.
+	 * 
+	 * @param creator
+	 *            creator
+	 */
+	private void setCreator(final Certificate creator) {
+		try {
+			_creatorCert = creator;
+			_creatorCertSeq = creator.getEncoded();
+		} catch (final java.security.cert.CertificateEncodingException ex) {
+			System.out.println("Cannot get encoded byte sequence of the creator's certificate: "
+					+ creator.toString());
+			_creatorCert = null;
+			_creatorCertSeq = null;
+		}
 	}
-	this._signature = signature;
-	this._signatureSeq = seq;
-    }
 
-    /**
-     * Signs the signature.
-     */
-    final private void sign(PrivateKey key) {
-	if (key == null) {
+	/**
+	 * Sets domain name.
+	 * 
+	 * @param name
+	 *            domain name
+	 */
+	private void setDomainName(final String name) {
+		_domainName = name;
+		final ByteSequence seq = new ByteSequence(name);
 
-	    // unknown user
-	    System.err.println("Sharedsecret.sign(): null private key");
-	    return;
+		_domainNameSeq = seq.sequence();
 	}
-	try {
-	    _mdigest.reset();
-	    _mdigest.update(this.secret());
-	    this._sign.initSign(key);
-	    this._sign.update(_mdigest.digest());
-	    this.setSignature(this._sign.sign());
-	} catch (InvalidKeyException excpt) {
-	    System.err.println(excpt.toString());
-	    return;
-	} catch (SignatureException excpt) {
-	    System.err.println(excpt.toString());
-	    return;
-	}
-    }
 
-    /**
-     * Returns lines representation of the shared secret.
-     * 
-     * @return lines representation of the shared secret
-     */
-    public Enumeration toLines() {
-	Vector lines = null;
-	final String secret = this.getSecret();
-	final String domain = this.getDomainName();
-	final String creator = this.getCreatorEncodedString();
-	final String signature = this.getSignatureString();
+	/**
+	 * Sets signature.
+	 * 
+	 * @param signature
+	 *            signature
+	 */
+	private void setSignature(final byte[] signature) {
+		_signature = Hexadecimal.valueOf(signature);
+		_signatureSeq = signature;
+	}
 
-	if ((secret != null) && !secret.equals("")) {
-	    if (lines == null) {
-		lines = new Vector();
-	    }
-	    lines.addElement(FIELD_SECRET + FIELD_NAME_TERM + secret);
-	}
-	if ((domain != null) && !domain.equals("")) {
-	    if (lines == null) {
-		lines = new Vector();
-	    }
-	    lines.addElement(FIELD_DOMAIN_NAME + FIELD_NAME_TERM + domain);
-	}
-	if ((creator != null) && !creator.equals("")) {
-	    if (lines == null) {
-		lines = new Vector();
-	    }
-	    lines.addElement(FIELD_CREATOR + FIELD_NAME_TERM + creator);
-	}
-	if ((signature != null) && !signature.equals("")) {
-	    if (lines == null) {
-		lines = new Vector();
-	    }
-	    lines.addElement(FIELD_SIGNATURE + FIELD_NAME_TERM + signature);
-	}
-	if (lines == null) {
-	    return null;
-	}
-	return lines.elements();
-    }
+	/**
+	 * Sets signature.
+	 * 
+	 * @param signature
+	 *            signature string
+	 */
+	private void setSignature(final String signature) {
+		byte[] seq = null;
 
-    /**
-     * Returns a string representation of the shared secret.
-     * 
-     * @return a string representation of the shared secret
-     * @see ByteSequence#toString
-     */
-    @Override
-    public String toString() {
-	Enumeration lines = this.toLines();
-
-	if (lines == null) {
-	    return null;
+		try {
+			seq = Hexadecimal.parseSeq(signature);
+		} catch (final NumberFormatException excpt) {
+			return;
+		}
+		_signature = signature;
+		_signatureSeq = seq;
 	}
-	String str = null;
 
-	while (lines.hasMoreElements()) {
-	    String line = (String) lines.nextElement();
+	/**
+	 * Signs the signature.
+	 */
+	final private void sign(final PrivateKey key) {
+		if (key == null) {
 
-	    if (str == null) {
-		str = line;
-	    } else {
-		str += _strNewLine + line;
-	    }
+			// unknown user
+			System.err.println("Sharedsecret.sign(): null private key");
+			return;
+		}
+		try {
+			_mdigest.reset();
+			_mdigest.update(secret());
+			_sign.initSign(key);
+			_sign.update(_mdigest.digest());
+			this.setSignature(_sign.sign());
+		} catch (final InvalidKeyException excpt) {
+			System.err.println(excpt.toString());
+			return;
+		} catch (final SignatureException excpt) {
+			System.err.println(excpt.toString());
+			return;
+		}
 	}
-	return str;
-    }
 
-    /**
-     * Verifies the signature.
-     * 
-     * @return true if the signature is correct, otherwise false.
-     */
-    final private boolean verify() {
-	if (this._signatureSeq == null) {
-	    return false;
+	/**
+	 * Returns lines representation of the shared secret.
+	 * 
+	 * @return lines representation of the shared secret
+	 */
+	public Enumeration toLines() {
+		Vector lines = null;
+		final String secret = getSecret();
+		final String domain = getDomainName();
+		final String creator = getCreatorEncodedString();
+		final String signature = getSignatureString();
+
+		if ((secret != null) && !secret.equals("")) {
+			if (lines == null) {
+				lines = new Vector();
+			}
+			lines.addElement(FIELD_SECRET + FIELD_NAME_TERM + secret);
+		}
+		if ((domain != null) && !domain.equals("")) {
+			if (lines == null) {
+				lines = new Vector();
+			}
+			lines.addElement(FIELD_DOMAIN_NAME + FIELD_NAME_TERM + domain);
+		}
+		if ((creator != null) && !creator.equals("")) {
+			if (lines == null) {
+				lines = new Vector();
+			}
+			lines.addElement(FIELD_CREATOR + FIELD_NAME_TERM + creator);
+		}
+		if ((signature != null) && !signature.equals("")) {
+			if (lines == null) {
+				lines = new Vector();
+			}
+			lines.addElement(FIELD_SIGNATURE + FIELD_NAME_TERM + signature);
+		}
+		if (lines == null) {
+			return null;
+		}
+		return lines.elements();
 	}
-	try {
-	    _mdigest.reset();
-	    _mdigest.update(this.secret());
-	    this._sign.initVerify(this._creatorCert.getPublicKey());
 
-	    // - System.out.println("secret : "+Hexadecimal.valueOf(secret()));
-	    this._sign.update(_mdigest.digest());
+	/**
+	 * Returns a string representation of the shared secret.
+	 * 
+	 * @return a string representation of the shared secret
+	 * @see ByteSequence#toString
+	 */
+	@Override
+	public String toString() {
+		final Enumeration lines = toLines();
 
-	    // -
-	    // System.out.println("signature : "+Hexadecimal.valueOf(_signatureSeq));
-	    return this._sign.verify(this.getSignature());
-	} catch (InvalidKeyException excpt) {
-	    System.err.println(excpt.toString());
-	    return false;
-	} catch (SignatureException excpt) {
-	    System.err.println(excpt.toString());
-	    return false;
+		if (lines == null) {
+			return null;
+		}
+		String str = null;
+
+		while (lines.hasMoreElements()) {
+			final String line = (String) lines.nextElement();
+
+			if (str == null) {
+				str = line;
+			} else {
+				str += _strNewLine + line;
+			}
+		}
+		return str;
 	}
-    }
+
+	/**
+	 * Verifies the signature.
+	 * 
+	 * @return true if the signature is correct, otherwise false.
+	 */
+	final private boolean verify() {
+		if (_signatureSeq == null) {
+			return false;
+		}
+		try {
+			_mdigest.reset();
+			_mdigest.update(secret());
+			_sign.initVerify(_creatorCert.getPublicKey());
+
+			// - System.out.println("secret : "+Hexadecimal.valueOf(secret()));
+			_sign.update(_mdigest.digest());
+
+			// -
+			// System.out.println("signature : "+Hexadecimal.valueOf(_signatureSeq));
+			return _sign.verify(getSignature());
+		} catch (final InvalidKeyException excpt) {
+			System.err.println(excpt.toString());
+			return false;
+		} catch (final SignatureException excpt) {
+			System.err.println(excpt.toString());
+			return false;
+		}
+	}
 }

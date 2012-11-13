@@ -43,60 +43,60 @@ import com.ibm.aglet.message.Message;
  */
 public class SeqPlanItinerary extends SeqItinerary {
 
-    static final long serialVersionUID = 7979344708988677116L;
+	static final long serialVersionUID = 7979344708988677116L;
 
-    /**
-     * Constructs a SeqPlanItinerary object with the specified owner aglet.
-     * 
-     * @param aglet
-     *            the owner aglet
-     */
-    public SeqPlanItinerary(Aglet aglet) {
-	super(aglet);
-    }
-
-    /**
-     * Adds the new itinerary item of the form [address, message].
-     * 
-     * @param address
-     *            the address to go
-     * @param msg
-     *            the message to be sent to the owner aglet
-     */
-    public void addPlan(String address, Message msg) {
-	this.addTask(address, new SeqPlanTask(msg));
-    }
-
-    /**
-     * Adds the new itinerary item of the form [address, message]. This is added
-     * at the end of plan.
-     * 
-     * @param address
-     *            the address to go
-     * @param msg
-     *            the message to be sent to the owner aglet
-     */
-    public void addPlan(String address, String msg) {
-	this.addPlan(address, new Message(msg));
-    }
-
-    public Message getMessageAt(int index) {
-	return ((SeqPlanTask) this.getTaskAt(index)).getMessage();
-    }
-
-    @Override
-    public void onArrival(MobilityEvent ev) {
-	try {
-	    Task task = this.getCurrentTask();
-
-	    this.incIndex(); // should be improved
-	    task.execute(this);
-	} catch (Exception ex) {
-	    this.handleException(ex);
+	/**
+	 * Constructs a SeqPlanItinerary object with the specified owner aglet.
+	 * 
+	 * @param aglet
+	 *            the owner aglet
+	 */
+	public SeqPlanItinerary(final Aglet aglet) {
+		super(aglet);
 	}
-    }
 
-    public void removePlanAt(int index) {
-	this.removeTaskAt(index);
-    }
+	/**
+	 * Adds the new itinerary item of the form [address, message].
+	 * 
+	 * @param address
+	 *            the address to go
+	 * @param msg
+	 *            the message to be sent to the owner aglet
+	 */
+	public void addPlan(final String address, final Message msg) {
+		addTask(address, new SeqPlanTask(msg));
+	}
+
+	/**
+	 * Adds the new itinerary item of the form [address, message]. This is added
+	 * at the end of plan.
+	 * 
+	 * @param address
+	 *            the address to go
+	 * @param msg
+	 *            the message to be sent to the owner aglet
+	 */
+	public void addPlan(final String address, final String msg) {
+		this.addPlan(address, new Message(msg));
+	}
+
+	public Message getMessageAt(final int index) {
+		return ((SeqPlanTask) getTaskAt(index)).getMessage();
+	}
+
+	@Override
+	public void onArrival(final MobilityEvent ev) {
+		try {
+			final Task task = getCurrentTask();
+
+			incIndex(); // should be improved
+			task.execute(this);
+		} catch (final Exception ex) {
+			handleException(ex);
+		}
+	}
+
+	public void removePlanAt(final int index) {
+		removeTaskAt(index);
+	}
 }

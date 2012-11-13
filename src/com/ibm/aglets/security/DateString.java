@@ -27,119 +27,119 @@ import java.util.Date;
  * @author ONO Kouichi
  */
 final public class DateString {
-    /**
-     * Date string format
-     */
-    final private static String FORMAT_DATE = "yyyy.MM.dd HH:mm:ss.SSS z";
+	/**
+	 * Date string format
+	 */
+	final private static String FORMAT_DATE = "yyyy.MM.dd HH:mm:ss.SSS z";
 
-    Date _date = null;
-
-    /**
-     * Constructor.
-     */
-    public DateString() {
-	this._date = getCurrentTime();
-    }
-
-    /**
-     * Gets string from date.
-     * 
-     * @param date
-     *            date
-     * @return date string
-     */
-    public static String date2string(Date date) {
-	return date2string(date, FORMAT_DATE);
-    }
-
-    /**
-     * Gets string from date.
-     * 
-     * @param date
-     *            date
-     * @param format
-     *            format string
-     * @return date string
-     */
-    public static String date2string(Date date, String format) {
-	if (date == null) {
-	    return null;
+	/**
+	 * Gets string from date.
+	 * 
+	 * @param date
+	 *            date
+	 * @return date string
+	 */
+	public static String date2string(final Date date) {
+		return date2string(date, FORMAT_DATE);
 	}
-	SimpleDateFormat dateFormat = getDateFormatInstance(format);
 
-	return dateFormat.format(date);
-    }
+	/**
+	 * Gets string from date.
+	 * 
+	 * @param date
+	 *            date
+	 * @param format
+	 *            format string
+	 * @return date string
+	 */
+	public static String date2string(final Date date, final String format) {
+		if (date == null) {
+			return null;
+		}
+		final SimpleDateFormat dateFormat = getDateFormatInstance(format);
 
-    /**
-     * 
-     */
-    public static Date getCurrentTime() {
-	Calendar cal = Calendar.getInstance();
-
-	if (cal == null) {
-	    return null;
+		return dateFormat.format(date);
 	}
-	return cal.getTime();
-    }
 
-    private static SimpleDateFormat getDateFormatInstance(String format) {
-	return new SimpleDateFormat(format);
-    }
+	/**
+	 * 
+	 */
+	public static Date getCurrentTime() {
+		final Calendar cal = Calendar.getInstance();
 
-    public Date getTime() {
-	return this._date;
-    }
-
-    public String getTimeString() {
-	return date2string(this._date);
-    }
-
-    public static void main(String arg[]) {
-	Date curTime = DateString.getCurrentTime();
-
-	System.out.println("current date=" + curTime.toString());
-	System.out.println(DateString.date2string(curTime));
-	Date date = DateString.string2date(arg[0]);
-
-	System.out.println(date.toString());
-	DateString dtstr = new DateString();
-
-	System.out.println(dtstr.getTime().toString());
-	System.out.println(dtstr.getTimeString());
-    }
-
-    /**
-     * Gets date from string.
-     * 
-     * @param date
-     *            date string
-     * @return date
-     */
-    public static Date string2date(String date) {
-	return string2date(date, FORMAT_DATE);
-    }
-
-    /**
-     * Gets date from string.
-     * 
-     * @param date
-     *            date string
-     * @param format
-     *            format string
-     * @return date
-     */
-    public static Date string2date(String date, String format) {
-	if (date == null) {
-	    return null;
+		if (cal == null) {
+			return null;
+		}
+		return cal.getTime();
 	}
-	SimpleDateFormat dateFormat = getDateFormatInstance(format);
-	Date dt = null;
 
-	try {
-	    dt = dateFormat.parse(date);
-	} catch (ParseException excpt) {
-	    return null;
+	private static SimpleDateFormat getDateFormatInstance(final String format) {
+		return new SimpleDateFormat(format);
 	}
-	return dt;
-    }
+
+	public static void main(final String arg[]) {
+		final Date curTime = DateString.getCurrentTime();
+
+		System.out.println("current date=" + curTime.toString());
+		System.out.println(DateString.date2string(curTime));
+		final Date date = DateString.string2date(arg[0]);
+
+		System.out.println(date.toString());
+		final DateString dtstr = new DateString();
+
+		System.out.println(dtstr.getTime().toString());
+		System.out.println(dtstr.getTimeString());
+	}
+
+	/**
+	 * Gets date from string.
+	 * 
+	 * @param date
+	 *            date string
+	 * @return date
+	 */
+	public static Date string2date(final String date) {
+		return string2date(date, FORMAT_DATE);
+	}
+
+	/**
+	 * Gets date from string.
+	 * 
+	 * @param date
+	 *            date string
+	 * @param format
+	 *            format string
+	 * @return date
+	 */
+	public static Date string2date(final String date, final String format) {
+		if (date == null) {
+			return null;
+		}
+		final SimpleDateFormat dateFormat = getDateFormatInstance(format);
+		Date dt = null;
+
+		try {
+			dt = dateFormat.parse(date);
+		} catch (final ParseException excpt) {
+			return null;
+		}
+		return dt;
+	}
+
+	Date _date = null;
+
+	/**
+	 * Constructor.
+	 */
+	public DateString() {
+		_date = getCurrentTime();
+	}
+
+	public Date getTime() {
+		return _date;
+	}
+
+	public String getTimeString() {
+		return date2string(_date);
+	}
 }

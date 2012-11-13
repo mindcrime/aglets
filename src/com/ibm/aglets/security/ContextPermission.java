@@ -18,57 +18,57 @@ import java.security.Permission;
 import java.util.Vector;
 
 public class ContextPermission extends AgletsPermissionBase {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -1704237134466029296L;
-    String _actions;
-    private Vector _actionList = new Vector();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1704237134466029296L;
+	String _actions;
+	private final Vector _actionList = new Vector();
 
-    // should be implemented?
-    // ==== public PermissionCollection newPermissionCollection();
-    public ContextPermission(String name, String actions) {
-	super(name);
-	String[] actionList = split(actions.toLowerCase(), SEPARATORS);
-	int i = 0;
+	// should be implemented?
+	// ==== public PermissionCollection newPermissionCollection();
+	public ContextPermission(final String name, final String actions) {
+		super(name);
+		final String[] actionList = split(actions.toLowerCase(), SEPARATORS);
+		int i = 0;
 
-	for (i = 0; i < actionList.length; i++) {
-	    this._actionList.addElement(actionList[i]);
+		for (i = 0; i < actionList.length; i++) {
+			_actionList.addElement(actionList[i]);
+		}
+		_actions = concat(_actionList);
 	}
-	this._actions = concat(this._actionList);
-    }
 
-    @Override
-    public boolean equals(Object obj) {
-	if (obj == this) {
-	    return true;
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == this) {
+			return true;
+		}
+		if (!(obj instanceof ContextPermission)) {
+			return false;
+		}
+		final ContextPermission o = (ContextPermission) obj;
+
+		return (getName().equals(o.getName()) && _actions.equals(o._actions));
 	}
-	if (!(obj instanceof ContextPermission)) {
-	    return false;
+
+	@Override
+	public String getActions() {
+		return _actions;
 	}
-	ContextPermission o = (ContextPermission) obj;
 
-	return (this.getName().equals(o.getName()) && this._actions.equals(o._actions));
-    }
-
-    @Override
-    public String getActions() {
-	return this._actions;
-    }
-
-    @Override
-    public int hashCode() {
-	return this.getName().hashCode() + this._actions.hashCode();
-    }
-
-    @Override
-    public boolean implies(Permission p) {
-	if (!(p instanceof ContextPermission)) {
-	    return false;
+	@Override
+	public int hashCode() {
+		return getName().hashCode() + _actions.hashCode();
 	}
-	ContextPermission cp = (ContextPermission) p;
 
-	return matches(this.getName(), cp.getName())
-	&& matches(this._actionList, cp._actionList);
-    }
+	@Override
+	public boolean implies(final Permission p) {
+		if (!(p instanceof ContextPermission)) {
+			return false;
+		}
+		final ContextPermission cp = (ContextPermission) p;
+
+		return matches(getName(), cp.getName())
+		&& matches(_actionList, cp._actionList);
+	}
 }

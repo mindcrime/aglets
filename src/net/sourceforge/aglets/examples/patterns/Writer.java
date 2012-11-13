@@ -36,65 +36,65 @@ import com.ibm.agletx.patterns.Slave;
 
 public class Writer extends SampleAglet {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 686920604416831963L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 686920604416831963L;
 
-    // -- callback function for the "go" bottom.
-    //
-    @Override
-    protected void createSlave(Vector destinations, Object obj) {
-	Arguments args = new Arguments();
-	String username = "unknown";
+	// -- callback function for the "go" bottom.
+	//
+	@Override
+	protected void createSlave(final Vector destinations, final Object obj) {
+		final Arguments args = new Arguments();
+		final String username = "unknown";
 
-	args.setArg("msg", obj);
-	args.setArg("user", username);
-	try {
-	    Slave.create(null, "examples.patterns.WriterSlave", this.getAgletContext(), this, destinations, args);
-	} catch (IOException ae) {
-	    this.inError(ae.getMessage());
-	} catch (AgletException ae) {
-	    this.inError(ae.getMessage());
-	}
-    }
-
-    @Override
-    public void createWindow() {
-	try {
-	    this._msw = new WriterWindow(this);
-	    this.updateWindow();
-	} catch (Exception e) {
-	    this.inError(e.getMessage());
-	}
-    }
-
-    // -- Handler for messages
-    //
-    @Override
-    public boolean handleMessage(Message msg) {
-	try {
-	    if (msg.sameKind("result")) {
-		String arg = null;
-
-		if ((arg = (String) (msg.getArg())) != null) {
-		    try {
-			this.setTheMessage(arg);
-			this.setTheMessage("Finished");
-		    } catch (Exception e) {
-
-			// not yet implemented
-		    }
-		} else {
-		    this.setTheMessage("Finished, but no argument!");
+		args.setArg("msg", obj);
+		args.setArg("user", username);
+		try {
+			Slave.create(null, "examples.patterns.WriterSlave", getAgletContext(), this, destinations, args);
+		} catch (final IOException ae) {
+			inError(ae.getMessage());
+		} catch (final AgletException ae) {
+			inError(ae.getMessage());
 		}
-	    } else {
-		super.handleMessage(msg);
-	    }
-	} catch (Exception e) {
-
-	    // -- not yet handled
 	}
-	return false;
-    }
+
+	@Override
+	public void createWindow() {
+		try {
+			_msw = new WriterWindow(this);
+			updateWindow();
+		} catch (final Exception e) {
+			inError(e.getMessage());
+		}
+	}
+
+	// -- Handler for messages
+	//
+	@Override
+	public boolean handleMessage(final Message msg) {
+		try {
+			if (msg.sameKind("result")) {
+				String arg = null;
+
+				if ((arg = (String) (msg.getArg())) != null) {
+					try {
+						setTheMessage(arg);
+						setTheMessage("Finished");
+					} catch (final Exception e) {
+
+						// not yet implemented
+					}
+				} else {
+					setTheMessage("Finished, but no argument!");
+				}
+			} else {
+				super.handleMessage(msg);
+			}
+		} catch (final Exception e) {
+
+			// -- not yet handled
+		}
+		return false;
+	}
 }

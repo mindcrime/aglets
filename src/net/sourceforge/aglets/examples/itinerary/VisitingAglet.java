@@ -35,56 +35,56 @@ import com.ibm.agletx.util.MeetingsItinerary;
  */
 public class VisitingAglet extends Aglet {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -4362375345294662627L;
-    MeetingsItinerary itinerary;
-    Vector addresses = new Vector();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4362375345294662627L;
+	MeetingsItinerary itinerary;
+	Vector addresses = new Vector();
 
-    public void createStationaryAglets(MeetingsItinerary itin) throws Exception {
-	String addr = null;
+	public void createStationaryAglets(final MeetingsItinerary itin) throws Exception {
+		String addr = null;
 
-	for (int i = 0; i < this.addresses.size(); i++) {
-	    try {
-		Meeting m = new Meeting(addr = (String) this.addresses.elementAt(i));
+		for (int i = 0; i < addresses.size(); i++) {
+			try {
+				final Meeting m = new Meeting(addr = (String) addresses.elementAt(i));
 
-		// temoporary since can not create a remote aglet with
-		// a user defined initial object
-		AgletProxy p = this.getAgletContext().createAglet(null, "examples.itinerary.StationaryAglet", m);
+				// temoporary since can not create a remote aglet with
+				// a user defined initial object
+				final AgletProxy p = getAgletContext().createAglet(null, "examples.itinerary.StationaryAglet", m);
 
-		p.dispatch(new URL(addr));
-		itin.addMeetingTask(new AgletTask(m));
-	    } catch (Exception ex) {
-		ex.printStackTrace();
-	    }
+				p.dispatch(new URL(addr));
+				itin.addMeetingTask(new AgletTask(m));
+			} catch (final Exception ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
-    }
 
-    @Override
-    public boolean handleMessage(Message msg) {
-	if (msg.sameKind("dialog")) {
-	    Frame f = new VisitingFrame(this);
+	@Override
+	public boolean handleMessage(final Message msg) {
+		if (msg.sameKind("dialog")) {
+			final Frame f = new VisitingFrame(this);
 
-	    f.pack();
-	    f.setVisible(true);
-	    return true;
+			f.pack();
+			f.setVisible(true);
+			return true;
+		}
+		return false;
 	}
-	return false;
-    }
 
-    @Override
-    public void onCreation(Object ini) {
-	this.itinerary = new MeetingsItinerary(this);
-    }
-
-    public void start() {
-	try {
-	    this.itinerary.clear();
-	    this.createStationaryAglets(this.itinerary);
-	    this.itinerary.startTrip();
-	} catch (Exception ex) {
-	    ex.printStackTrace();
+	@Override
+	public void onCreation(final Object ini) {
+		itinerary = new MeetingsItinerary(this);
 	}
-    }
+
+	public void start() {
+		try {
+			itinerary.clear();
+			createStationaryAglets(itinerary);
+			itinerary.startTrip();
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 }

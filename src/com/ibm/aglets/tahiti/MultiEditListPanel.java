@@ -22,176 +22,176 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 class MultiEditListPanel extends GridBagPanel implements ActionListener {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 8831622465350074476L;
-    private static final String LABEL_ADD = "add";
-    private static final String LABEL_REMOVE = "remove";
-    private static final String LABEL_MOVE_TO_TOP = "move to top";
-    private static final String LABEL_MOVE_TO_LAST = "move to last";
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8831622465350074476L;
+	private static final String LABEL_ADD = "add";
+	private static final String LABEL_REMOVE = "remove";
+	private static final String LABEL_MOVE_TO_TOP = "move to top";
+	private static final String LABEL_MOVE_TO_LAST = "move to last";
 
-    private MultiListEditable _mlist = null;
-    GridBagLayout _layout = new GridBagLayout();
+	public static void main(final String arg[]) {
+		final Frame frame = new Frame("test");
 
-    MultiEditListPanel(int rows, double[] weight) {
-	this.setLayout(this._layout);
-	this._mlist = new MultiListEditable(rows, weight);
-	this.makePanel();
-    }
+		frame.setSize(1000, 200);
+		final int cols = 4;
+		final double[] weight = new double[cols];
 
-    MultiEditListPanel(int rows, double[] weight, String[] labels) {
-	this.setLayout(this._layout);
-	this._mlist = new MultiListEditable(rows, weight, labels);
-	this.makePanel();
-    }
+		weight[0] = 0.0;
+		weight[1] = 0.0;
+		weight[2] = 0.0;
+		weight[3] = 0.0;
 
-    MultiEditListPanel(int rows, int[] width) {
-	this.setLayout(this._layout);
-	this._mlist = new MultiListEditable(rows, width);
-	this.makePanel();
-    }
+		final int[] width = new int[cols];
 
-    MultiEditListPanel(int rows, int[] width, double[] weight) {
-	this.setLayout(this._layout);
-	this._mlist = new MultiListEditable(rows, width, weight);
-	this.makePanel();
-    }
+		width[0] = 5;
+		width[1] = 5;
+		width[2] = 10;
+		width[3] = 5;
 
-    MultiEditListPanel(int rows, int[] width, double[] weight, String[] labels) {
-	this.setLayout(this._layout);
-	this._mlist = new MultiListEditable(rows, width, weight, labels);
-	this.makePanel();
-    }
+		final String[] items = new String[cols];
 
-    MultiEditListPanel(int rows, int[] width, String[] labels) {
-	this.setLayout(this._layout);
-	this._mlist = new MultiListEditable(rows, width, labels);
-	this.makePanel();
-    }
+		items[0] = "item 1";
+		items[1] = "ITEM 2";
+		items[2] = "item 3";
+		items[3] = "item 4";
 
-    MultiEditListPanel(int rows, String[] labels) {
-	this.setLayout(this._layout);
-	this._mlist = new MultiListEditable(rows, labels);
-	this.makePanel();
-    }
+		// MultiEditListPanel mpanel = new MultiEditListPanel(3, weight, items);
+		// MultiEditListPanel mpanel = new MultiEditListPanel(3, items);
+		final MultiEditListPanel mpanel = new MultiEditListPanel(3, width, items);
 
-    MultiEditListPanel(int rows, int cols) {
-	this.setLayout(this._layout);
-	this._mlist = new MultiListEditable(rows, cols);
-	this.makePanel();
-    }
+		frame.add(mpanel);
 
-    @Override
-    public void actionPerformed(ActionEvent ev) {
-	String cmd = ev.getActionCommand();
-
-	if (LABEL_ADD.equals(cmd)) {
-	    this._mlist.addItemsInTextFields();
-	} else if (LABEL_REMOVE.equals(cmd)) {
-	    this._mlist.delSelectedItems();
-	} else if (LABEL_MOVE_TO_TOP.equals(cmd)) {
-	    this._mlist.moveToTop();
-	} else if (LABEL_MOVE_TO_LAST.equals(cmd)) {
-	    this._mlist.moveToLast();
+		// frame.pack();
+		frame.show();
 	}
-    }
+	private MultiListEditable _mlist = null;
 
-    protected void addButton(
-                             String label,
-                             GridBagLayout layout,
-                             GridBagConstraints cnt) {
-	Button button = new Button(label);
+	GridBagLayout _layout = new GridBagLayout();
 
-	layout.setConstraints(button, cnt);
-	this.add(button);
-	button.setActionCommand(label);
-	button.addActionListener(this);
-    }
-
-    public void addButtons() {
-	this.addButtons(true, true, true, true);
-    }
-
-    public void addButtons(
-                           boolean add,
-                           boolean remove,
-                           boolean top,
-                           boolean last) {
-	GridBagConstraints cnt = new GridBagConstraints();
-
-	cnt.gridx = GridBagConstraints.RELATIVE;
-	cnt.gridy = GridBagConstraints.RELATIVE;
-
-	// cnt.gridy = 1;
-	cnt.gridwidth = GridBagConstraints.RELATIVE;
-	cnt.gridheight = 1;
-	cnt.weightx = 0.0;
-	cnt.weighty = 0.0;
-	cnt.fill = GridBagConstraints.NONE;
-	cnt.anchor = GridBagConstraints.WEST;
-	cnt.ipadx = 2;
-	cnt.ipady = 2;
-
-	if (add) {
-	    this.addButton(LABEL_ADD, this._layout, cnt);
+	MultiEditListPanel(final int rows, final double[] weight) {
+		setLayout(_layout);
+		_mlist = new MultiListEditable(rows, weight);
+		makePanel();
 	}
-	if (remove) {
-	    this.addButton(LABEL_REMOVE, this._layout, cnt);
+
+	MultiEditListPanel(final int rows, final double[] weight, final String[] labels) {
+		setLayout(_layout);
+		_mlist = new MultiListEditable(rows, weight, labels);
+		makePanel();
 	}
-	if (top) {
-	    this.addButton(LABEL_MOVE_TO_TOP, this._layout, cnt);
+
+	MultiEditListPanel(final int rows, final int cols) {
+		setLayout(_layout);
+		_mlist = new MultiListEditable(rows, cols);
+		makePanel();
 	}
-	if (last) {
-	    this.addButton(LABEL_MOVE_TO_LAST, this._layout, cnt);
+
+	MultiEditListPanel(final int rows, final int[] width) {
+		setLayout(_layout);
+		_mlist = new MultiListEditable(rows, width);
+		makePanel();
 	}
-    }
 
-    public void addEditFields() {
-    }
+	MultiEditListPanel(final int rows, final int[] width, final double[] weight) {
+		setLayout(_layout);
+		_mlist = new MultiListEditable(rows, width, weight);
+		makePanel();
+	}
 
-    public static void main(String arg[]) {
-	Frame frame = new Frame("test");
+	MultiEditListPanel(final int rows, final int[] width, final double[] weight, final String[] labels) {
+		setLayout(_layout);
+		_mlist = new MultiListEditable(rows, width, weight, labels);
+		makePanel();
+	}
 
-	frame.setSize(1000, 200);
-	final int cols = 4;
-	double[] weight = new double[cols];
+	MultiEditListPanel(final int rows, final int[] width, final String[] labels) {
+		setLayout(_layout);
+		_mlist = new MultiListEditable(rows, width, labels);
+		makePanel();
+	}
 
-	weight[0] = 0.0;
-	weight[1] = 0.0;
-	weight[2] = 0.0;
-	weight[3] = 0.0;
+	MultiEditListPanel(final int rows, final String[] labels) {
+		setLayout(_layout);
+		_mlist = new MultiListEditable(rows, labels);
+		makePanel();
+	}
 
-	int[] width = new int[cols];
+	@Override
+	public void actionPerformed(final ActionEvent ev) {
+		final String cmd = ev.getActionCommand();
 
-	width[0] = 5;
-	width[1] = 5;
-	width[2] = 10;
-	width[3] = 5;
+		if (LABEL_ADD.equals(cmd)) {
+			_mlist.addItemsInTextFields();
+		} else if (LABEL_REMOVE.equals(cmd)) {
+			_mlist.delSelectedItems();
+		} else if (LABEL_MOVE_TO_TOP.equals(cmd)) {
+			_mlist.moveToTop();
+		} else if (LABEL_MOVE_TO_LAST.equals(cmd)) {
+			_mlist.moveToLast();
+		}
+	}
 
-	String[] items = new String[cols];
+	protected void addButton(
+	                         final String label,
+	                         final GridBagLayout layout,
+	                         final GridBagConstraints cnt) {
+		final Button button = new Button(label);
 
-	items[0] = "item 1";
-	items[1] = "ITEM 2";
-	items[2] = "item 3";
-	items[3] = "item 4";
+		layout.setConstraints(button, cnt);
+		this.add(button);
+		button.setActionCommand(label);
+		button.addActionListener(this);
+	}
 
-	// MultiEditListPanel mpanel = new MultiEditListPanel(3, weight, items);
-	// MultiEditListPanel mpanel = new MultiEditListPanel(3, items);
-	MultiEditListPanel mpanel = new MultiEditListPanel(3, width, items);
+	public void addButtons() {
+		this.addButtons(true, true, true, true);
+	}
 
-	frame.add(mpanel);
+	public void addButtons(
+	                       final boolean add,
+	                       final boolean remove,
+	                       final boolean top,
+	                       final boolean last) {
+		final GridBagConstraints cnt = new GridBagConstraints();
 
-	// frame.pack();
-	frame.show();
-    }
+		cnt.gridx = GridBagConstraints.RELATIVE;
+		cnt.gridy = GridBagConstraints.RELATIVE;
 
-    private void makePanel() {
-	GridBagConstraints cnt = new GridBagConstraints();
+		// cnt.gridy = 1;
+		cnt.gridwidth = GridBagConstraints.RELATIVE;
+		cnt.gridheight = 1;
+		cnt.weightx = 0.0;
+		cnt.weighty = 0.0;
+		cnt.fill = GridBagConstraints.NONE;
+		cnt.anchor = GridBagConstraints.WEST;
+		cnt.ipadx = 2;
+		cnt.ipady = 2;
 
-	cnt.gridwidth = GridBagConstraints.REMAINDER;
-	this._layout.setConstraints(this._mlist, cnt);
-	this.add(this._mlist);
-	this.addButtons(true, true, true, true);
-    }
+		if (add) {
+			addButton(LABEL_ADD, _layout, cnt);
+		}
+		if (remove) {
+			addButton(LABEL_REMOVE, _layout, cnt);
+		}
+		if (top) {
+			addButton(LABEL_MOVE_TO_TOP, _layout, cnt);
+		}
+		if (last) {
+			addButton(LABEL_MOVE_TO_LAST, _layout, cnt);
+		}
+	}
+
+	public void addEditFields() {
+	}
+
+	private void makePanel() {
+		final GridBagConstraints cnt = new GridBagConstraints();
+
+		cnt.gridwidth = GridBagConstraints.REMAINDER;
+		_layout.setConstraints(_mlist, cnt);
+		this.add(_mlist);
+		this.addButtons(true, true, true, true);
+	}
 }

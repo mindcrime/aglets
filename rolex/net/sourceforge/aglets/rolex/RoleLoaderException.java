@@ -6,16 +6,16 @@ package net.sourceforge.aglets.rolex;
  * @version 1.0
  */
 public class RoleLoaderException extends RolexException {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -3605055423318177047L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3605055423318177047L;
 
-    public RoleLoaderException() {
-	super();
-    }
+	public RoleLoaderException() {
+		super();
+	}
 
-    public RoleLoaderException(String s) {
-	super(s);
-    }
+	public RoleLoaderException(final String s) {
+		super(s);
+	}
 }

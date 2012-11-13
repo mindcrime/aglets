@@ -23,42 +23,42 @@ import com.ibm.maf.Name;
 
 // package
 final class MAF {
-    static Certificate unknown_user_cert = AgletRuntime.getAnonymousUserCertificate();
+	static Certificate unknown_user_cert = AgletRuntime.getAnonymousUserCertificate();
 
-    public void print(Name name) {
-	System.out.println("type = " + name.agent_system_type);
-	System.out.println("auth = " + new String(name.authority));
-    }
+	static AgentProfile toAgentProfile(final AgletInfo info) {
+		final AgentProfile p = new AgentProfile(MAFUtil.toLanguageID("Java"), MAFUtil.toAgentSystemType("Aglets"), "Aglets 2.5 alpha", info.getAPIMajorVersion(), info.getAPIMinorVersion(), (short) 1, /* serialization */
+				null);
 
-    static AgentProfile toAgentProfile(AgletInfo info) {
-	AgentProfile p = new AgentProfile(MAFUtil.toLanguageID("Java"), MAFUtil.toAgentSystemType("Aglets"), "Aglets 2.5 alpha", info.getAPIMajorVersion(), info.getAPIMinorVersion(), (short) 1, /* serialization */
-		null);
-
-	// Object[] __properties);
-	return p;
-    }
-
-    static Name toAgentSystemName(
-                                  MAFAgentSystem_AgletsImpl sys,
-                                  Certificate owner) {
-	java.util.Random r = new java.util.Random();
-	byte[] ident_bytes = new byte[8];
-
-	r.nextBytes(ident_bytes);
-	try {
-	    byte[] ownerEncoded = null;
-
-	    if (owner != null) {
-		ownerEncoded = owner.getEncoded();
-	    }
-	    return new Name(ownerEncoded, ident_bytes, MAFUtil.AGENT_SYSTEM_TYPE_AGLETS);
-	} catch (java.security.cert.CertificateEncodingException ex) {
-	    ex.printStackTrace();
-	    return null;
+		// Object[] __properties);
+		return p;
 	}
-    }
 
-    static AgletInfo toAgletInfo(AgentProfile profile) {
-	return null;
-    }
+	static Name toAgentSystemName(
+	                              final MAFAgentSystem_AgletsImpl sys,
+	                              final Certificate owner) {
+		final java.util.Random r = new java.util.Random();
+		final byte[] ident_bytes = new byte[8];
+
+		r.nextBytes(ident_bytes);
+		try {
+			byte[] ownerEncoded = null;
+
+			if (owner != null) {
+				ownerEncoded = owner.getEncoded();
+			}
+			return new Name(ownerEncoded, ident_bytes, MAFUtil.AGENT_SYSTEM_TYPE_AGLETS);
+		} catch (final java.security.cert.CertificateEncodingException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+
+	static AgletInfo toAgletInfo(final AgentProfile profile) {
+		return null;
+	}
+
+	public void print(final Name name) {
+		System.out.println("type = " + name.agent_system_type);
+		System.out.println("auth = " + new String(name.authority));
+	}
 }

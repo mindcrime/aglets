@@ -37,307 +37,307 @@ import com.ibm.aglets.thread.AgletThread;
  */
 public class MessageImpl extends Message implements Cloneable {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 6493363552096602045L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6493363552096602045L;
 
-    transient FutureReplyImpl future = null;
+	transient FutureReplyImpl future = null;
 
-    private int msg_type;
-    private boolean defered = false;
+	private final int msg_type;
+	private boolean defered = false;
 
-    transient protected boolean delegatable = false;
+	transient protected boolean delegatable = false;
 
-    transient AgletThread thread = null;
+	transient AgletThread thread = null;
 
-    boolean waiting = false;
+	boolean waiting = false;
 
-    private static AgletsLogger logger = AgletsLogger.getLogger("com.ibm.aglets.MessageImpl");
+	private static AgletsLogger logger = AgletsLogger.getLogger("com.ibm.aglets.MessageImpl");
 
-    /*
-     * For system and event message. These are all synchronus.
-     */
-    protected MessageImpl() {
-	super(null, null);
-	this.msg_type = Message.SYNCHRONOUS;
-	this.timestamp = System.currentTimeMillis();
-    }
-
-    /*
-     * 
-     */
-    public MessageImpl(Message msg, FutureReplyImpl future, int msg_type,
-                       long timestamp) {
-	super(msg.getKind(), msg.getArg());
-	this.future = future;
-	this.msg_type = msg_type;
-	this.timestamp = timestamp;
-    }
-
-    protected MessageImpl(Object arg) {
-	super(null, arg);
-	this.msg_type = Message.SYNCHRONOUS;
-	this.timestamp = System.currentTimeMillis();
-    }
-
-    final void activate(MessageManagerImpl manager) {
-	try {
-	    if (this.thread == null) {
-		this.thread = manager.popThread();
-	    }
-	    this.thread.handleMessage(this);
-
-	    // } else {
-	    // synchronized (this) {
-	    // waiting = false;
-	    // notifyAll();
-	    // }
-	    // }
-	} catch (AgletException e) {
-	    logger.error("Exception caught while trying to activate a message", e);
-	}
-    }
-
-    final synchronized void cancel(String explain) {
-	if (this.future != null) {
-	    this.future.cancel(explain);
-	}
-    }
-
-    @Override
-    public Object clone() {
-	MessageImpl c = new MessageImpl(this, this.future, this.msg_type, this.timestamp);
-
-	c.priority = this.priority;
-	return c;
-    }
-
-    final synchronized void destroy() {
-	if (this.thread == Thread.currentThread()) {
-	    System.err.println("waring: tring to destroy itself");
+	/*
+	 * For system and event message. These are all synchronus.
+	 */
+	protected MessageImpl() {
+		super(null, null);
+		msg_type = Message.SYNCHRONOUS;
+		timestamp = System.currentTimeMillis();
 	}
 
-	if (this.waiting) {
-	    this.waiting = false;
-
-	    // all thread must be suspended before notify
-	    // to make sure...
-	    // thread.suspend();
-	    // Debug.check();
-	    this.notifyAll();
-	    final Thread th = this.thread;
-
-	    AccessController.doPrivileged(new PrivilegedAction() {
-		@Override
-		public Object run() {
-
-		    // all thread will be stopped and them resumed
-		    th.stop();
-		    th.resume();
-		    return null;
-		}
-	    });
-	}
-	this.thread = null;
-    }
-
-    /* synchronized */
-    final void disable() {
-	this.future = null;
-	this.delegatable = false;
-    }
-
-    final synchronized void doWait() {
-
-	// Debug.check();
-	while (this.waiting) {
-	    try {
-		this.wait();
-	    } catch (InterruptedException ex) {
-		ex.printStackTrace();
-	    }
+	/*
+	 * 
+	 */
+	public MessageImpl(final Message msg, final FutureReplyImpl future, final int msg_type,
+	                   final long timestamp) {
+		super(msg.getKind(), msg.getArg());
+		this.future = future;
+		this.msg_type = msg_type;
+		this.timestamp = timestamp;
 	}
 
-	// Debug.check();
-    }
+	protected MessageImpl(final Object arg) {
+		super(null, arg);
+		msg_type = Message.SYNCHRONOUS;
+		timestamp = System.currentTimeMillis();
+	}
 
-    final synchronized void doWait(long timeout) {
-	if (timeout == 0) {
-	    this.doWait();
-	} else {
-
-	    // Debug.check();
-	    long until = System.currentTimeMillis() + timeout;
-	    long reft;
-
-	    while (this.waiting
-		    && ((reft = (until - System.currentTimeMillis())) > 0)) {
+	final void activate(final MessageManagerImpl manager) {
 		try {
-		    this.wait(reft);
-		} catch (InterruptedException ex) {
-		    ex.printStackTrace();
+			if (thread == null) {
+				thread = manager.popThread();
+			}
+			thread.handleMessage(this);
+
+			// } else {
+			// synchronized (this) {
+			// waiting = false;
+			// notifyAll();
+			// }
+			// }
+		} catch (final AgletException e) {
+			logger.error("Exception caught while trying to activate a message", e);
 		}
-	    }
-
-	    // Debug.check();
 	}
-    }
 
-    @Override
-    final public void enableDeferedReply(boolean b) {
-	this.defered = b;
-    }
+	final synchronized void cancel(final String explain) {
+		if (future != null) {
+			future.cancel(explain);
+		}
+	}
 
-    /**
-     * 
-     */
-    final void enableDelegation() {
-	this.delegatable = true;
-    }
+	@Override
+	public Object clone() {
+		final MessageImpl c = new MessageImpl(this, future, msg_type, timestamp);
 
-    @Override
-    final public int getMessageType() {
-	return this.msg_type;
-    }
+		c.priority = priority;
+		return c;
+	}
 
-    Permission getPermission(String authority) {
+	final synchronized void destroy() {
+		if (thread == Thread.currentThread()) {
+			System.err.println("waring: tring to destroy itself");
+		}
 
-	// or MessagePermission(authority)
-	return new MessagePermission(authority, /* "message." + */this.getKind());
-    }
+		if (waiting) {
+			waiting = false;
 
-    Permission getProtection(String authority) {
+			// all thread must be suspended before notify
+			// to make sure...
+			// thread.suspend();
+			// Debug.check();
+			notifyAll();
+			final Thread th = thread;
 
-	// or MessageProtection(authority)
-	return new MessageProtection(authority, /* "message." + */this.getKind());
-    }
+			AccessController.doPrivileged(new PrivilegedAction() {
+				@Override
+				public Object run() {
 
-    public void handle(LocalAgletRef ref) throws InvalidAgletException {
-	FutureReplyImpl f = this.future;
-	Aglet aglet = ref.aglet;
-	boolean handled = false;
+					// all thread will be stopped and them resumed
+					th.stop();
+					th.resume();
+					return null;
+				}
+			});
+		}
+		thread = null;
+	}
 
-	try {
+	/* synchronized */
+	final void disable() {
+		future = null;
+		delegatable = false;
+	}
 
-	    // Debug.check();
-	    handled = aglet.handleMessage(this);
+	final synchronized void doWait() {
 
-	} catch (RuntimeException ex) {
+		// Debug.check();
+		while (waiting) {
+			try {
+				this.wait();
+			} catch (final InterruptedException ex) {
+				ex.printStackTrace();
+			}
+		}
 
-	    // was trying to process someting..
-	    f.sendExceptionIfNeeded(ex);
-	    ex.printStackTrace();
-	} catch (ThreadDeath ex) {
-	    f.sendExceptionIfNeeded(ex);
-	    throw ex;
+		// Debug.check();
+	}
 
-	} catch (Throwable ex) {
-	    f.sendExceptionIfNeeded(ex);
-	    ex.printStackTrace();
-
-	} finally {
-
-	    // Debug.check();
-	    if (this.delegatable == false) {
-		if (handled) {
-		    if (this.defered == false) {
-			f.sendReplyIfNeeded(null);
-		    }
+	final synchronized void doWait(final long timeout) {
+		if (timeout == 0) {
+			this.doWait();
 		} else {
-		    f.cancel(this.toString());
+
+			// Debug.check();
+			final long until = System.currentTimeMillis() + timeout;
+			long reft;
+
+			while (waiting
+					&& ((reft = (until - System.currentTimeMillis())) > 0)) {
+				try {
+					this.wait(reft);
+				} catch (final InterruptedException ex) {
+					ex.printStackTrace();
+				}
+			}
+
+			// Debug.check();
 		}
-	    }
 	}
-    }
 
-    /* synchronized */
-    boolean isDelegatable() {
-	return this.delegatable && (this.future != null)
-	&& !this.future.available;
-    }
-
-    final boolean isWaiting() {
-	return this.waiting;
-    }
-
-    /**
-     * 
-     */
-    @Override
-    final public void sendException(Exception exp) {
-	this.future.setExceptionAndNotify(exp);
-    }
-
-    /**
-     * 
-     */
-    @Override
-    final public void sendReply() {
-	this.future.setReplyAndNotify(null);
-    }
-
-    /**
-     * Sets the reply of the message.
-     */
-    @Override
-    final public void sendReply(Object arg) {
-	this.future.setReplyAndNotify(arg);
-    }
-
-    final void setWaiting() {
-	this.waiting = true;
-    }
-
-    @Override
-    public String toString() {
-	StringBuffer buff = new StringBuffer();
-
-	buff.append("[Message : kind = " + this.kind + ": arg = "
-		+ String.valueOf(this.arg) + ": priority = " + this.priority);
-	if (this.waiting) {
-	    buff.append(" :waiting ");
+	@Override
+	final public void enableDeferedReply(final boolean b) {
+		defered = b;
 	}
-	buff.append(']');
 
-	return buff.toString();
-    }
+	/**
+	 * 
+	 */
+	final void enableDelegation() {
+		delegatable = true;
+	}
 
-    /**
-     * Gets back the thread.
-     * 
-     * @return the thread
-     */
-    protected synchronized AgletThread getThread() {
-	return this.thread;
-    }
+	@Override
+	final public int getMessageType() {
+		return msg_type;
+	}
 
-    /**
-     * Sets the thread value.
-     * 
-     * @param thread
-     *            the thread to set
-     */
-    protected synchronized void setThread(AgletThread thread) {
-	this.thread = thread;
-    }
+	Permission getPermission(final String authority) {
 
-    protected synchronized void setReplyAvailable() {
-	this.future.available = true;
-    }
+		// or MessagePermission(authority)
+		return new MessagePermission(authority, /* "message." + */getKind());
+	}
 
-    /**
-     * Overrides the method that normalizes the priority. This method simply
-     * returns the priority provided as argument, thus you can set a system
-     * priority.
-     * 
-     * @param priority
-     *            the priority you want to set for this message
-     * @return the unchanged priority argument
-     */
-    @Override
-    protected int normalizePriority(int priority) {
-	return priority;
-    }
+	Permission getProtection(final String authority) {
+
+		// or MessageProtection(authority)
+		return new MessageProtection(authority, /* "message." + */getKind());
+	}
+
+	/**
+	 * Gets back the thread.
+	 * 
+	 * @return the thread
+	 */
+	protected synchronized AgletThread getThread() {
+		return thread;
+	}
+
+	public void handle(final LocalAgletRef ref) throws InvalidAgletException {
+		final FutureReplyImpl f = future;
+		final Aglet aglet = ref.aglet;
+		boolean handled = false;
+
+		try {
+
+			// Debug.check();
+			handled = aglet.handleMessage(this);
+
+		} catch (final RuntimeException ex) {
+
+			// was trying to process someting..
+			f.sendExceptionIfNeeded(ex);
+			ex.printStackTrace();
+		} catch (final ThreadDeath ex) {
+			f.sendExceptionIfNeeded(ex);
+			throw ex;
+
+		} catch (final Throwable ex) {
+			f.sendExceptionIfNeeded(ex);
+			ex.printStackTrace();
+
+		} finally {
+
+			// Debug.check();
+			if (delegatable == false) {
+				if (handled) {
+					if (defered == false) {
+						f.sendReplyIfNeeded(null);
+					}
+				} else {
+					f.cancel(toString());
+				}
+			}
+		}
+	}
+
+	/* synchronized */
+	boolean isDelegatable() {
+		return delegatable && (future != null)
+		&& !future.available;
+	}
+
+	final boolean isWaiting() {
+		return waiting;
+	}
+
+	/**
+	 * Overrides the method that normalizes the priority. This method simply
+	 * returns the priority provided as argument, thus you can set a system
+	 * priority.
+	 * 
+	 * @param priority
+	 *            the priority you want to set for this message
+	 * @return the unchanged priority argument
+	 */
+	@Override
+	protected int normalizePriority(final int priority) {
+		return priority;
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	final public void sendException(final Exception exp) {
+		future.setExceptionAndNotify(exp);
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	final public void sendReply() {
+		future.setReplyAndNotify(null);
+	}
+
+	/**
+	 * Sets the reply of the message.
+	 */
+	@Override
+	final public void sendReply(final Object arg) {
+		future.setReplyAndNotify(arg);
+	}
+
+	protected synchronized void setReplyAvailable() {
+		future.available = true;
+	}
+
+	/**
+	 * Sets the thread value.
+	 * 
+	 * @param thread
+	 *            the thread to set
+	 */
+	protected synchronized void setThread(final AgletThread thread) {
+		this.thread = thread;
+	}
+
+	final void setWaiting() {
+		waiting = true;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuffer buff = new StringBuffer();
+
+		buff.append("[Message : kind = " + kind + ": arg = "
+				+ String.valueOf(arg) + ": priority = " + priority);
+		if (waiting) {
+			buff.append(" :waiting ");
+		}
+		buff.append(']');
+
+		return buff.toString();
+	}
 
 }

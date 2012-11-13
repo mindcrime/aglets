@@ -32,72 +32,72 @@ import com.ibm.aglet.util.AddressChooser;
  * @author Yoshiaki Mima
  */
 public class TalkWindow extends Frame implements ActionListener {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -4541762637219919068L;
-    TextArea text = new TextArea();
-    TextField input = new TextField();
-    AddressChooser dest = null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4541762637219919068L;
+	TextArea text = new TextArea();
+	TextField input = new TextField();
+	AddressChooser dest = null;
 
-    String address = "";
-    TalkMaster master = null;
-    TalkSlave slave = null;
+	String address = "";
+	TalkMaster master = null;
+	TalkSlave slave = null;
 
-    public TalkWindow(TalkMaster master) {
-	super("Talk");
-	this.master = master;
-	this.setLayout(new BorderLayout(5, 5));
-	this.dest = new AddressChooser();
+	public TalkWindow(final TalkMaster master) {
+		super("Talk");
+		this.master = master;
+		setLayout(new BorderLayout(5, 5));
+		dest = new AddressChooser();
 
-	this.add("North", this.dest);
-	this.add("Center", this.text);
-	this.add("South", this.input);
+		this.add("North", dest);
+		this.add("Center", text);
+		this.add("South", input);
 
-	this.text.setEditable(false);
-	this.input.addActionListener(this);
+		text.setEditable(false);
+		input.addActionListener(this);
 
-	this.addWindowListener(new WindowAdapter() {
-	    @Override
-	    public void windowClosing(WindowEvent e) {
-		TalkWindow.this.setVisible(false);
-	    }
-	});
-    }
-
-    public TalkWindow(TalkSlave slave) {
-	super("Talk");
-	this.slave = slave;
-	this.setLayout(new BorderLayout());
-
-	this.add("Center", this.text);
-	this.add("South", this.input);
-
-	this.text.setEditable(false);
-	this.input.addActionListener(this);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-	Object source = e.getSource();
-
-	if (source == this.input) {
-	    String t = this.input.getText();
-
-	    this.appendText(t);
-	    if (this.master != null) {
-		if (!this.address.equals(this.dest.getAddress())) {
-		    this.master.dispatchSlave(this.address = this.dest.getAddress());
-		}
-		this.master.sendText(t);
-	    } else if (this.slave != null) {
-		this.slave.sendText(t);
-	    }
-	    this.input.setText("");
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(final WindowEvent e) {
+				TalkWindow.this.setVisible(false);
+			}
+		});
 	}
-    }
 
-    public void appendText(String str) {
-	this.text.append(str + "\r\n");
-    }
+	public TalkWindow(final TalkSlave slave) {
+		super("Talk");
+		this.slave = slave;
+		setLayout(new BorderLayout());
+
+		this.add("Center", text);
+		this.add("South", input);
+
+		text.setEditable(false);
+		input.addActionListener(this);
+	}
+
+	@Override
+	public void actionPerformed(final ActionEvent e) {
+		final Object source = e.getSource();
+
+		if (source == input) {
+			final String t = input.getText();
+
+			appendText(t);
+			if (master != null) {
+				if (!address.equals(dest.getAddress())) {
+					master.dispatchSlave(address = dest.getAddress());
+				}
+				master.sendText(t);
+			} else if (slave != null) {
+				slave.sendText(t);
+			}
+			input.setText("");
+		}
+	}
+
+	public void appendText(final String str) {
+		text.append(str + "\r\n");
+	}
 }

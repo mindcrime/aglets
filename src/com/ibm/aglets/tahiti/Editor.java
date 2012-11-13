@@ -15,7 +15,7 @@ package com.ibm.aglets.tahiti;
  */
 
 interface Editor {
-    String getText();
+	String getText();
 
-    void setText(String str);
+	void setText(String str);
 }

@@ -25,10 +25,10 @@ import java.io.Serializable;
  */
 
 public abstract class Task implements Serializable {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -4016885502125593520L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4016885502125593520L;
 
-    abstract public void execute(SeqItinerary itin) throws Exception;
+	abstract public void execute(SeqItinerary itin) throws Exception;
 }

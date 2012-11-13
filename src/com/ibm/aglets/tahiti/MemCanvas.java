@@ -17,32 +17,32 @@ package com.ibm.aglets.tahiti;
 import java.awt.Dimension;
 
 class MemCanvas extends java.awt.Canvas {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1248194503958262102L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1248194503958262102L;
 
-    @Override
-    public Dimension getMinimumSize() {
-	return new Dimension(100, 20);
-    }
+	@Override
+	public Dimension getMinimumSize() {
+		return new Dimension(100, 20);
+	}
 
-    @Override
-    public Dimension getPreferredSize() {
-	return this.getMinimumSize();
-    }
+	@Override
+	public Dimension getPreferredSize() {
+		return getMinimumSize();
+	}
 
-    @Override
-    public void paint(java.awt.Graphics g) {
-	java.awt.Rectangle rect = this.getBounds();
-	Runtime r = Runtime.getRuntime();
-	long total = r.totalMemory();
-	long freeMemory = r.freeMemory();
-	int usedWidth = (rect.width - (int) (rect.width * freeMemory / total));
+	@Override
+	public void paint(final java.awt.Graphics g) {
+		final java.awt.Rectangle rect = this.getBounds();
+		final Runtime r = Runtime.getRuntime();
+		final long total = r.totalMemory();
+		final long freeMemory = r.freeMemory();
+		final int usedWidth = (rect.width - (int) (rect.width * freeMemory / total));
 
-	g.setColor(java.awt.Color.red);
-	g.fillRect(0, 0, usedWidth, rect.height);
-	g.setColor(java.awt.Color.blue);
-	g.fillRect(usedWidth + 1, 0, rect.width, rect.height);
-    }
+		g.setColor(java.awt.Color.red);
+		g.fillRect(0, 0, usedWidth, rect.height);
+		g.setColor(java.awt.Color.blue);
+		g.fillRect(usedWidth + 1, 0, rect.width, rect.height);
+	}
 }

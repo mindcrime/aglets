@@ -30,71 +30,71 @@ package com.ibm.aglet.event;
  * @author Mitsuru Oshima
  */
 abstract public class AgletEvent extends java.util.EventObject {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 5753551787599230988L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5753551787599230988L;
 
-    /**
-     * Event id
-     */
-    private int id;
+	/**
+	 * Event id
+	 */
+	private final int id;
 
-    /**
-     * A sequence to take count of the events.
-     */
-    private static int idSequence = 0;
+	/**
+	 * A sequence to take count of the events.
+	 */
+	private static int idSequence = 0;
 
-    /**
-     * Provides the next id available for an event.
-     * 
-     * @return the next id available
-     */
-    public static final synchronized int nextID() {
-	return ++idSequence;
-    }
+	/**
+	 * Provides the next id available for an event.
+	 * 
+	 * @return the next id available
+	 */
+	public static final synchronized int nextID() {
+		return ++idSequence;
+	}
 
-    /**
-     * The event type, if the event is of a known type.
-     */
-    private EventType eventType = null;
+	/**
+	 * The event type, if the event is of a known type.
+	 */
+	private EventType eventType = null;
 
-    /**
-     * Constructs an AgletEvent with source and id.
-     */
-    public AgletEvent(Object source, int id) {
-	super(source);
-	this.id = id;
-    }
+	/**
+	 * Constructs an AgletEvent with source and id.
+	 */
+	public AgletEvent(final Object source, final int id) {
+		super(source);
+		this.id = id;
+	}
 
-    /**
-     * Builds an event of a specified type.
-     * 
-     * @param source
-     *            the object that is sending the event
-     * @param id
-     *            the id of the event
-     * @param type
-     *            the type of the event, in the case it is a well known event
-     */
-    public AgletEvent(Object source, int id, EventType type) {
-	this(source, id);
-	this.eventType = type;
-    }
+	/**
+	 * Builds an event of a specified type.
+	 * 
+	 * @param source
+	 *            the object that is sending the event
+	 * @param id
+	 *            the id of the event
+	 * @param type
+	 *            the type of the event, in the case it is a well known event
+	 */
+	public AgletEvent(final Object source, final int id, final EventType type) {
+		this(source, id);
+		eventType = type;
+	}
 
-    /**
-     * Gets back the eventType.
-     * 
-     * @return the eventType
-     */
-    public synchronized final EventType getEventType() {
-	return this.eventType;
-    }
+	/**
+	 * Gets back the eventType.
+	 * 
+	 * @return the eventType
+	 */
+	public synchronized final EventType getEventType() {
+		return eventType;
+	}
 
-    /**
-     * Gets the id of this event
-     */
-    public int getID() {
-	return this.id;
-    }
+	/**
+	 * Gets the id of this event
+	 */
+	public int getID() {
+		return id;
+	}
 }

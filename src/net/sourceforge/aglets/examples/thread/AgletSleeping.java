@@ -12,44 +12,44 @@ import com.ibm.aglet.message.Message;
  * 
  */
 public class AgletSleeping extends Aglet {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 764665884852314091L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 764665884852314091L;
 
-    @Override
-    public void run() {
-	long startTime = 0;
-	long endTime = 0;
-	long waitTime = 20000;
+	@Override
+	public boolean handleMessage(final Message msg) {
+		System.out.println("Handling a message of kind " + msg.getKind());
+		System.out.println("The thread in charge of the message handling is:");
+		System.out.println("\t" + Thread.currentThread());
 
-	System.out.println("\n\tSleeping aglet!");
-	System.out.println("\n\tThe agent will sleep for " + waitTime / 1000
-		+ " seconds");
-	startTime = System.currentTimeMillis();
-	System.out.println("Current time is " + startTime);
-	try {
-	    this.sleep(waitTime);
-	} catch (IllegalArgumentException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	} catch (AgletException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+		return true;
 	}
-	endTime = System.currentTimeMillis();
-	System.out.println("Current time is " + endTime);
-	System.out.println("Aglet slept for " + (endTime - startTime)
-		+ " millisecs.");
 
-    }
+	@Override
+	public void run() {
+		long startTime = 0;
+		long endTime = 0;
+		final long waitTime = 20000;
 
-    @Override
-    public boolean handleMessage(Message msg) {
-	System.out.println("Handling a message of kind " + msg.getKind());
-	System.out.println("The thread in charge of the message handling is:");
-	System.out.println("\t" + Thread.currentThread());
+		System.out.println("\n\tSleeping aglet!");
+		System.out.println("\n\tThe agent will sleep for " + waitTime / 1000
+				+ " seconds");
+		startTime = System.currentTimeMillis();
+		System.out.println("Current time is " + startTime);
+		try {
+			sleep(waitTime);
+		} catch (final IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (final AgletException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		endTime = System.currentTimeMillis();
+		System.out.println("Current time is " + endTime);
+		System.out.println("Aglet slept for " + (endTime - startTime)
+				+ " millisecs.");
 
-	return true;
-    }
+	}
 }

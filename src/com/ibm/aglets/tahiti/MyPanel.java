@@ -25,63 +25,63 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 class MyPanel extends BorderPanel {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 6230438978399025011L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6230438978399025011L;
 
-    Vector v = new Vector();
+	Vector v = new Vector();
 
-    GridBagConstraints cns = new GridBagConstraints();
-    GridBagLayout grid = new GridBagLayout();
+	GridBagConstraints cns = new GridBagConstraints();
+	GridBagLayout grid = new GridBagLayout();
 
-    public MyPanel(String title) {
-	super(title);
-	this.setLayout(this.grid);
+	public MyPanel(final String title) {
+		super(title);
+		setLayout(grid);
 
-	this.cns.ipadx = this.cns.ipady = 5;
-	this.cns.weightx = 1.0;
-	this.cns.weighty = 1.0;
-	this.cns.fill = GridBagConstraints.HORIZONTAL;
-	this.cns.anchor = GridBagConstraints.EAST;
-    }
-
-    public void makeLabeledComponent(String lbl, Label field) {
-	if (this.getComponentCount() == 0) {
-	    this.cns.insets = this.topInsets();
-	    this.cns.insets.bottom = this.bottomInsets().bottom;
-	} else {
-	    this.cns.insets = this.bottomInsets();
+		cns.ipadx = cns.ipady = 5;
+		cns.weightx = 1.0;
+		cns.weighty = 1.0;
+		cns.fill = GridBagConstraints.HORIZONTAL;
+		cns.anchor = GridBagConstraints.EAST;
 	}
-	this.cns.gridwidth = 1;
 
-	Label l = new Label(lbl);
+	public void makeLabeledComponent(final String lbl, final Label field) {
+		if (getComponentCount() == 0) {
+			cns.insets = topInsets();
+			cns.insets.bottom = bottomInsets().bottom;
+		} else {
+			cns.insets = bottomInsets();
+		}
+		cns.gridwidth = 1;
 
-	this.cns.weightx = 0.1;
-	this.grid.setConstraints(l, this.cns);
-	this.add(l);
+		final Label l = new Label(lbl);
 
-	this.cns.weightx = 1.0;
-	this.cns.gridwidth = GridBagConstraints.REMAINDER;
-	this.grid.setConstraints(field, this.cns);
-	this.add(field);
-	this.v.addElement(field);
-    }
+		cns.weightx = 0.1;
+		grid.setConstraints(l, cns);
+		this.add(l);
 
-    @Override
-    public void paint(Graphics g) {
-	Enumeration e = this.v.elements();
-
-	g.setColor(this.getBackground());
-	Dimension size = this.getSize();
-
-	g.fillRect(0, 0, size.width, size.height);
-	while (e.hasMoreElements()) {
-	    Component l = (Component) e.nextElement();
-	    Rectangle b = l.getBounds();
-
-	    g.draw3DRect(b.x - 1, b.y - 1, b.width + 1, b.height + 1, false);
+		cns.weightx = 1.0;
+		cns.gridwidth = GridBagConstraints.REMAINDER;
+		grid.setConstraints(field, cns);
+		this.add(field);
+		v.addElement(field);
 	}
-	super.paint(g);
-    }
+
+	@Override
+	public void paint(final Graphics g) {
+		final Enumeration e = v.elements();
+
+		g.setColor(getBackground());
+		final Dimension size = this.getSize();
+
+		g.fillRect(0, 0, size.width, size.height);
+		while (e.hasMoreElements()) {
+			final Component l = (Component) e.nextElement();
+			final Rectangle b = l.getBounds();
+
+			g.draw3DRect(b.x - 1, b.y - 1, b.width + 1, b.height + 1, false);
+		}
+		super.paint(g);
+	}
 }

@@ -17,194 +17,194 @@ import net.sourceforge.aglets.util.gui.JComponentBuilder;
 
 public class TahitiToolBar extends JToolBar implements ActionListener {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -6327657485302108603L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6327657485302108603L;
 
-    private String baseKey = this.getClass().getName();
+	private final String baseKey = this.getClass().getName();
 
-    /**
-     * A button to reduce/enlarge the window size.
-     */
-    protected JButton shrink = null;
+	/**
+	 * A button to reduce/enlarge the window size.
+	 */
+	protected JButton shrink = null;
 
-    /**
-     * A button for creating a new aglet.
-     */
-    protected JButton create = null;
+	/**
+	 * A button for creating a new aglet.
+	 */
+	protected JButton create = null;
 
-    /**
-     * A button to clone an existing aglet,
-     */
-    protected JButton clone = null;
+	/**
+	 * A button to clone an existing aglet,
+	 */
+	protected JButton clone = null;
 
-    /**
-     * A button to dispose an aglet.
-     */
-    protected JButton dispose = null;
+	/**
+	 * A button to dispose an aglet.
+	 */
+	protected JButton dispose = null;
 
-    /**
-     * Buttons for dispatching/retracting an aglet
-     */
-    protected JButton dispatch = null;
-    protected JButton retract = null;
+	/**
+	 * Buttons for dispatching/retracting an aglet
+	 */
+	protected JButton dispatch = null;
+	protected JButton retract = null;
 
-    /**
-     * Activatation and deactivation buttons.
-     */
-    protected JButton activate = null;
-    protected JButton deactivate = null;
+	/**
+	 * Activatation and deactivation buttons.
+	 */
+	protected JButton activate = null;
+	protected JButton deactivate = null;
 
-    /**
-     * A button for sending a dialog message.
-     */
-    protected JButton dialog = null;
+	/**
+	 * A button for sending a dialog message.
+	 */
+	protected JButton dialog = null;
 
-    /**
-     * A button for getting info about the agent.
-     */
-    protected JButton info = null;
+	/**
+	 * A button for getting info about the agent.
+	 */
+	protected JButton info = null;
 
-    /**
-     * Let's an agent to sleep.
-     */
-    protected JButton sleep = null;
+	/**
+	 * Let's an agent to sleep.
+	 */
+	protected JButton sleep = null;
 
-    /**
-     * A list of conditional buttons, that can be enabled or disbaled depending
-     * on some other events in the GUI.
-     */
-    private LinkedList<JButton> conditionalButtons = null;
+	/**
+	 * A list of conditional buttons, that can be enabled or disbaled depending
+	 * on some other events in the GUI.
+	 */
+	private LinkedList<JButton> conditionalButtons = null;
 
-    /**
-     * Creates the toolbar, placing buttons and labels accordingly to the
-     * resource bundle.
-     * 
-     * @param listener
-     *            the action listener to associate to each button of the toolbar
-     */
-    public TahitiToolBar(ActionListener listener) {
-	super("Tahiti ToolBar", SwingConstants.HORIZONTAL);
-	this.conditionalButtons = new LinkedList<JButton>();
+	/**
+	 * Creates the toolbar, placing buttons and labels accordingly to the
+	 * resource bundle.
+	 * 
+	 * @param listener
+	 *            the action listener to associate to each button of the toolbar
+	 */
+	public TahitiToolBar(final ActionListener listener) {
+		super("Tahiti ToolBar", SwingConstants.HORIZONTAL);
+		conditionalButtons = new LinkedList<JButton>();
 
-	this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 
-	// creates all the buttons
-	this.shrink = JComponentBuilder.createJButton(this.baseKey + ".shrink", GUICommandStrings.REDUCE_COMMAND, this);
-	if (listener != null)
-	    this.shrink.addActionListener(listener);
+		// creates all the buttons
+		shrink = JComponentBuilder.createJButton(baseKey + ".shrink", GUICommandStrings.REDUCE_COMMAND, this);
+		if (listener != null)
+			shrink.addActionListener(listener);
 
-	this.add(this.shrink);
-	this.addSeparator();
+		this.add(shrink);
+		this.addSeparator();
 
-	this.create = JComponentBuilder.createJButton(this.baseKey + ".create", GUICommandStrings.CREATE_AGLET_COMMAND, listener);
-	this.add(this.create);
+		create = JComponentBuilder.createJButton(baseKey + ".create", GUICommandStrings.CREATE_AGLET_COMMAND, listener);
+		this.add(create);
 
-	this.clone = JComponentBuilder.createJButton(this.baseKey + ".clone", GUICommandStrings.CLONE_AGLET_COMMAND, listener);
-	this.add(this.clone);
-	this.conditionalButtons.add(this.clone);
+		clone = JComponentBuilder.createJButton(baseKey + ".clone", GUICommandStrings.CLONE_AGLET_COMMAND, listener);
+		this.add(clone);
+		conditionalButtons.add(clone);
 
-	this.dispose = JComponentBuilder.createJButton(this.baseKey
-		+ ".dispose", GUICommandStrings.DISPOSE_AGLET_COMMAND, listener);
+		dispose = JComponentBuilder.createJButton(baseKey
+				+ ".dispose", GUICommandStrings.DISPOSE_AGLET_COMMAND, listener);
 
-	this.add(this.dispose);
-	this.conditionalButtons.add(this.dispose);
+		this.add(dispose);
+		conditionalButtons.add(dispose);
 
-	this.addSeparator();
+		this.addSeparator();
 
-	this.dispatch = JComponentBuilder.createJButton(this.baseKey
-		+ ".dispatch", GUICommandStrings.DISPATCH_AGLET_COMMAND, listener);
+		dispatch = JComponentBuilder.createJButton(baseKey
+				+ ".dispatch", GUICommandStrings.DISPATCH_AGLET_COMMAND, listener);
 
-	this.add(this.dispatch);
-	this.conditionalButtons.add(this.dispatch);
+		this.add(dispatch);
+		conditionalButtons.add(dispatch);
 
-	this.retract = JComponentBuilder.createJButton(this.baseKey
-		+ ".retract", GUICommandStrings.RETRACT_AGLET_COMMAND, listener);
-	this.add(this.retract);
+		retract = JComponentBuilder.createJButton(baseKey
+				+ ".retract", GUICommandStrings.RETRACT_AGLET_COMMAND, listener);
+		this.add(retract);
 
-	this.addSeparator();
+		this.addSeparator();
 
-	this.activate = JComponentBuilder.createJButton(this.baseKey
-		+ ".activate", GUICommandStrings.ACTIVATE_AGLET_COMMAND, listener);
-	this.add(this.activate);
-	this.conditionalButtons.add(this.activate);
+		activate = JComponentBuilder.createJButton(baseKey
+				+ ".activate", GUICommandStrings.ACTIVATE_AGLET_COMMAND, listener);
+		this.add(activate);
+		conditionalButtons.add(activate);
 
-	this.deactivate = JComponentBuilder.createJButton(this.baseKey
-		+ ".deactivate", GUICommandStrings.DEACTIVATE_AGLET_COMMAND, listener);
-	this.add(this.deactivate);
-	this.conditionalButtons.add(this.deactivate);
+		deactivate = JComponentBuilder.createJButton(baseKey
+				+ ".deactivate", GUICommandStrings.DEACTIVATE_AGLET_COMMAND, listener);
+		this.add(deactivate);
+		conditionalButtons.add(deactivate);
 
-	this.sleep = JComponentBuilder.createJButton(this.baseKey + ".sleep", GUICommandStrings.SLEEP_AGLET_COMMAND, listener);
-	this.add(this.sleep);
-	this.conditionalButtons.add(this.sleep);
+		sleep = JComponentBuilder.createJButton(baseKey + ".sleep", GUICommandStrings.SLEEP_AGLET_COMMAND, listener);
+		this.add(sleep);
+		conditionalButtons.add(sleep);
 
-	this.addSeparator();
+		this.addSeparator();
 
-	this.dialog = JComponentBuilder.createJButton(this.baseKey + ".dialog", GUICommandStrings.MESSAGE_AGLET_COMMAND, listener);
-	this.add(this.dialog);
-	this.conditionalButtons.add(this.dialog);
+		dialog = JComponentBuilder.createJButton(baseKey + ".dialog", GUICommandStrings.MESSAGE_AGLET_COMMAND, listener);
+		this.add(dialog);
+		conditionalButtons.add(dialog);
 
-	this.info = JComponentBuilder.createJButton(this.baseKey + ".info", GUICommandStrings.INFO_AGLET_COMMAND, listener);
-	this.add(this.info);
-	this.conditionalButtons.add(this.info);
-	this.addSeparator();
+		info = JComponentBuilder.createJButton(baseKey + ".info", GUICommandStrings.INFO_AGLET_COMMAND, listener);
+		this.add(info);
+		conditionalButtons.add(info);
+		this.addSeparator();
 
-	this.add(Box.createHorizontalGlue()); // fill the space
-	ImagePanel logo = JComponentBuilder.createSmallLogoPanel();
-	if (logo != null)
-	    this.add(logo);
+		this.add(Box.createHorizontalGlue()); // fill the space
+		final ImagePanel logo = JComponentBuilder.createSmallLogoPanel();
+		if (logo != null)
+			this.add(logo);
 
-	// disable conditiona buttons
-	this.enableConditionalButtons(false);
-    }
-
-    /**
-     * Enables only some buttons that depends on the selection of an aglet.
-     * 
-     * @param enabled
-     *            the enabling flag
-     */
-    public final void enableConditionalButtons(boolean enabled) {
-	if ((this.conditionalButtons == null)
-		|| this.conditionalButtons.isEmpty())
-	    return;
-
-	Iterator iter = this.conditionalButtons.iterator();
-	while ((iter != null) && iter.hasNext()) {
-	    JButton button = (JButton) iter.next();
-	    button.setEnabled(enabled);
-
+		// disable conditiona buttons
+		enableConditionalButtons(false);
 	}
-    }
 
-    /**
-     * Manage events for the shrink button
-     * 
-     * @param event
-     *            the event to manage
-     */
-    @Override
-    public void actionPerformed(ActionEvent event) {
-	String command = event.getActionCommand();
+	/**
+	 * Manage events for the shrink button
+	 * 
+	 * @param event
+	 *            the event to manage
+	 */
+	@Override
+	public void actionPerformed(final ActionEvent event) {
+		final String command = event.getActionCommand();
 
-	if ((command != null)
-		&& command.equals(GUICommandStrings.REDUCE_COMMAND)) {
-	    String key = this.baseKey + ".shrink2";
-	    String text = JComponentBuilder.getTranslator().translate(key);
-	    this.shrink.setText(text);
-	    this.shrink.setIcon(JComponentBuilder.getIcon(key));
-	    this.shrink.setToolTipText(JComponentBuilder.getTooltipText(key));
-	    this.shrink.setActionCommand(GUICommandStrings.ENLARGE_COMMAND);
+		if ((command != null)
+				&& command.equals(GUICommandStrings.REDUCE_COMMAND)) {
+			final String key = baseKey + ".shrink2";
+			final String text = JComponentBuilder.getTranslator().translate(key);
+			shrink.setText(text);
+			shrink.setIcon(JComponentBuilder.getIcon(key));
+			shrink.setToolTipText(JComponentBuilder.getTooltipText(key));
+			shrink.setActionCommand(GUICommandStrings.ENLARGE_COMMAND);
 
-	} else if ((command != null)
-		&& command.equals(GUICommandStrings.ENLARGE_COMMAND)) {
-	    String key = this.baseKey + ".shrink";
-	    String text = JComponentBuilder.getTranslator().translate(key);
-	    this.shrink.setText(text);
-	    this.shrink.setIcon(JComponentBuilder.getIcon(key));
-	    this.shrink.setToolTipText(JComponentBuilder.getTooltipText(key));
-	    this.shrink.setActionCommand(GUICommandStrings.REDUCE_COMMAND);
+		} else if ((command != null)
+				&& command.equals(GUICommandStrings.ENLARGE_COMMAND)) {
+			final String key = baseKey + ".shrink";
+			final String text = JComponentBuilder.getTranslator().translate(key);
+			shrink.setText(text);
+			shrink.setIcon(JComponentBuilder.getIcon(key));
+			shrink.setToolTipText(JComponentBuilder.getTooltipText(key));
+			shrink.setActionCommand(GUICommandStrings.REDUCE_COMMAND);
+		}
 	}
-    }
+
+	/**
+	 * Enables only some buttons that depends on the selection of an aglet.
+	 * 
+	 * @param enabled
+	 *            the enabling flag
+	 */
+	public final void enableConditionalButtons(final boolean enabled) {
+		if ((conditionalButtons == null)
+				|| conditionalButtons.isEmpty())
+			return;
+
+		final Iterator iter = conditionalButtons.iterator();
+		while ((iter != null) && iter.hasNext()) {
+			final JButton button = (JButton) iter.next();
+			button.setEnabled(enabled);
+
+		}
+	}
 }

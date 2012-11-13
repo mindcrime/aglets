@@ -30,55 +30,55 @@ import com.ibm.aglet.message.Message;
  * @author Yoshiaki Mima
  */
 public class MobilityEvents extends Aglet implements MobilityListener {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 4766693893154763601L;
-    String history = null; // history
-    int count = 0; // hopping counter
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4766693893154763601L;
+	String history = null; // history
+	int count = 0; // hopping counter
 
-    @Override
-    public boolean handleMessage(Message msg) {
+	@Override
+	public boolean handleMessage(final Message msg) {
 
-	if (msg.sameKind("dialog")) { // show history
-	    System.out.println(this.history);
-	    return true;
-	} else if (msg.sameKind("clear")) { // reset history and count
-	    this.history = "";
-	    this.count = 0;
-	    return true;
+		if (msg.sameKind("dialog")) { // show history
+			System.out.println(history);
+			return true;
+		} else if (msg.sameKind("clear")) { // reset history and count
+			history = "";
+			count = 0;
+			return true;
+		}
+		return false;
 	}
-	return false;
-    }
 
-    @Override
-    public void onArrival(MobilityEvent ev) {
-	this.count += 1;
-	this.history += "onArrival: "
-	    + this.getAgletContext().getHostingURL().toString() + "\n";
-    }
+	@Override
+	public void onArrival(final MobilityEvent ev) {
+		count += 1;
+		history += "onArrival: "
+			+ getAgletContext().getHostingURL().toString() + "\n";
+	}
 
-    @Override
-    public void onCreation(Object arg) {
-	this.history = "[History of MobilityEvents]\n";
-	this.count = 0;
-	this.addMobilityListener(this);
-    }
+	@Override
+	public void onCreation(final Object arg) {
+		history = "[History of MobilityEvents]\n";
+		count = 0;
+		addMobilityListener(this);
+	}
 
-    @Override
-    public void onDispatching(MobilityEvent ev) {
-	this.history += "onDispatching: "
-	    + this.getAgletContext().getHostingURL().toString() + "\n";
-    }
+	@Override
+	public void onDispatching(final MobilityEvent ev) {
+		history += "onDispatching: "
+			+ getAgletContext().getHostingURL().toString() + "\n";
+	}
 
-    @Override
-    public void onReverting(MobilityEvent ev) {
-	this.history += "onReverting: "
-	    + this.getAgletContext().getHostingURL().toString() + "\n";
-    }
+	@Override
+	public void onReverting(final MobilityEvent ev) {
+		history += "onReverting: "
+			+ getAgletContext().getHostingURL().toString() + "\n";
+	}
 
-    @Override
-    public void run() {
-	this.setText("hopping count: " + this.count);
-    }
+	@Override
+	public void run() {
+		setText("hopping count: " + count);
+	}
 }

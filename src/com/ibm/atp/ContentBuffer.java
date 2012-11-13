@@ -15,5 +15,5 @@ package com.ibm.atp;
  */
 
 public interface ContentBuffer {
-    public void sendContent() throws java.io.IOException;
+	public void sendContent() throws java.io.IOException;
 }

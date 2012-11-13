@@ -16,17 +16,17 @@ package com.ibm.maf;
 
 public final class NotHandled extends MAFExtendedException {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -7460177891056147326L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7460177891056147326L;
 
-    // constructor
-    public NotHandled() {
-	super();
-    }
+	// constructor
+	public NotHandled() {
+		super();
+	}
 
-    public NotHandled(String msg) {
-	super(msg);
-    }
+	public NotHandled(final String msg) {
+		super(msg);
+	}
 }

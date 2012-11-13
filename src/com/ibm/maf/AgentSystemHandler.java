@@ -18,15 +18,15 @@ import com.ibm.aglet.Ticket;
 
 public interface AgentSystemHandler {
 
-    public MAFAgentSystem getMAFAgentSystem(Ticket ticket)
-    throws java.net.UnknownHostException;
+	public MAFAgentSystem getMAFAgentSystem(String address)
+	throws java.net.UnknownHostException;
 
-    public MAFAgentSystem getMAFAgentSystem(String address)
-    throws java.net.UnknownHostException;
+	public MAFAgentSystem getMAFAgentSystem(Ticket ticket)
+	throws java.net.UnknownHostException;
 
-    public void initMAFAgentSystem(MAFAgentSystem local)
-    throws MAFExtendedException;
+	public void initMAFAgentSystem(MAFAgentSystem local)
+	throws MAFExtendedException;
 
-    public void startMAFAgentSystem(MAFAgentSystem local)
-    throws MAFExtendedException;
+	public void startMAFAgentSystem(MAFAgentSystem local)
+	throws MAFExtendedException;
 }

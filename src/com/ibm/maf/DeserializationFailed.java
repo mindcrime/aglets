@@ -23,17 +23,17 @@ package com.ibm.maf;
 
 public final class DeserializationFailed extends MAFException {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -1899395305534997050L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1899395305534997050L;
 
-    // constructor
-    public DeserializationFailed() {
-	super();
-    }
+	// constructor
+	public DeserializationFailed() {
+		super();
+	}
 
-    public DeserializationFailed(String msg) {
-	super(msg);
-    }
+	public DeserializationFailed(final String msg) {
+		super(msg);
+	}
 }

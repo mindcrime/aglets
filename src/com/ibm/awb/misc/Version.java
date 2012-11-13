@@ -30,135 +30,135 @@ package com.ibm.awb.misc;
 
 public final class Version {
 
-    /**
-     * The description of the product.
-     */
-    private String product = "";
+	/**
+	 * The description of the product.
+	 */
+	private String product = "";
 
-    /**
-     * Release information.
-     */
-    private int majorVersion;
-    private int minorVersion;
-    private int microVersion;
-    private boolean isStable = true;
+	/**
+	 * Release information.
+	 */
+	private final int majorVersion;
+	private final int minorVersion;
+	private final int microVersion;
+	private boolean isStable = true;
 
-    /**
-     * Creates a version object which will never expire.
-     * 
-     * @param kind
-     *            product information.
-     * @param major
-     *            major version number M.x.x
-     * @param minor
-     *            minor version number x.M.x
-     * @param micro
-     *            build version number x.x.B
-     */
-    public Version(String kind, int major, int minor, int micro) {
-	this.product = (kind != null) ? kind : "";
-	this.majorVersion = major;
-	this.minorVersion = minor;
-	this.microVersion = micro;
-    }
+	/**
+	 * Creates a version object which will never expire.
+	 * 
+	 * @param kind
+	 *            product information.
+	 * @param major
+	 *            major version number M.x.x
+	 * @param minor
+	 *            minor version number x.M.x
+	 * @param micro
+	 *            build version number x.x.B
+	 */
+	public Version(final String kind, final int major, final int minor, final int micro) {
+		product = (kind != null) ? kind : "";
+		majorVersion = major;
+		minorVersion = minor;
+		microVersion = micro;
+	}
 
-    /**
-     * Builds a version identifier.
-     * 
-     * @param kind
-     *            the description of the product.
-     * @param major
-     *            the major versione number M.x.x
-     * @param minor
-     *            the minor version number x.M.x
-     * @param micro
-     *            the micro version number x.x.M
-     * @param isStable
-     *            true if this product is stable, false otherwise
-     */
-    public Version(String kind, int major, int minor, int micro,
-                   boolean isStable) {
-	this(kind, major, minor, micro);
-	this.isStable = isStable;
-    }
+	/**
+	 * Builds a version identifier.
+	 * 
+	 * @param kind
+	 *            the description of the product.
+	 * @param major
+	 *            the major versione number M.x.x
+	 * @param minor
+	 *            the minor version number x.M.x
+	 * @param micro
+	 *            the micro version number x.x.M
+	 * @param isStable
+	 *            true if this product is stable, false otherwise
+	 */
+	public Version(final String kind, final int major, final int minor, final int micro,
+	               final boolean isStable) {
+		this(kind, major, minor, micro);
+		this.isStable = isStable;
+	}
 
-    /**
-     * Gets the string that describes what is versioned.
-     * 
-     * @deprecated see getProduct()
-     */
-    @Deprecated
-    public String getKind() {
-	return this.getProduct();
-    }
+	/**
+	 * Gets the string that describes what is versioned.
+	 * 
+	 * @deprecated see getProduct()
+	 */
+	@Deprecated
+	public String getKind() {
+		return getProduct();
+	}
 
-    /**
-     * Provides a representation of the Version. The string returned is composed
-     * with the product kind, the major.minor.micro version and a string that
-     * provides information about the stable/unstable version.
-     */
-    @Override
-    public String toString() {
-	StringBuffer buffer = new StringBuffer(50);
-	buffer.append(this.product);
-	buffer.append(" - ");
-	buffer.append(this.majorVersion);
-	buffer.append(".");
-	buffer.append(this.minorVersion);
-	buffer.append(".");
-	buffer.append(this.microVersion);
+	/**
+	 * Gets back the majorVersion.
+	 * 
+	 * @return the majorVersion
+	 */
+	public int getMajorVersion() {
+		return majorVersion;
+	}
 
-	if (this.isStable)
-	    buffer.append(" (stable)");
-	else
-	    buffer.append(" (unstable)");
+	/**
+	 * Gets back the microVersion.
+	 * 
+	 * @return the microVersion
+	 */
+	public int getMicroVersion() {
+		return microVersion;
+	}
 
-	return buffer.toString();
+	/**
+	 * Gets back the minorVersion.
+	 * 
+	 * @return the minorVersion
+	 */
+	public int getMinorVersion() {
+		return minorVersion;
+	}
 
-    }
+	/**
+	 * Gets back the product.
+	 * 
+	 * @return the product
+	 */
+	public String getProduct() {
+		return product;
+	}
 
-    /**
-     * Gets back the isStable.
-     * 
-     * @return the isStable
-     */
-    public boolean isStable() {
-	return this.isStable;
-    }
+	/**
+	 * Gets back the isStable.
+	 * 
+	 * @return the isStable
+	 */
+	public boolean isStable() {
+		return isStable;
+	}
 
-    /**
-     * Gets back the majorVersion.
-     * 
-     * @return the majorVersion
-     */
-    public int getMajorVersion() {
-	return this.majorVersion;
-    }
+	/**
+	 * Provides a representation of the Version. The string returned is composed
+	 * with the product kind, the major.minor.micro version and a string that
+	 * provides information about the stable/unstable version.
+	 */
+	@Override
+	public String toString() {
+		final StringBuffer buffer = new StringBuffer(50);
+		buffer.append(product);
+		buffer.append(" - ");
+		buffer.append(majorVersion);
+		buffer.append(".");
+		buffer.append(minorVersion);
+		buffer.append(".");
+		buffer.append(microVersion);
 
-    /**
-     * Gets back the microVersion.
-     * 
-     * @return the microVersion
-     */
-    public int getMicroVersion() {
-	return this.microVersion;
-    }
+		if (isStable)
+			buffer.append(" (stable)");
+		else
+			buffer.append(" (unstable)");
 
-    /**
-     * Gets back the minorVersion.
-     * 
-     * @return the minorVersion
-     */
-    public int getMinorVersion() {
-	return this.minorVersion;
-    }
+		return buffer.toString();
 
-    /**
-     * Gets back the product.
-     * 
-     * @return the product
-     */
-    public String getProduct() {
-	return this.product;
-    }
+	}
 }

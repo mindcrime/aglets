@@ -18,22 +18,22 @@ import java.security.Permission;
 
 public class AgletPermission extends PlainAgletPermission {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 2978265363262157692L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2978265363262157692L;
 
-    // should be implemented?
-    // ==== public PermissionCollection newPermissionCollection();
-    public AgletPermission(String name, String actions) {
-	super(name, actions);
-    }
-
-    @Override
-    public boolean implies(Permission p) {
-	if (!(p instanceof AgletPermission)) {
-	    return false;
+	// should be implemented?
+	// ==== public PermissionCollection newPermissionCollection();
+	public AgletPermission(final String name, final String actions) {
+		super(name, actions);
 	}
-	return super.implies(p);
-    }
+
+	@Override
+	public boolean implies(final Permission p) {
+		if (!(p instanceof AgletPermission)) {
+			return false;
+		}
+		return super.implies(p);
+	}
 }

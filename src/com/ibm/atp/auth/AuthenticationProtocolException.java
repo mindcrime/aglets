@@ -24,26 +24,26 @@ import java.net.ProtocolException;
  * @author ONO Kouichi
  */
 public class AuthenticationProtocolException extends ProtocolException {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 4612183429410290207L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4612183429410290207L;
 
-    /**
-     * Default Constructor shows stack trace.
-     */
-    public AuthenticationProtocolException() {
-	this.printStackTrace();
-    }
+	/**
+	 * Default Constructor shows stack trace.
+	 */
+	public AuthenticationProtocolException() {
+		this.printStackTrace();
+	}
 
-    /**
-     * Constructor shows stack trace with the specified detailed message.
-     * 
-     * @param msg
-     *            the detailed message
-     */
-    public AuthenticationProtocolException(String msg) {
-	super(msg);
-	this.printStackTrace();
-    }
+	/**
+	 * Constructor shows stack trace with the specified detailed message.
+	 * 
+	 * @param msg
+	 *            the detailed message
+	 */
+	public AuthenticationProtocolException(final String msg) {
+		super(msg);
+		this.printStackTrace();
+	}
 }

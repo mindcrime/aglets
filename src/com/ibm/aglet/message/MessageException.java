@@ -38,69 +38,69 @@ import com.ibm.aglet.AgletException;
  */
 
 public class MessageException extends AgletException {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 3923549098763231035L;
-    private Throwable _exception;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3923549098763231035L;
+	private Throwable _exception;
 
-    /*
-     * Constructs a MessageException
-     */
-    public MessageException(Throwable ex) {
-	this._exception = ex;
-    }
-
-    /*
-     * Constructs a MessageException with the detailed message.
-     * 
-     * @param s the detailed message
-     */
-    public MessageException(Throwable ex, String s) {
-	super(s);
-	this._exception = ex;
-    }
-
-    /**
-     * Gets the message occured
-     */
-    public Throwable getException() {
-	return this._exception;
-    }
-
-    private void readObject(ObjectInputStream s)
-    throws IOException,
-    ClassNotFoundException {
-	Object ex = s.readObject();
-
-	if (ex instanceof String) {
-	    try {
-		this._exception = (Throwable) Class.forName((String) ex).newInstance();
-	    } catch (Exception ee) {
-		ee.printStackTrace();
-	    }
-	} else if (ex instanceof Throwable) {
-	    this._exception = (Throwable) ex;
-	} else {
-	    this._exception = null;
+	/*
+	 * Constructs a MessageException
+	 */
+	public MessageException(final Throwable ex) {
+		_exception = ex;
 	}
-    }
 
-    @Override
-    public String toString() {
-	return super.toString() + " (" + this._exception + ")";
-    }
-
-    /*
-     * 
-     */
-    private void writeObject(ObjectOutputStream s) throws IOException {
-	if (this._exception instanceof Serializable) {
-	    s.writeObject(this._exception);
-	} else if (this._exception != null) {
-	    s.writeObject(this._exception.getClass().getName());
-	} else {
-	    s.writeObject(null);
+	/*
+	 * Constructs a MessageException with the detailed message.
+	 * 
+	 * @param s the detailed message
+	 */
+	public MessageException(final Throwable ex, final String s) {
+		super(s);
+		_exception = ex;
 	}
-    }
+
+	/**
+	 * Gets the message occured
+	 */
+	public Throwable getException() {
+		return _exception;
+	}
+
+	private void readObject(final ObjectInputStream s)
+	throws IOException,
+	ClassNotFoundException {
+		final Object ex = s.readObject();
+
+		if (ex instanceof String) {
+			try {
+				_exception = (Throwable) Class.forName((String) ex).newInstance();
+			} catch (final Exception ee) {
+				ee.printStackTrace();
+			}
+		} else if (ex instanceof Throwable) {
+			_exception = (Throwable) ex;
+		} else {
+			_exception = null;
+		}
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + " (" + _exception + ")";
+	}
+
+	/*
+	 * 
+	 */
+	private void writeObject(final ObjectOutputStream s) throws IOException {
+		if (_exception instanceof Serializable) {
+			s.writeObject(_exception);
+		} else if (_exception != null) {
+			s.writeObject(_exception.getClass().getName());
+		} else {
+			s.writeObject(null);
+		}
+	}
 }

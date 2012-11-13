@@ -23,13 +23,13 @@ package com.ibm.maf;
 
 public final class NameInvalid extends MAFException {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 8182592668767719533L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8182592668767719533L;
 
-    // constructor
-    public NameInvalid() {
-	super();
-    }
+	// constructor
+	public NameInvalid() {
+		super();
+	}
 }

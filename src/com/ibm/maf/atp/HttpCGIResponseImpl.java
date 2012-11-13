@@ -26,139 +26,139 @@ import com.ibm.atp.ContentOutputStream;
  */
 final class HttpCGIResponseImpl implements AtpResponse, AtpConstants {
 
-    private static final String CRLF = "\r\n";
+	private static final String CRLF = "\r\n";
 
-    private OutputStream out = null;
-    private ContentOutputStream bout = null;
-    private int statusCode = -1;
-    private String statusMsg;
+	private OutputStream out = null;
+	private ContentOutputStream bout = null;
+	private int statusCode = -1;
+	private String statusMsg;
 
-    private String content_type = "text/html";
+	private final String content_type = "text/html";
 
-    public HttpCGIResponseImpl(OutputStream out) throws IOException {
-	this.out = out;
-    }
-
-    @Override
-    public OutputStream getOutputStream() throws IOException {
-	if (this.bout == null) {
-	    this.bout = new ContentOutputStream(this.out, true);
-	}
-	return this.bout;
-    }
-
-    @Override
-    public int getStatusCode() {
-	return this.statusCode;
-    }
-
-    @Override
-    public void sendError(int i) throws IOException {
-	this.setStatusCode(i);
-	this.writeStatusLine();
-	String h = "<HTML><BODY>ERROR statusCode = " + i + " : "
-	+ this.statusMsg + "</BODY></HTML>";
-
-	int len = h.length();
-
-	String ct = "Content-Length: " + len + CRLF + CRLF;
-
-	for (int j = 0; j < ct.length(); j++) {
-	    this.out.write(ct.charAt(j));
+	public HttpCGIResponseImpl(final OutputStream out) throws IOException {
+		this.out = out;
 	}
 
-	for (int j = 0; j < len; j++) {
-	    this.out.write(h.charAt(j));
+	@Override
+	public OutputStream getOutputStream() throws IOException {
+		if (bout == null) {
+			bout = new ContentOutputStream(out, true);
+		}
+		return bout;
 	}
-	this.out.flush();
-    }
 
-    @Override
-    public void sendResponse() throws IOException {
-	this.writeStatusLine();
-	this.writeHeaders();
-	if (this.bout != null) {
-	    if (this.bout.size() == 0) {
-		java.io.PrintWriter p = new java.io.PrintWriter(this.bout);
-
-		p.println("No Response is written by the aglet");
-		p.flush();
-	    }
-	    this.bout.sendContent();
+	@Override
+	public int getStatusCode() {
+		return statusCode;
 	}
-	this.out.flush();
-    }
 
-    @Override
-    public void setContentType(String type) {
-	return;
-    }
+	@Override
+	public void sendError(final int i) throws IOException {
+		this.setStatusCode(i);
+		writeStatusLine();
+		final String h = "<HTML><BODY>ERROR statusCode = " + i + " : "
+		+ statusMsg + "</BODY></HTML>";
 
-    @Override
-    public void setStatusCode(int i) {
-	this.statusCode = i;
-	switch (this.statusCode) {
-	case OKAY:
-	    this.statusMsg = "OKAY";
-	    break;
-	case MOVED:
-	    this.statusMsg = "MOVED";
-	    break;
-	case BAD_REQUEST:
-	    this.statusMsg = "BAD REQUEST";
-	    break;
-	case FORBIDDEN:
-	    this.statusMsg = "FORBIDDEN";
-	    break;
-	case NOT_FOUND:
-	    this.statusMsg = "NOT FOUND";
-	    break;
-	case INTERNAL_ERROR:
-	    this.statusMsg = "INTERNAL ERROR";
-	    break;
-	case NOT_IMPLEMENTED:
-	    this.statusMsg = "NOT IMPLEMENTED";
-	    break;
-	case BAD_GATEWAY:
-	    this.statusMsg = "BAD GATEWAY";
-	    break;
-	case SERVICE_UNAVAILABLE:
-	    this.statusMsg = "SERVICE UNAVAILABLE";
-	    break;
+		final int len = h.length();
 
+		final String ct = "Content-Length: " + len + CRLF + CRLF;
+
+		for (int j = 0; j < ct.length(); j++) {
+			out.write(ct.charAt(j));
+		}
+
+		for (int j = 0; j < len; j++) {
+			out.write(h.charAt(j));
+		}
+		out.flush();
 	}
-    }
 
-    @Override
-    public void setStatusCode(int i, String msg) {
-	this.statusCode = i;
-	this.statusMsg = msg;
-    }
+	@Override
+	public void sendResponse() throws IOException {
+		writeStatusLine();
+		writeHeaders();
+		if (bout != null) {
+			if (bout.size() == 0) {
+				final java.io.PrintWriter p = new java.io.PrintWriter(bout);
 
-    private void writeHeaders() throws IOException {
-	String h = "";
-
-	// - if (resultURI != null) {
-	// - h = "Location:" + resultURI.toExternalForm() + CRLF;
-	// - }
-	h += "Content-Type:" + this.content_type + CRLF;
-
-	// - "Content-Language:" + content_language + CRLF +
-	// - "Content-Encoding:" + content_encoding + CRLF;
-	int len = h.length();
-
-	for (int i = 0; i < len; i++) {
-	    this.out.write(h.charAt(i));
+				p.println("No Response is written by the aglet");
+				p.flush();
+			}
+			bout.sendContent();
+		}
+		out.flush();
 	}
-    }
 
-    private void writeStatusLine() throws IOException {
-	String h = "HTTP/1.0 " + (this.statusCode + 100) + " " + this.statusMsg
-	+ CRLF;
-	int len = h.length();
-
-	for (int i = 0; i < len; i++) {
-	    this.out.write(h.charAt(i));
+	@Override
+	public void setContentType(final String type) {
+		return;
 	}
-    }
+
+	@Override
+	public void setStatusCode(final int i) {
+		statusCode = i;
+		switch (statusCode) {
+			case OKAY:
+				statusMsg = "OKAY";
+				break;
+			case MOVED:
+				statusMsg = "MOVED";
+				break;
+			case BAD_REQUEST:
+				statusMsg = "BAD REQUEST";
+				break;
+			case FORBIDDEN:
+				statusMsg = "FORBIDDEN";
+				break;
+			case NOT_FOUND:
+				statusMsg = "NOT FOUND";
+				break;
+			case INTERNAL_ERROR:
+				statusMsg = "INTERNAL ERROR";
+				break;
+			case NOT_IMPLEMENTED:
+				statusMsg = "NOT IMPLEMENTED";
+				break;
+			case BAD_GATEWAY:
+				statusMsg = "BAD GATEWAY";
+				break;
+			case SERVICE_UNAVAILABLE:
+				statusMsg = "SERVICE UNAVAILABLE";
+				break;
+
+		}
+	}
+
+	@Override
+	public void setStatusCode(final int i, final String msg) {
+		statusCode = i;
+		statusMsg = msg;
+	}
+
+	private void writeHeaders() throws IOException {
+		String h = "";
+
+		// - if (resultURI != null) {
+		// - h = "Location:" + resultURI.toExternalForm() + CRLF;
+		// - }
+		h += "Content-Type:" + content_type + CRLF;
+
+		// - "Content-Language:" + content_language + CRLF +
+		// - "Content-Encoding:" + content_encoding + CRLF;
+		final int len = h.length();
+
+		for (int i = 0; i < len; i++) {
+			out.write(h.charAt(i));
+		}
+	}
+
+	private void writeStatusLine() throws IOException {
+		final String h = "HTTP/1.0 " + (statusCode + 100) + " " + statusMsg
+		+ CRLF;
+		final int len = h.length();
+
+		for (int i = 0; i < len; i++) {
+			out.write(h.charAt(i));
+		}
+	}
 }

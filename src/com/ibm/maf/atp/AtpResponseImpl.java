@@ -26,134 +26,134 @@ import com.ibm.atp.ContentOutputStream;
  */
 public final class AtpResponseImpl implements AtpResponse {
 
-    private static final String CRLF = "\r\n";
+	private static final String CRLF = "\r\n";
 
-    private OutputStream out = null;
-    private ContentOutputStream bout = null;
+	private OutputStream out = null;
+	private ContentOutputStream bout = null;
 
-    private int statusCode = -1;
-    private String statusMsg;
+	private int statusCode = -1;
+	private String statusMsg;
 
-    private String content_type = "";
-    private String content_language = "";
-    private String content_encoding = "";
+	private String content_type = "";
+	private final String content_language = "";
+	private final String content_encoding = "";
 
-    public AtpResponseImpl(OutputStream out) throws IOException {
-	this.out = out;
-    }
-
-    @Override
-    public OutputStream getOutputStream() throws IOException {
-	if (this.bout == null) {
-	    this.bout = new ContentOutputStream(this.out, true);
-	}
-	return this.bout;
-    }
-
-    @Override
-    public int getStatusCode() {
-	return this.statusCode;
-    }
-
-    @Override
-    public void sendError(int i) throws IOException {
-	this.setStatusCode(i);
-	this.writeStatusLine();
-	for (int j = 0; j < CRLF.length(); j++) {
-	    this.out.write(CRLF.charAt(j));
+	public AtpResponseImpl(final OutputStream out) throws IOException {
+		this.out = out;
 	}
 
-	// out.flush();
-	if (this.bout != null) {
-	    this.bout.sendContent();
+	@Override
+	public OutputStream getOutputStream() throws IOException {
+		if (bout == null) {
+			bout = new ContentOutputStream(out, true);
+		}
+		return bout;
 	}
-	this.out.flush();
-	this.out.close();
-    }
 
-    @Override
-    public void sendResponse() throws IOException {
-	this.writeStatusLine();
-	this.writeHeaders();
-	if (this.bout != null) {
-	    this.bout.sendContent();
+	@Override
+	public int getStatusCode() {
+		return statusCode;
 	}
-	this.out.flush();
-    }
 
-    @Override
-    public void setContentType(String type) {
-	this.content_type = type;
-    }
+	@Override
+	public void sendError(final int i) throws IOException {
+		this.setStatusCode(i);
+		writeStatusLine();
+		for (int j = 0; j < CRLF.length(); j++) {
+			out.write(CRLF.charAt(j));
+		}
 
-    @Override
-    public void setStatusCode(int i) {
-	this.statusCode = i;
-	switch (this.statusCode) {
-	case AtpConstants.OKAY:
-	    this.statusMsg = "OKAY";
-	    break;
-	case AtpConstants.MOVED:
-	    this.statusMsg = "MOVED";
-	    break;
-	case AtpConstants.BAD_REQUEST:
-	    this.statusMsg = "BAD REQUEST";
-	    break;
-	case AtpConstants.FORBIDDEN:
-	    this.statusMsg = "FORBIDDEN";
-	    break;
-	case AtpConstants.NOT_FOUND:
-	    this.statusMsg = "NOT FOUND";
-	    break;
-	case AtpConstants.INTERNAL_ERROR:
-	    this.statusMsg = "INTERNAL ERROR";
-	    break;
-	case AtpConstants.NOT_IMPLEMENTED:
-	    this.statusMsg = "NOT IMPLEMENTED";
-	    break;
-	case AtpConstants.BAD_GATEWAY:
-	    this.statusMsg = "BAD GATEWAY";
-	    break;
-	case AtpConstants.SERVICE_UNAVAILABLE:
-	    this.statusMsg = "SERVICE UNAVAILABLE";
-	    break;
-	case AtpConstants.NOT_AUTHENTICATED:
-	    this.statusMsg = "NOT AUTHENTICATED";
-	    break;
+		// out.flush();
+		if (bout != null) {
+			bout.sendContent();
+		}
+		out.flush();
+		out.close();
 	}
-    }
 
-    @Override
-    public void setStatusCode(int i, String msg) {
-	this.statusCode = i;
-	this.statusMsg = msg;
-    }
-
-    private void writeHeaders() throws IOException {
-	String h = "";
-
-	/*
-	 * if (resultURI != null) { h = "Location:" + resultURI.toExternalForm()
-	 * + CRLF; }
-	 */
-	h += "Content-Type:" + this.content_type + CRLF + "Content-Language:"
-	+ this.content_language + CRLF + "Content-Encoding:"
-	+ this.content_encoding + CRLF;
-
-	int len = h.length();
-
-	for (int i = 0; i < len; i++) {
-	    this.out.write(h.charAt(i));
+	@Override
+	public void sendResponse() throws IOException {
+		writeStatusLine();
+		writeHeaders();
+		if (bout != null) {
+			bout.sendContent();
+		}
+		out.flush();
 	}
-    }
 
-    private void writeStatusLine() throws IOException {
-	String h = AtpRequestImpl.ATP_VERSION + " " + this.statusCode + " "
-	+ this.statusMsg + CRLF;
-	int len = h.length();
-
-	for (int i = 0; i < len; i++) {
-	    this.out.write(h.charAt(i));
+	@Override
+	public void setContentType(final String type) {
+		content_type = type;
 	}
-    }
+
+	@Override
+	public void setStatusCode(final int i) {
+		statusCode = i;
+		switch (statusCode) {
+			case AtpConstants.OKAY:
+				statusMsg = "OKAY";
+				break;
+			case AtpConstants.MOVED:
+				statusMsg = "MOVED";
+				break;
+			case AtpConstants.BAD_REQUEST:
+				statusMsg = "BAD REQUEST";
+				break;
+			case AtpConstants.FORBIDDEN:
+				statusMsg = "FORBIDDEN";
+				break;
+			case AtpConstants.NOT_FOUND:
+				statusMsg = "NOT FOUND";
+				break;
+			case AtpConstants.INTERNAL_ERROR:
+				statusMsg = "INTERNAL ERROR";
+				break;
+			case AtpConstants.NOT_IMPLEMENTED:
+				statusMsg = "NOT IMPLEMENTED";
+				break;
+			case AtpConstants.BAD_GATEWAY:
+				statusMsg = "BAD GATEWAY";
+				break;
+			case AtpConstants.SERVICE_UNAVAILABLE:
+				statusMsg = "SERVICE UNAVAILABLE";
+				break;
+			case AtpConstants.NOT_AUTHENTICATED:
+				statusMsg = "NOT AUTHENTICATED";
+				break;
+		}
+	}
+
+	@Override
+	public void setStatusCode(final int i, final String msg) {
+		statusCode = i;
+		statusMsg = msg;
+	}
+
+	private void writeHeaders() throws IOException {
+		String h = "";
+
+		/*
+		 * if (resultURI != null) { h = "Location:" + resultURI.toExternalForm()
+		 * + CRLF; }
+		 */
+		h += "Content-Type:" + content_type + CRLF + "Content-Language:"
+		+ content_language + CRLF + "Content-Encoding:"
+		+ content_encoding + CRLF;
+
+		final int len = h.length();
+
+		for (int i = 0; i < len; i++) {
+			out.write(h.charAt(i));
+		}
+	}
+
+	private void writeStatusLine() throws IOException {
+		final String h = AtpRequestImpl.ATP_VERSION + " " + statusCode + " "
+		+ statusMsg + CRLF;
+		final int len = h.length();
+
+		for (int i = 0; i < len; i++) {
+			out.write(h.charAt(i));
+		}
+	}
 }

@@ -22,29 +22,29 @@ import com.ibm.maf.Name;
 
 interface AtpRequest {
 
-    public Name getAgentName();
+	public Name getAgentName();
 
-    public String getAgentNameAsString();
+	public String getAgentNameAsString();
 
-    public AgentProfile getAgentProfile();
+	public AgentProfile getAgentProfile();
 
-    public int getContentLength();
+	public int getContentLength();
 
-    public String getFetchClassFile();
+	public String getFetchClassFile();
 
-    public InputStream getInputStream();
+	public InputStream getInputStream();
 
-    public int getMethod();
+	public int getMethod();
 
-    public String getPlaceName();
+	public String getPlaceName();
 
-    public String getRequestLine();
+	public String getRequestLine();
 
-    public String getRequestParameter(String key);
+	public String getRequestParameter(String key);
 
-    // public String getAgentLanguage();
+	// public String getAgentLanguage();
 
-    public String getSender();
+	public String getSender();
 
-    public void parseHeaders() throws IOException;
+	public void parseHeaders() throws IOException;
 }

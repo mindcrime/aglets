@@ -37,94 +37,94 @@ import com.ibm.aglet.message.Message;
  */
 
 public class HostCollector extends Aglet implements MobilityListener {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 7122217680888792625L;
-    Hashtable hostList;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7122217680888792625L;
+	Hashtable hostList;
 
-    public void appendList(Hashtable list) {
-	for (Enumeration e = list.keys(); e.hasMoreElements();) {
-	    Object key = e.nextElement();
+	public void appendList(final Hashtable list) {
+		for (final Enumeration e = list.keys(); e.hasMoreElements();) {
+			final Object key = e.nextElement();
 
-	    if (this.hostList.get(key) == null) {
-		System.out.println("new: " + key);
-		this.hostList.put(key, "new");
-	    } else {
-		System.out.println("key: " + key + " value: "
-			+ this.hostList.get(key));
-	    }
-	}
-    }
-
-    @Override
-    public boolean handleMessage(Message msg) {
-	if (msg.sameKind("dialog")) {
-	    try {
-		System.out.println(this.hostList);
-	    } catch (Exception ex) {
-		ex.printStackTrace();
-	    }
-	    return true;
-	} else if (msg.sameKind("shutdown")) {
-	    try {
-		this.deactivate(0);
-	    } catch (Exception e) {
-	    }
-	    return true;
-	} else {
-	}
-	return true;
-    }
-
-    @Override
-    public void onArrival(MobilityEvent event) {
-	AgletProxy ap = (AgletProxy) this.getAgletContext().getProperty("hostlist");
-
-	this.hostList.put(this.getAgletContext().getHostingURL().toString(), "running");
-
-	try {
-	    if ((ap == null) || !ap.isValid()) {
-		ap = this.getAgletContext().createAglet(this.getCodeBase(), "examples.finder.HostList", this.hostList);
-	    }
-
-	    ap.sendMessage(new Message("append", this.hostList));
-	    Hashtable list = (Hashtable) ap.sendMessage(new Message("getlist"));
-
-	    if (list != null) {
-		this.appendList(list);
-	    }
-	} catch (Exception e) {
-	    System.out.println(e);
-	}
-    }
-
-    @Override
-    public void onCreation(Object init) {
-	this.hostList = new Hashtable();
-	AgletProxy ap = (AgletProxy) this.getAgletContext().getProperty("hostlist");
-
-	this.hostList.put(this.getAgletContext().getHostingURL().toString(), "running");
-
-	try {
-	    if ((ap == null) || !ap.isValid()) {
-		ap = this.getAgletContext().createAglet(this.getCodeBase(), "examples.finder.HostList", this.hostList);
-	    }
-	} catch (Exception e) {
-	    System.out.println(e);
+			if (hostList.get(key) == null) {
+				System.out.println("new: " + key);
+				hostList.put(key, "new");
+			} else {
+				System.out.println("key: " + key + " value: "
+						+ hostList.get(key));
+			}
+		}
 	}
 
-	this.addMobilityListener(this);
-    }
+	@Override
+	public boolean handleMessage(final Message msg) {
+		if (msg.sameKind("dialog")) {
+			try {
+				System.out.println(hostList);
+			} catch (final Exception ex) {
+				ex.printStackTrace();
+			}
+			return true;
+		} else if (msg.sameKind("shutdown")) {
+			try {
+				deactivate(0);
+			} catch (final Exception e) {
+			}
+			return true;
+		} else {
+		}
+		return true;
+	}
 
-    @Override
-    public void onDispatching(MobilityEvent event) {
-    }
+	@Override
+	public void onArrival(final MobilityEvent event) {
+		AgletProxy ap = (AgletProxy) getAgletContext().getProperty("hostlist");
 
-    public void onRetraction(MobilityEvent event) {
-    }
+		hostList.put(getAgletContext().getHostingURL().toString(), "running");
 
-    @Override
-    public void onReverting(MobilityEvent event) {
-    }
+		try {
+			if ((ap == null) || !ap.isValid()) {
+				ap = getAgletContext().createAglet(getCodeBase(), "examples.finder.HostList", hostList);
+			}
+
+			ap.sendMessage(new Message("append", hostList));
+			final Hashtable list = (Hashtable) ap.sendMessage(new Message("getlist"));
+
+			if (list != null) {
+				appendList(list);
+			}
+		} catch (final Exception e) {
+			System.out.println(e);
+		}
+	}
+
+	@Override
+	public void onCreation(final Object init) {
+		hostList = new Hashtable();
+		AgletProxy ap = (AgletProxy) getAgletContext().getProperty("hostlist");
+
+		hostList.put(getAgletContext().getHostingURL().toString(), "running");
+
+		try {
+			if ((ap == null) || !ap.isValid()) {
+				ap = getAgletContext().createAglet(getCodeBase(), "examples.finder.HostList", hostList);
+			}
+		} catch (final Exception e) {
+			System.out.println(e);
+		}
+
+		addMobilityListener(this);
+	}
+
+	@Override
+	public void onDispatching(final MobilityEvent event) {
+	}
+
+	public void onRetraction(final MobilityEvent event) {
+	}
+
+	@Override
+	public void onReverting(final MobilityEvent event) {
+	}
 }

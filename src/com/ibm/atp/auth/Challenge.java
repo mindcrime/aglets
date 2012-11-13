@@ -24,64 +24,64 @@ import com.ibm.awb.misc.Hexadecimal;
  * @author ONO Kouichi
  */
 final public class Challenge extends ByteSequence {
-    /**
-     * serial version UID
-     */
-    static final long serialVersionUID = 286760688223181885L;
+	/**
+	 * serial version UID
+	 */
+	static final long serialVersionUID = 286760688223181885L;
 
-    /**
-     * The length of byte sequence.
-     */
-    final public static int LENGTH = 32;
+	/**
+	 * The length of byte sequence.
+	 */
+	final public static int LENGTH = 32;
 
-    /**
-     * Constructor creates a secure random generator, and generate byte sequence
-     * as a challenge for authentication.
-     */
-    public Challenge() {
-	super(LENGTH);
-    }
+	/**
+	 * Constructor creates a secure random generator, and generate byte sequence
+	 * as a challenge for authentication.
+	 */
+	public Challenge() {
+		super(LENGTH);
+	}
 
-    /**
-     * Constructor creates byte sequence as a copy of given byte sequence as a
-     * challenge for authentication.
-     * 
-     * @param challenge
-     *            a byte sequence to be copied as a challenge
-     */
-    public Challenge(Challenge challenge) {
-	super(challenge.challenge());
-    }
+	/**
+	 * Constructor creates byte sequence as a copy of given byte sequence as a
+	 * challenge for authentication.
+	 * 
+	 * @param challenge
+	 *            a byte sequence to be copied as a challenge
+	 */
+	public Challenge(final Challenge challenge) {
+		super(challenge.challenge());
+	}
 
-    /**
-     * Constructor creates byte sequence as a copy of given hexadecimal string
-     * of encoded bytes as a challenge for authentication.
-     * 
-     * @param str
-     *            a string of encoded byte sequence to be copied as a challenge
-     */
-    public Challenge(String str) {
-	super(0, str, null);
-    }
+	/**
+	 * Constructor creates byte sequence as a copy of given hexadecimal string
+	 * of encoded bytes as a challenge for authentication.
+	 * 
+	 * @param str
+	 *            a string of encoded byte sequence to be copied as a challenge
+	 */
+	public Challenge(final String str) {
+		super(0, str, null);
+	}
 
-    /**
-     * Returns current byte sequence as a challenge for authentication.
-     * 
-     * @return current byte sequence as a challenge for authentication.
-     */
-    final public byte[] challenge() {
-	return this.sequence();
-    }
+	/**
+	 * Returns current byte sequence as a challenge for authentication.
+	 * 
+	 * @return current byte sequence as a challenge for authentication.
+	 */
+	final public byte[] challenge() {
+		return sequence();
+	}
 
-    /**
-     * Returns a hexadecimal string representation of the byte sequence. The
-     * series of hexadecimal strings are the contents of byte sequence.
-     * 
-     * @return a hexadecimal string representation of the byte sequence
-     * @see com.ibm.atp.auth.ByteSequence#toString
-     */
-    @Override
-    public String toString() {
-	return Hexadecimal.valueOf(this.challenge());
-    }
+	/**
+	 * Returns a hexadecimal string representation of the byte sequence. The
+	 * series of hexadecimal strings are the contents of byte sequence.
+	 * 
+	 * @return a hexadecimal string representation of the byte sequence
+	 * @see com.ibm.atp.auth.ByteSequence#toString
+	 */
+	@Override
+	public String toString() {
+		return Hexadecimal.valueOf(challenge());
+	}
 }
